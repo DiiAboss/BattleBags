@@ -1,6 +1,26 @@
+
+// Adjstable stats
+
+global.gameSpeed = 3;
+
+
+
+//-----------------------------------
+// BLOCKS
+//-----------------------------------
+enum BLOCK 
+{
+	RED = 0
+		
+}
+
+swap_in_progress = false;
+global.needs_match_check = false;
 // ----------------------------------
-// 1. BASIC GAME SETTINGS
+// 1. Setting up the board
 // ----------------------------------
+global.gemSize = 64;
+
 WILD_BLOCK = -2;
 swap_in_progress = false;
 
@@ -15,8 +35,8 @@ swap_info = {
 
 offset = 32;
 board_x_offset = 128;
-global.gameSpeed = 3;
-width = 10;
+
+width = 8;
 height = 17;
 global.topmost_row = height - 1;
 
@@ -90,11 +110,6 @@ for (var i = 0; i < width; i++) {
         grid[i][j] = create_gem(irandom(numberOfGemTypes - 1));
     }
 }
-
-
-
-
-
 
 
 

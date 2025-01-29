@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"Sprites",
-    "path":"folders/Sprites.yy",
+    "name":"playerAttacks",
+    "path":"folders/Sprites/playerAttacks.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
