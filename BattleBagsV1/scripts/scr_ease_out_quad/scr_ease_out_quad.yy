@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_ease_out_quad",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"CONTROL",
+    "path":"folders/Scripts/CONTROL.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

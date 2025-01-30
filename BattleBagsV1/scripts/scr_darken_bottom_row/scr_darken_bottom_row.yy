@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_darken_bottom_row",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"EFFECTS",
+    "path":"folders/Scripts/CONTROL/EFFECTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

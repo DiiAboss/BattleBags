@@ -1,4 +1,8 @@
-function create_gem(_type, _powerup = create_powerup(irandom(3))) {
+function create_gem(_type = -99, _powerup = create_powerup(irandom(3))) {
+	
+	if (_type == -99) { // If generating a new random gem
+		_type = weighted_random_gem(self);
+    }
 	
 	var _color = c_white;
 	
@@ -41,9 +45,18 @@ function create_gem(_type, _powerup = create_powerup(irandom(3))) {
         offset_y: 0,       // Vertical offset for animations
         fall_target: -1,   // Target row for falling animations
 		falling: false,
-		shake_timer: 0,  // New property for shaking effect
+		shake_timer: 0,    // New property for shaking effect
 		color: _color,
-		fall_delay: 0
+		fall_delay: 0,
+		max_fall_delay: 10, 
+		freeze_timer: 0,   // 🔥 New: Countdown to thaw
+        frozen: false,      // 🔥 New: Flag for frozen state
+		damage: 1,
+		combo_multiplier: 1,
+		pop_speed: 1,
+		explode_on_four: false,
+		explode_on_five: false,
+		explode_on_six: false
     };
 }
 

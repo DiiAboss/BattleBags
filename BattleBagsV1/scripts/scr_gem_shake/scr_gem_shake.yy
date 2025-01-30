@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_gem_shake",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"EFFECTS",
+    "path":"folders/Scripts/CONTROL/EFFECTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_spawn_new_row",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"SPAWN_GEMS",
+    "path":"folders/Scripts/CONTROL/SPAWN_GEMS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

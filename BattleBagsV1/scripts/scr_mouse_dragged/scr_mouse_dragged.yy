@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_mouse_dragged",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_mouse_dragged",
+  "parent":{
+    "name":"CONTROL",
+    "path":"folders/Scripts/CONTROL.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

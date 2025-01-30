@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_freeze_block",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_freeze_block",
+  "parent":{
+    "name":"SKILLS",
+    "path":"folders/Scripts/SKILLS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

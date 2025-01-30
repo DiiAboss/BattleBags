@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_legacy_fall_controls",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_legacy_fall_controls",
+  "parent":{
+    "name":"LEGACY",
+    "path":"folders/Scripts/CONTROL/LEGACY.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

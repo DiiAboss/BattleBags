@@ -27,6 +27,22 @@ for (var i = 0; i < width; i++) {
 			if (gem.powerup != -1) {
                 draw_sprite(gem.powerup.sprite, 0, draw_x, draw_y);
             }
+					 // 🧊 If frozen, draw ice overlay
+        if (gem.frozen) {
+			var _scale = 1;
+			
+			if (gem.freeze_timer > 120)
+			{
+				draw_sprite(spr_ice_cover, 0, draw_x, draw_y);
+			}
+			else
+			{
+				var shake_x = draw_x + irandom_range(-3, 3);
+				var shake_y = draw_y + irandom_range(-3, 3);
+				draw_sprite_ext(spr_ice_cover, 0, shake_x, shake_y, _scale, _scale, 0, c_white, 1);
+			}
+        }
+	
         }
     }
 }
@@ -106,7 +122,24 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
         1.0
     );
             }
-	
+			
+			// Draw the combo number if a combo is active
+		if (combo > 1) { // Only show if at least 2 matches have happened
+		    draw_set_font(f_b_font);
+		    draw_set_halign(fa_center);
+		    draw_set_valign(fa_middle);
+    
+		    var px = (global.combo_x * gem_size) + board_x_offset + (gem_size / 2);
+		    var py = (global.combo_y * gem_size) + global_y_offset + (gem_size / 2);
+			
+			
+			draw_text_color(px+2 + irandom_range(-1, 1), py+2 + irandom_range(-1, 1), string(combo) + "x!", c_black, c_black, c_black, c_black, 1);
+			draw_text_color(px + irandom_range(-1, 1), py + irandom_range(-1, 1), string(combo) + "x!", c_yellow, c_yellow, c_white, c_white, 1);
+		    //draw_text(px, py, string(combo) + "x!");
+			
+			draw_set_font(fnt_basic);
+			draw_set_halign(fa_left);
+		}
 	
 }
 
@@ -133,8 +166,4 @@ draw_rectangle(board_x_offset + grid_width, - thickness,
 draw_rectangle(board_x_offset - thickness, grid_height, 
                board_x_offset + grid_width + thickness, grid_height + thickness, false); // Bottom
 
-//// Draw a thick border around the grid
-//draw_set_color(c_white);
-//var line_width = 5;
-//draw_rectangle_color(board_x_offset, 0, 
-//                       board_x_offset + width * 64, room_height, c_white, c_white, c_white, c_white, true);
+draw_spawn_rates(self);

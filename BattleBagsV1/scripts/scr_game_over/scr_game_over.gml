@@ -3,6 +3,7 @@
 /// Simple Game Over logic
 function game_over() {
     show_message("Game Over!");
+	game_restart();
     // Additional logic can be added here
 }
 
@@ -12,7 +13,7 @@ function check_game_over(_self) {
 	
     // 1) Skip game over if there's ANY locked gem in row 0
     for (var i = 0; i < width; i++) {
-        if (_self.grid[i, 0] != -1 && _self.locked[i, 0]) {
+        if (_self.grid[i, 0] != -1 && _self.grid[i, 0].falling) {
             return; 
         }
     }
@@ -21,7 +22,7 @@ function check_game_over(_self) {
     //    Then if row 0 has a gem, cause game over
     for (var i = 0; i < width; i++) {
         // FIX SYNTAX: Add parentheses around the entire condition
-        if ((_self.grid[i, 0] != -1) && (!_self.locked[i, 0])) {
+        if ((_self.grid[i, 0] != -1) && (!_self.grid[i, 0].falling)) {
             //game_over();
             return;
         }

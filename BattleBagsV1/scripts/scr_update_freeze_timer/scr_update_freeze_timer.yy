@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_update_freeze_timer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_update_freeze_timer",
+  "parent":{
+    "name":"SKILLS",
+    "path":"folders/Scripts/SKILLS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

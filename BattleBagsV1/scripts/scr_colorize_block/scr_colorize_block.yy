@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_colorize_block",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"SKILLS",
+    "path":"folders/Scripts/SKILLS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

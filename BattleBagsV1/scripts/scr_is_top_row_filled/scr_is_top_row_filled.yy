@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_is_top_row_filled",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_is_top_row_filled",
+  "parent":{
+    "name":"CONTROL",
+    "path":"folders/Scripts/CONTROL.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

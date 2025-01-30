@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_create_upgrade",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_create_upgrade",
+  "parent":{
+    "name":"CREATIONS",
+    "path":"folders/Scripts/CONTROL/CREATIONS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

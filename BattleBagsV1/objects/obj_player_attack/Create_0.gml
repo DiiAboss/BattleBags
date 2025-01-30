@@ -7,13 +7,12 @@ max_ef_timer = ef_timer;
 type = -1;
 powerup = -1;
 color = c_white;
-
-damage = obj_control.combo + 1;
+spd = 8;
+damage = obj_game_control.combo + 1;
 
 if (instance_exists(obj_enemy_parent))
 {
 	target = instance_nearest(x, y, obj_enemy_parent);
-	speed = 8;
 	direction = point_direction(x, y, target.x, target.y)
 }
 else

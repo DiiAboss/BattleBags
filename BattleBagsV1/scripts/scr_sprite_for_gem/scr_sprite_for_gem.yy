@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_sprite_for_gem",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"CREATIONS",
+    "path":"folders/Scripts/CONTROL/CREATIONS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
