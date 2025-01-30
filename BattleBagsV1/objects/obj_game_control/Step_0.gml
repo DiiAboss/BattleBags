@@ -14,8 +14,40 @@ mouse_dragged(self);
 var hover_i = floor((mouse_x - board_x_offset) / gem_size);
 var hover_j = floor((mouse_y - global_y_offset) / gem_size);
 
+
+// 🌟 Horizontal Destruction
+if (keyboard_check_pressed(ord("L"))) { 
+    destroy_blocks_in_direction_from_point(self, hover_i, hover_j, +1, 0); // 🔴 Right
+}
+if (keyboard_check_pressed(ord("J"))) { 
+    destroy_blocks_in_direction_from_point(self, hover_i, hover_j, -1, 0); // 🔵 Left
+}
+
+// 🌟 Vertical Destruction
+if (keyboard_check_pressed(ord("I"))) { 
+    destroy_blocks_in_direction_from_point(self, hover_i, hover_j, 0, -1); // 🔼 Up
+}
+if (keyboard_check_pressed(ord("K"))) { 
+    destroy_blocks_in_direction_from_point(self, hover_i, hover_j, 0, +1); // 🔽 Down
+}
+
+// 🌟 Diagonal Destruction
+if (keyboard_check_pressed(ord("U"))) { 
+    destroy_blocks_in_direction_from_point(self, hover_i, hover_j, -1, -1); // 🔼🔵 Top-Left
+}
+if (keyboard_check_pressed(ord("O"))) { 
+    destroy_blocks_in_direction_from_point(self, hover_i, hover_j, +1, -1); // 🔼🔴 Top-Right
+}
+if (keyboard_check_pressed(ord("M"))) { 
+    destroy_blocks_in_direction_from_point(self, hover_i, hover_j, -1, +1); // 🔽🔵 Bottom-Left
+}
+if (keyboard_check_pressed(ord("."))) { 
+    destroy_blocks_in_direction_from_point(self, hover_i, hover_j, +1, +1); // 🔽🔴 Bottom-Right
+}
+
+
 if (keyboard_check_pressed(vk_shift)) {
-	toss_down_row(self);
+	toss_down_row(self, true);
 }
 
 if keyboard_check_pressed(ord("E")) {
@@ -45,18 +77,33 @@ if (keyboard_check_pressed(ord("U"))) {
 
 
 // Space for speed up
-if (keyboard_check(vk_space)) {
+if (fight_for_your_life)
+{
+	global.gameSpeed = game_speed_default * game_speed_fight_for_your_life_modifier;
+}
+else if (keyboard_check(vk_space)) {
     global.gameSpeed = game_speed_default * game_speed_increase_modifier;
 } else {
-    if (combo == 0) 
-	{
-        global.gameSpeed = game_speed_default;
-    }
-    else 
-	{
-        global.gameSpeed = game_speed_default * game_speed_combo_modifier;
-    }
+	    if (combo == 0) 
+		{
+	        global.gameSpeed = game_speed_default;
+	    }
+	    else 
+		{
+	        global.gameSpeed = game_speed_default * game_speed_combo_modifier;
+	    }
 }
+
+total_time += 1;
+
+var t_i_s = (total_time / FPS);
+time_in_seconds = round(t_i_s);
+
+if (t_i_s % 30 == 0)
+{
+	game_speed_default += 0.1;
+}
+
 
 if (keyboard_check_pressed(ord("1"))) {
     toss_down_shape(self, string("square_3x3"));
@@ -219,11 +266,14 @@ function shift_up() {
 // ✅ POINT CALCULATION FUNCTION
 // -------------------------
 
+
+
 function find_and_destroy_matches() {
     var marked_for_removal = array_create(width, height);
     var found_any = false;
     var first_found = false; // ✅ Track the first block in the combo
     var total_match_points = 0; // ✅ Accumulates points for multiple matches
+	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
 
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
@@ -255,6 +305,8 @@ function find_and_destroy_matches() {
                                 global.combo_y = j;
                                 first_found = true;
                             }
+							 // ✅ Check for adjacent black blocks
+                            check_adjacent_black_blocks(self, j, xx, black_blocks_to_transform);
                         }
                     }
                     // ✅ Add points based on match size
@@ -274,6 +326,8 @@ function find_and_destroy_matches() {
                         global.combo_y = j;
                         first_found = true;
                     }
+					 // ✅ Check for adjacent black blocks
+                     check_adjacent_black_blocks(self, j, xx, black_blocks_to_transform);
                 }
             }
            total_match_points += calculate_match_points(self, match_count);
@@ -303,6 +357,8 @@ function find_and_destroy_matches() {
                                 global.combo_y = yy;
                                 first_found = true;
                             }
+							 // ✅ Check for adjacent black blocks
+                            check_adjacent_black_blocks(self, i, yy, black_blocks_to_transform);
                         }
                     }
                     total_match_points += calculate_match_points(self, match_count);
@@ -321,14 +377,15 @@ function find_and_destroy_matches() {
                         global.combo_y = yy;
                         first_found = true;
                     }
+					 // ✅ Check for adjacent black blocks
+                     check_adjacent_black_blocks(self, i, yy, black_blocks_to_transform);
                 }
             }
             total_match_points += calculate_match_points(self, match_count);
         }
     }
 
-    // ✅ Add accumulated match points to total_points
-    total_points += total_match_points;
+
 
     // -------------------------
     // ✅ HANDLE MATCHED GEMS
@@ -343,29 +400,42 @@ function find_and_destroy_matches() {
                 var dx = i - global.lastSwapX;
                 var dy = j - global.lastSwapY;
                 var dist = sqrt(dx * dx + dy * dy);
-
+				var _start_delay = 5;
+				
+				if (gem.type == BLOCK.BLACK)
+				{
+					_start_delay = 20;
+				}
+				
+				
                 var pop_info = {
                     x: i,
                     y: j,
                     gem_type: gem.type,
                     timer: 0,
-                    start_delay: dist * 5, // Wave effect
+                    start_delay: dist * _start_delay, // Wave effect
                     scale: 1.0,
                     popping: true,
                     powerup: gem.powerup,
                     offset_x: gem.offset_x,
                     offset_y: gem.offset_y,
                     color: gem.color,
-                    y_offset_global: global_y_offset
+                    y_offset_global: global_y_offset,
+					match_size: match_count, // ✅ Store the match size
+					match_points: total_match_points
                 };
 
                 gem.popping = true;
-                gem.pop_timer = 0;
+                gem.pop_timer = _start_delay;
 
                 ds_list_add(global.pop_list, pop_info);
             }
         }
     }
+	
+	// ✅ Transform black blocks **after matches are removed**
+    update_black_blocks(self, black_blocks_to_transform);
+    ds_list_destroy(black_blocks_to_transform);
 
     return found_any;
 }
@@ -373,43 +443,53 @@ function find_and_destroy_matches() {
 
 
 
-if all_blocks_landed(self)
-{
-	for (var i = 0; i < ds_list_size(global.pop_list); i++) {
-	    var pop_data = ds_list_find_value(global.pop_list, i);
+if all_blocks_landed(self) {
+    for (var i = 0; i < ds_list_size(global.pop_list); i++) {
+        var pop_data = ds_list_find_value(global.pop_list, i);
 
-	    // Wait for start_delay
-	    if (pop_data.timer < pop_data.start_delay) {
-	        pop_data.timer++;
-	    }
-	    else {
-	        // Grow, e.g. pop_data.scale += 0.02
-	        pop_data.scale += 0.05;
-	        // Once scale >= 1.1, pop is done
-	        if (pop_data.scale >= 1.1) {
-	            // Now we remove from the grid
-	            destroy_block(self, pop_data.x, pop_data.y);
-				// Mark gem for destruction after animation
+        // Wait for start_delay
+        if (pop_data.timer < pop_data.start_delay) {
+            pop_data.timer++;
+        } else {
+            // Grow effect
+            pop_data.scale += 0.05;
 
-				 // 1) Compute the pixel position for the new object
-			    var px = (pop_data.x * gem_size) + board_x_offset + offset;
-			    var py = (pop_data.y * gem_size) + offset + global_y_offset + gem_y_offsets[pop_data.x, pop_data.y];
+            // Once scale >= 1.1, pop is done
+            if (pop_data.scale >= 1.1) {
+                // Now we remove from the grid
+                destroy_block(self, pop_data.x, pop_data.y);
 
-			    // 2) Create the attack object
-				effect_create_depth(depth, ef_firework, px, py-4, 0.5, pop_data.color);
-			    var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
-				attack.color = pop_data.color;
+                // Compute pixel position for new object
+                var px = (pop_data.x * gem_size) + board_x_offset + offset;
+                var py = (pop_data.y * gem_size) + offset + global_y_offset + gem_y_offsets[pop_data.x, pop_data.y];
+
+                // Create visual effect
+                effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
+
+                // -------------------------------------
+                // ✅ Create Attack Object with Score
+                // -------------------------------------
+                var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
+                attack.color = pop_data.color;
+
+                // 🔥 Assign points based on match size (Uses previous logic)
+                attack.damage = pop_data.match_points / pop_data.match_size;
+				
+				// ✅ Add accumulated match points to total_points
+				total_points += attack.damage;
 				
 				
-	            // Then remove from pop_list
-	            ds_list_delete(global.pop_list, i);
-	            i--; 
-	            continue;
-	        }
-	    }
-	    // Write back
-	    ds_list_replace(global.pop_list, i, pop_data);
-	}
+
+                // Then remove from pop_list
+                ds_list_delete(global.pop_list, i);
+                i--; 
+                continue;
+            }
+        }
+
+        // Write back updated pop_data
+        ds_list_replace(global.pop_list, i, pop_data);
+    }
 }
 
 function start_swap(ax, ay, bx, by) {
@@ -436,5 +516,10 @@ function start_swap(ax, ay, bx, by) {
     }
 }
 	
+
+
+
+
+
 
 

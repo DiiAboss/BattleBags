@@ -2,22 +2,24 @@
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 function sprite_for_gem(gem_type) {
     switch (gem_type) {
-		case -2:
+		case BLOCK.WILD:
 			return spr_wild_gem;
-        case 0:
+        case BLOCK.RED:
             return spr_red_gem;    // Red gem
-        case 1:
+        case BLOCK.YELLOW:
             return spr_yellow_gem;   // Blue gem
-        case 2:
+        case BLOCK.GREEN:
             return spr_green_gem;  // Green gem
-        case 3:
+        case BLOCK.PINK:
             return spr_pink_gem; // Yellow gem
-        case 4:
+        case BLOCK.PURPLE:
             return spr_purple_gem; // Purple gem
-		case 5:
+		case BLOCK.LIGHTBLUE:
             return spr_lightblue_gem; // Purple gem
-		case 6:
+		case BLOCK.ORANGE:
             return spr_orange_gem; // Purple gem
+			case BLOCK.BLACK:
+            return spr_black_gem; // Purple gem
         default:
             return spr_red_gem;    // Default gem (in case of an invalid value)
     }

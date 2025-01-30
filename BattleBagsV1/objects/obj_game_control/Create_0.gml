@@ -1,6 +1,7 @@
 
 
 randomize();
+FPS = 60;
 
 // ------------------------------------------------------
 // Adjustable Stats
@@ -8,13 +9,33 @@ randomize();
 game_speed_default = 3;
 game_speed_combo_modifier = 0.5;
 game_speed_increase_modifier = 2;
+game_speed_fight_for_your_life_modifier = 0.1;
 global.gameSpeed = game_speed_default;
+
+global.player_total_level = 1;
+global.player_level = 1;
+
+fight_for_your_life = false;
 
 max_player_health = 10;
 player_health     = max_player_health;
 
 highest_points = 0;
 total_points   = 0;
+
+total_upgrades = 0;
+
+money_this_round = 0;
+total_money = 0;
+
+matches_this_round = 0;
+total_matches = 0;
+
+
+
+
+total_time = 0;
+time_in_seconds = total_time * FPS;
 
 // ------------------------------------------------------
 // Global Variables & Game State
@@ -31,7 +52,7 @@ global.grid_shake_amount = 0; // Grid shake intensity
 // Block Types
 // ------------------------------------------------------
 enum BLOCK {
-    WILD = -2, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
     LIGHTBLUE = 5, ORANGE = 6, GREY = 7, WHITE = 8, BLACK = 9
 }
 

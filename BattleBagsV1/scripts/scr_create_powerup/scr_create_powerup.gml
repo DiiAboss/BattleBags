@@ -7,6 +7,12 @@ enum POWERUP
 	EXP      = 4,
 	HEART    = 5,
 	MONEY    = 6,
+	POISON   = 7,
+	FIRE     = 8,
+	ICE      = 9,
+	TIMER    = 10,
+	FEATHER  = 11
+	
 }
 
 function create_powerup(_powerup = -1, _chance = 0) {
@@ -42,6 +48,31 @@ function create_powerup(_powerup = -1, _chance = 0) {
 		case POWERUP.MULTI_2X:
 			_sprite = spr_powerup_2x_multi;
 		break;
+		case POWERUP.EXP:
+			_sprite = spr_powerup_exp;
+		break;
+		case POWERUP.HEART:
+			_sprite = spr_powerup_heart;
+		break;
+		case POWERUP.MONEY:
+			_sprite = spr_powerup_money;
+		break;
+		case POWERUP.POISON:
+			_sprite = spr_powerup_poison;
+		break;
+		case POWERUP.FIRE:
+			_sprite = spr_powerup_fire;
+		break;
+		case POWERUP.ICE:
+			_sprite = spr_powerup_ice;
+		break;
+		case POWERUP.TIMER:
+			_sprite = spr_powerup_timer;
+		break;
+		case POWERUP.FEATHER:
+			_sprite = spr_powerup_feather;
+		break;
+		
 		default:
 		   _sprite = spr_none;
 		break;

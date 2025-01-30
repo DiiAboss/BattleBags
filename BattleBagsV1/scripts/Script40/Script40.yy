@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_toss_down_row",
+  "%Name":"Script40",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_toss_down_row",
+  "name":"Script40",
   "parent":{
-    "name":"SKILLS",
-    "path":"folders/Scripts/SKILLS.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

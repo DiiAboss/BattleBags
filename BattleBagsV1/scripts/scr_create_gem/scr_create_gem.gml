@@ -8,33 +8,34 @@ function create_gem(_type = -99, _powerup = create_powerup(irandom(3))) {
 	
 	switch(_type)
 	{
-		case 0:
+		case BLOCK.RED:
 		_powerup = -1;
 		_color = c_red;
 		break;
-		case 1:
+		case BLOCK.YELLOW:
 		_powerup = -1;
 		_color = c_yellow;
 		break;
-		case 2:
+		case BLOCK.GREEN:
 		_powerup = -1;
 		_color = c_lime;
 		break;
-		case 3:
+		case BLOCK.PINK:
 		_color = c_fuchsia;
 		break;
-		case 4:
+		case BLOCK.PURPLE:
 		_color = c_purple;
 		break;
-		case 5:
+		case BLOCK.LIGHTBLUE:
 		_color = c_silver;
 		break;
-		case 6:
-		_color = c_red;
-		break;
-		case 7:
+		case BLOCK.ORANGE:
 		_color = c_orange;
 		break;
+		case BLOCK.BLACK:
+		_color = c_black;
+		break;
+		
 	}
 	
     return {
@@ -56,7 +57,9 @@ function create_gem(_type = -99, _powerup = create_powerup(irandom(3))) {
 		pop_speed: 1,
 		explode_on_four: false,
 		explode_on_five: false,
-		explode_on_six: false
+		explode_on_six: false,
+		popping: false,
+		pop_timer: 0,
     };
 }
 
