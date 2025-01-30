@@ -10,8 +10,8 @@
   "name":"obj_enemy_parent",
   "overriddenProperties":[],
   "parent":{
-    "name":"group1",
-    "path":"folders/Objects/group1.yy",
+    "name":"Enemies",
+    "path":"folders/Objects/group1/Enemies.yy",
   },
   "parentObjectId":null,
   "persistent":false,

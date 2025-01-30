@@ -46,7 +46,7 @@ if (keyboard_check_pressed(ord("U"))) {
 
 // Space for speed up
 if (keyboard_check(vk_space)) {
-    global.gameSpeed = game_speed_default * game_speed_combo_modifier;
+    global.gameSpeed = game_speed_default * game_speed_increase_modifier;
 } else {
     if (combo == 0) 
 	{
@@ -75,7 +75,9 @@ if (keyboard_check_pressed(ord("5"))) {
 }
 
 
-
+if (global.grid_shake_amount > 0) {
+    global.grid_shake_amount *= 0.9; // Slowly decay the shake
+}
 
 gem_shake(self);
 
@@ -212,11 +214,16 @@ function shift_up() {
     // 4️⃣ Reset alpha so the newly spawned row fades in again
     darken_alpha = 0;
 }
+	
+	// -------------------------
+// ✅ POINT CALCULATION FUNCTION
+// -------------------------
 
 function find_and_destroy_matches() {
     var marked_for_removal = array_create(width, height);
     var found_any = false;
     var first_found = false; // ✅ Track the first block in the combo
+    var total_match_points = 0; // ✅ Accumulates points for multiple matches
 
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
@@ -225,7 +232,9 @@ function find_and_destroy_matches() {
         }
     }
 
-    // Horizontal matches
+    // -------------------------
+    // ✅ HORIZONTAL MATCHES
+    // -------------------------
     for (var j = 0; j < height; j++) {
         var match_count = 1;
         var start_idx = 0;
@@ -241,7 +250,6 @@ function find_and_destroy_matches() {
                         if (xx >= 0 && xx < width) {
                             marked_for_removal[xx, j] = true;
 
-                            // ✅ Store the first popping block
                             if (!first_found) {
                                 global.combo_x = xx;
                                 global.combo_y = j;
@@ -249,11 +257,12 @@ function find_and_destroy_matches() {
                             }
                         }
                     }
+                    // ✅ Add points based on match size
+                    total_match_points += calculate_match_points(self, match_count);
                 }
                 match_count = 1;
             }
         }
-
         if (match_count >= 3) {
             for (var k = 0; k < match_count; k++) {
                 var xx = start_idx + k;
@@ -267,10 +276,13 @@ function find_and_destroy_matches() {
                     }
                 }
             }
+           total_match_points += calculate_match_points(self, match_count);
         }
     }
 
-    // Vertical matches
+    // -------------------------
+    // ✅ VERTICAL MATCHES
+    // -------------------------
     for (var i = 0; i < width; i++) {
         var match_count = 1;
         var start_idx = 0;
@@ -293,11 +305,11 @@ function find_and_destroy_matches() {
                             }
                         }
                     }
+                    total_match_points += calculate_match_points(self, match_count);
                 }
                 match_count = 1;
             }
         }
-
         if (match_count >= 3) {
             for (var k = 0; k < match_count; k++) {
                 var yy = start_idx + k;
@@ -311,15 +323,20 @@ function find_and_destroy_matches() {
                     }
                 }
             }
+            total_match_points += calculate_match_points(self, match_count);
         }
     }
 
-    // Handle matched gems
+    // ✅ Add accumulated match points to total_points
+    total_points += total_match_points;
+
+    // -------------------------
+    // ✅ HANDLE MATCHED GEMS
+    // -------------------------
     for (var i = 0; i < width; i++) {
         for (var j = 0; j < height; j++) {
             if (marked_for_removal[i, j]) {
                 found_any = true;
-
                 grid[i, j].shake_timer = 30; // Start shaking effect
 
                 var gem = grid[i, j];
@@ -349,9 +366,12 @@ function find_and_destroy_matches() {
             }
         }
     }
-	
+
     return found_any;
 }
+
+
+
 
 if all_blocks_landed(self)
 {

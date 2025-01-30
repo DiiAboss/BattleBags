@@ -1,3 +1,7 @@
+
+
+randomize();
+
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------
@@ -5,6 +9,12 @@ game_speed_default = 3;
 game_speed_combo_modifier = 0.5;
 game_speed_increase_modifier = 2;
 global.gameSpeed = game_speed_default;
+
+max_player_health = 10;
+player_health     = max_player_health;
+
+highest_points = 0;
+total_points   = 0;
 
 // ------------------------------------------------------
 // Global Variables & Game State
@@ -15,11 +25,13 @@ global.selected_upgrades = array_create(3, -1); // Stores 3 upgrades at a time
 global.upgrade_selected = false; // Tracks if upgrades were selected
 global.paused = false;
 
+
+global.grid_shake_amount = 0; // Grid shake intensity
 // ------------------------------------------------------
 // Block Types
 // ------------------------------------------------------
 enum BLOCK {
-    RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    WILD = -2, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
     LIGHTBLUE = 5, ORANGE = 6, GREY = 7, WHITE = 8, BLACK = 9
 }
 

@@ -1,14 +1,30 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
+// ----------------------------------
+// 💥 APPLY GRID SHAKE WHEN DAMAGED
+// ----------------------------------
+var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
+var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
 
 for (var i = 0; i < width; i++) {
     for (var j = 0; j < height; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
 
+		
         // Ensure the cell contains a valid gem object
         if (gem.type != -1) {
-            var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-            var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset;
+            var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x  + shake_x;
+            var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + shake_y;
+			
+					
+		if (grid[i, 1].type != -1 && !grid[i, 1].falling) { // 🚨 Column in danger
+                var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
+                var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
 
+                var shake_intensity = lerp(0, 3, progress); // Shake increases as it gets closer
+                draw_x += irandom_range(-shake_intensity, shake_intensity);
+                draw_y += irandom_range(-shake_intensity, shake_intensity);
+            }
+			
             // Fade bottom row
             if (j == height - 1) {
                 draw_sprite_ext(
@@ -20,7 +36,7 @@ for (var i = 0; i < width; i++) {
                 draw_sprite(sprite_for_gem(gem.type), 0, draw_x, draw_y);
             }
 
-            if (gem.type == WILD_BLOCK) {
+            if (gem.type == BLOCK.WILD) {
                 draw_sprite(spr_wild_gem, 0, draw_x, draw_y);
             }
 			
@@ -37,8 +53,8 @@ for (var i = 0; i < width; i++) {
 			}
 			else
 			{
-				var shake_x = draw_x + irandom_range(-3, 3);
-				var shake_y = draw_y + irandom_range(-3, 3);
+				var _shake_x = draw_x + irandom_range(-3, 3);
+				var _shake_y = draw_y + irandom_range(-3, 3);
 				draw_sprite_ext(spr_ice_cover, 0, shake_x, shake_y, _scale, _scale, 0, c_white, 1);
 			}
         }
@@ -167,3 +183,100 @@ draw_rectangle(board_x_offset - thickness, grid_height,
                board_x_offset + grid_width + thickness, grid_height + thickness, false); // Bottom
 
 draw_spawn_rates(self);
+
+
+// ----------------------
+//  🔴 DRAW PLAYER HEALTH BAR
+// ----------------------
+var max_health = max_player_health; // Set max health (Adjust as needed)
+var bar_width = width * gem_size; // Full grid width
+var bar_height = 64; // Bar height
+var bar_x = board_x_offset; // X Position
+var bar_y = -10; // Slightly above the grid
+
+// Calculate health percentage
+var health_percent = clamp(player_health / max_health, 0, 1);
+var health_bar_width = bar_width * health_percent;
+
+// Draw background (gray full bar)
+draw_set_color(c_black);
+draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, false);
+
+// Draw actual health bar (Red)
+draw_set_color(c_red);
+draw_rectangle(bar_x, bar_y, bar_x + health_bar_width, bar_y + bar_height, false);
+
+// Draw Text (Health Number)
+draw_set_color(c_white);
+draw_set_halign(fa_center);
+draw_text(bar_x + (bar_width / 2), bar_y + (bar_height / 2), "HP: " + string(player_health) + "/" + string(max_health));
+
+// Reset Alignment
+draw_set_halign(fa_left);
+
+// ----------------------
+//  🔥 DRAW DANGER WARNING (Glowing Columns)
+// ----------------------
+
+for (var i = 0; i < width; i++) {
+    var is_danger = false;
+    var flash_alpha = 0;
+    var flash_speed = 0;
+
+    // 🚨 Check if a block is in row 1
+    if (grid[i, 1].type != -1) && (!grid[i, 1].falling) { 
+        is_danger = true;
+
+        // 🔥 Calculate progression from row 1 to row 0
+        var block_y = (1 * gem_size) + global_y_offset;  // Actual Y position of block
+        var progress = 0.75 * (1 - clamp(block_y / gem_size, 0, 0.75)); // Normalize to range 0 - 1
+
+        // ✅ **Flashing starts slow & soft, increases as it moves up**
+        flash_speed = lerp(1, 5, progress);  // Starts at speed 1, max at 20
+        flash_alpha = lerp(0.2, 0.5, progress);  // Starts at alpha 0.2, max at 0.5
+
+        // ✅ Use sine wave to control smooth flashing
+        var sine_wave = 0.25 + 0.25 * sin(degtorad(current_time * flash_speed));
+        flash_alpha *= progress;
+    }
+
+    // 🔴 Apply red flashing effect if danger detected
+    if (is_danger) {
+        var col_x = board_x_offset + (i * gem_size);
+        var col_y = 0;
+        var col_width = gem_size;
+        var col_height = room_height;
+
+        draw_set_alpha(flash_alpha);
+        draw_rectangle_color(col_x, col_y, col_x + col_width, col_y + col_height, c_red, c_red, c_red, c_red, false);
+        draw_set_alpha(1); // Reset alpha
+    }
+}
+
+
+// ----------------------
+//  🏆 DRAW TOTAL POINTS (Top Right Corner)
+// ----------------------
+
+// Set text properties
+draw_set_font(f_b_font);
+draw_set_halign(fa_right);
+draw_set_color(c_white);
+
+// Define position (top-right of the screen)
+var points_x = (room_width * 0.5) + 128;
+var points_y = 20;
+
+// Draw background box (optional for visibility)
+var box_width = 150;
+var box_height = 40;
+draw_set_color(c_black);
+draw_rectangle(points_x - box_width, points_y - 10, points_x, points_y + box_height, false);
+
+// Draw the total points
+draw_set_color(c_white);
+draw_text(points_x - 10, points_y + 10, "Score: " + string(total_points));
+
+// Reset alignment
+draw_set_halign(fa_left);
+draw_set_font(fnt_basic);
