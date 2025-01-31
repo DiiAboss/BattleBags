@@ -26,64 +26,44 @@ enum ENEMY_ATTACK
 	regular_3x5 = 20
 }
 
-function create_enemy_attack(_self, _enemy_attack, _chance)
-{
-	return 
-	{
-		attack: _enemy_attack,
-		chance: _chance,
-		
-	}
-}
-
-attack_random = true;
-
-attack_array = [ENEMY_ATTACK.regular_1x1, ENEMY_ATTACK.regular_1x2];
-
-block_weakness_array = [];
-block_strength_array = [];
-
-
-hp = 999999;
-max_hp = 999999;
-
-
+// ----------------------------------
+// ✅ Enemy Stats
+// ----------------------------------
+hp = 100;
+max_hp = 100;
 defence = 0;
-attack  = 1; // How many blocks they add to each attack, 
+attack = 1; // 🔥 How many blocks are spawned in each attack
+gold_reward = 10;
+exp_reward = 5;
 
-function basic_enemy_attack(_self, _size)
-{
-	var _attack_array = [];
-	
-	switch (_size)
-	{
-		case 1:
-			array_push(_attack_array, ENEMY_ATTACK.regular_1x1);
-			//toss_down_shape(self, "single_1x1")
-		break;
-		case 2:
-			array_push(_attack_array, ENEMY_ATTACK.regular_1x2);
-			array_push(_attack_array, ENEMY_ATTACK.regular_2x1);
-		break;
-		case 3:
-		break;
-		case 4:
-		break;
-	}
-}
-
-player_current_level = 0;
+// ----------------------------------
+// ✅ Attack Timer
+// ----------------------------------
 
 
-
+attack_timer_increase_mod = 1;
+total_attacks = 0;
 attack_timer = 0;
-max_attack_timer = 30;
+max_attack_timer = 120; // Attacks every 2 seconds (120 frames)
+
+attacks_until_special_attack = 5; // Set this so after a certain amount of attacks, do a special attack;
+special_attack_patterns = [
+"triangle_down_3x3",
+];
 
 
+// ----------------------------------
+// ✅ Damage Tracking
+// ----------------------------------
 incoming_damage = 0;
 total_damage = 0;
 damage_timer = 0;
 max_damage_timer = 60;
-
 damage_alpha = 0;
 
+attack_patterns = [
+	ENEMY_ATTACK.regular_1x1,
+	ENEMY_ATTACK.regular_1x2,
+	ENEMY_ATTACK.regular_2x1,
+	ENEMY_ATTACK.regular_2x2
+];

@@ -39,7 +39,7 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
 		   &&  current_y == _self.selected_y // Horizontal swaps only
 		   &&  current_x != _self.selected_x) 
 		   {
-			    start_swap(_self.selected_x, _self.selected_y, current_x, _self.selected_y);
+			    start_swap(_self, _self.selected_x, _self.selected_y, current_x, _self.selected_y);
 			    _self.selected_x = current_x;
 			    _self.dragged = true;
 			}

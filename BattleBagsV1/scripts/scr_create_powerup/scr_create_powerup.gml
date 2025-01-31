@@ -1,5 +1,6 @@
 enum POWERUP 
 {
+	NONE     = -1,
 	SWORD    = 0,
 	BOW      = 1,
 	BOMB     = 2,
@@ -11,14 +12,48 @@ enum POWERUP
 	FIRE     = 8,
 	ICE      = 9,
 	TIMER    = 10,
-	FEATHER  = 11
+	FEATHER  = 11,
+	WILD_POTION = 12,
 	
 }
+
+// Total probability pool
+var TOTAL_CHANCE = 100;
+
+// Power-up weight map (higher value = more frequent)
+global.powerup_weights = ds_map_create();
+ds_map_add(global.powerup_weights, POWERUP.BOMB, 25);
+ds_map_add(global.powerup_weights, POWERUP.MULTI_2X, 1);
+ds_map_add(global.powerup_weights, POWERUP.BOW, 1);
+ds_map_add(global.powerup_weights, POWERUP.EXP, 1);
+ds_map_add(global.powerup_weights, POWERUP.HEART, 1);
+ds_map_add(global.powerup_weights, POWERUP.MONEY, 1);
+ds_map_add(global.powerup_weights, POWERUP.POISON, 1);
+ds_map_add(global.powerup_weights, POWERUP.FIRE, 1);
+ds_map_add(global.powerup_weights, POWERUP.ICE, 1);
+ds_map_add(global.powerup_weights, POWERUP.TIMER, 1);
+ds_map_add(global.powerup_weights, POWERUP.FEATHER, 1);
+ds_map_add(global.powerup_weights, POWERUP.WILD_POTION, 1); // Very rare
+
+// ✅ Dynamically calculate NONE chance
+var sum_chances = 0;
+var keys = ds_map_find_first(global.powerup_weights);
+while (keys != undefined) {
+    sum_chances += ds_map_find_value(global.powerup_weights, keys);
+    keys = ds_map_find_next(global.powerup_weights, keys);
+}
+
+// ✅ Ensure we don’t exceed TOTAL_CHANCE
+var chance_none = max(0, TOTAL_CHANCE - sum_chances);
+ds_map_add(global.powerup_weights, POWERUP.NONE, chance_none);
+
+
 
 function create_powerup(_powerup = -1, _chance = 25) {
 	
 	var _sprite = spr_powerup_1;
 	var _dir = choose(0, 90, 180, 270);
+	var _bomb_tracker = false;
 	switch (_powerup)
 	{
 		case POWERUP.SWORD:
@@ -44,6 +79,7 @@ function create_powerup(_powerup = -1, _chance = 25) {
 		break;
 		case POWERUP.BOMB:
 			_sprite = spr_powerup_bomb;
+			_bomb_tracker = true;
 		break;
 		case POWERUP.MULTI_2X:
 			_sprite = spr_powerup_2x_multi;
@@ -72,6 +108,9 @@ function create_powerup(_powerup = -1, _chance = 25) {
 		case POWERUP.FEATHER:
 			_sprite = spr_powerup_feather;
 		break;
+		case POWERUP.WILD_POTION:
+			_sprite = spr_powerup_wild_potion;
+		break;
 		
 		default:
 		   _sprite = spr_none;
@@ -83,6 +122,39 @@ function create_powerup(_powerup = -1, _chance = 25) {
 		sprite: _sprite,
 		chance: _chance,
 		dir: _dir,
-		size: 1
+		size: 1,
+		bomb_tracker: _bomb_tracker,
+		bomb_level: 1,
+		color: c_white
     };
+}
+
+
+function weighted_random_powerup() {
+    var powerup_list = ds_list_create();
+    
+    // Add power-ups to list based on weights
+    var map_keys = ds_map_find_first(global.powerup_weights);
+    while (map_keys != undefined) {
+        var powerup = map_keys;
+        var weight = ds_map_find_value(global.powerup_weights, powerup);
+        
+        for (var i = 0; i < weight; i++) {
+            ds_list_add(powerup_list, powerup);
+        }
+
+        map_keys = ds_map_find_next(global.powerup_weights, map_keys);
+    }
+
+    // ✅ Select a random power-up from the weighted list
+    var selected_powerup_type = ds_list_find_value(powerup_list, irandom(ds_list_size(powerup_list) - 1));
+    
+    ds_list_destroy(powerup_list);
+    
+    // ✅ If NONE was selected, return -1 (no power-up)
+    if (selected_powerup_type == POWERUP.NONE) {
+        return -1;
+    }
+
+    return create_powerup(selected_powerup_type);
 }

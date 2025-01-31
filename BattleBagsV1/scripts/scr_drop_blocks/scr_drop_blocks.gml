@@ -29,6 +29,13 @@ function drop_blocks(_self, fall_speed = 2) {
                     }
                 } 
                 else {
+					// ✅ **Fix: Reset enemy block flag when falling stops**
+                    if (gem.falling || gem.fall_delay > 0) {
+                        gem.falling = false;
+                        if (gem.is_enemy_block) {
+                            gem.is_enemy_block = false;
+                        }
+                    }
                     gem.falling = false; // ✅ If blocked, stop falling
                 }
             }
@@ -47,5 +54,3 @@ function drop_blocks(_self, fall_speed = 2) {
         }
     }
 }
-
-

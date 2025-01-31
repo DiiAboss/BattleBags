@@ -11,7 +11,7 @@ function update_topmost_row(_self) {
             var gem = _self.grid[i, j];
 
             // ✅ If there's a valid, stationary gem, update `topmost_row`
-            if (gem.type != -1 && !_self.locked[i, j] && !gem.falling) {
+            if (gem.type != -1 && !_self.locked[i, j] && !gem.falling && gem.fall_delay == 0) {
                 global.topmost_row = j;
                 return;
             }

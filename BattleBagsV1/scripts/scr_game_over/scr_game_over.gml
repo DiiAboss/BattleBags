@@ -29,30 +29,42 @@
 //    }
 //}
 
-// 🛑 NEW GAME OVER CHECK 🛑
 function check_game_over(_self) {
-	if (_self.combo > 1) return;
-    if (global.topmost_row <= 0) { // Blocks have reached the top
-        var blocks_destroyed = 0;
-        
-        // 🔥 Destroy the entire top row
-        for (var i = 0; i < width; i++) {
-            if (_self.grid[i, 0].type != -1 && _self.combo == 0) { 
-                destroy_block(_self, i, 0); // Call existing destroy function
-                blocks_destroyed++;
+    // Do nothing if the combo is active
+    if (_self.combo > 0) return;
+    
+    var blocks_destroyed = 0;
+    // Define the top-of-screen threshold (0 means anything at or above y = 0 counts)
+    var threshold = 0;
+    
+    // Loop over all rows (or you could stop at a certain row)
+    for (var j = 0; j < _self.height; j++) {
+        // Compute the effective y position of row j
+        var effective_y = j * gem_size + global_y_offset;
+        // If the row’s effective position is above (or at) our threshold…
+        if (effective_y <= threshold) {
+            for (var i = 0; i < _self.width; i++) {
+                var gem = _self.grid[i, j];
+                // Only process valid, non-falling, fully settled blocks
+                if (gem.type != -1 && !gem.falling && gem.fall_delay == 0) {
+                    destroy_block(_self, i, j); // Destroy the block
+                    blocks_destroyed++;
+                }
             }
         }
-
-        // 💔 Reduce health by the number of destroyed blocks
+    }
+    
+    // If we destroyed any blocks, subtract that many from player health
+    if (blocks_destroyed > 0) {
         player_health -= blocks_destroyed;
-        global.grid_shake_amount = 10; // Set shake amount on damage
-		
-        // ⚠️ If health reaches zero, trigger game over
+        global.grid_shake_amount = 10; // Trigger a shake effect
+        
         if (player_health <= 0) {
             trigger_final_game_over();
         }
     }
 }
+
 
 // 💀 Final Game Over Function
 function trigger_final_game_over() {

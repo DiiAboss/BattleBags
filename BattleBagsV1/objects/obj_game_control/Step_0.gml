@@ -80,6 +80,7 @@ if (keyboard_check_pressed(ord("U"))) {
 if (fight_for_your_life)
 {
 	global.gameSpeed = game_speed_default * game_speed_fight_for_your_life_modifier;
+	global.enemy_timer_game_speed = global.gameSpeed;
 }
 else if (keyboard_check(vk_space)) {
     global.gameSpeed = game_speed_default * game_speed_increase_modifier;
@@ -87,10 +88,12 @@ else if (keyboard_check(vk_space)) {
 	    if (combo <= 1) 
 		{
 	        global.gameSpeed = game_speed_default;
+			global.enemy_timer_game_speed = global.gameSpeed;
 	    }
 	    else 
 		{
 	        global.gameSpeed = game_speed_default * game_speed_combo_modifier;
+			global.enemy_timer_game_speed = global.gameSpeed;
 	    }
 }
 
@@ -124,9 +127,25 @@ if (keyboard_check_pressed(ord("5"))) {
     toss_down_shape(self, "x_shape");
 }
 
+if (keyboard_check(ord("F")))
+{
+	fight_for_your_life = true;
+}
 
-if (global.grid_shake_amount > 0) {
-    global.grid_shake_amount *= 0.9; // Slowly decay the shake
+if (fight_for_your_life)
+{
+	global.grid_shake_amount = 1;
+}
+else
+{
+
+	if (global.grid_shake_amount > 0) {
+	    global.grid_shake_amount *= 0.9; // Slowly decay the shake
+	}
+	else
+	{
+		global.grid_shake_amount = 0;
+	}
 }
 
 if (experience_points >= max_experience_points)
@@ -460,7 +479,9 @@ function find_and_destroy_matches() {
                     color: gem.color,
                     y_offset_global: global_y_offset,
 					match_size: match_count, // ✅ Store the match size
-					match_points: total_match_points
+					match_points: total_match_points,
+					bomb_tracker: false,               // Flag to mark this pop as bomb‐generated
+					bomb_level: 0
                 };
 
                 gem.popping = true;
@@ -489,27 +510,43 @@ if all_blocks_landed(self) {
         // Wait for start_delay
         if (pop_data.timer < pop_data.start_delay) {
             pop_data.timer++;
+			
+			
+			
         } else {
             // Grow effect
             pop_data.scale += 0.05;
-
+			
+			
+			
             // Once scale >= 1.1, pop is done
             if (pop_data.scale >= 1.1) {
                 var _x = pop_data.x;
                 var _y = pop_data.y;
                 var px = (_x * gem_size) + board_x_offset + offset;
                 var py = (_y * gem_size) + offset + global_y_offset + gem_y_offsets[_x, _y];
-				
-				show_debug_message("_x, _y: "+string(_x)+ " , " +string(_y));
-				show_debug_message("px, py: "+string(px)+ " , "+ string(py));
 
-                // **✅ Store Gem Object Before Destroying**
-                var gem = self.grid[_x, _y];
-				show_debug_message(string(grid[_x, _y].powerup))
-                // 🔥 **Process Powerups before destroying the block**
-                
-                    //process_powerup(self, _x, _y, gem);
-                process_powerup(self,_x, _y, gem);
+                // ✅ Store Gem Object Before Destroying
+				if (self.grid[_x, _y] != -1)
+				{
+				   var gem = self.grid[_x, _y];
+				}
+				else
+				{
+					return;
+				}
+				
+				
+
+                if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2;
+                //if (gem.powerup == POWERUP.MULTI_3X) total_multiplier *= 3;
+                //if (gem.powerup == POWERUP.MULTI_4X) total_multiplier *= 4;
+                // ✅ You can add more multipliers here later!
+
+                // 🔥 **Step 2: Loop Through Multipliers**
+                for (var m = 0; m < total_multiplier_next; m++) {
+                    process_powerup(self, _x, _y, gem);
+                }
 
                 // **Destroy the block**
                 destroy_block(self, _x, _y);
@@ -517,16 +554,14 @@ if all_blocks_landed(self) {
                 // **Create visual effect**
                 effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
-                // -------------------------------------
                 // ✅ Create Attack Object with Score
-                // -------------------------------------
                 var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
                 attack.color = pop_data.color;
-
-                attack.damage = pop_data.match_points / pop_data.match_size;
+                attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
 
                 // ✅ Add accumulated match points to total_points
                 total_points += attack.damage;
+				total_multiplier_next = 1;
 
                 // Remove from pop_list
                 ds_list_delete(global.pop_list, i);
@@ -540,11 +575,10 @@ if all_blocks_landed(self) {
     }
 }
 
-// ------------------------
-// ✅ PROCESS POWERUPS FUNCTION (Fixed)
-// ------------------------
-function process_powerup(_self,_x, _y, gem) {
+
+function process_powerup(_self, _x, _y, gem) {
     if (gem.powerup == -1) return; // No power-up, do nothing
+
     switch (gem.powerup.powerup) {
         case POWERUP.SWORD:
             // 💥 **Destroy the entire row**
@@ -564,12 +598,7 @@ function process_powerup(_self,_x, _y, gem) {
 
         case POWERUP.BOMB:
             // 💣 **Destroy surrounding 3x3 area**
-            activate_bomb_gem(_self, _x, _y);
-            break;
-
-        case POWERUP.MULTI_2X:
-            // 🔥 **Double player's combo multiplier for this match**
-            combo *= 2;
+            activate_bomb_gem(_self, _x, _y, gem.bomb_level);
             break;
 
         case POWERUP.EXP:
@@ -624,36 +653,51 @@ function process_powerup(_self,_x, _y, gem) {
                 }
             }
             break;
+
+        case POWERUP.WILD_POTION:
+            spawn_wild_block(_self, 1); // ✅ Calls function to spawn a single wild block
+            break;
     }
 }
 
 
+function spawn_wild_block(_self, multiplier = 1) {
+    var _rand_array = array_create(0); // Stores valid positions
 
-
-function start_swap(ax, ay, bx, by) {
-	if (swap_in_progress) return; // Prevent stacking swaps
-    // Ensure the source and target are valid grid positions
-    if (
-        ax >= 0 && ax < width && ay >= 0 && ay < height &&
-        bx >= 0 && bx < width && by >= 0 && by < height
-    ) {
-        // Prevent swapping with a position marked for destruction
-        if (is_being_destroyed(ax, ay) || is_being_destroyed(bx, by)) {
-            return; // Do not allow swap
+    // ✅ Find valid positions for wild blocks
+    for (var j = 0; j < _self.height; j++) {
+        for (var i = 0; i < _self.width; i++) {
+            if (_self.grid[i, j].type != -1) { // Only non-empty slots
+                array_push(_rand_array, { x: i, y: j }); // ✅ Store x, y coordinates
+            }
         }
-		if (grid[ax, ay].frozen || grid[bx, by].frozen) return;
-		if (grid[ax, ay].type == BLOCK.MEGA || grid[bx, by].type == BLOCK.MEGA ) return;
+    }
 
-        swap_in_progress = true;
-		
-        swap_info.from_x = ax;
-        swap_info.from_y = ay;
-        swap_info.to_x   = bx;
-        swap_info.to_y   = by;
-        swap_info.progress = 0;
-        swap_info.speed = 0.1; // e.g., 0.1 means ~10 frames
+    // ✅ Ensure there's at least one valid position
+    if (array_length(_rand_array) > 0) {
+        for (var k = 0; k < multiplier; k++) { // ✅ Add multiplier functionality
+            var _rand_index = irandom(array_length(_rand_array) - 1);
+            var _rand_pos = _rand_array[_rand_index];
+
+            // ✅ Change the block at the random position to WILD
+            _self.grid[_rand_pos.x, _rand_pos.y].type = BLOCK.WILD;
+        }
     }
 }
+
+
+
+
+
+// If a swap is queued and the offset is above our threshold, execute it
+if (self.global_y_offset >= 5 && global.swap_queue.active) {
+    execute_swap(self, global.swap_queue.ax, global.swap_queue.ay, global.swap_queue.bx, global.swap_queue.by);
+    global.swap_queue.active = false; // Clear the swap queue
+}
+
+
+
+
 	
 function create_mega_block(_width, _height) {
     return {

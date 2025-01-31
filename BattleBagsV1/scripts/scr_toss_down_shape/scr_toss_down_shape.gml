@@ -1,4 +1,4 @@
-function toss_down_shape(_self, shape_name) {
+function toss_down_shape(_self, shape_name, is_enemy_attack = false) {
     var width = _self.width;
     var height = _self.height;
     var gem_size = _self.gem_size;
@@ -26,7 +26,7 @@ function toss_down_shape(_self, shape_name) {
 
             if (gem_x >= 0 && gem_x < width && gem_y >= 0 && gem_y < height) {
                 // ✅ Decide Color (Fixed, Random Gem)
-                var gem_color;
+                var gem_color = BLOCK.NONE;
                 if (block_type == BLOCK.RANDOM) {
                     gem_color = irandom_range(0, _self.numberOfGemTypes - 1); // Random gem color
                 } else {
@@ -37,9 +37,12 @@ function toss_down_shape(_self, shape_name) {
                 var new_gem = create_gem(gem_color);
                 _self.grid[gem_x, gem_y] = new_gem;
 
-                // ✅ Ensure it falls properly
-                _self.grid[gem_x, gem_y].falling = true;
-                _self.grid[gem_x, gem_y].fall_delay = 0; // **No delay before falling**
+				// 🔥 **Mark as an enemy block**
+                if (is_enemy_attack) {
+                    _self.grid[gem_x, gem_y].is_enemy_block = true;
+                    _self.grid[gem_x, gem_y].falling = true;
+                    _self.grid[gem_x, gem_y].fall_delay = 0;
+                }
             }
         }
     }

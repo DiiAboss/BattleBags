@@ -9,14 +9,13 @@ for (var i = 0; i < width; i++) {
     for (var j = 0; j < height; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
 
-		
         // Ensure the cell contains a valid gem object
-        if (gem.type != -1) {
+		if (gem.type != -1) {
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x  + shake_x;
             var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + shake_y;
 			
 					
-		if (grid[i, 1].type != -1 && !grid[i, 1].falling) { // 🚨 Column in danger
+			if (grid[i, 1].type != -1 && !grid[i, 1].falling) { // 🚨 Column in danger
                 var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
                 var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
 				
@@ -45,20 +44,30 @@ for (var i = 0; i < width; i++) {
                 draw_sprite(gem.powerup.sprite, 0, draw_x, draw_y);
             }
 					 // 🧊 If frozen, draw ice overlay
-        if (gem.frozen) {
-			var _scale = 1;
+	        if (gem.frozen) {
+				var _scale = 1;
 			
-			if (gem.freeze_timer > 120)
+				if (gem.freeze_timer > 120)
+				{
+					draw_sprite(spr_ice_cover, 0, draw_x, draw_y);
+				}
+				else
+				{
+					var _shake_x = draw_x + irandom_range(-3, 3);
+					var _shake_y = draw_y + irandom_range(-3, 3);
+					draw_sprite_ext(spr_ice_cover, 0, shake_x, shake_y, _scale, _scale, 0, c_white, 1);
+				}
+	        }
+		
+			if (gem.is_enemy_block)
 			{
-				draw_sprite(spr_ice_cover, 0, draw_x, draw_y);
+				draw_sprite(spr_enemy_gem_overlay, 0, draw_x, draw_y);
 			}
-			else
+			
+			if (gem.popping && gem.bomb_tracker)
 			{
-				var _shake_x = draw_x + irandom_range(-3, 3);
-				var _shake_y = draw_y + irandom_range(-3, 3);
-				draw_sprite_ext(spr_ice_cover, 0, shake_x, shake_y, _scale, _scale, 0, c_white, 1);
+				draw_sprite(spr_bomb_overlay, 0, draw_x, draw_y);
 			}
-        }
 	
         }
     }

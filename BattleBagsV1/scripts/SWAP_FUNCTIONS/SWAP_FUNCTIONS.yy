@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SWAP_FUNCTIONS",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SWAP_FUNCTIONS",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

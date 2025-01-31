@@ -36,7 +36,10 @@ function destroy_blocks_in_direction_from_point(_self, start_x, start_y, _dir_x,
             color: gem.color,
             y_offset_global: _self.global_y_offset,
             match_size: blocks_destroyed,
-            match_points: points_awarded
+            match_points: points_awarded,
+			bomb_tracker: false,
+			bomb_level: 1,
+			dir: gem.dir,
         };
 
         gem.popping = true;

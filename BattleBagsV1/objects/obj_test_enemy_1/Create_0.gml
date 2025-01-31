@@ -7,6 +7,6 @@ experience_points = 0;
 level = 0;
 
 defence = 0;
-attack = 0;
+attack = 1;
 
 attack_timer = 0;

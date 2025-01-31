@@ -4,14 +4,21 @@ randomize();
 FPS = 60;
 mega_blocks = ds_list_create();
 
+
+
+global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
+
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------
 game_speed_default = 3;
 game_speed_combo_modifier = 0.5;
 game_speed_increase_modifier = 2;
-game_speed_fight_for_your_life_modifier = 0.1;
+game_speed_fight_for_your_life_modifier = 0;
+
 global.gameSpeed = game_speed_default;
+
+global.enemy_timer_game_speed = 1;
 
 global.player_total_level = 1;
 global.player_level = 1;
@@ -38,6 +45,7 @@ total_matches = 0;
 
 total_time = 0;
 time_in_seconds = total_time * FPS;
+global.gold	= 0;
 
 // ------------------------------------------------------
 // Global Variables & Game State
@@ -92,6 +100,7 @@ darken_alpha = 0;
 gem_size = 64;
 global_y_offset = 0;
 
+total_multiplier_next = 1;
 // ------------------------------------------------------
 // Color Spawn Weight System
 // ------------------------------------------------------
