@@ -125,9 +125,20 @@ if (keyboard_check_pressed(ord("5"))) {
 if (global.grid_shake_amount > 0) {
     global.grid_shake_amount *= 0.9; // Slowly decay the shake
 }
-if (ds_list_size(self.shape_spawn_queue) > 0) {
-    spawn_next_shape_row(self);
+
+if (experience_points >= max_experience_points)
+{
+	var temp_exp = experience_points - max_experience_points;
+	level += 1;
+	max_experience_points = 10 + ((10 * level) + (level * level)) - level;
+	experience_points = temp_exp;
 }
+
+if (keyboard_check(vk_alt))
+{
+	experience_points += 10;
+}
+
 gem_shake(self);
 
 if (swap_in_progress) {

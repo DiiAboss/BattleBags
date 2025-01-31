@@ -2,7 +2,7 @@
 
 randomize();
 FPS = 60;
-shape_spawn_queue = ds_list_create();
+
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------
@@ -14,6 +14,10 @@ global.gameSpeed = game_speed_default;
 
 global.player_total_level = 1;
 global.player_level = 1;
+
+level = 1;
+experience_points = 0;
+max_experience_points = 10 + ((10 * level) + (level * level)) - level;
 
 fight_for_your_life = false;
 
@@ -30,9 +34,6 @@ total_money = 0;
 
 matches_this_round = 0;
 total_matches = 0;
-
-
-
 
 total_time = 0;
 time_in_seconds = total_time * FPS;
