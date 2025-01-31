@@ -109,13 +109,13 @@ if (t_i_s % 30 == 0)
 
 
 if (keyboard_check_pressed(ord("1"))) {
-    toss_down_shape(self, string("square_3x3"));
+    toss_down_shape(self, string("h_1x2"));
 }
 if (keyboard_check_pressed(ord("2"))) {
-    toss_down_shape(self, "line_1x3");
+    toss_down_shape(self, "h_2x1");
 }
 if (keyboard_check_pressed(ord("3"))) {
-    toss_down_shape(self, "block_2x3");
+    toss_down_shape(self, "triangle_down_3x3");
 }
 if (keyboard_check_pressed(ord("4"))) {
     toss_down_shape(self, "cross");
@@ -186,10 +186,7 @@ if (swap_in_progress) {
 }
 
 
-// ✅ Only reset combo **if absolutely everything has stopped moving**
-if (!blocks_still_moving(self)) {
-	combo = 1;
-}
+
 
 // ------------------------------------------------------
 // SMOOTH UPWARD MOVEMENT + SHIFT
@@ -238,7 +235,31 @@ if (all_pops_finished()) {
 	} 
 }
 
+if (!blocks_still_moving(self))
+{
+	combo = 0;
+}
+
 update_freeze_timer(self);
+for (var i = 0; i < width; i++) {
+if (grid[i, 1].type != -1 && !grid[i, 1].falling) { 
+	                var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
+                var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
+				
+				if (progress > 0 && combo > 0)
+				{
+					fight_for_your_life = true;
+				}
+				else
+				{
+					fight_for_your_life = false;
+				}
+}
+else
+{
+	fight_for_your_life = false;
+}
+}
 
 // -----------------------------------------------------------------------
 // FUNCTIONS

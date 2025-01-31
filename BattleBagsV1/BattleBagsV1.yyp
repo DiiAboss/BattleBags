@@ -60,6 +60,7 @@
     {"id":{"name":"ParticleSystem1","path":"particles/ParticleSystem1/ParticleSystem1.yy",},},
     {"id":{"name":"rm_gameRoom","path":"rooms/rm_gameRoom/rm_gameRoom.yy",},},
     {"id":{"name":"rm_init","path":"rooms/rm_init/rm_init.yy",},},
+    {"id":{"name":"GLOBAL_SHAPE_TEMPLATES","path":"scripts/GLOBAL_SHAPE_TEMPLATES/GLOBAL_SHAPE_TEMPLATES.yy",},},
     {"id":{"name":"scr_activate_bomb","path":"scripts/scr_activate_bomb/scr_activate_bomb.yy",},},
     {"id":{"name":"scr_activate_shuffle","path":"scripts/scr_activate_shuffle/scr_activate_shuffle.yy",},},
     {"id":{"name":"scr_all_blocks_landed","path":"scripts/scr_all_blocks_landed/scr_all_blocks_landed.yy",},},

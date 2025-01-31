@@ -20,23 +20,11 @@ for (var i = 0; i < width; i++) {
                 var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
                 var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
 				
-				if (progress > 0 && combo > 0)
-				{
-					fight_for_your_life = true;
-				}
-				else
-				{
-					fight_for_your_life = false;
-				}
-				
                 var shake_intensity = lerp(0, 3, progress); // Shake increases as it gets closer
                 draw_x += irandom_range(-shake_intensity, shake_intensity);
                 draw_y += irandom_range(-shake_intensity, shake_intensity);
             }
-			else
-			{
-				fight_for_your_life = false;
-			}
+
 			
             // Fade bottom row
             if (j == height - 1) {

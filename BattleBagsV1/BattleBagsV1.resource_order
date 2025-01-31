@@ -36,6 +36,7 @@
     {"name":"obj_player_attack","order":5,"path":"objects/obj_player_attack/obj_player_attack.yy",},
     {"name":"obj_test_enemy_1","order":2,"path":"objects/obj_test_enemy_1/obj_test_enemy_1.yy",},
     {"name":"rm_init","order":1,"path":"rooms/rm_init/rm_init.yy",},
+    {"name":"GLOBAL_SHAPE_TEMPLATES","order":14,"path":"scripts/GLOBAL_SHAPE_TEMPLATES/GLOBAL_SHAPE_TEMPLATES.yy",},
     {"name":"scr_activate_bomb","order":3,"path":"scripts/scr_activate_bomb/scr_activate_bomb.yy",},
     {"name":"scr_activate_shuffle","order":4,"path":"scripts/scr_activate_shuffle/scr_activate_shuffle.yy",},
     {"name":"scr_all_blocks_landed","order":7,"path":"scripts/scr_all_blocks_landed/scr_all_blocks_landed.yy",},

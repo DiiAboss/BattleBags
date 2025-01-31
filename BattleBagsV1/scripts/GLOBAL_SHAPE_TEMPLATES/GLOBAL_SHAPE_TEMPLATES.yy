@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"GLOBAL_SHAPE_TEMPLATES",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GLOBAL_SHAPE_TEMPLATES",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

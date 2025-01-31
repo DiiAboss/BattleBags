@@ -31,12 +31,13 @@
 
 // 🛑 NEW GAME OVER CHECK 🛑
 function check_game_over(_self) {
+	if (_self.combo > 1) return;
     if (global.topmost_row <= 0) { // Blocks have reached the top
         var blocks_destroyed = 0;
         
         // 🔥 Destroy the entire top row
         for (var i = 0; i < width; i++) {
-            if (_self.grid[i, 0].type != -1 && _self.combo > 0) { 
+            if (_self.grid[i, 0].type != -1 && _self.combo == 0) { 
                 destroy_block(_self, i, 0); // Call existing destroy function
                 blocks_destroyed++;
             }

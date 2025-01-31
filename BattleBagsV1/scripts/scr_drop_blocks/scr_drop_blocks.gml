@@ -15,8 +15,8 @@ function drop_blocks(_self, fall_speed = 2) {
                     gem.falling = true; // ✅ Mark as falling
 
                     // ✅ Countdown fall delay before moving
-                    if (gem.fall_delay > 0) {
-                        gem.fall_delay--;
+                    if (gem.fall_delay < gem.max_fall_delay) {
+                        gem.fall_delay++;
                     } else {
                         // ✅ Move the gem **one row down**
                         _self.grid[i, j + 1] = gem;
@@ -25,7 +25,7 @@ function drop_blocks(_self, fall_speed = 2) {
                         _self.gem_y_offsets[i, j] = 0; // Reset previous position
                         
                         // ✅ Reset fall delay
-                        gem.fall_delay = gem.max_fall_delay;
+                        gem.fall_delay = 0;
                     }
                 } 
                 else {

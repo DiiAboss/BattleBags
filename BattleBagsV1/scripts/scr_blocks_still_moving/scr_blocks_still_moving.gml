@@ -7,7 +7,7 @@ function blocks_still_moving(_self) {
             var gem = _self.grid[i, j];
 
             if (gem.type != -1) { // Only check valid gems
-                if (gem.falling) {
+                if (gem.falling) || gem.fall_delay {
                     return true; // 🚨 A block is still moving, so do not reset combo!
                 }
             }

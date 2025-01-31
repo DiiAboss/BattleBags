@@ -54,36 +54,11 @@ global.grid_shake_amount = 0; // Grid shake intensity
 // Block Types
 // ------------------------------------------------------
 enum BLOCK {
-    MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    RANDOM = -4,MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
     LIGHTBLUE = 5, ORANGE = 6, GREY = 7, WHITE = 8, BLACK = 9
 }
 
-// ------------------------------------------------------
-// Shape Templates (Stored in DS Map)
-// ------------------------------------------------------
-global.shape_templates = ds_map_create();
-ds_map_add(global.shape_templates, "square_3x3", [
-    [1, 1, 1],
-    [1, 1, 1],
-    [1, 1, 1]
-]);
-ds_map_add(global.shape_templates, "line_1x3", [
-    [1, 1, 1]
-]);
-ds_map_add(global.shape_templates, "block_2x3", [
-    [1, 1, 1],
-    [1, 1, 1]
-]);
-ds_map_add(global.shape_templates, "cross", [
-    [0, 1, 0],
-    [1, 1, 1],
-    [0, 1, 0]
-]);
-ds_map_add(global.shape_templates, "x_shape", [
-    [1, 0, 1],
-    [0, 1, 0],
-    [1, 0, 1]
-]);
+global_shape_function_init();
 
 // ------------------------------------------------------
 // Swap Mechanics
