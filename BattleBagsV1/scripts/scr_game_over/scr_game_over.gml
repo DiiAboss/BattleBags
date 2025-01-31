@@ -36,7 +36,7 @@ function check_game_over(_self) {
         
         // 🔥 Destroy the entire top row
         for (var i = 0; i < width; i++) {
-            if (_self.grid[i, 0].type != -1) { 
+            if (_self.grid[i, 0].type != -1 && _self.combo > 0) { 
                 destroy_block(_self, i, 0); // Call existing destroy function
                 blocks_destroyed++;
             }

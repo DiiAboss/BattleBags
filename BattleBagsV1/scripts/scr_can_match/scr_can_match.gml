@@ -4,6 +4,7 @@ function can_match(gem1, gem2) {
 
     // ❌ Black blocks can NEVER match (even with other black blocks)
     if (gem1.type == BLOCK.BLACK || gem2.type == BLOCK.BLACK) return false;
+	if (gem1.type == BLOCK.MEGA || gem2.type == BLOCK.MEGA) return false;
 
     return gem1.type != -1 && gem2.type != -1 && (
         gem1.type == gem2.type ||  // ✅ Normally, matching colors

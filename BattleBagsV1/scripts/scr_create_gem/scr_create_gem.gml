@@ -1,23 +1,31 @@
-function create_gem(_type = -99, _powerup = create_powerup(irandom(3))) {
+function create_gem(_type = -99, _powerup = create_powerup(choose(POWERUP.BOMB, POWERUP.BOW, POWERUP.EXP, POWERUP.FEATHER, POWERUP.TIMER, POWERUP.MONEY, POWERUP.HEART))) {
 	
 	if (_type == -99) { // If generating a new random gem
 		_type = weighted_random_gem(self);
     }
 	
+	if (irandom(100) > _powerup.chance)
+	{
+		_powerup = -1;
+	}
+	
+	var _dir = choose(0, 90, 180, 270);
+	
+	if (_powerup != -1)
+	{
+		_dir = _powerup.dir;
+	}
 	var _color = c_white;
 	
 	switch(_type)
 	{
 		case BLOCK.RED:
-		_powerup = -1;
 		_color = c_red;
 		break;
 		case BLOCK.YELLOW:
-		_powerup = -1;
 		_color = c_yellow;
 		break;
 		case BLOCK.GREEN:
-		_powerup = -1;
 		_color = c_lime;
 		break;
 		case BLOCK.PINK:
@@ -34,6 +42,9 @@ function create_gem(_type = -99, _powerup = create_powerup(irandom(3))) {
 		break;
 		case BLOCK.BLACK:
 		_color = c_black;
+		break;
+		case BLOCK.MEGA:
+		_color = c_white;
 		break;
 		
 	}
@@ -60,6 +71,8 @@ function create_gem(_type = -99, _powerup = create_powerup(irandom(3))) {
 		explode_on_six: false,
 		popping: false,
 		pop_timer: 0,
+		group_id: -1,
+		dir: _dir
     };
 }
 

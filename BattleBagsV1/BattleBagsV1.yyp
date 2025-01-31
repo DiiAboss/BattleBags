@@ -105,6 +105,7 @@
     {"id":{"name":"spr_green_gem","path":"sprites/spr_green_gem/spr_green_gem.yy",},},
     {"id":{"name":"spr_ice_cover","path":"sprites/spr_ice_cover/spr_ice_cover.yy",},},
     {"id":{"name":"spr_lightblue_gem","path":"sprites/spr_lightblue_gem/spr_lightblue_gem.yy",},},
+    {"id":{"name":"spr_mega_gem","path":"sprites/spr_mega_gem/spr_mega_gem.yy",},},
     {"id":{"name":"spr_none","path":"sprites/spr_none/spr_none.yy",},},
     {"id":{"name":"spr_orange_gem","path":"sprites/spr_orange_gem/spr_orange_gem.yy",},},
     {"id":{"name":"spr_pink_gem","path":"sprites/spr_pink_gem/spr_pink_gem.yy",},},

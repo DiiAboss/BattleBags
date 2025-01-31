@@ -84,7 +84,7 @@ if (fight_for_your_life)
 else if (keyboard_check(vk_space)) {
     global.gameSpeed = game_speed_default * game_speed_increase_modifier;
 } else {
-	    if (combo == 0) 
+	    if (combo <= 1) 
 		{
 	        global.gameSpeed = game_speed_default;
 	    }
@@ -93,6 +93,9 @@ else if (keyboard_check(vk_space)) {
 	        global.gameSpeed = game_speed_default * game_speed_combo_modifier;
 	    }
 }
+
+
+
 
 total_time += 1;
 
@@ -185,7 +188,7 @@ if (swap_in_progress) {
 
 // ✅ Only reset combo **if absolutely everything has stopped moving**
 if (!blocks_still_moving(self)) {
-	combo = 0;
+	combo = 1;
 }
 
 // ------------------------------------------------------
@@ -430,6 +433,7 @@ function find_and_destroy_matches() {
                     scale: 1.0,
                     popping: true,
                     powerup: gem.powerup,
+					dir: gem.dir,
                     offset_x: gem.offset_x,
                     offset_y: gem.offset_y,
                     color: gem.color,
@@ -449,7 +453,7 @@ function find_and_destroy_matches() {
 	// ✅ Transform black blocks **after matches are removed**
     update_black_blocks(self, black_blocks_to_transform);
     ds_list_destroy(black_blocks_to_transform);
-
+	
     return found_any;
 }
 
@@ -457,6 +461,7 @@ function find_and_destroy_matches() {
 
 
 if all_blocks_landed(self) {
+	
     for (var i = 0; i < ds_list_size(global.pop_list); i++) {
         var pop_data = ds_list_find_value(global.pop_list, i);
 
@@ -469,14 +474,26 @@ if all_blocks_landed(self) {
 
             // Once scale >= 1.1, pop is done
             if (pop_data.scale >= 1.1) {
-                // Now we remove from the grid
-                destroy_block(self, pop_data.x, pop_data.y);
+                var _x = pop_data.x;
+                var _y = pop_data.y;
+                var px = (_x * gem_size) + board_x_offset + offset;
+                var py = (_y * gem_size) + offset + global_y_offset + gem_y_offsets[_x, _y];
+				
+				show_debug_message("_x, _y: "+string(_x)+ " , " +string(_y));
+				show_debug_message("px, py: "+string(px)+ " , "+ string(py));
 
-                // Compute pixel position for new object
-                var px = (pop_data.x * gem_size) + board_x_offset + offset;
-                var py = (pop_data.y * gem_size) + offset + global_y_offset + gem_y_offsets[pop_data.x, pop_data.y];
+                // **✅ Store Gem Object Before Destroying**
+                var gem = self.grid[_x, _y];
+				show_debug_message(string(grid[_x, _y].powerup))
+                // 🔥 **Process Powerups before destroying the block**
+                
+                    //process_powerup(self, _x, _y, gem);
+                process_powerup(self,_x, _y, gem);
 
-                // Create visual effect
+                // **Destroy the block**
+                destroy_block(self, _x, _y);
+
+                // **Create visual effect**
                 effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
                 // -------------------------------------
@@ -485,15 +502,12 @@ if all_blocks_landed(self) {
                 var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
                 attack.color = pop_data.color;
 
-                // 🔥 Assign points based on match size (Uses previous logic)
                 attack.damage = pop_data.match_points / pop_data.match_size;
-				
-				// ✅ Add accumulated match points to total_points
-				total_points += attack.damage;
-				
-				
 
-                // Then remove from pop_list
+                // ✅ Add accumulated match points to total_points
+                total_points += attack.damage;
+
+                // Remove from pop_list
                 ds_list_delete(global.pop_list, i);
                 i--; 
                 continue;
@@ -504,6 +518,96 @@ if all_blocks_landed(self) {
         ds_list_replace(global.pop_list, i, pop_data);
     }
 }
+
+// ------------------------
+// ✅ PROCESS POWERUPS FUNCTION (Fixed)
+// ------------------------
+function process_powerup(_self,_x, _y, gem) {
+    if (gem.powerup == -1) return; // No power-up, do nothing
+    switch (gem.powerup.powerup) {
+        case POWERUP.SWORD:
+            // 💥 **Destroy the entire row**
+            destroy_blocks_in_direction_from_point(_self, _x, _y, 1, 0); // Right
+            destroy_blocks_in_direction_from_point(_self, _x, _y, -1, 0); // Left
+            break;
+
+        case POWERUP.BOW:
+            // 💥 **Destroy in one direction (random)**
+            switch (gem.powerup.dir) {
+                case 0:   destroy_blocks_in_direction_from_point(_self, _x, _y, 1, 0); break; // Right
+                case 90:  destroy_blocks_in_direction_from_point(_self, _x, _y, 0, -1); break; // Up
+                case 180: destroy_blocks_in_direction_from_point(_self, _x, _y, -1, 0); break; // Left
+                case 270: destroy_blocks_in_direction_from_point(_self, _x, _y, 0, 1); break; // Down
+            }
+            break;
+
+        case POWERUP.BOMB:
+            // 💣 **Destroy surrounding 3x3 area**
+            activate_bomb_gem(_self, _x, _y);
+            break;
+
+        case POWERUP.MULTI_2X:
+            // 🔥 **Double player's combo multiplier for this match**
+            combo *= 2;
+            break;
+
+        case POWERUP.EXP:
+            // ⭐ **Grant extra experience**
+            experience_points += 10;
+            break;
+
+        case POWERUP.HEART:
+            // 💖 **Heal the player**
+            player_health = min(player_health + 1, max_player_health);
+            break;
+
+        case POWERUP.MONEY:
+            // 💰 **Grant extra points**
+            total_points += 50;
+            break;
+
+        case POWERUP.POISON:
+            // ☠️ **Reduce player health**
+            player_health -= 1;
+            break;
+
+        case POWERUP.FIRE:
+            // 🔥 **Ignite adjacent blocks**
+            for (var dx = -1; dx <= 1; dx++) {
+                for (var dy = -1; dy <= 1; dy++) {
+                    if (dx == 0 && dy == 0) continue;
+                    var nx = _x + dx;
+                    var ny = _y + dy;
+                    if (nx >= 0 && nx < _self.width && ny >= 0 && ny < _self.height) {
+                        _self.grid[nx, ny].popping = true; // Set adjacent gems to pop
+                    }
+                }
+            }
+            break;
+
+        case POWERUP.ICE:
+            // ❄️ **Freeze surrounding blocks**
+            freeze_block(_self, _x, _y);
+            break;
+
+        case POWERUP.TIMER:
+            // ⏳ **Slow down the game temporarily**
+            global.gameSpeed = 0.5;
+            break;
+
+        case POWERUP.FEATHER:
+            // 🪶 **Remove gravity effect for a short time**
+            for (var j = 0; j < height; j++) {
+                for (var i = 0; i < width; i++) {
+                    _self.grid[i, j].falling = false;
+                }
+            }
+            break;
+    }
+}
+
+
+
 
 function start_swap(ax, ay, bx, by) {
 	if (swap_in_progress) return; // Prevent stacking swaps
@@ -517,6 +621,7 @@ function start_swap(ax, ay, bx, by) {
             return; // Do not allow swap
         }
 		if (grid[ax, ay].frozen || grid[bx, by].frozen) return;
+		if (grid[ax, ay].type == BLOCK.MEGA || grid[bx, by].type == BLOCK.MEGA ) return;
 
         swap_in_progress = true;
 		
@@ -529,9 +634,125 @@ function start_swap(ax, ay, bx, by) {
     }
 }
 	
+function create_mega_block(_width, _height) {
+    return {
+        x: -1, // Grid X position (top-left)
+        y: -1, // Grid Y position (top-left)
+        width: _width,
+        height: _height,
+        type: BLOCK.MEGA,
+        falling: true,    // Gem type (e.g., 0 for red, 1 for blue, etc.)
+        powerup: -1, // Power-up type (e.g., 0 for bomb, 1 for rainbow, etc.)
+        locked: true,     // Whether the gem is locked
+        offset_x: 0,       // Horizontal offset for animations
+        offset_y: 0,       // Vertical offset for animations
+        fall_target: -1,   // Target row for falling animations
+		shake_timer: 0,    // New property for shaking effect
+		color: c_white,
+		fall_delay: 0,
+		max_fall_delay: 10, 
+		freeze_timer: 0,   // 🔥 New: Countdown to thaw
+        frozen: false,      // 🔥 New: Flag for frozen state
+		damage: 1,
+		combo_multiplier: 1,
+		pop_speed: 1,
+		explode_on_four: false,
+		explode_on_five: false,
+		explode_on_six: false,
+		popping: false,
+		pop_timer: 0,
+		group_id: irandom(99999)
+    };
+}
+
+function spawn_mega_block(_self, _x, _y, _width, _height) {
+    var mega_block = create_mega_block(_width, _height);
+    mega_block.x = _x;
+    mega_block.y = 0; // ✅ Start above screen
+    mega_block.group_id = irandom(999999); // ✅ Unique ID for tracking
+	mega_block.falling = true;
+
+    // ✅ Reserve space in the grid for the entire Mega Block
+    for (var i = 0; i < _width; i++) {
+        for (var j = 0; j < _height; j++) {
+            _self.grid[_x + i, _y + j] = mega_block; // Assign reference to the same object
+        }
+    }
+
+    //mega_block.falling = true; // ✅ Mark the whole block as falling
+    //ds_list_add(_self.mega_blocks, mega_block);
+}
 
 
 
+function check_mega_block_transform(_self) {
+    var transformed_groups = ds_map_create(); // ✅ Track which groups already transformed
+
+    for (var j = 0; j < _self.height; j++) {
+        for (var i = 0; i < _self.width; i++) {
+            var gem = _self.grid[i, j];
+
+            // ✅ Only process Mega Blocks
+            if (gem.type == BLOCK.MEGA) {
+                var group_id = gem.group_id;
+
+                // ✅ Skip if this group has already transformed
+                if (ds_map_exists(transformed_groups, group_id)) {
+                    continue;
+                }
+
+                var transform = false;
+
+                // ✅ **Check if any part of the Mega Block is next to a popping block**
+                for (var bx = 0; bx < gem.width; bx++) {
+                    for (var by = 0; by < gem.height; by++) {
+                        var _x = gem.x + bx;
+                        var _y = gem.y + by;
+
+                        for (var dx = -1; dx <= 1; dx++) {
+                            for (var dy = -1; dy <= 1; dy++) {
+                                if (dx == 0 && dy == 0) continue; // Skip itself
+                                var nx = _x + dx;
+                                var ny = _y + dy;
+
+                                if (nx >= 0 && nx < _self.width && ny >= 0 && ny < _self.height) {
+                                    if (_self.grid[nx, ny] != -1 && _self.grid[nx, ny].popping) {
+                                        transform = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // ✅ **Trigger transformation**
+                if (transform) {
+                    gem.pop_timer += 1; // Start the popping delay
+
+                    if (gem.pop_timer >= 30) { // 🔥 **Wait before transformation**
+                        for (var bx = 0; bx < gem.width; bx++) {
+                            for (var by = 0; by < gem.height; by++) {
+                                var _x = gem.x + bx + board_x_offset;
+                                var _y = gem.y + by;
+
+                                // 🔥 **Create a pop effect before transformation**
+                                effect_create_depth(_self.depth, ef_explosion, (_x * gem_size), (_y * gem_size), 0.5, c_white);
+
+                                // ✅ **Transform the entire Mega Block**
+                                _self.grid[_x, _y] = create_gem(irandom(_self.numberOfGemTypes - 1));
+                            }
+                        }
+
+                        // ✅ **Mark this group as transformed**
+                        ds_map_add(transformed_groups, group_id, true);
+                    }
+                }
+            }
+        }
+    }
+
+    ds_map_destroy(transformed_groups); // ✅ Cleanup memory
+}
 
 
 

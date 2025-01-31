@@ -20,6 +20,9 @@ function sprite_for_gem(gem_type) {
             return spr_orange_gem; // Purple gem
 			case BLOCK.BLACK:
             return spr_black_gem; // Purple gem
+			
+			case BLOCK.MEGA:
+            return spr_mega_gem; // Purple ge.
         default:
             return spr_red_gem;    // Default gem (in case of an invalid value)
     }

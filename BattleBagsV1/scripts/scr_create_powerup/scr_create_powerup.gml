@@ -15,7 +15,7 @@ enum POWERUP
 	
 }
 
-function create_powerup(_powerup = -1, _chance = 0) {
+function create_powerup(_powerup = -1, _chance = 25) {
 	
 	var _sprite = spr_powerup_1;
 	var _dir = choose(0, 90, 180, 270);

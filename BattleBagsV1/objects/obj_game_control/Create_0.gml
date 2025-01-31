@@ -2,6 +2,7 @@
 
 randomize();
 FPS = 60;
+mega_blocks = ds_list_create();
 
 // ------------------------------------------------------
 // Adjustable Stats
@@ -53,7 +54,7 @@ global.grid_shake_amount = 0; // Grid shake intensity
 // Block Types
 // ------------------------------------------------------
 enum BLOCK {
-    WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
     LIGHTBLUE = 5, ORANGE = 6, GREY = 7, WHITE = 8, BLACK = 9
 }
 
@@ -127,7 +128,8 @@ global.color_spawn_weight = array_create(numberOfGemTypes, 4);
 powerups = array_create(7, -1);
 powerups[0] = create_powerup(POWERUP.SWORD);
 powerups[1] = create_powerup(POWERUP.BOW);
-powerups[2] = create_powerup(POWERUP.BOMB);
+powerups[2] = create_powerup(POWERUP.EXP);
+
 
 for (var i = 0; i < array_length(powerups) - 1; i++) {
     if (powerups[i] != -1) {
