@@ -485,7 +485,7 @@ function find_and_destroy_matches() {
                 };
 
                 gem.popping = true;
-                gem.pop_timer = _start_delay;
+                gem.pop_timer = dist * _start_delay;
 
                 ds_list_add(global.pop_list, pop_info);
             }
@@ -506,12 +506,17 @@ if all_blocks_landed(self) {
 	
     for (var i = 0; i < ds_list_size(global.pop_list); i++) {
         var pop_data = ds_list_find_value(global.pop_list, i);
-
+		
         // Wait for start_delay
         if (pop_data.timer < pop_data.start_delay) {
             pop_data.timer++;
 			
-			
+
+			var _x = pop_data.x;
+            var _y = pop_data.y;
+            var px = (_x * gem_size) + board_x_offset + offset;
+            var py = (_y * gem_size) + offset + global_y_offset + gem_y_offsets[_x, _y];
+			effect_create_depth(depth, ef_smoke, px, py - 4, 2, pop_data.color);
 			
         } else {
             // Grow effect
@@ -529,6 +534,7 @@ if all_blocks_landed(self) {
                 // ✅ Store Gem Object Before Destroying
 				if (self.grid[_x, _y] != -1)
 				{
+				   
 				   var gem = self.grid[_x, _y];
 				}
 				else

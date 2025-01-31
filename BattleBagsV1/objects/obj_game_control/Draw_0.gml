@@ -64,14 +64,13 @@ for (var i = 0; i < width; i++) {
 				draw_sprite(spr_enemy_gem_overlay, 0, draw_x, draw_y);
 			}
 			
-			if (gem.popping && gem.bomb_tracker)
-			{
-				draw_sprite(spr_bomb_overlay, 0, draw_x, draw_y);
-			}
+			// Loop through all popping gems in global.pop_list
+
 	
         }
     }
 }
+
 
 // ----------------------------------------------------------------------
 // 2) HIGHLIGHT HOVERED GEM
@@ -148,6 +147,11 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
         1.0
     );
             }
+			
+			if (pop_data.bomb_tracker)
+			{
+				draw_sprite(spr_bomb_overlay, 0, draw_x, draw_y);
+			}
 			
 			// Draw the combo number if a combo is active
 		if (combo > 1) { // Only show if at least 2 matches have happened
