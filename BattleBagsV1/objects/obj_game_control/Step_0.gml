@@ -125,7 +125,9 @@ if (keyboard_check_pressed(ord("5"))) {
 if (global.grid_shake_amount > 0) {
     global.grid_shake_amount *= 0.9; // Slowly decay the shake
 }
-
+if (ds_list_size(self.shape_spawn_queue) > 0) {
+    spawn_next_shape_row(self);
+}
 gem_shake(self);
 
 if (swap_in_progress) {
