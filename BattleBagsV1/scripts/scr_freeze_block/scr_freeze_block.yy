@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_freeze_block",
   "parent":{
-    "name":"SKILLS",
-    "path":"folders/Scripts/SKILLS.yy",
+    "name":"ENEMY_ATTACKS",
+    "path":"folders/Scripts/MAIN/ENEMY_ATTACKS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

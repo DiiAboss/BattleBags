@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_weighted_random_gem",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"GEMS",
+    "path":"folders/Scripts/MAIN/CREATIONS/GEMS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

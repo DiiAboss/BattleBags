@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_create_upgrade",
   "parent":{
-    "name":"CREATIONS",
-    "path":"folders/Scripts/CONTROL/CREATIONS.yy",
+    "name":"UPGRADES",
+    "path":"folders/Scripts/MAIN/CREATIONS/UPGRADES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"GLOBAL_SHAPE_TEMPLATES",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"ENEMY_ATTACKS",
+    "path":"folders/Scripts/MAIN/ENEMY_ATTACKS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

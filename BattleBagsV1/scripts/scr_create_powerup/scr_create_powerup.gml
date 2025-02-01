@@ -20,20 +20,30 @@ enum POWERUP
 // Total probability pool
 var TOTAL_CHANCE = 100;
 
+function adjust_powerup_weights(powerup, increase_amount) {
+    // Ensure powerup exists in the map
+    if (ds_map_exists(global.powerup_weights, powerup)) {
+        var current_weight = ds_map_find_value(global.powerup_weights, powerup);
+        ds_map_replace(global.powerup_weights, powerup, current_weight + increase_amount);
+    }
+}
+
+
+
 // Power-up weight map (higher value = more frequent)
 global.powerup_weights = ds_map_create();
-ds_map_add(global.powerup_weights, POWERUP.BOMB, 2);
-ds_map_add(global.powerup_weights, POWERUP.MULTI_2X, 2);
-ds_map_add(global.powerup_weights, POWERUP.BOW, 2);
+ds_map_add(global.powerup_weights, POWERUP.BOMB, 10);
+ds_map_add(global.powerup_weights, POWERUP.MULTI_2X, 0);
+ds_map_add(global.powerup_weights, POWERUP.BOW, 0);
 ds_map_add(global.powerup_weights, POWERUP.EXP, 1);
 ds_map_add(global.powerup_weights, POWERUP.HEART, 1);
 ds_map_add(global.powerup_weights, POWERUP.MONEY, 1);
 ds_map_add(global.powerup_weights, POWERUP.POISON, 0);
-ds_map_add(global.powerup_weights, POWERUP.FIRE, 1);
+ds_map_add(global.powerup_weights, POWERUP.FIRE, 0);
 ds_map_add(global.powerup_weights, POWERUP.ICE, 0);
 ds_map_add(global.powerup_weights, POWERUP.TIMER, 0);
 ds_map_add(global.powerup_weights, POWERUP.FEATHER, 0);
-ds_map_add(global.powerup_weights, POWERUP.WILD_POTION, 3); // Very rare
+ds_map_add(global.powerup_weights, POWERUP.WILD_POTION, 0); // Very rare
 
 // ✅ Dynamically calculate NONE chance
 var sum_chances = 0;

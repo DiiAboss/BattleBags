@@ -75,6 +75,14 @@ if (keyboard_check_pressed(ord("U"))) {
 	bring_up_upgrade_menu();
 }
 
+if (keyboard_check_pressed(ord("Q"))) {
+
+	// Increase Bomb spawn rate by 2
+	adjust_powerup_weights(POWERUP.BOMB, 2);
+
+	// Increase Wild Potion spawn rate by 5
+	adjust_powerup_weights(POWERUP.WILD_POTION, 5);
+}
 
 // Space for speed up
 if (fight_for_your_life)
@@ -148,17 +156,62 @@ else
 	}
 }
 
-if (experience_points >= max_experience_points)
+
+
+/// @function process_experience_points(_self, amount, increment_speed)
+/// @description Gradually increases experience points toward a target value
+/// and levels up when the experience bar is full.
+/// - _self: The object (or global struct) whose experience is being updated.
+/// - amount: The total XP to add.
+/// - increment_speed: The speed factor (default = 0.01).
+function process_experience_points(_self, amount, increment_speed = 2) 
 {
-	var temp_exp = experience_points - max_experience_points;
-	level += 1;
-	max_experience_points = 10 + ((10 * level) + (level * level)) - level;
-	experience_points = temp_exp;
+    // Gradual XP increment
+    var diff = _self.experience_points + amount;
+
+    if (abs(diff) < 1) {
+        _self.experience_points = _self.target_experience_points;
+        _self.target_experience_points = 0;
+    } 
+    else 
+	{
+        var delta = diff * increment_speed;
+
+        if (abs(delta) < 1) {
+            delta = sign(delta) * 1;
+        }
+        _self.experience_points += delta;
+		_self.target_experience_points -= delta;
+    }
+	process_level_up(_self);
 }
 
-if (keyboard_check(vk_alt))
+function process_level_up(_self)
 {
-	experience_points += 10;
+	    // **Check for Level Up**
+    if (_self.experience_points >= _self.max_experience_points) {
+        _self.experience_points -= _self.max_experience_points; // Carry over excess XP
+        _self.level += 1;
+
+        // **Recalculate max XP for the next level**
+        _self.max_experience_points = _self.max_exp_mod + ((_self.max_exp_level_mod * _self.level) + (_self.level * _self.level)) - _self.level;
+        
+        // If the target XP was exceeded, keep processing until all XP is accounted for
+        if (_self.target_experience_points <= _self.experience_points) {
+            _self.target_experience_points = 0;
+        }
+    }
+}
+
+
+if keyboard_check_pressed(vk_alt)
+{
+	target_experience_points += 100;
+}
+
+if (target_experience_points > 0)
+{
+	process_experience_points(self, target_experience_points, 0.0025);
 }
 
 gem_shake(self);
@@ -483,6 +536,8 @@ function find_and_destroy_matches() {
 					bomb_tracker: false,               // Flag to mark this pop as bomb‐generated
 					bomb_level: 0
                 };
+				
+				target_experience_points += (match_count + combo) + (global.modifier);
 
                 gem.popping = true;
                 gem.pop_timer = dist * _start_delay;
@@ -499,7 +554,7 @@ function find_and_destroy_matches() {
     return found_any;
 }
 
-
+global.modifier = game_speed_default / game_speed_start;
 
 
 if all_blocks_landed(self) {
@@ -573,7 +628,6 @@ if all_blocks_landed(self) {
 
                 // ✅ Add accumulated match points to total_points
                 total_points += attack.damage;
-				
 
                 // Remove from pop_list
                 ds_list_delete(global.pop_list, i);

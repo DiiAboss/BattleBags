@@ -6,7 +6,7 @@
   "name":"scr_gem_shake",
   "parent":{
     "name":"EFFECTS",
-    "path":"folders/Scripts/CONTROL/EFFECTS.yy",
+    "path":"folders/Scripts/MAIN/EFFECTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

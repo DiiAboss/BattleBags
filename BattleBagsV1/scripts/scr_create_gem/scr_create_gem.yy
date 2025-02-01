@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_create_gem",
   "parent":{
-    "name":"CREATIONS",
-    "path":"folders/Scripts/CONTROL/CREATIONS.yy",
+    "name":"GEMS",
+    "path":"folders/Scripts/MAIN/CREATIONS/GEMS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

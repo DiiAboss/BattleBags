@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_drop_blocks",
   "parent":{
-    "name":"CONTROL",
-    "path":"folders/Scripts/CONTROL.yy",
+    "name":"BLOCKS_AND_POPS",
+    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

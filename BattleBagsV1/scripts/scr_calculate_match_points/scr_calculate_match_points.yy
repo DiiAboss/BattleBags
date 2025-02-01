@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_calculate_match_points",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"POINTS",
+    "path":"folders/Scripts/MAIN/POINTS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

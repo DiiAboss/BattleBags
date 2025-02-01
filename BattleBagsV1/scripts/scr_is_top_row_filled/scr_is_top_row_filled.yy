@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_is_top_row_filled",
   "parent":{
-    "name":"CONTROL",
-    "path":"folders/Scripts/CONTROL.yy",
+    "name":"MATCH_AND_BOARD",
+    "path":"folders/Scripts/MAIN/MATCH_AND_BOARD.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

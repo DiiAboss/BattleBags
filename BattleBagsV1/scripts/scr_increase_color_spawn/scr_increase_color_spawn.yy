@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_increase_color_spawn",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"UPGRADES",
+    "path":"folders/Scripts/MAIN/UPGRADES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

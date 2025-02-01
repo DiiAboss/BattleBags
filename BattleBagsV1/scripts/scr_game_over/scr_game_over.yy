@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_game_over",
   "parent":{
-    "name":"CONTROL",
-    "path":"folders/Scripts/CONTROL.yy",
+    "name":"PLAYER_HEALTH",
+    "path":"folders/Scripts/MAIN/PLAYER_HEALTH.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

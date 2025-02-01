@@ -1,3 +1,5 @@
+
+
 function create_gem(_type = -99, _powerup = weighted_random_powerup()) {
 	
 	if (_type == -99) { // If generating a new random gem

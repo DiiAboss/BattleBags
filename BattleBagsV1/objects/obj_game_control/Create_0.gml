@@ -12,6 +12,10 @@ global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
 // Adjustable Stats
 // ------------------------------------------------------
 game_speed_default = 2;
+game_speed_start   = game_speed_default;
+
+global.modifier = game_speed_default / game_speed_start;
+
 game_speed_combo_modifier = 0.5;
 game_speed_increase_modifier = 2;
 game_speed_fight_for_your_life_modifier = 0;
@@ -24,8 +28,14 @@ global.player_total_level = 1;
 global.player_level = 1;
 
 level = 1;
+
+target_experience_points = 0;
 experience_points = 0;
-max_experience_points = 10 + ((10 * level) + (level * level)) - level;
+
+max_exp_mod = 50;
+max_exp_level_mod = 10;
+
+max_experience_points = max_exp_mod + ((max_exp_level_mod * level) + (level * level)) - level;
 
 fight_for_your_life = false;
 
@@ -68,6 +78,14 @@ enum BLOCK {
 
 global_shape_function_init();
 
+
+// ✅ Create global upgrade storage
+global.upgrades = ds_map_create();
+
+init_upgrades();
+
+
+
 // ------------------------------------------------------
 // Swap Mechanics
 // ------------------------------------------------------
@@ -101,10 +119,6 @@ gem_size = 64;
 global_y_offset = 0;
 
 total_multiplier_next = 1;
-// ------------------------------------------------------
-// Color Spawn Weight System
-// ------------------------------------------------------
-global.color_spawn_weight = array_create(numberOfGemTypes, 4);
 
 // ------------------------------------------------------
 // Powerups System
@@ -121,6 +135,7 @@ for (var i = 0; i < array_length(powerups) - 1; i++) {
     }
 }
 
+create_gem_spawn_rates();
 // ------------------------------------------------------
 // Create The Grid
 // ------------------------------------------------------

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Script40",
+  "%Name":"BLACK_BLOCKS",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Script40",
+  "name":"BLACK_BLOCKS",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"BLOCKS_AND_POPS",
+    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -178,7 +178,14 @@ draw_text(10, 40, "TIME: " + string(time_in_seconds));
 draw_text(10, 60, "SPEED: " + string(game_speed_default));
 draw_text(10, 80, "EXP: " + string(experience_points) + " / " + string(max_experience_points));
 draw_text(10, 100, "LEVEL: " + string(level));
-draw_text(10, 100, "MULTINEXT: " + string(total_multiplier_next) );
+draw_text(10, 120, "NEXTEXP: " + string(target_experience_points) );
+
+var y_start = 128;
+var y_end   = room_height - 128; 
+var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
+
+draw_rectangle_color(board_x_offset * 0.5, 128, board_x_offset * 0.9, room_height - 128, c_white, c_white, c_white, c_white, true);
+draw_rectangle_color(board_x_offset * 0.5, y_end - draw_exp_y, board_x_offset * 0.9, room_height - 128, c_orange, c_orange, c_orange, c_orange, false);
 
 //var gem_size = 64; // Size of each cell
 var thickness = 5; // Thickness of the outline

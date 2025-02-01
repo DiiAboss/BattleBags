@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_mouse_dragged",
   "parent":{
-    "name":"CONTROL",
-    "path":"folders/Scripts/CONTROL.yy",
+    "name":"PLAYER_CONTROLS",
+    "path":"folders/Scripts/MAIN/PLAYER_CONTROLS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

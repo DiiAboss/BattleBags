@@ -1,3 +1,12 @@
+// ------------------------------------------------------
+// Color Spawn Weight System
+// ------------------------------------------------------
+
+function create_gem_spawn_rates(spawn_rate = 4)
+{
+	global.color_spawn_weight = array_create(numberOfGemTypes, spawn_rate);
+}
+
 function weighted_random_gem(_self) {
     var total_weight = 0;
 

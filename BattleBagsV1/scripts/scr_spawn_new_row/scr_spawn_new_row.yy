@@ -6,7 +6,7 @@
   "name":"scr_spawn_new_row",
   "parent":{
     "name":"SPAWN_GEMS",
-    "path":"folders/Scripts/CONTROL/SPAWN_GEMS.yy",
+    "path":"folders/Scripts/MAIN/SPAWN_GEMS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

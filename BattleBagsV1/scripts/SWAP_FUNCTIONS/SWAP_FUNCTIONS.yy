@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"SWAP_FUNCTIONS",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"MATCH_AND_BOARD",
+    "path":"folders/Scripts/MAIN/MATCH_AND_BOARD.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

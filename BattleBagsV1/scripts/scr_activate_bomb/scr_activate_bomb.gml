@@ -70,6 +70,15 @@ function create_pop_info(_self, cell_x, cell_y, origin_x, origin_y, blocks_destr
     };
 }
 
+function get_bomb_start_level() {
+    // Ensure the upgrade exists before retrieving it
+    if (ds_map_exists(global.upgrades, UPGRADE.BOMB_START_LEVEL)) {
+        return 1 + ds_map_find_value(global.upgrades, UPGRADE.BOMB_START_LEVEL);
+    }
+    return 1; // Default level if the upgrade hasn't been unlocked yet
+}
+
+
 /// Bomb explosion function
 function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
     var blocks_destroyed = 0;
@@ -77,7 +86,7 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
     var gem_size = _self.gem_size;
     var _color = c_white;
     
-    var bomb_level = (_bomb_level != -1) ? _bomb_level : 1;
+    var bomb_level = get_bomb_start_level();
     
     // --- Pattern A: Cross pattern for level 1 ---
     if (bomb_level == 1) {

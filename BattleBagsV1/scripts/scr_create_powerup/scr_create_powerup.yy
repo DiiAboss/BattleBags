@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_create_powerup",
   "parent":{
-    "name":"CREATIONS",
-    "path":"folders/Scripts/CONTROL/CREATIONS.yy",
+    "name":"POWERUPS",
+    "path":"folders/Scripts/MAIN/CREATIONS/POWERUPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
