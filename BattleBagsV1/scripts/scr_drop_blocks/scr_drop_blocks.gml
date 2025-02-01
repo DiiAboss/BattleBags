@@ -7,10 +7,18 @@ function drop_blocks(_self, fall_speed = 2) {
     for (var j = height - 2; j >= 0; j--) { // Process from bottom-up
         for (var i = 0; i < width; i++) {
             var gem = _self.grid[i, j];
+			
 
             if (gem.type != -1) { // Valid gem
+				//if (gem.frozen) && (gem.falling)
+				//{
+				//	gem.fall_delay = 1;
+				//}
+				
+				
+				
                 var below = _self.grid[i, j + 1];
-
+				//gem.falling = below.popping;
                 // ✅ If the block below is empty, make this block fall
                 if (below.type == -1) {
                     gem.falling = true; // ✅ Mark as falling
@@ -26,17 +34,28 @@ function drop_blocks(_self, fall_speed = 2) {
                         _self.gem_y_offsets[i, j] = 0; // Reset previous position
                         
                         // ✅ Reset fall delay
-                        gem.fall_delay = 0;
+                        gem.fall_delay = 1;
                         has_fallen = true; // ✅ A block has moved, so we need another pass
                     }
                 } 
                 else {
                     // ✅ **Only stop falling if this is the lowest block in a stack**
-                    if (gem.falling) {
+                    if (gem.falling) && (!below.falling) {
                         gem.falling = false;
+						gem.fall_delay = 0;
                     }
                 }
             }
+        }
+    }
+	
+	    // 🔥 THIRD PASS: Explicitly Mark **Bottom-Row Blocks as Landed**
+    for (var i = 0; i < width; i++) {
+        var gem = _self.grid[i, height - 1]; // Last row
+
+        if (gem.type != -1) { // Valid gem
+            gem.falling = false; // ✅ Ensure it is settled
+            gem.fall_delay = 0;
         }
     }
 
@@ -48,7 +67,7 @@ function drop_blocks(_self, fall_speed = 2) {
 
             if (gem.type != -1 && below.falling) {
                 gem.falling = true; // ✅ Keep the entire stack "falling"
-				gem.fall_delay = 0;
+				gem.fall_delay = 1;
             }
         }
     }
@@ -65,6 +84,20 @@ function drop_blocks(_self, fall_speed = 2) {
                 }
             }
         }
+		
+		//    // 🔥 Ensure combo resets if needed
+	    //if (!blocks_still_moving(_self)) {
+	    //    combo = 0;
+	    //}
     }
+}
+
+function should_block_fall(_self, i, j) {
+    if (j >= _self.height - 1) return false; // Last row never falls
+
+    var below = _self.grid[i, j + 1];
+
+    // ✅ If the block below is EMPTY or POPPING, this block should fall
+    return (below.type == -1 || below.popping);
 }
 

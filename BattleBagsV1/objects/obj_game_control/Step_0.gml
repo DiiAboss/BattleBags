@@ -107,7 +107,6 @@ else if (keyboard_check(vk_space)) {
 
 
 
-
 total_time += 1;
 
 var t_i_s = (total_time / FPS);
@@ -155,7 +154,6 @@ else
 		global.grid_shake_amount = 0;
 	}
 }
-
 
 
 /// @function process_experience_points(_self, amount, increment_speed)
@@ -297,20 +295,49 @@ if (!swap_in_progress && all_blocks_landed(self)) {
 spawn_timer = 60 / global.gameSpeed;
 shift_speed = 0.1 * global.gameSpeed;
 
+//if (all_pops_finished()) {
+//	// Now we can drop blocks
+//	drop_blocks(self);
+
+//	// ✅ If a match is found, increase combo
+//	if find_and_destroy_matches() {
+//		combo += 1;
+//	} 
+//}
+
+
 if (all_pops_finished()) {
-	// Now we can drop blocks
-	drop_blocks(self);
+    // ✅ Drop blocks **AFTER** all pops finish
+    drop_blocks(self);
 
-	// ✅ If a match is found, increase combo
-	if find_and_destroy_matches() {
-		combo += 1;
-	} 
+    // ✅ If a new match is found, **increase** combo instead of resetting
+    if find_and_destroy_matches() {
+		combo_timer = 0;
+        combo += 1;
+    } 
 }
 
-if (!blocks_still_moving(self))
+// ✅ Ensure combo resets **ONLY when no movement remains**
+if (!blocks_still_moving(self) ){
+	if (combo_timer < max_combo_timer)
+	{
+		combo_timer ++;
+	}
+	else
+	{
+		combo = 0;
+		combo_timer = max_combo_timer;
+	}
+}
+else
 {
-	combo = 0;
+	combo_timer = 0;
 }
+
+//if (!blocks_still_moving(self))
+//{
+//	combo = 0;
+//}
 
 update_freeze_timer(self);
 for (var i = 0; i < width; i++) {
@@ -364,7 +391,7 @@ function shift_up() {
     for (var i = 0; i < width; i++) {
         //grid[i, height - 1] = create_gem(irandom_range(0, numberOfGemTypes - 1));
 		grid[i, height - 1] = create_gem(-99);
-        gem_y_offsets[i, height - 1] = gem_size;
+        gem_y_offsets[i, height - 1] = 0;
     }
 	
     // 4️⃣ Reset alpha so the newly spawned row fades in again
@@ -388,6 +415,12 @@ function find_and_destroy_matches() {
     for (var xx = 0; xx < width; xx++) {
         for (var yy = 0; yy < height; yy++) {
             marked_for_removal[xx, yy] = false;
+			
+			if (grid[xx, yy].shake_timer > 0)
+			{
+				grid[xx, yy].popping = true;
+			}
+			
         }
     }
 
@@ -504,7 +537,7 @@ function find_and_destroy_matches() {
             if (marked_for_removal[i, j]) {
                 found_any = true;
                 grid[i, j].shake_timer = 30; // Start shaking effect
-
+				
                 var gem = grid[i, j];
                 var dx = i - global.lastSwapX;
                 var dy = j - global.lastSwapY;
@@ -539,8 +572,8 @@ function find_and_destroy_matches() {
 				
 				target_experience_points += (match_count + combo) + (global.modifier);
 
-                gem.popping = true;
-                gem.pop_timer = dist * _start_delay;
+                grid[i, j].popping = true;
+                grid[i, j].pop_timer = dist * _start_delay;
 
                 ds_list_add(global.pop_list, pop_info);
             }
@@ -565,13 +598,14 @@ if all_blocks_landed(self) {
         // Wait for start_delay
         if (pop_data.timer < pop_data.start_delay) {
             pop_data.timer++;
-			
+			combo_timer = 0;
 
 			var _x = pop_data.x;
             var _y = pop_data.y;
             var px = (_x * gem_size) + board_x_offset + offset;
             var py = (_y * gem_size) + offset + global_y_offset + gem_y_offsets[_x, _y];
 			
+			self.grid[_x, _y].popping = true;
 			
 			if !(variable_struct_exists(pop_data, "color"))
 			{

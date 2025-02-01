@@ -1,9 +1,21 @@
+//function enemy_attack_basic(_self, game_control_object) {
+//    var is_freeze_attack = (irandom(1) == 0); // 50% chance of freeze attack
+
+//    if (is_freeze_attack) {
+//        ds_list_add(global.enemy_attack_queue, "FREEZE"); // 🔥 Add "FREEZE" to queue
+//    } else {
+//        var attack_pattern = generate_attack_shape(_self.attack);
+//        ds_list_add(global.enemy_attack_queue, attack_pattern);
+//    }
+//}
 function enemy_attack_basic(_self, game_control_object) {
     var attack_pattern = generate_attack_shape(_self.attack);
 
     // 🔥 Add attack to queue **for preview & execution**
     ds_list_add(global.enemy_attack_queue, attack_pattern);
 }
+
+
 
 function enemy_attack_special(_self, attack_pattern) {
 	

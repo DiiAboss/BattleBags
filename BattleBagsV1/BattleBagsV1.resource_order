@@ -70,7 +70,7 @@
     {"name":"scr_powerup_spawn","order":1,"path":"scripts/scr_powerup_spawn/scr_powerup_spawn.yy",},
     {"name":"scr_resolve_board","order":3,"path":"scripts/scr_resolve_board/scr_resolve_board.yy",},
     {"name":"scr_toss_row","order":1,"path":"scripts/scr_toss_row/scr_toss_row.yy",},
-    {"name":"scr_update_freeze_timer","order":6,"path":"scripts/scr_update_freeze_timer/scr_update_freeze_timer.yy",},
+    {"name":"scr_update_freeze_timer","order":5,"path":"scripts/scr_update_freeze_timer/scr_update_freeze_timer.yy",},
     {"name":"scr_update_topmost_row","order":2,"path":"scripts/scr_update_topmost_row/scr_update_topmost_row.yy",},
     {"name":"scr_weighted_random_gem","order":2,"path":"scripts/scr_weighted_random_gem/scr_weighted_random_gem.yy",},
     {"name":"Script43","order":4,"path":"scripts/Script43/Script43.yy",},

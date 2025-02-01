@@ -49,6 +49,8 @@ if (attack_timer >= max_attack_timer) {
 }
 else
 {
+
+	
 	if (attack_timer == 0)
 	{
 		if (total_attacks % attacks_until_special_attack == 0) {
@@ -59,8 +61,19 @@ else
 		}
 	}
 	
-	attack_timer_increase_mod = global.enemy_timer_game_speed / obj_game_control.game_speed_default;
-	attack_timer += attack_timer_increase_mod;
+	if (obj_game_control.combo > 0)
+	{
+		if attack_timer < (max_attack_timer * 0.95)
+		{
+				attack_timer_increase_mod = global.enemy_timer_game_speed / obj_game_control.game_speed_default;
+				attack_timer += attack_timer_increase_mod;
+		}
+	}
+	else
+	{
+		attack_timer_increase_mod = global.enemy_timer_game_speed / obj_game_control.game_speed_default;
+		attack_timer += attack_timer_increase_mod;
+	}
 }
 
 

@@ -64,8 +64,13 @@ for (var i = 0; i < width; i++) {
 				draw_sprite(spr_enemy_gem_overlay, 0, draw_x, draw_y);
 			}
 			
-			// Loop through all popping gems in global.pop_list
+			
 
+			
+			// Loop through all popping gems in global.pop_list
+								draw_text(draw_x, draw_y, string(gem.falling))
+			draw_text(draw_x + 12, draw_y, string(gem.fall_delay > 0))
+			draw_text(draw_x + 24, draw_y, string(gem.shake_timer))
 	
         }
     }
@@ -148,6 +153,11 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
     );
             }
 			
+			
+
+					draw_text(draw_x, draw_y, string(grid[pop_data.x, pop_data.y].popping))
+
+			
 			if (pop_data.bomb_tracker)
 			{
 				draw_sprite(spr_bomb_overlay, 0, draw_x, draw_y);
@@ -178,7 +188,9 @@ draw_text(10, 40, "TIME: " + string(time_in_seconds));
 draw_text(10, 60, "SPEED: " + string(game_speed_default));
 draw_text(10, 80, "EXP: " + string(experience_points) + " / " + string(max_experience_points));
 draw_text(10, 100, "LEVEL: " + string(level));
-draw_text(10, 120, "NEXTEXP: " + string(target_experience_points) );
+draw_text(10, 120, "COMBO: " + string(combo) );
+draw_text(10, 140, "cTIMER: " + string(combo_timer));
+
 
 var y_start = 128;
 var y_end   = room_height - 128; 
@@ -331,36 +343,45 @@ if (ds_list_size(global.enemy_attack_queue) > 0) {
     draw_rectangle(preview_x, preview_y, preview_x + preview_size, preview_y + bar_height, false);
     draw_set_alpha(1);
 
-    // 🔳 Draw the Grid & Attack Blocks
-    if (ds_map_exists(global.shape_templates, next_attack)) {
-        var attack_shape = ds_map_find_value(global.shape_templates, next_attack);
-        var shape_width = array_length(attack_shape[0]);
-        var shape_height = array_length(attack_shape);
-
-        // 🔥 Centering Calculation
-        var total_width = (shape_width * grid_size) + ((shape_width - 1) * grid_spacing);
-        var total_height = (shape_height * grid_size) + ((shape_height - 1) * grid_spacing);
-        var offset_x = preview_x + (preview_size - total_width) / 2;
-        var offset_y = preview_y + (preview_size - total_height) / 2;
-
-        for (var j = 0; j < shape_height; j++) {
-            for (var i = 0; i < shape_width; i++) {
-                var grid_x = offset_x + (i * (grid_size + grid_spacing));
-                var grid_y = offset_y + (j * (grid_size + grid_spacing));
-
-                // 🔲 Draw Grid
-                //draw_rectangle(grid_x, grid_y, grid_x + grid_size, grid_y + grid_size, true);
-
-                // 🟥 Draw the Attack Blocks
-                if (attack_shape[j][i] != BLOCK.NONE) {
-                    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, false);
-                }
-				//else
-				//{
-                //    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, true);
-				//}
-            }
-        }
+	 // 🔳 Draw Attack Grid or Display "FREEZE"
+    if (next_attack == "FREEZE") {
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_text(preview_x + preview_size / 2, preview_y + preview_size / 2, "FREEZE");
     }
+	else
+	{
+	    // 🔳 Draw the Grid & Attack Blocks
+	    if (ds_map_exists(global.shape_templates, next_attack)) {
+	        var attack_shape = ds_map_find_value(global.shape_templates, next_attack);
+	        var shape_width = array_length(attack_shape[0]);
+	        var shape_height = array_length(attack_shape);
+
+	        // 🔥 Centering Calculation
+	        var total_width = (shape_width * grid_size) + ((shape_width - 1) * grid_spacing);
+	        var total_height = (shape_height * grid_size) + ((shape_height - 1) * grid_spacing);
+	        var offset_x = preview_x + (preview_size - total_width) / 2;
+	        var offset_y = preview_y + (preview_size - total_height) / 2;
+
+	        for (var j = 0; j < shape_height; j++) {
+	            for (var i = 0; i < shape_width; i++) {
+	                var grid_x = offset_x + (i * (grid_size + grid_spacing));
+	                var grid_y = offset_y + (j * (grid_size + grid_spacing));
+
+	                // 🔲 Draw Grid
+	                //draw_rectangle(grid_x, grid_y, grid_x + grid_size, grid_y + grid_size, true);
+
+	                // 🟥 Draw the Attack Blocks
+	                if (attack_shape[j][i] != BLOCK.NONE) {
+	                    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, false);
+	                }
+					//else
+					//{
+	                //    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, true);
+					//}
+	            }
+	        }
+	    }
+	}
 }
 
