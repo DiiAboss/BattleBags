@@ -84,6 +84,7 @@ global.upgrades = ds_map_create();
 
 init_upgrades();
 
+global.enemy_attack_queue = ds_list_create();
 
 
 // ------------------------------------------------------

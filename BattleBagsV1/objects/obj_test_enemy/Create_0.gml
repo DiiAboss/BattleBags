@@ -7,5 +7,6 @@ hp = max_hp;
 
 defence = 0;
 attack = 2;
+attack_default = attack;
 
 attack_timer = 0;

@@ -42,11 +42,12 @@ exp_reward = 5;
 
 
 attack_timer_increase_mod = 1;
-total_attacks = 0;
+total_attacks = 1;
 attack_timer = 0;
 max_attack_timer = 600; // Attacks every 5 seconds
+attack_default = 1;
 
-attacks_until_special_attack = 5; // Set this so after a certain amount of attacks, do a special attack;
+attacks_until_special_attack = 3; // Set this so after a certain amount of attacks, do a special attack;
 special_attack_patterns = [
 "triangle_down_3x3",
 ];

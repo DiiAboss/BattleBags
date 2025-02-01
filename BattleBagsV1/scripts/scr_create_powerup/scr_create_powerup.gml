@@ -32,18 +32,18 @@ function adjust_powerup_weights(powerup, increase_amount) {
 
 // Power-up weight map (higher value = more frequent)
 global.powerup_weights = ds_map_create();
-ds_map_add(global.powerup_weights, POWERUP.BOMB, 10);
-ds_map_add(global.powerup_weights, POWERUP.MULTI_2X, 0);
-ds_map_add(global.powerup_weights, POWERUP.BOW, 0);
-ds_map_add(global.powerup_weights, POWERUP.EXP, 1);
-ds_map_add(global.powerup_weights, POWERUP.HEART, 1);
-ds_map_add(global.powerup_weights, POWERUP.MONEY, 1);
+ds_map_add(global.powerup_weights, POWERUP.BOMB, 2);
+ds_map_add(global.powerup_weights, POWERUP.MULTI_2X, 2);
+ds_map_add(global.powerup_weights, POWERUP.BOW, 2);
+ds_map_add(global.powerup_weights, POWERUP.EXP, 2);
+ds_map_add(global.powerup_weights, POWERUP.HEART, 2);
+ds_map_add(global.powerup_weights, POWERUP.MONEY, 2);
 ds_map_add(global.powerup_weights, POWERUP.POISON, 0);
 ds_map_add(global.powerup_weights, POWERUP.FIRE, 0);
 ds_map_add(global.powerup_weights, POWERUP.ICE, 0);
 ds_map_add(global.powerup_weights, POWERUP.TIMER, 0);
 ds_map_add(global.powerup_weights, POWERUP.FEATHER, 0);
-ds_map_add(global.powerup_weights, POWERUP.WILD_POTION, 0); // Very rare
+ds_map_add(global.powerup_weights, POWERUP.WILD_POTION, 2); // Very rare
 
 // ✅ Dynamically calculate NONE chance
 var sum_chances = 0;

@@ -1,4 +1,4 @@
-function toss_down_row(_self, black_block = false) {
+function toss_down_row(_self, black_block = false, start_x = -1) {
     var width = _self.width;
     var height = _self.height;
     var gem_size = _self.gem_size;

@@ -1,4 +1,4 @@
-function toss_down_shape(_self, shape_name, is_enemy_attack = false) {
+function toss_down_shape(_self, shape_name, is_enemy_attack = false, _start_x = -1) {
     var width = _self.width;
     var height = _self.height;
     var gem_size = _self.gem_size;
@@ -10,9 +10,16 @@ function toss_down_shape(_self, shape_name, is_enemy_attack = false) {
     var shape_width = array_length(shape[0]);
     var shape_height = array_length(shape);
 
-    // ✅ Choose a **random starting X position** (ensure it fits)
-    var start_x = irandom_range(0, width - shape_width);
-
+	if (_start_x == -1)
+	{
+		// ✅ Choose a **random starting X position** (ensure it fits)
+		var start_x = irandom_range(0, width - shape_width);
+	}
+	else
+	{
+		var start_x = _start_x;
+	}
+	
     // ✅ Place shape into the grid at row 0
     for (var j = 0; j < shape_height; j++) {
         for (var i = 0; i < shape_width; i++) {
