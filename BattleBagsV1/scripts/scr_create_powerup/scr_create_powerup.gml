@@ -20,11 +20,18 @@ enum POWERUP
 // Total probability pool
 var TOTAL_CHANCE = 100;
 
+//function adjust_powerup_weights(powerup, increase_amount) {
+//    // Ensure powerup exists in the map
+//    if (ds_map_exists(global.powerup_weights, powerup)) {
+//        var current_weight = ds_map_find_value(global.powerup_weights, powerup);
+//        ds_map_replace(global.powerup_weights, powerup, current_weight + increase_amount);
+//    }
+//}
+
 function adjust_powerup_weights(powerup, increase_amount) {
-    // Ensure powerup exists in the map
     if (ds_map_exists(global.powerup_weights, powerup)) {
         var current_weight = ds_map_find_value(global.powerup_weights, powerup);
-        ds_map_replace(global.powerup_weights, powerup, current_weight + increase_amount);
+        ds_map_replace(global.powerup_weights, powerup, max(0, current_weight + increase_amount)); // Prevent negatives
     }
 }
 

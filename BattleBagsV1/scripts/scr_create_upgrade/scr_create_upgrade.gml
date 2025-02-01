@@ -1,8 +1,9 @@
-function create_upgrade(_name, _desc, _effect) {
+function create_upgrade(_name, _desc, _effect, _level = 1 + irandom(5)) {
     var upgrade = {
         name: _name,
         desc: _desc,
-        effect: _effect
+        effect: _effect,
+		level: _level
     };
     return upgrade;
 }

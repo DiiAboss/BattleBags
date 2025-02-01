@@ -85,6 +85,8 @@ max_combo_timer = 30;
 // ✅ Create global upgrade storage
 global.upgrades = ds_map_create();
 
+//generate_all_upgrades()
+
 init_upgrades();
 
 global.enemy_attack_queue = ds_list_create();
@@ -152,6 +154,8 @@ for (var i = 0; i < width; i++) {
 }
 
 global.fall_timer = 0;
+
+global.in_upgrade_menu = false;
 
 // ------------------------------------------------------
 // Create Gem Offset Arrays

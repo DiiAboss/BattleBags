@@ -1,10 +1,23 @@
-// ✅ Toggle Pause with "P" key
-if (keyboard_check_pressed(ord("P"))) {
-    global.paused = !global.paused; // Toggle the pause state
+
+
+if (instance_exists(obj_upgrade_menu))
+{
+	global.in_upgrade_menu = true;
+}
+else
+{
+	global.in_upgrade_menu = false;
+	// ✅ Toggle Pause with "P" key
+	if (keyboard_check_pressed(ord("P"))) {
+	    global.paused = !global.paused; // Toggle the pause state
+	}
+
 }
 
-// ✅ Stop everything except the pause check
-if (global.paused) return;
+	// ✅ Stop everything except the pause check
+	if (global.paused) || global.in_upgrade_menu {
+		return;
+	}
 
 //--------------------------------------------------------
 // CONTROLS
@@ -91,7 +104,7 @@ if (fight_for_your_life)
 	global.enemy_timer_game_speed = global.gameSpeed;
 }
 else if (keyboard_check(vk_space)) {
-    global.gameSpeed = game_speed_default * game_speed_increase_modifier;
+    global.gameSpeed = game_speed_default + game_speed_increase_modifier;
 } else {
 	    if (combo <= 1) 
 		{
@@ -186,10 +199,12 @@ function process_experience_points(_self, amount, increment_speed = 2)
 
 function process_level_up(_self)
 {
+	
 	    // **Check for Level Up**
     if (_self.experience_points >= _self.max_experience_points) {
         _self.experience_points -= _self.max_experience_points; // Carry over excess XP
         _self.level += 1;
+		bring_up_upgrade_menu();
 
         // **Recalculate max XP for the next level**
         _self.max_experience_points = _self.max_exp_mod + ((_self.max_exp_level_mod * _self.level) + (_self.level * _self.level)) - _self.level;
@@ -210,6 +225,7 @@ if keyboard_check_pressed(vk_alt)
 if (target_experience_points > 0)
 {
 	process_experience_points(self, target_experience_points, 0.0025);
+	
 }
 
 gem_shake(self);

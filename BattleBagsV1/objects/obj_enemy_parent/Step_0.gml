@@ -1,5 +1,12 @@
 /// @description Insert description here
 // You can write your code in this editor
+
+	// ✅ Stop everything except the pause check
+	if (global.paused) || global.in_upgrade_menu {
+		return;
+	}
+
+
 if place_meeting(x, y, obj_player_attack)
 {
 	var incoming = instance_nearest(x, y, obj_player_attack);

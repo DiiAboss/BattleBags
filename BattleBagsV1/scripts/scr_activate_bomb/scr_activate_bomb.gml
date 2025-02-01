@@ -72,9 +72,9 @@ function create_pop_info(_self, cell_x, cell_y, origin_x, origin_y, blocks_destr
 
 function get_bomb_start_level() {
     // Ensure the upgrade exists before retrieving it
-    if (ds_map_exists(global.upgrades, UPGRADE.BOMB_START_LEVEL)) {
-        return 1 + ds_map_find_value(global.upgrades, UPGRADE.BOMB_START_LEVEL);
-    }
+    //if (ds_list_find_value(global.upgrades, UPGRADE.BOMB_START_LEVEL)) {
+    //    return 1 + ds_list_find_value(global.upgrades, UPGRADE.BOMB_START_LEVEL);
+    //}
     return 1; // Default level if the upgrade hasn't been unlocked yet
 }
 

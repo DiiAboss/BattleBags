@@ -148,6 +148,8 @@
     {"id":{"name":"spr_red_gem","path":"sprites/spr_red_gem/spr_red_gem.yy",},},
     {"id":{"name":"spr_shield_gem","path":"sprites/spr_shield_gem/spr_shield_gem.yy",},},
     {"id":{"name":"spr_test_dummy","path":"sprites/spr_test_dummy/spr_test_dummy.yy",},},
+    {"id":{"name":"spr_upgrade_frame","path":"sprites/spr_upgrade_frame/spr_upgrade_frame.yy",},},
+    {"id":{"name":"spr_upgrade_gem_spawn_up","path":"sprites/spr_upgrade_gem_spawn_up/spr_upgrade_gem_spawn_up.yy",},},
     {"id":{"name":"spr_wild_gem","path":"sprites/spr_wild_gem/spr_wild_gem.yy",},},
     {"id":{"name":"spr_yellow_gem","path":"sprites/spr_yellow_gem/spr_yellow_gem.yy",},},
   ],
