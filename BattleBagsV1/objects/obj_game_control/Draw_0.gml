@@ -176,9 +176,9 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 // Optional: Draw combo count
 draw_text(10, 40, "TIME: " + string(time_in_seconds));
 draw_text(10, 60, "SPEED: " + string(game_speed_default));
-draw_text(10, 80, "EXP: " + string(experience_points));
-draw_text(10, 100, "MAXEXP: " + string(max_experience_points));
-draw_text(10, 120, "LEVEL: " + string(level));
+draw_text(10, 80, "EXP: " + string(experience_points) + " / " + string(max_experience_points));
+draw_text(10, 100, "LEVEL: " + string(level));
+draw_text(10, 100, "MULTINEXT: " + string(total_multiplier_next) );
 
 //var gem_size = 64; // Size of each cell
 var thickness = 5; // Thickness of the outline

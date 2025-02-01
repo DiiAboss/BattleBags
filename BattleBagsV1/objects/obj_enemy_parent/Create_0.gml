@@ -44,7 +44,7 @@ exp_reward = 5;
 attack_timer_increase_mod = 1;
 total_attacks = 0;
 attack_timer = 0;
-max_attack_timer = 120; // Attacks every 2 seconds (120 frames)
+max_attack_timer = 600; // Attacks every 5 seconds
 
 attacks_until_special_attack = 5; // Set this so after a certain amount of attacks, do a special attack;
 special_attack_patterns = [

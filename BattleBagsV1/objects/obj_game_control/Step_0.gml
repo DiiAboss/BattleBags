@@ -516,7 +516,13 @@ if all_blocks_landed(self) {
             var _y = pop_data.y;
             var px = (_x * gem_size) + board_x_offset + offset;
             var py = (_y * gem_size) + offset + global_y_offset + gem_y_offsets[_x, _y];
-			effect_create_depth(depth, ef_smoke, px, py - 4, 2, pop_data.color);
+			
+			var _color = c_white;
+			if (variable_struct_exists(pop_data, "color"))
+			{
+				_color = pop_data.color;
+			}
+			effect_create_depth(depth, ef_smoke, px, py - 4, 2, _color);
 			
         } else {
             // Grow effect
@@ -549,10 +555,9 @@ if all_blocks_landed(self) {
                 //if (gem.powerup == POWERUP.MULTI_4X) total_multiplier *= 4;
                 // ✅ You can add more multipliers here later!
 
+
                 // 🔥 **Step 2: Loop Through Multipliers**
-                for (var m = 0; m < total_multiplier_next; m++) {
-                    process_powerup(self, _x, _y, gem);
-                }
+                process_powerup(self, _x, _y, gem, total_multiplier_next);
 
                 // **Destroy the block**
                 destroy_block(self, _x, _y);
@@ -563,11 +568,12 @@ if all_blocks_landed(self) {
                 // ✅ Create Attack Object with Score
                 var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
                 attack.color = pop_data.color;
+				
                 attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
 
                 // ✅ Add accumulated match points to total_points
                 total_points += attack.damage;
-				total_multiplier_next = 1;
+				
 
                 // Remove from pop_list
                 ds_list_delete(global.pop_list, i);
@@ -575,21 +581,25 @@ if all_blocks_landed(self) {
                 continue;
             }
         }
-
+		total_multiplier_next = 1;
         // Write back updated pop_data
         ds_list_replace(global.pop_list, i, pop_data);
     }
 }
 
 
-function process_powerup(_self, _x, _y, gem) {
+function process_powerup(_self, _x, _y, gem, total_multiplier) {
     if (gem.powerup == -1) return; // No power-up, do nothing
-
+	
+	var powerup_level = total_multiplier;
+	
     switch (gem.powerup.powerup) {
         case POWERUP.SWORD:
             // 💥 **Destroy the entire row**
             destroy_blocks_in_direction_from_point(_self, _x, _y, 1, 0); // Right
             destroy_blocks_in_direction_from_point(_self, _x, _y, -1, 0); // Left
+			destroy_blocks_in_direction_from_point(_self, _x, _y, 0, 1); // Right
+            destroy_blocks_in_direction_from_point(_self, _x, _y, 0, -1); // Left
             break;
 
         case POWERUP.BOW:

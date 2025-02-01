@@ -41,7 +41,7 @@ function toss_down_shape(_self, shape_name, is_enemy_attack = false) {
                 if (is_enemy_attack) {
                     _self.grid[gem_x, gem_y].is_enemy_block = true;
                     _self.grid[gem_x, gem_y].falling = true;
-                    _self.grid[gem_x, gem_y].fall_delay = 0;
+                    _self.grid[gem_x, gem_y].fall_delay = 5;
                 }
             }
         }
