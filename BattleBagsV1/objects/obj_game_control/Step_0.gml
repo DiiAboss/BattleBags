@@ -572,11 +572,13 @@ if all_blocks_landed(self) {
             var px = (_x * gem_size) + board_x_offset + offset;
             var py = (_y * gem_size) + offset + global_y_offset + gem_y_offsets[_x, _y];
 			
-			var _color = c_white;
-			if (variable_struct_exists(pop_data, "color"))
+			
+			if !(variable_struct_exists(pop_data, "color"))
 			{
-				_color = pop_data.color;
+				return;
 			}
+			var _color = pop_data.color;
+			
 			effect_create_depth(depth, ef_smoke, px, py - 4, 2, _color);
 			
         } else {

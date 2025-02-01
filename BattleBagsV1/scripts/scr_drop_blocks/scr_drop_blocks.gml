@@ -2,6 +2,7 @@ function drop_blocks(_self, fall_speed = 2) {
     var width = _self.width;
     var height = _self.height;
     var gem_size = _self.gem_size;
+    var has_fallen = false; // ✅ Track if any block has moved
 
     for (var j = height - 2; j >= 0; j--) { // Process from bottom-up
         for (var i = 0; i < width; i++) {
@@ -10,8 +11,8 @@ function drop_blocks(_self, fall_speed = 2) {
             if (gem.type != -1) { // Valid gem
                 var below = _self.grid[i, j + 1];
 
-                // ✅ If the block below is empty or **falling**, make this block fall
-                if (below.type == -1 ){//|| below.falling) { // bug from falling chekc
+                // ✅ If the block below is empty, make this block fall
+                if (below.type == -1) {
                     gem.falling = true; // ✅ Mark as falling
 
                     // ✅ Countdown fall delay before moving
@@ -26,23 +27,20 @@ function drop_blocks(_self, fall_speed = 2) {
                         
                         // ✅ Reset fall delay
                         gem.fall_delay = 0;
+                        has_fallen = true; // ✅ A block has moved, so we need another pass
                     }
                 } 
                 else {
-					// ✅ **Fix: Reset enemy block flag when falling stops**
-                    if (gem.falling || gem.fall_delay > 0) {
+                    // ✅ **Only stop falling if this is the lowest block in a stack**
+                    if (gem.falling) {
                         gem.falling = false;
-                        if (gem.is_enemy_block) {
-                            gem.is_enemy_block = false;
-                        }
                     }
-                    gem.falling = false; // ✅ If blocked, stop falling
                 }
             }
         }
     }
 
-    // ✅ Now propagate "falling" status **upward** in each column
+    // ✅ Ensure we **propagate falling status** upward in columns
     for (var i = 0; i < width; i++) {
         for (var j = height - 2; j >= 0; j--) {
             var gem = _self.grid[i, j];
@@ -50,7 +48,23 @@ function drop_blocks(_self, fall_speed = 2) {
 
             if (gem.type != -1 && below.falling) {
                 gem.falling = true; // ✅ Keep the entire stack "falling"
+				gem.fall_delay = 0;
+            }
+        }
+    }
+
+    // ✅ **New Check: Reset `is_enemy_block` only when fully landed**
+    if (!has_fallen) {
+        for (var i = 0; i < width; i++) {
+            for (var j = 0; j < height; j++) {
+                var gem = _self.grid[i, j];
+
+                if (gem.type != -1 && !gem.falling) {
+                    gem.is_enemy_block = false; // ✅ Now safe to reset
+					gem.fall_delay = 0;
+                }
             }
         }
     }
 }
+
