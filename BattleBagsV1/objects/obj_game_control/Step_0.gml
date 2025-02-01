@@ -591,87 +591,93 @@ if all_blocks_landed(self) {
 function process_powerup(_self, _x, _y, gem, total_multiplier) {
     if (gem.powerup == -1) return; // No power-up, do nothing
 	
-	var powerup_level = total_multiplier;
-	
+    // 🔥 Convert multiplier to level (max level 5)
+    var level = clamp(ln(total_multiplier) / ln(2), 1, 5); // Maps 2→1, 4→2, 8→3, 16→4, 32+→5
+
     switch (gem.powerup.powerup) {
         case POWERUP.SWORD:
-            // 💥 **Destroy the entire row**
-            destroy_blocks_in_direction_from_point(_self, _x, _y, 1, 0); // Right
-            destroy_blocks_in_direction_from_point(_self, _x, _y, -1, 0); // Left
-			destroy_blocks_in_direction_from_point(_self, _x, _y, 0, 1); // Right
-            destroy_blocks_in_direction_from_point(_self, _x, _y, 0, -1); // Left
+            // 💥 **Destroy the entire row & column**
+            for (var offset = 0; offset < level; offset++) {
+                destroy_blocks_in_direction_from_point(_self, _x + offset, _y, 1, 0);
+                destroy_blocks_in_direction_from_point(_self, _x - offset, _y, -1, 0);
+                destroy_blocks_in_direction_from_point(_self, _x, _y + offset, 0, 1);
+                destroy_blocks_in_direction_from_point(_self, _x, _y - offset, 0, -1);
+            }
             break;
 
         case POWERUP.BOW:
-            // 💥 **Destroy in one direction (random)**
-            switch (gem.powerup.dir) {
-                case 0:   destroy_blocks_in_direction_from_point(_self, _x, _y, 1, 0); break; // Right
-                case 90:  destroy_blocks_in_direction_from_point(_self, _x, _y, 0, -1); break; // Up
-                case 180: destroy_blocks_in_direction_from_point(_self, _x, _y, -1, 0); break; // Left
-                case 270: destroy_blocks_in_direction_from_point(_self, _x, _y, 0, 1); break; // Down
+            // 💥 **Destroy same direction row below it for each level**
+            for (var offset = 0; offset < level; offset++) {
+                switch (gem.powerup.dir) {
+                    case 0:   destroy_blocks_in_direction_from_point(_self, _x + offset, _y, 1, 0); break; // Right
+                    case 90:  destroy_blocks_in_direction_from_point(_self, _x, _y - offset, 0, -1); break; // Up
+                    case 180: destroy_blocks_in_direction_from_point(_self, _x - offset, _y, -1, 0); break; // Left
+                    case 270: destroy_blocks_in_direction_from_point(_self, _x, _y + offset, 0, 1); break; // Down
+                }
             }
             break;
 
         case POWERUP.BOMB:
-            // 💣 **Destroy surrounding 3x3 area**
-            activate_bomb_gem(_self, _x, _y, gem.bomb_level);
+            // 💣 **Explode in larger areas based on level**
+            activate_bomb_gem(_self, _x, _y, level);
             break;
 
         case POWERUP.EXP:
-            // ⭐ **Grant extra experience**
-            experience_points += 10;
+            // ⭐ **Grant extra experience (scales infinitely)**
+            experience_points += 10 * total_multiplier;
             break;
 
         case POWERUP.HEART:
-            // 💖 **Heal the player**
-            player_health = min(player_health + 1, max_player_health);
+            // 💖 **Heal infinitely without cap**
+            player_health += total_multiplier;
             break;
 
         case POWERUP.MONEY:
-            // 💰 **Grant extra points**
-            total_points += 50;
+            // 💰 **Grant points infinitely**
+            total_points += 50 * total_multiplier;
             break;
 
         case POWERUP.POISON:
-            // ☠️ **Reduce player health**
-            player_health -= 1;
+            // ☠️ **Reduce health scaled by level (not infinite)**
+            player_health -= level;
             break;
 
         case POWERUP.FIRE:
-            // 🔥 **Ignite adjacent blocks**
-            for (var dx = -1; dx <= 1; dx++) {
-                for (var dy = -1; dy <= 1; dy++) {
+            // 🔥 **Ignite area based on level (max 5)**
+            for (var dx = -level; dx <= level; dx++) {
+                for (var dy = -level; dy <= level; dy++) {
                     if (dx == 0 && dy == 0) continue;
                     var nx = _x + dx;
                     var ny = _y + dy;
                     if (nx >= 0 && nx < _self.width && ny >= 0 && ny < _self.height) {
-                        _self.grid[nx, ny].popping = true; // Set adjacent gems to pop
+                        _self.grid[nx, ny].popping = true;
                     }
                 }
             }
             break;
 
         case POWERUP.ICE:
-            // ❄️ **Freeze surrounding blocks**
-            freeze_block(_self, _x, _y);
+            // ❄️ **Freeze surrounding blocks (max level 5)**
+            freeze_block(_self, _x, _y, level);
             break;
 
         case POWERUP.TIMER:
-            // ⏳ **Slow down the game temporarily**
-            global.gameSpeed = 0.5;
+            // ⏳ **Slow down the game (max level 5)**
+            global.gameSpeed = max(0.5 / level, 0.1);
             break;
 
         case POWERUP.FEATHER:
-            // 🪶 **Remove gravity effect for a short time**
-            for (var j = 0; j < height; j++) {
-                for (var i = 0; i < width; i++) {
+            // 🪶 **Remove gravity effect for short time**
+            for (var j = 0; j < _self.height; j++) {
+                for (var i = 0; i < _self.width; i++) {
                     _self.grid[i, j].falling = false;
                 }
             }
             break;
 
         case POWERUP.WILD_POTION:
-            spawn_wild_block(_self, 1); // ✅ Calls function to spawn a single wild block
+            // 🌀 **Spawn wild blocks infinitely (no level cap)**
+            spawn_wild_block(_self, total_multiplier);
             break;
     }
 }

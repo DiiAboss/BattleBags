@@ -11,7 +11,7 @@ global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------
-game_speed_default = 2;
+game_speed_default = 3;
 game_speed_combo_modifier = 0.5;
 game_speed_increase_modifier = 2;
 game_speed_fight_for_your_life_modifier = 0;
