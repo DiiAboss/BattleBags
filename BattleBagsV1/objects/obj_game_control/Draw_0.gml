@@ -67,10 +67,10 @@ for (var i = 0; i < width; i++) {
 			
 
 			
-			// Loop through all popping gems in global.pop_list
-								draw_text(draw_x, draw_y, string(gem.falling))
-			draw_text(draw_x + 12, draw_y, string(gem.fall_delay > 0))
-			draw_text(draw_x + 24, draw_y, string(gem.shake_timer))
+			//// Loop through all popping gems in global.pop_list
+			//					draw_text(draw_x, draw_y, string(gem.falling))
+			//draw_text(draw_x + 12, draw_y, string(gem.fall_delay > 0))
+			//draw_text(draw_x + 24, draw_y, string(gem.shake_timer))
 	
         }
     }

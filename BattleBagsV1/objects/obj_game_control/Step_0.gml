@@ -175,6 +175,54 @@ else
 /// - _self: The object (or global struct) whose experience is being updated.
 /// - amount: The total XP to add.
 /// - increment_speed: The speed factor (default = 0.01).
+//function process_experience_points(_self, amount, increment_speed = 2) 
+//{
+//    // Gradual XP increment
+//    var diff = _self.experience_points + amount;
+
+//    if (abs(diff) < 1) {
+//        _self.experience_points = _self.target_experience_points;
+//        _self.target_experience_points = 0;
+//    } 
+//    else 
+//	{
+//        var delta = diff * increment_speed;
+
+//        if (abs(delta) < 1) {
+//            delta = sign(delta) * 1;
+//        }
+//        _self.experience_points += delta;
+//		_self.target_experience_points -= delta;
+//    }
+//	process_level_up(_self);
+//}
+
+//function process_level_up(_self)
+//{
+	
+//	    // **Check for Level Up**
+//    if (_self.experience_points >= _self.max_experience_points) {
+//        _self.experience_points -= _self.max_experience_points; // Carry over excess XP
+//        _self.level += 1;
+		
+//		bring_up_upgrade_menu();
+
+//        // **Recalculate max XP for the next level**
+//        _self.max_experience_points = _self.max_exp_mod + ((_self.max_exp_level_mod * _self.level) + (_self.level * _self.level)) - _self.level;
+        
+//        // If the target XP was exceeded, keep processing until all XP is accounted for
+//        if (_self.target_experience_points <= _self.experience_points) {
+//            _self.target_experience_points = 0;
+//        }
+//    }
+//}
+
+/// @function process_experience_points(_self, amount, increment_speed)
+/// @description Gradually increases experience points toward a target value
+/// and levels up when the experience bar is full.
+/// - _self: The object (or global struct) whose experience is being updated.
+/// - amount: The total XP to add.
+/// - increment_speed: The speed factor (default = 0.01).
 function process_experience_points(_self, amount, increment_speed = 2) 
 {
     // Gradual XP increment
@@ -194,17 +242,22 @@ function process_experience_points(_self, amount, increment_speed = 2)
         _self.experience_points += delta;
 		_self.target_experience_points -= delta;
     }
-	process_level_up(_self);
+
+    process_level_up(_self);
 }
 
+/// @function process_level_up(_self)
+/// @description Handles leveling up and queues up multiple upgrades if needed.
 function process_level_up(_self)
 {
-	
-	    // **Check for Level Up**
-    if (_self.experience_points >= _self.max_experience_points) {
+    var levels_gained = 0;
+
+    // **Check for multiple Level Ups**
+    while (_self.experience_points >= _self.max_experience_points) {
         _self.experience_points -= _self.max_experience_points; // Carry over excess XP
         _self.level += 1;
-		bring_up_upgrade_menu();
+        levels_gained += 1; //  Track levels gained
+		game_speed_default += 0.05;
 
         // **Recalculate max XP for the next level**
         _self.max_experience_points = _self.max_exp_mod + ((_self.max_exp_level_mod * _self.level) + (_self.level * _self.level)) - _self.level;
@@ -214,8 +267,31 @@ function process_level_up(_self)
             _self.target_experience_points = 0;
         }
     }
+
+    // ✅ Store total levels gained but **don't trigger upgrade menu yet**
+    target_level += levels_gained;
 }
 
+/// @function check_and_apply_upgrades()
+/// @description Waits for upgrade menu to close, then applies next upgrade.
+function check_and_apply_upgrades()
+{
+    // Only run if the player has pending upgrades
+    if (target_level > 0 && !global.in_upgrade_menu && combo == 0) {
+        
+        // ✅ **Spawn the upgrade menu**
+        bring_up_upgrade_menu();
+        
+        // ✅ **Track that we are inside the upgrade menu**
+        global.in_upgrade_menu = true;
+        
+        // ✅ **Decrement the target level after closing**
+        target_level -= 1;
+    }
+}
+
+
+check_and_apply_upgrades();
 
 if keyboard_check_pressed(vk_alt)
 {

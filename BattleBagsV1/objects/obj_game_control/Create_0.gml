@@ -11,7 +11,7 @@ global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------
-game_speed_default = 1;
+game_speed_default = 2;
 game_speed_start   = game_speed_default;
 
 global.modifier = game_speed_default / game_speed_start;
@@ -28,6 +28,7 @@ global.player_total_level = 1;
 global.player_level = 1;
 
 level = 1;
+target_level = 0;
 
 target_experience_points = 0;
 experience_points = 0;
@@ -62,8 +63,6 @@ global.gold	= 0;
 // ------------------------------------------------------
 global.combo_x = -1;
 global.combo_y = -1;
-global.selected_upgrades = array_create(3, -1); // Stores 3 upgrades at a time
-global.upgrade_selected = false; // Tracks if upgrades were selected
 global.paused = false;
 
 
@@ -82,12 +81,15 @@ global_shape_function_init();
 combo_timer = 0;
 max_combo_timer = 30;
 
-// ✅ Create global upgrade storage
-global.upgrades = ds_map_create();
+// ✅ Initialize Global Upgrade System
+global.upgrades_list = ds_list_create(); // Stores all upgrades
+global.selected_upgrades = array_create(3, -1); // Stores 3 upgrades per level-up
+global.target_level = 0; // Tracks pending level-ups
+global.in_upgrade_menu = false; // Tracks if menu is open
 
-//generate_all_upgrades()
+// ✅ Populate the upgrade list
+generate_all_upgrades();
 
-init_upgrades();
 
 global.enemy_attack_queue = ds_list_create();
 

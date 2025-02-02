@@ -44,47 +44,22 @@ for (var i = 0; i < array_size; i++) {
 
     // 🔠 Upgrade Name (Above Frame)
     draw_set_halign(fa_center);
-    draw_text(draw_x, draw_y - 100, upgrade_data.name);
-
-    // 📝 Upgrade Description (Below Frame)
-    draw_text(draw_x, draw_y + 100, upgrade_data.desc);
+    draw_text(draw_x, draw_y - 80, upgrade_data.name);
+	// 📝 Display upgrade descriptions centered **below all upgrades**
+	var desc_y_position = 500;
+	draw_set_alpha(0.5);
+	draw_text(global.upgrade_positions[i].x, desc_y_position, upgrade[i].desc);
+	draw_set_alpha(1);
+    // 📝 Display affected block or powerup sprite next to the frame
+    var sprite_to_draw = get_upgrade_sprite(upgrade_data.effect);
+    draw_sprite(sprite_to_draw, 0, draw_x, draw_y); // Positioned next to upgrade frame
 }
 
-// 🟢💣🔥 Show Spawn Rates & Game Speed Modifier
-var info_x = room_width - 240;
-var info_y = 140;
-var line_spacing = 22;
-
-draw_set_color(c_white);
-draw_set_halign(fa_left);
-draw_text(info_x, info_y - 30, "📊 Upgrade Effects & Spawn Rates");
-
-//draw_set_color(c_lime);
-draw_text(info_x, info_y - 10, "🌟 Game Speed Modifier: " + string(global.gameSpeed));
-
-// 🟥 🟨 🟩 🟦 🟪 Color Spawn Rates
-draw_set_color(c_white);
-draw_text(info_x, info_y, "🎨 Color Spawn Rates:");
-
-var color_names = ["Red", "Yellow", "Green", "Blue", "Purple", "Orange"];
-var color_keys = [BLOCK.RED, BLOCK.YELLOW, BLOCK.GREEN, BLOCK.PINK, BLOCK.PURPLE, BLOCK.ORANGE];
-
-for (var i = 0; i < array_length(color_keys); i++) {
-    var color_weight = global.color_spawn_weight[color_keys[i]];
-    draw_text(info_x + 20, info_y + (i * line_spacing), color_names[i] + ": " + string(color_weight));
-}
-
-info_y += (array_length(color_keys) + 1) * line_spacing;
-
-// 💣🏹🔥❄️⏳ Power-up Spawn Rates
-draw_set_color(c_white);
-draw_text(info_x, info_y, "💥 Power-up Spawn Rates:");
-
-var powerup_names = ["Bomb", "Multi 2X", "Bow", "EXP", "Heart", "Money", "Fire", "Ice", "Timer", "Feather", "Wild Potion"];
-var powerup_keys = [POWERUP.BOMB, POWERUP.MULTI_2X, POWERUP.BOW, POWERUP.EXP, POWERUP.HEART, POWERUP.MONEY, POWERUP.FIRE, POWERUP.ICE, POWERUP.TIMER, POWERUP.FEATHER, POWERUP.WILD_POTION];
-
-for (var i = 0; i < array_length(powerup_keys); i++) {
-    var powerup_weight = ds_map_find_value(global.powerup_weights, powerup_keys[i]);
-    draw_text(info_x + 20, info_y + ((i + 1) * line_spacing), powerup_names[i] + ": " + string(powerup_weight));
+if (hover_index != -1)
+{
+// 📝 Display upgrade descriptions centered **below all upgrades**
+var desc_y_position = 500;
+draw_set_halign(fa_center);
+draw_text(global.upgrade_positions[hover_index].x, desc_y_position, upgrade[hover_index].desc);
 }
 

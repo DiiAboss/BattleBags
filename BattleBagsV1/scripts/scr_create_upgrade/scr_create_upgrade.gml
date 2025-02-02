@@ -1,37 +1,39 @@
-function create_upgrade(_name, _desc, _effect, _level = 1 + irandom(5)) {
+function create_upgrade(_name, _desc, _effect, _level = -1) {
+	
     var upgrade = {
         name: _name,
         desc: _desc,
         effect: _effect,
-		level: _level
+		level: get_upgrade_level()
     };
     return upgrade;
 }
 
 
+/// @function get_upgrade_sprite(effect)
+/// @desc Returns the correct sprite for an upgrade, based on the block or powerup it affects.
+function get_upgrade_sprite(effect) {
+    switch (effect) {
+        case "more_red": return sprite_for_gem(BLOCK.RED);
+        case "more_yellow": return sprite_for_gem(BLOCK.YELLOW);
+        case "more_green": return sprite_for_gem(BLOCK.GREEN);
+        case "more_pink": return sprite_for_gem(BLOCK.PINK);
+        case "more_light_blue": return sprite_for_gem(BLOCK.LIGHTBLUE);
+        case "more_purple": return sprite_for_gem(BLOCK.PURPLE);
+        case "more_orange": return sprite_for_gem(BLOCK.ORANGE);
 
-// ✅ Define upgrade names (for reference)
-enum UPGRADE {
-    BOMB_START_LEVEL,       // Bombs start at level 2, then +1 per upgrade
-    POWERUP_SPAWN_RATE,     // Increases overall power-up appearance
-    SPECIFIC_GEM_POWERUP,   // Boosts power-up chance for a selected gem color
-    COLOR_SPAWN_RATE,       // Increases spawn rate for a specific color
-    WILD_POTION_SPAWN,      // Wild Potion blocks appear more often
-    MAX_LEVEL_UPGRADE,      // Allows power-ups to exceed default max levels
-    EXP_MULTIPLIER,         // Increases experience gained
+        case "more_bombs": return spr_powerup_bomb;
+        case "more_multi": return spr_powerup_2x_multi;
+        case "more_bows": return spr_powerup_destroy_to_right;
+        case "more_exp": return spr_powerup_exp;
+        case "more_hearts": return spr_powerup_heart;
+        case "more_money": return spr_powerup_money;
+        case "more_timers": return spr_powerup_timer;
+        case "more_wild_potions": return spr_powerup_wild_potion;
+
+        default: return spr_none; // If no matching sprite, use a placeholder
+    }
 }
-
-// ✅ Initialize upgrades (start at level 0)
-function init_upgrades() {
-    ds_map_add(global.upgrades, UPGRADE.BOMB_START_LEVEL, 0);
-    ds_map_add(global.upgrades, UPGRADE.POWERUP_SPAWN_RATE, 0);
-    ds_map_add(global.upgrades, UPGRADE.SPECIFIC_GEM_POWERUP, 0);
-    ds_map_add(global.upgrades, UPGRADE.COLOR_SPAWN_RATE, 0);
-    ds_map_add(global.upgrades, UPGRADE.WILD_POTION_SPAWN, 0);
-    ds_map_add(global.upgrades, UPGRADE.MAX_LEVEL_UPGRADE, 0);
-    ds_map_add(global.upgrades, UPGRADE.EXP_MULTIPLIER, 0);
-}
-
 
 
 

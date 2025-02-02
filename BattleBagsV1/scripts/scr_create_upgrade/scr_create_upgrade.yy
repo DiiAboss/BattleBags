@@ -6,7 +6,7 @@
   "name":"scr_create_upgrade",
   "parent":{
     "name":"UPGRADES",
-    "path":"folders/Scripts/MAIN/CREATIONS/UPGRADES.yy",
+    "path":"folders/Scripts/MAIN/UPGRADES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
