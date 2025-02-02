@@ -52,10 +52,12 @@ function draw_spawn_rates(_self) {
 			case BLOCK.ORANGE:
 				color_name = "ORANGE";
 			break;
-			case 7:
+			case BLOCK.BLUE:
+				color_name = "BLUE";
+			case BLOCK.WHITE:
 				color_name = "WHITE";
 			break;
-			case 8:
+			case BLOCK.BLACK:
 				color_name = "BLACK";
 			break;
 			default:

@@ -1,4 +1,8 @@
 
+enum BLOCK {
+    RANDOM = -4,MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
+}
 
 function create_gem(_type = -99, _powerup = weighted_random_powerup()) {
 	
@@ -34,6 +38,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		case BLOCK.PURPLE: _color = c_purple; break;
 		case BLOCK.LIGHTBLUE: _color = c_silver; break;
 		case BLOCK.ORANGE: _color = c_orange; break;
+		case BLOCK.BLUE: _color = c_blue; break;
 		case BLOCK.BLACK: _color = c_black; break;
 		case BLOCK.MEGA: _color = c_white; break;
 	}
@@ -49,7 +54,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		shake_timer: 0,    
 		color: _color,
 		fall_delay: 0,
-		max_fall_delay: 10, 
+		max_fall_delay: 5, 
 		freeze_timer: 0,   
         frozen: false,      
 		damage: 1,

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"Script44",
+  "%Name":"DIAGONAL_MATCHING",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Script44",
+  "name":"DIAGONAL_MATCHING",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

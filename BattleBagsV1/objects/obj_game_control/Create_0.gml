@@ -58,7 +58,7 @@ total_time = 0;
 time_in_seconds = total_time * FPS;
 global.gold	= 0;
 
-diagonal_matches = true;
+diagonal_matches = false;
 
 // ------------------------------------------------------
 // Global Variables & Game State
@@ -72,10 +72,6 @@ global.grid_shake_amount = 0; // Grid shake intensity
 // ------------------------------------------------------
 // Block Types
 // ------------------------------------------------------
-enum BLOCK {
-    RANDOM = -4,MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
-    LIGHTBLUE = 5, ORANGE = 6, GREY = 7, WHITE = 8, BLACK = 9
-}
 
 global_shape_function_init();
 
@@ -123,7 +119,7 @@ global.lastSwapX = -1;
 global.lastSwapY = -1;
 player_level = 0;
 combo = 0;
-numberOfGemTypes = 7;
+numberOfGemTypes = 8;
 darken_alpha = 0;
 gem_size = 64;
 global_y_offset = 0;

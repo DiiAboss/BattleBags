@@ -21,7 +21,7 @@ function get_upgrade_sprite(effect) {
         case "more_light_blue": return sprite_for_gem(BLOCK.LIGHTBLUE);
         case "more_purple": return sprite_for_gem(BLOCK.PURPLE);
         case "more_orange": return sprite_for_gem(BLOCK.ORANGE);
-
+		case "more_blue": return sprite_for_gem(BLOCK.BLUE);
         case "more_bombs": return spr_powerup_bomb;
         case "more_multi": return spr_powerup_2x_multi;
         case "more_bows": return spr_powerup_destroy_to_right;

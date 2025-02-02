@@ -496,205 +496,23 @@ function shift_up() {
 
 
 
-//function find_and_destroy_matches() {
-//    var marked_for_removal = array_create(width, height);
-//    var found_any = false;
-//    var first_found = false; // ✅ Track the first block in the combo
-//    var total_match_points = 0; // ✅ Accumulates points for multiple matches
-//	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
-
-//    // Initialize the marked_for_removal array
-//    for (var xx = 0; xx < width; xx++) {
-//        for (var yy = 0; yy < height; yy++) {
-//            marked_for_removal[xx, yy] = false;
-			
-//			if (grid[xx, yy].shake_timer > 0)
-//			{
-//				grid[xx, yy].popping = true;
-//			}
-			
-//        }
-//    }
-
-//    // -------------------------
-//    // ✅ HORIZONTAL MATCHES
-//    // -------------------------
-//    for (var j = 0; j < height; j++) {
-//        var match_count = 1;
-//        var start_idx = 0;
-
-//        for (var i = 1; i < width; i++) {
-//            if (can_match(grid[i, j], grid[i - 1, j])) {
-//                if (match_count == 1) start_idx = i - 1;
-//                match_count++;
-//            } else {
-//                if (match_count >= 3) {
-//                    for (var k = 0; k < match_count; k++) {
-//                        var xx = start_idx + k;
-//                        if (xx >= 0 && xx < width) {
-//                            marked_for_removal[xx, j] = true;
-
-//                            if (!first_found) {
-//                                global.combo_x = xx;
-//                                global.combo_y = j;
-//                                first_found = true;
-//                            }
-//							 // ✅ Check for adjacent black blocks
-//                            check_adjacent_black_blocks(self, j, xx, black_blocks_to_transform);
-//                        }
-//                    }
-//                    // ✅ Add points based on match size
-//                    total_match_points += calculate_match_points(self, match_count);
-//                }
-//                match_count = 1;
-//            }
-//        }
-//        if (match_count >= 3) {
-//            for (var k = 0; k < match_count; k++) {
-//                var xx = start_idx + k;
-//                if (xx >= 0 && xx < width) {
-//                    marked_for_removal[xx, j] = true;
-
-//                    if (!first_found) {
-//                        global.combo_x = xx;
-//                        global.combo_y = j;
-//                        first_found = true;
-//                    }
-//					 // ✅ Check for adjacent black blocks
-//                     check_adjacent_black_blocks(self, j, xx, black_blocks_to_transform);
-//                }
-//            }
-//           total_match_points += calculate_match_points(self, match_count);
-//        }
-//    }
-
-//    // -------------------------
-//    // ✅ VERTICAL MATCHES
-//    // -------------------------
-//    for (var i = 0; i < width; i++) {
-//        var match_count = 1;
-//        var start_idx = 0;
-
-//        for (var j = 1; j < height; j++) {
-//            if (can_match(grid[i, j], grid[i, j - 1])) {
-//                if (match_count == 1) start_idx = j - 1;
-//                match_count++;
-//            } else {
-//                if (match_count >= 3) {
-//                    for (var k = 0; k < match_count; k++) {
-//                        var yy = start_idx + k;
-						
-//                        if (yy >= 0 && yy < height) {
-//                            marked_for_removal[i, yy] = true;
-
-//                            if (!first_found) {
-//                                global.combo_x = i;
-//                                global.combo_y = yy;
-//                                first_found = true;
-//                            }
-//							 // ✅ Check for adjacent black blocks
-//                            check_adjacent_black_blocks(self, i, yy, black_blocks_to_transform);
-//                        }
-//                    }
-//                    total_match_points += calculate_match_points(self, match_count);
-//                }
-//                match_count = 1;
-//            }
-//        }
-//        if (match_count >= 3) {
-//            for (var k = 0; k < match_count; k++) {
-//                var yy = start_idx + k;
-//                if (yy >= 0 && yy < height) {
-//                    marked_for_removal[i, yy] = true;
-
-//                    if (!first_found) {
-//                        global.combo_x = i;
-//                        global.combo_y = yy;
-//                        first_found = true;
-//                    }
-//					 // ✅ Check for adjacent black blocks
-//                     check_adjacent_black_blocks(self, i, yy, black_blocks_to_transform);
-//                }
-//            }
-//            total_match_points += calculate_match_points(self, match_count);
-//        }
-//    }
-
-
-
-//    // -------------------------
-//    // ✅ HANDLE MATCHED GEMS
-//    // -------------------------
-//    for (var i = 0; i < width; i++) {
-//        for (var j = 0; j < height; j++) {
-//            if (marked_for_removal[i, j]) {
-//                found_any = true;
-//                grid[i, j].shake_timer = 30; // Start shaking effect
-				
-//                var gem = grid[i, j];
-//                var dx = i - global.lastSwapX;
-//                var dy = j - global.lastSwapY;
-//                var dist = sqrt(dx * dx + dy * dy);
-//				var _start_delay = 5;
-				
-//				if (gem.type == BLOCK.BLACK)
-//				{
-//					_start_delay = 20;
-//				}
-				
-				
-//                var pop_info = {
-//                    x: i,
-//                    y: j,
-//                    gem_type: gem.type,
-//                    timer: 0,
-//                    start_delay: dist * _start_delay, // Wave effect
-//                    scale: 1.0,
-//                    popping: true,
-//                    powerup: gem.powerup,
-//					dir: gem.dir,
-//                    offset_x: gem.offset_x,
-//                    offset_y: gem.offset_y,
-//                    color: gem.color,
-//                    y_offset_global: global_y_offset,
-//					match_size: match_count, // ✅ Store the match size
-//					match_points: total_match_points,
-//					bomb_tracker: false,               // Flag to mark this pop as bomb‐generated
-//					bomb_level: 0
-//                };
-				
-//				target_experience_points += (match_count + combo) + (global.modifier);
-
-//                grid[i, j].popping = true;
-//                grid[i, j].pop_timer = dist * _start_delay;
-
-//                ds_list_add(global.pop_list, pop_info);
-//            }
-//        }
-//    }
-	
-//	// ✅ Transform black blocks **after matches are removed**
-//    update_black_blocks(self, black_blocks_to_transform);
-//    ds_list_destroy(black_blocks_to_transform);
-	
-//    return found_any;
-//}
-
-
 function find_and_destroy_matches() {
     var marked_for_removal = array_create(width, height);
     var found_any = false;
-    var first_found = false;
-    var total_match_points = 0;
-    var black_blocks_to_transform = ds_list_create();
+    var first_found = false; // ✅ Track the first block in the combo
+    var total_match_points = 0; // ✅ Accumulates points for multiple matches
+	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
 
-    // ✅ Initialize marked_for_removal array
+    // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
         for (var yy = 0; yy < height; yy++) {
             marked_for_removal[xx, yy] = false;
-            if (grid[xx, yy].shake_timer > 0) {
-                grid[xx, yy].popping = true;
-            }
+			
+			if (grid[xx, yy].shake_timer > 0)
+			{
+				grid[xx, yy].popping = true;
+			}
+			
         }
     }
 
@@ -710,11 +528,44 @@ function find_and_destroy_matches() {
                 if (match_count == 1) start_idx = i - 1;
                 match_count++;
             } else {
-                if (match_count >= 3) mark_match(marked_for_removal, start_idx, match_count, j, "horizontal");
+                if (match_count >= 3) {
+                    for (var k = 0; k < match_count; k++) {
+                        var xx = start_idx + k;
+                        if (xx >= 0 && xx < width) {
+                            marked_for_removal[xx, j] = true;
+
+                            if (!first_found) {
+                                global.combo_x = xx;
+                                global.combo_y = j;
+                                first_found = true;
+                            }
+							 // ✅ Check for adjacent black blocks
+                            check_adjacent_black_blocks(self, j, xx, black_blocks_to_transform);
+                        }
+                    }
+                    // ✅ Add points based on match size
+                    total_match_points += calculate_match_points(self, match_count);
+                }
                 match_count = 1;
             }
         }
-        if (match_count >= 3) mark_match(marked_for_removal, start_idx, match_count, j, "horizontal");
+        if (match_count >= 3) {
+            for (var k = 0; k < match_count; k++) {
+                var xx = start_idx + k;
+                if (xx >= 0 && xx < width) {
+                    marked_for_removal[xx, j] = true;
+
+                    if (!first_found) {
+                        global.combo_x = xx;
+                        global.combo_y = j;
+                        first_found = true;
+                    }
+					 // ✅ Check for adjacent black blocks
+                     check_adjacent_black_blocks(self, j, xx, black_blocks_to_transform);
+                }
+            }
+           total_match_points += calculate_match_points(self, match_count);
+        }
     }
 
     // -------------------------
@@ -729,18 +580,51 @@ function find_and_destroy_matches() {
                 if (match_count == 1) start_idx = j - 1;
                 match_count++;
             } else {
-                if (match_count >= 3) mark_match(marked_for_removal, i, match_count, start_idx, "vertical");
+                if (match_count >= 3) {
+                    for (var k = 0; k < match_count; k++) {
+                        var yy = start_idx + k;
+						
+                        if (yy >= 0 && yy < height) {
+                            marked_for_removal[i, yy] = true;
+
+                            if (!first_found) {
+                                global.combo_x = i;
+                                global.combo_y = yy;
+                                first_found = true;
+                            }
+							 // ✅ Check for adjacent black blocks
+                            check_adjacent_black_blocks(self, i, yy, black_blocks_to_transform);
+                        }
+                    }
+                    total_match_points += calculate_match_points(self, match_count);
+                }
                 match_count = 1;
             }
         }
-        if (match_count >= 3) mark_match(marked_for_removal, i, match_count, start_idx, "vertical");
+        if (match_count >= 3) {
+            for (var k = 0; k < match_count; k++) {
+                var yy = start_idx + k;
+                if (yy >= 0 && yy < height) {
+                    marked_for_removal[i, yy] = true;
+
+                    if (!first_found) {
+                        global.combo_x = i;
+                        global.combo_y = yy;
+                        first_found = true;
+                    }
+					 // ✅ Check for adjacent black blocks
+                     check_adjacent_black_blocks(self, i, yy, black_blocks_to_transform);
+                }
+            }
+            total_match_points += calculate_match_points(self, match_count);
+        }
     }
 
-    // -------------------------
-    // ✅ DIAGONAL MATCHES (If enabled)
-    // -------------------------
+     //-------------------------
+     //✅ DIAGONAL MATCHES (If enabled)
+     //-------------------------
     if (diagonal_matches) {
-        // 🔵 **↘ Diagonal Matches (Top-Left to Bottom-Right)**
+         //**↘ Diagonal Matches (Top-Left to Bottom-Right)**
         for (var j = 0; j < height - 2; j++) {
             for (var i = 0; i < width - 2; i++) {
                 var match_count = 1;
@@ -753,9 +637,11 @@ function find_and_destroy_matches() {
 
                 if (match_count >= 3) mark_diagonal_match(marked_for_removal, i, j, match_count, "↘");
             }
+			
+
         }
 
-        // 🔴 **↙ Diagonal Matches (Top-Right to Bottom-Left)**
+         //**↙ Diagonal Matches (Top-Right to Bottom-Left)**
         for (var j = 0; j < height - 2; j++) {
             for (var i = width - 1; i >= 2; i--) {
                 var match_count = 1;
@@ -771,6 +657,7 @@ function find_and_destroy_matches() {
         }
     }
 
+
     // -------------------------
     // ✅ HANDLE MATCHED GEMS
     // -------------------------
@@ -778,39 +665,58 @@ function find_and_destroy_matches() {
         for (var j = 0; j < height; j++) {
             if (marked_for_removal[i, j]) {
                 found_any = true;
-                grid[i, j].shake_timer = 30;
-
+                grid[i, j].shake_timer = 30; // Start shaking effect
+				
                 var gem = grid[i, j];
                 var dx = i - global.lastSwapX;
                 var dy = j - global.lastSwapY;
                 var dist = sqrt(dx * dx + dy * dy);
-                var _start_delay = (gem.type == BLOCK.BLACK) ? 20 : 5;
-
+				var _start_delay = 5;
+				
+				if (gem.type == BLOCK.BLACK)
+				{
+					_start_delay = 20;
+				}
+				
+				
                 var pop_info = {
-                    x: i, y: j, gem_type: gem.type,
-                    timer: 0, start_delay: dist * _start_delay,
-                    scale: 1.0, popping: true,
-                    powerup: gem.powerup, dir: gem.dir,
-                    offset_x: gem.offset_x, offset_y: gem.offset_y,
-                    color: gem.color, y_offset_global: global_y_offset,
-                    match_size: match_count, match_points: total_match_points,
-                    bomb_tracker: false, bomb_level: 0
+                    x: i,
+                    y: j,
+                    gem_type: gem.type,
+                    timer: 0,
+                    start_delay: dist * _start_delay, // Wave effect
+                    scale: 1.0,
+                    popping: true,
+                    powerup: gem.powerup,
+					dir: gem.dir,
+                    offset_x: gem.offset_x,
+                    offset_y: gem.offset_y,
+                    color: gem.color,
+                    y_offset_global: global_y_offset,
+					match_size: match_count, // ✅ Store the match size
+					match_points: total_match_points,
+					bomb_tracker: false,               // Flag to mark this pop as bomb‐generated
+					bomb_level: 0
                 };
+				
+				target_experience_points += (match_count + combo) + (global.modifier);
 
-                target_experience_points += (match_count + combo) + (global.modifier);
                 grid[i, j].popping = true;
                 grid[i, j].pop_timer = dist * _start_delay;
+
                 ds_list_add(global.pop_list, pop_info);
             }
         }
     }
-
-    // ✅ Transform black blocks **after matches are removed**
+	
+	// ✅ Transform black blocks **after matches are removed**
     update_black_blocks(self, black_blocks_to_transform);
     ds_list_destroy(black_blocks_to_transform);
-
+	
     return found_any;
 }
+
+
 
 
 
@@ -832,8 +738,6 @@ if all_blocks_landed(self) {
             var _y = pop_data.y;
             var px = (_x * gem_size) + board_x_offset + offset;
             var py = (_y * gem_size) + offset + global_y_offset + gem_y_offsets[_x, _y];
-			
-			//self.grid[_x, _y].popping = true;
 			
 			var _color = c_white;
 			if (variable_struct_exists(pop_data, "color"))
@@ -942,12 +846,19 @@ function process_powerup(_self, _x, _y, gem, total_multiplier) {
 
         case POWERUP.EXP:
             // ⭐ **Grant extra experience (scales infinitely)**
-            experience_points += 10 * total_multiplier;
+            experience_points += (max_experience_points * 0.05) * total_multiplier;
             break;
 
         case POWERUP.HEART:
-            // 💖 **Heal infinitely without cap**
-            player_health += total_multiplier;
+            // **Heal infinitely without cap**
+			if (player_health < max_player_health)
+			{
+				player_health += total_multiplier;
+			}
+			else
+			{
+				player_health = max_player_health;
+			}
             break;
 
         case POWERUP.MONEY:
@@ -985,7 +896,7 @@ function process_powerup(_self, _x, _y, gem, total_multiplier) {
             break;
 
         case POWERUP.FEATHER:
-            // 🪶 **Remove gravity effect for short time**
+            // **Remove gravity effect for short time**
             for (var j = 0; j < _self.height; j++) {
                 for (var i = 0; i < _self.width; i++) {
                     _self.grid[i, j].falling = false;
