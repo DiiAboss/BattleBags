@@ -27,7 +27,7 @@ enum ENEMY_ATTACK
 }
 
 queued_attack_timer = 0;
-max_queue_attack_timer = 60;
+max_queue_attack_timer = 20;
 
 // ----------------------------------
 // ✅ Enemy Stats
