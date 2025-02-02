@@ -1,6 +1,8 @@
 // 🎨 Draw background box
 draw_set_color(c_black);
-draw_rectangle(100, 100, room_width - 100, room_height - 100, false);
+draw_set_alpha(0.95);
+draw_rectangle(0, 0, room_width, room_height, false);
+draw_set_alpha(1);
 draw_set_color(c_white);
 draw_set_halign(fa_center);
 draw_text(room_width / 2, 80, "Choose an Upgrade");
@@ -61,5 +63,50 @@ if (hover_index != -1)
 var desc_y_position = 500;
 draw_set_halign(fa_center);
 draw_text(global.upgrade_positions[hover_index].x, desc_y_position, upgrade[hover_index].desc);
+
+// 🔢 Display **Current Stat Value**
+    var stat_value = get_upgrade_current_stat(upgrade[hover_index].effect);
+    draw_set_color(c_lime);
+    draw_text(global.upgrade_positions[hover_index].x, desc_y_position + 20, "Current Value: " + string(stat_value));
+}
+
+// ------------------------------------
+// 🎨 Display Gem Spawn Rates (LEFT SIDE)
+// ------------------------------------
+var gem_x = (room_width / 2) - 178;  // Left Position
+var gem_y = room_height / 1.75;
+var gem_line_spacing = 22;
+
+draw_set_color(c_white);
+draw_set_halign(fa_left);
+draw_text(gem_x, gem_y - 20, "🎨 Gem Spawn Rates:");
+
+var gem_percentages = get_color_spawn_percentages(self);
+var gem_names = ["Red", "Yellow", "Green", "Blue", "Purple", "Orange", "Pink", "Blue"];
+var gem_keys = [BLOCK.RED, BLOCK.YELLOW, BLOCK.GREEN, BLOCK.LIGHTBLUE, BLOCK.PURPLE, BLOCK.ORANGE, BLOCK.PINK, BLOCK.BLUE];
+
+for (var i = 0; i < array_length(gem_keys); i++) {
+    var gem_percentage = gem_percentages[gem_keys[i]];
+    draw_text(gem_x, gem_y + (i * gem_line_spacing), gem_names[i] + ": " + string(round(gem_percentage)) + "%");
+}
+
+
+// --------------------------------------
+// 💥 Display Power-Up Spawn Rates (RIGHT SIDE)
+// --------------------------------------
+var powerup_x = (room_width / 2) + 64;  // Right Position
+var powerup_y = room_height / 1.75;
+var powerup_line_spacing = 22;
+
+draw_set_color(c_white);
+draw_set_halign(fa_left);
+draw_text(powerup_x, powerup_y - 20, "💥 Power-Up Spawn Rates:");
+
+var powerup_names = ["Bomb", "Multi 2X", "Bow", "EXP", "Heart", "Money", "Fire", "Ice", "Timer", "Feather", "Wild Potion"];
+var powerup_keys = [POWERUP.BOMB, POWERUP.MULTI_2X, POWERUP.BOW, POWERUP.EXP, POWERUP.HEART, POWERUP.MONEY, POWERUP.FIRE, POWERUP.ICE, POWERUP.TIMER, POWERUP.FEATHER, POWERUP.WILD_POTION];
+
+for (var i = 0; i < array_length(powerup_keys); i++) {
+    var powerup_weight = ds_map_find_value(global.powerup_weights, powerup_keys[i]);
+    draw_text(powerup_x, powerup_y + (i * powerup_line_spacing), powerup_names[i] + ": " + string(powerup_weight) + "%");
 }
 

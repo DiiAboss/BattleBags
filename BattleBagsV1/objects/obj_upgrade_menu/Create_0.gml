@@ -3,6 +3,7 @@ array_size = 3;
 upgrade = array_create(array_size);
 
 
+
 global.upgrade_positions = array_create(array_size); // Store button positions
 
 var x_start = (room_width / 2) - (384 * 1);
@@ -24,3 +25,5 @@ for (var i = 0; i < array_size; i++) {
 
 
 depth = -99;
+
+numberOfGemTypes = obj_game_control.numberOfGemTypes;

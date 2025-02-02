@@ -8,7 +8,7 @@ function get_color_spawn_percentages(_self) {
     }
 
     // ✅ Compute each color’s percentage
-    for (var i = 0; i < numberOfGemTypes; i++) {
+    for (var i = 0; i < _self.numberOfGemTypes; i++) {
         percentages[i] = (global.color_spawn_weight[i] / total_weight) * 100;
     }
 

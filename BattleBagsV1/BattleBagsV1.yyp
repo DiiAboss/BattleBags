@@ -98,6 +98,7 @@
     {"id":{"name":"scr_game_over","path":"scripts/scr_game_over/scr_game_over.yy",},},
     {"id":{"name":"scr_gem_shake","path":"scripts/scr_gem_shake/scr_gem_shake.yy",},},
     {"id":{"name":"scr_get_color_spawn_percentages","path":"scripts/scr_get_color_spawn_percentages/scr_get_color_spawn_percentages.yy",},},
+    {"id":{"name":"scr_get_upgrade_stat","path":"scripts/scr_get_upgrade_stat/scr_get_upgrade_stat.yy",},},
     {"id":{"name":"scr_increase_color_spawn","path":"scripts/scr_increase_color_spawn/scr_increase_color_spawn.yy",},},
     {"id":{"name":"scr_is_being_destroyed","path":"scripts/scr_is_being_destroyed/scr_is_being_destroyed.yy",},},
     {"id":{"name":"scr_is_top_row_filled","path":"scripts/scr_is_top_row_filled/scr_is_top_row_filled.yy",},},

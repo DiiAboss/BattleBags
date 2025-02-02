@@ -65,6 +65,7 @@
     {"name":"scr_drop_blocks","order":3,"path":"scripts/scr_drop_blocks/scr_drop_blocks.yy",},
     {"name":"scr_freeze_block","order":2,"path":"scripts/scr_freeze_block/scr_freeze_block.yy",},
     {"name":"scr_get_color_spawn_percentages","order":2,"path":"scripts/scr_get_color_spawn_percentages/scr_get_color_spawn_percentages.yy",},
+    {"name":"scr_get_upgrade_stat","order":5,"path":"scripts/scr_get_upgrade_stat/scr_get_upgrade_stat.yy",},
     {"name":"scr_increase_color_spawn","order":1,"path":"scripts/scr_increase_color_spawn/scr_increase_color_spawn.yy",},
     {"name":"scr_is_being_destroyed","order":6,"path":"scripts/scr_is_being_destroyed/scr_is_being_destroyed.yy",},
     {"name":"scr_is_top_row_filled","order":1,"path":"scripts/scr_is_top_row_filled/scr_is_top_row_filled.yy",},

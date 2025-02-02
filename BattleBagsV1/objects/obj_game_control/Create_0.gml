@@ -40,7 +40,9 @@ max_experience_points = max_exp_mod + ((max_exp_level_mod * level) + (level * le
 
 fight_for_your_life = false;
 
-max_player_health = 30;
+
+// Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
+max_player_health = 10;
 player_health     = max_player_health;
 
 highest_points = 0;

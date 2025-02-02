@@ -322,6 +322,69 @@ draw_set_font(fnt_basic);
 
 
 
+//// 🛑 Always Draw the Preview Box (Even if No Attack is Queued)
+//var preview_x = board_x_offset + (width * gem_size) + 16;
+//var preview_y = 64;
+//var preview_size = 256; // Preview box size
+//var grid_size = 32;     // Size of each grid cell
+//var grid_spacing = 4;   // Spacing between blocks
+
+//// 🔲 Draw the preview box outline (always visible)
+//draw_rectangle(preview_x, preview_y, preview_x + preview_size, preview_y + preview_size, true);
+
+//// 🛑 Only draw attack preview if an attack is queued
+//if (ds_list_size(global.enemy_attack_queue) > 0) {
+//    var next_attack = ds_list_find_value(global.enemy_attack_queue, 0);
+
+//    // 🟥 Draw the Attack Timer Progress Overlay
+//    var attack_progress = obj_enemy_parent.attack_timer / obj_enemy_parent.max_attack_timer; // Progress % (1 = full)
+//    var bar_height = preview_size * attack_progress; // Calculate height
+//    draw_set_alpha(0.5);
+//    draw_rectangle(preview_x, preview_y, preview_x + preview_size, preview_y + bar_height, false);
+//    draw_set_alpha(1);
+
+//	 // 🔳 Draw Attack Grid or Display "FREEZE"
+//    if (next_attack == "FREEZE") {
+//        draw_set_halign(fa_center);
+//        draw_set_valign(fa_middle);
+//        draw_text(preview_x + preview_size / 2, preview_y + preview_size / 2, "FREEZE");
+//    }
+//	else
+//	{
+//	    // 🔳 Draw the Grid & Attack Blocks
+//	    if (ds_map_exists(global.shape_templates, next_attack)) {
+//	        var attack_shape = ds_map_find_value(global.shape_templates, next_attack);
+//	        var shape_width = array_length(attack_shape[0]);
+//	        var shape_height = array_length(attack_shape);
+
+//	        // 🔥 Centering Calculation
+//	        var total_width = (shape_width * grid_size) + ((shape_width - 1) * grid_spacing);
+//	        var total_height = (shape_height * grid_size) + ((shape_height - 1) * grid_spacing);
+//	        var offset_x = preview_x + (preview_size - total_width) / 2;
+//	        var offset_y = preview_y + (preview_size - total_height) / 2;
+
+//	        for (var j = 0; j < shape_height; j++) {
+//	            for (var i = 0; i < shape_width; i++) {
+//	                var grid_x = offset_x + (i * (grid_size + grid_spacing));
+//	                var grid_y = offset_y + (j * (grid_size + grid_spacing));
+
+//	                // 🔲 Draw Grid
+//	                //draw_rectangle(grid_x, grid_y, grid_x + grid_size, grid_y + grid_size, true);
+
+//	                // 🟥 Draw the Attack Blocks
+//	                if (attack_shape[j][i] != BLOCK.NONE) {
+//	                    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, false);
+//	                }
+//					//else
+//					//{
+//	                //    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, true);
+//					//}
+//	            }
+//	        }
+//	    }
+//	}
+//}
+
 // 🛑 Always Draw the Preview Box (Even if No Attack is Queued)
 var preview_x = board_x_offset + (width * gem_size) + 16;
 var preview_y = 64;
@@ -329,59 +392,63 @@ var preview_size = 256; // Preview box size
 var grid_size = 32;     // Size of each grid cell
 var grid_spacing = 4;   // Spacing between blocks
 
-// 🔲 Draw the preview box outline (always visible)
-draw_rectangle(preview_x, preview_y, preview_x + preview_size, preview_y + preview_size, true);
 
-// 🛑 Only draw attack preview if an attack is queued
-if (ds_list_size(global.enemy_attack_queue) > 0) {
-    var next_attack = ds_list_find_value(global.enemy_attack_queue, 0);
+// 🛑 Always Draw the Preview Box Outlines for Upcoming Attacks
+var max_attacks_shown = 5; // 🔥 Show up to 5 upcoming attacks
+var queue_size = min(ds_list_size(global.enemy_attack_queue), max_attacks_shown);
 
-    // 🟥 Draw the Attack Timer Progress Overlay
-    var attack_progress = obj_enemy_parent.attack_timer / obj_enemy_parent.max_attack_timer; // Progress % (1 = full)
-    var bar_height = preview_size * attack_progress; // Calculate height
-    draw_set_alpha(0.5);
-    draw_rectangle(preview_x, preview_y, preview_x + preview_size, preview_y + bar_height, false);
-    draw_set_alpha(1);
-
-	 // 🔳 Draw Attack Grid or Display "FREEZE"
-    if (next_attack == "FREEZE") {
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        draw_text(preview_x + preview_size / 2, preview_y + preview_size / 2, "FREEZE");
-    }
-	else
-	{
-	    // 🔳 Draw the Grid & Attack Blocks
-	    if (ds_map_exists(global.shape_templates, next_attack)) {
-	        var attack_shape = ds_map_find_value(global.shape_templates, next_attack);
-	        var shape_width = array_length(attack_shape[0]);
-	        var shape_height = array_length(attack_shape);
-
-	        // 🔥 Centering Calculation
-	        var total_width = (shape_width * grid_size) + ((shape_width - 1) * grid_spacing);
-	        var total_height = (shape_height * grid_size) + ((shape_height - 1) * grid_spacing);
-	        var offset_x = preview_x + (preview_size - total_width) / 2;
-	        var offset_y = preview_y + (preview_size - total_height) / 2;
-
-	        for (var j = 0; j < shape_height; j++) {
-	            for (var i = 0; i < shape_width; i++) {
-	                var grid_x = offset_x + (i * (grid_size + grid_spacing));
-	                var grid_y = offset_y + (j * (grid_size + grid_spacing));
-
-	                // 🔲 Draw Grid
-	                //draw_rectangle(grid_x, grid_y, grid_x + grid_size, grid_y + grid_size, true);
-
-	                // 🟥 Draw the Attack Blocks
-	                if (attack_shape[j][i] != BLOCK.NONE) {
-	                    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, false);
-	                }
-					//else
-					//{
-	                //    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, true);
-					//}
-	            }
-	        }
-	    }
-	}
+for (var i = 0; i < queue_size; i++) {
+    var attack_offset_y = preview_y + (i * (preview_size + 8)); // 🔥 Properly stack attacks with spacing
+    draw_rectangle(preview_x, attack_offset_y, preview_x + preview_size, attack_offset_y + preview_size, true);
 }
 
+//  Only draw attack preview if an attack is queued
+var queue_size = ds_list_size(global.enemy_attack_queue);
+if (queue_size > 0) {
+    //  Loop through the next `max_attacks_shown` attacks
+    for (var attack_index = 0; attack_index < min(queue_size, max_attacks_shown); attack_index++) {
+        var next_attack = ds_list_find_value(global.enemy_attack_queue, attack_index);
+        var attack_offset_y = preview_y + (attack_index * (preview_size + 8)); // Space out previews
+
+        //  Draw Attack Timer Progress Overlay for first attack
+        if (attack_index == 0) {
+            var attack_progress = obj_enemy_parent.attack_timer / obj_enemy_parent.max_attack_timer;
+            var bar_height = preview_size * attack_progress;
+            draw_set_alpha(0.5);
+            draw_rectangle(preview_x, attack_offset_y, preview_x + preview_size, attack_offset_y + bar_height, false);
+            draw_set_alpha(1);
+        }
+
+        // 🔳 Draw Attack Grid or Display "FREEZE"
+        if (next_attack == "FREEZE") {
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_middle);
+            draw_text(preview_x + preview_size / 2, attack_offset_y + preview_size / 2, "FREEZE");
+        } else {
+            // 🔳 Draw the Grid & Attack Blocks
+            if (ds_map_exists(global.shape_templates, next_attack)) {
+                var attack_shape = ds_map_find_value(global.shape_templates, next_attack);
+                var shape_width = array_length(attack_shape[0]);
+                var shape_height = array_length(attack_shape);
+
+                // 🔥 Centering Calculation
+                var total_width = (shape_width * grid_size) + ((shape_width - 1) * grid_spacing);
+                var total_height = (shape_height * grid_size) + ((shape_height - 1) * grid_spacing);
+                var offset_x = preview_x + (preview_size - total_width) / 2;
+                var offset_y = attack_offset_y + (preview_size - total_height) / 2;
+
+                for (var j = 0; j < shape_height; j++) {
+                    for (var i = 0; i < shape_width; i++) {
+                        var grid_x = offset_x + (i * (grid_size + grid_spacing));
+                        var grid_y = offset_y + (j * (grid_size + grid_spacing));
+
+                        // 🟥 Draw the Attack Blocks
+                        if (attack_shape[j][i] != BLOCK.NONE) {
+                            draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

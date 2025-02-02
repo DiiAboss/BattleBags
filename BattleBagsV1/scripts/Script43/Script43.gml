@@ -8,6 +8,8 @@
 //        ds_list_add(global.enemy_attack_queue, attack_pattern);
 //    }
 //}
+/// @function enemy_attack_basic
+/// @description Generates a basic attack and adds it to the queue.
 function enemy_attack_basic(_self, game_control_object) {
     var attack_pattern = generate_attack_shape(_self.attack);
 
@@ -15,14 +17,14 @@ function enemy_attack_basic(_self, game_control_object) {
     ds_list_add(global.enemy_attack_queue, attack_pattern);
 }
 
-
-
+/// @function enemy_attack_special
+/// @description Adds a special attack to the queue.
 function enemy_attack_special(_self, attack_pattern) {
-	
-	// 🔥 Add attack to queue **for preview & execution**
     ds_list_add(global.enemy_attack_queue, attack_pattern);
 }
 
+/// @function generate_attack_shape
+/// @description Generates a random attack shape dynamically.
 function generate_attack_shape(_attack) {
     var max_width = obj_game_control.width; // 🔥 Maximum width
     var max_height = 4;                     // 🔥 Maximum height (prevents game over)
@@ -65,15 +67,13 @@ function generate_attack_shape(_attack) {
     return attack_name;
 }
 
-
+/// @function enemy_defeated
+/// @description Handles enemy defeat.
 function enemy_defeated(_self, game_control_object) {
-	// ✅ Grant Rewards
-	global.gold	+= gold_reward;
-	game_control_object.experience_points += exp_reward;
+    // ✅ Grant Rewards
+    global.gold += gold_reward;
+    game_control_object.experience_points += exp_reward;
 
-	// ✅ Increase enemy difficulty over time
-	//global.enemies_defeated++;
-
-	// ✅ Destroy enemy
-	instance_destroy();
+    // ✅ Destroy enemy
+    instance_destroy();
 }

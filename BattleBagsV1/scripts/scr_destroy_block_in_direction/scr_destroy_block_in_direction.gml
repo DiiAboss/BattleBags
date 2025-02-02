@@ -9,7 +9,7 @@ function destroy_blocks_in_direction_from_point(_self, start_x, start_y, _dir_x,
     var j = start_y;
 
     // ✅ Move in the given direction
-    while (i >= 0 && i < width && j >= 0 && j < height) {
+    while (i >= 0 && i < width && j >= 1 && j < height) {
         var gem = _self.grid[i, j];
 
         if (i < 0 || i > width) {
