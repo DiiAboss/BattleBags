@@ -58,6 +58,8 @@ total_time = 0;
 time_in_seconds = total_time * FPS;
 global.gold	= 0;
 
+diagonal_matches = true;
+
 // ------------------------------------------------------
 // Global Variables & Game State
 // ------------------------------------------------------
