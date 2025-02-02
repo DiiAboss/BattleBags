@@ -112,6 +112,7 @@
     {"id":{"name":"scr_update_topmost_row","path":"scripts/scr_update_topmost_row/scr_update_topmost_row.yy",},},
     {"id":{"name":"scr_weighted_random_gem","path":"scripts/scr_weighted_random_gem/scr_weighted_random_gem.yy",},},
     {"id":{"name":"Script43","path":"scripts/Script43/Script43.yy",},},
+    {"id":{"name":"Script44","path":"scripts/Script44/Script44.yy",},},
     {"id":{"name":"SWAP_FUNCTIONS","path":"scripts/SWAP_FUNCTIONS/SWAP_FUNCTIONS.yy",},},
     {"id":{"name":"spr_black_gem","path":"sprites/spr_black_gem/spr_black_gem.yy",},},
     {"id":{"name":"spr_blue_gem","path":"sprites/spr_blue_gem/spr_blue_gem.yy",},},

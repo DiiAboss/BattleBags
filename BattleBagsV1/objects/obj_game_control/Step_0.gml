@@ -680,6 +680,7 @@ function shift_up() {
 //    return found_any;
 //}
 
+
 function find_and_destroy_matches() {
     var marked_for_removal = array_create(width, height);
     var found_any = false;
@@ -811,21 +812,7 @@ function find_and_destroy_matches() {
     return found_any;
 }
 
-// ✅ Function to mark matches
-function mark_match(marked_for_removal, _x, count, _y, _direction) {
-    for (var k = 0; k < count; k++) {
-        if (_direction == "horizontal") marked_for_removal[_x + k, _y] = true;
-        else if (_direction == "vertical") marked_for_removal[_x, _y + k] = true;
-    }
-}
 
-// ✅ Function to mark diagonal matches
-function mark_diagonal_match(marked_for_removal, start_x, start_y, count, _direction) {
-    for (var k = 0; k < count; k++) {
-        if (_direction == "↘") marked_for_removal[start_x + k, start_y + k] = true;
-        else if (_direction == "↙") marked_for_removal[start_x - k, start_y + k] = true;
-    }
-}
 
 
 global.modifier = game_speed_default / game_speed_start;
