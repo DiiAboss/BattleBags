@@ -102,20 +102,27 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
             var cy = coords[k].y;
             if (cx >= 0 && cx < _self.width && cy >= 0 && cy < _self.height &&
                 _self.grid[cx, cy].type != -1) {
-                
-                blocks_destroyed++;
-                total_match_points += calculate_match_points(_self, 1);
-                
-                // ✅ Make sure **ALL AFFECTED BLOCKS** have bomb_tracker enabled
-                _self.grid[cx, cy].bomb_tracker = true;
-                _self.grid[cx, cy].popping = true;
-                _self.grid[cx, cy].pop_timer = 20;
-                
-                var pop_info = create_pop_info(_self, cx, cy, _x, _y, blocks_destroyed, total_match_points, true, bomb_level);
-                ds_list_add(global.pop_list, pop_info);
 
-                _color = _self.grid[cx, cy].color;
-                destroy_block(_self, cx, cy);
+				if (_self.grid[cx, cy].type == BLOCK.BLACK)
+				{
+					_self.grid[cx, cy].type = create_gem(BLOCK.RANDOM);
+				}
+				else
+				{
+					blocks_destroyed++;
+					total_match_points += calculate_match_points(_self, 1);
+					// ✅ Make sure **ALL AFFECTED BLOCKS** have bomb_tracker enabled
+	                _self.grid[cx, cy].bomb_tracker = true;
+	                _self.grid[cx, cy].popping = true;
+	                _self.grid[cx, cy].pop_timer = 20;
+                
+	                var pop_info = create_pop_info(_self, cx, cy, _x, _y, blocks_destroyed, total_match_points, true, bomb_level);
+	                ds_list_add(global.pop_list, pop_info);
+
+	                _color = _self.grid[cx, cy].color;
+	                destroy_block(_self, cx, cy);
+				}
+                
             }
         }
     }
@@ -127,20 +134,26 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
             for (var j = _y - half; j <= _y + half; j++) {
                 if (i >= 0 && i < _self.width && j >= 0 && j < _self.height &&
                     _self.grid[i, j].type != -1) {
-
-                    blocks_destroyed++;
-                    total_match_points += calculate_match_points(_self, 1);
-
-                    // ✅ Ensure **ALL AFFECTED BLOCKS** get bomb_tracker!
-                    _self.grid[i, j].bomb_tracker = true;
-                    _self.grid[i, j].popping = true;
-                    _self.grid[i, j].pop_timer = 20;
+	
+					if (_self.grid[cx, cy].type == BLOCK.BLACK)
+					{
+						_self.grid[cx, cy].type = create_gem(BLOCK.RANDOM);
+					}
+					else
+					{
+						blocks_destroyed++;
+						total_match_points += calculate_match_points(_self, 1);
+	                    // ✅ Ensure **ALL AFFECTED BLOCKS** get bomb_tracker!
+	                    _self.grid[i, j].bomb_tracker = true;
+	                    _self.grid[i, j].popping = true;
+	                    _self.grid[i, j].pop_timer = 20;
                     
-                    var pop_info = create_pop_info(_self, i, j, _x, _y, blocks_destroyed, total_match_points, true, bomb_level);
-                    ds_list_add(global.pop_list, pop_info);
+	                    var pop_info = create_pop_info(_self, i, j, _x, _y, blocks_destroyed, total_match_points, true, bomb_level);
+	                    ds_list_add(global.pop_list, pop_info);
 
-                    _color = _self.grid[i, j].color;
-                    destroy_block(_self, i, j);
+	                    _color = _self.grid[i, j].color;
+	                    destroy_block(_self, i, j);
+					}
                 }
             }
         }

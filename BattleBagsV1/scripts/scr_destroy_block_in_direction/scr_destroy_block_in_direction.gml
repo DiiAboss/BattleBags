@@ -45,6 +45,13 @@ function destroy_blocks_in_direction_from_point(_self, start_x, start_y, _dir_x,
         gem.popping = true;
         gem.pop_timer = 0;
 		
+		if (gem.type == BLOCK.BLACK)
+		{
+			grid[i, j] = create_gem(-99);
+		}
+		else
+		
+		
 		if (gem.type != -1)
 		{
 			ds_list_add(global.pop_list, pop_info);

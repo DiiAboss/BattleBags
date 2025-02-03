@@ -1,17 +1,8 @@
-//function enemy_attack_basic(_self, game_control_object) {
-//    var is_freeze_attack = (irandom(1) == 0); // 50% chance of freeze attack
 
-//    if (is_freeze_attack) {
-//        ds_list_add(global.enemy_attack_queue, "FREEZE"); // 🔥 Add "FREEZE" to queue
-//    } else {
-//        var attack_pattern = generate_attack_shape(_self.attack);
-//        ds_list_add(global.enemy_attack_queue, attack_pattern);
-//    }
-//}
 /// @function enemy_attack_basic
 /// @description Generates a basic attack and adds it to the queue.
 function enemy_attack_basic(_self, game_control_object) {
-    var attack_pattern = generate_attack_shape(_self.attack);
+    var attack_pattern = generate_attack_shape(_self.attack, game_control_object);
 
     // 🔥 Add attack to queue **for preview & execution**
     ds_list_add(global.enemy_attack_queue, attack_pattern);
@@ -25,13 +16,23 @@ function enemy_attack_special(_self, attack_pattern) {
 
 /// @function generate_attack_shape
 /// @description Generates a random attack shape dynamically.
-function generate_attack_shape(_attack) {
+function generate_attack_shape(_attack, game_control_object) {
     var max_width = obj_game_control.width; // 🔥 Maximum width
     var max_height = 4;                     // 🔥 Maximum height (prevents game over)
 
     var shape_width = irandom_range(1, min(_attack, max_width)); 
     var shape_height = irandom_range(1, min(_attack div max_width + 1, max_height)); 
-
+	
+	var game_level = game_control_object.level;
+	
+	var block_to_drop = BLOCK.RANDOM;
+	
+	if (game_level > 10)
+	{
+		block_to_drop = BLOCK.BLACK;
+	}
+	
+	
     // 🔥 Restrict the 4th row from forming until previous rows are full
     if (_attack >= (max_width * 3) && shape_height < 4) {
         shape_height = 3; 
@@ -46,7 +47,7 @@ function generate_attack_shape(_attack) {
         
         for (var _x = 0; _x < shape_width; _x++) {
             if (remaining_blocks > 0) {
-                attack_template[_y][_x] = BLOCK.RANDOM;
+                attack_template[_y][_x] = block_to_drop;
                 remaining_blocks--;
             }
         }

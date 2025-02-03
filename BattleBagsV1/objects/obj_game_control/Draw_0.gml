@@ -184,7 +184,7 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 }
 
 // Optional: Draw combo count
-draw_text(10, 40, "TIME: " + string(time_in_seconds));
+draw_text(10, 40, "TIME: " + string(draw_time));
 draw_text(10, 60, "SPEED: " + string(game_speed_default));
 draw_text(10, 80, "EXP: " + string(experience_points) + " / " + string(max_experience_points));
 draw_text(10, 100, "LEVEL: " + string(level));

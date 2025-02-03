@@ -6,6 +6,9 @@ mega_blocks = ds_list_create();
 
 
 
+
+
+
 global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
 
 // ------------------------------------------------------
@@ -59,6 +62,10 @@ total_matches = 0;
 total_time = 0;
 time_in_seconds = total_time * FPS;
 global.gold	= 0;
+
+time_in_minutes = floor(time_in_seconds / 60);
+
+draw_time = string(time_in_minutes) + ":" + string(floor(time_in_seconds % 60));
 
 diagonal_matches = false;
 
