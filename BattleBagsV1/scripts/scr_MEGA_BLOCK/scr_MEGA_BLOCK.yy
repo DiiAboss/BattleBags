@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_create_gem",
+  "%Name":"scr_MEGA_BLOCK",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_create_gem",
+  "name":"scr_MEGA_BLOCK",
   "parent":{
-    "name":"GEMS",
-    "path":"folders/Scripts/MAIN/GEMS.yy",
+    "name":"MEGA_BLOCK",
+    "path":"folders/Scripts/MEGA_BLOCK.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

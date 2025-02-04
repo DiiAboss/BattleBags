@@ -6,7 +6,7 @@
   "name":"scr_create_powerup",
   "parent":{
     "name":"POWERUPS",
-    "path":"folders/Scripts/MAIN/CREATIONS/POWERUPS.yy",
+    "path":"folders/Scripts/MAIN/POWERUPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

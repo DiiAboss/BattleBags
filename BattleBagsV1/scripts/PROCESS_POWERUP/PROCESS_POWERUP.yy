@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_create_gem",
+  "%Name":"PROCESS_POWERUP",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_create_gem",
+  "name":"PROCESS_POWERUP",
   "parent":{
-    "name":"GEMS",
-    "path":"folders/Scripts/MAIN/GEMS.yy",
+    "name":"POWERUPS",
+    "path":"folders/Scripts/MAIN/POWERUPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

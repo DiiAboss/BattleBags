@@ -6,25 +6,28 @@
 /// - increment_speed: The speed factor (default = 0.01).
 function process_experience_points(_self, amount, increment_speed = 2) 
 {
-    // Gradual XP increment
-    var diff = _self.experience_points + amount;
-
-    if (abs(diff) < 1) {
-        _self.experience_points = _self.target_experience_points;
-        _self.target_experience_points = 0;
-    } 
-    else 
+	if (amount > 0)
 	{
-        var delta = diff * increment_speed;
+	    // Gradual XP increment
+	    var diff = _self.experience_points + amount;
 
-        if (abs(delta) < 1) {
-            delta = sign(delta) * 1;
-        }
-        _self.experience_points += delta;
-		_self.target_experience_points -= delta;
-    }
+	    if (abs(diff) < 1) {
+	        _self.experience_points = _self.target_experience_points;
+	        _self.target_experience_points = 0;
+	    } 
+	    else 
+		{
+	        var delta = diff * increment_speed;
 
-    process_level_up(_self);
+	        if (abs(delta) < 1) {
+	            delta = sign(delta) * 1;
+	        }
+	        _self.experience_points += delta;
+			_self.target_experience_points -= delta;
+	    }
+
+	    process_level_up(_self);
+	}
 }
 
 /// @function process_level_up(_self)
@@ -32,7 +35,7 @@ function process_experience_points(_self, amount, increment_speed = 2)
 function process_level_up(_self)
 {
     var levels_gained = 0;
-
+	
     // **Check for multiple Level Ups**
     while (_self.experience_points >= _self.max_experience_points) {
         _self.experience_points -= _self.max_experience_points; // Carry over excess XP

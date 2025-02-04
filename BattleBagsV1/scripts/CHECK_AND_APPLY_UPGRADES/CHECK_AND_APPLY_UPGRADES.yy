@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"CHECK_AND_APPLY_UPGRADES",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"CHECK_AND_APPLY_UPGRADES",
+  "parent":{
+    "name":"UPGRADES",
+    "path":"folders/Scripts/MAIN/UPGRADES.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

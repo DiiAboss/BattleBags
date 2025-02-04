@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_create_gem",
+  "%Name":"DEBUG_CONTROLS",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_create_gem",
+  "name":"DEBUG_CONTROLS",
   "parent":{
-    "name":"GEMS",
-    "path":"folders/Scripts/MAIN/GEMS.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

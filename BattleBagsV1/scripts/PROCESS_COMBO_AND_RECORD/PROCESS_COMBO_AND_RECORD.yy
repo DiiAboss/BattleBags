@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_create_gem",
+  "%Name":"PROCESS_COMBO_AND_RECORD",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_create_gem",
+  "name":"PROCESS_COMBO_AND_RECORD",
   "parent":{
-    "name":"GEMS",
-    "path":"folders/Scripts/MAIN/GEMS.yy",
+    "name":"COMBO",
+    "path":"folders/Scripts/COMBO.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

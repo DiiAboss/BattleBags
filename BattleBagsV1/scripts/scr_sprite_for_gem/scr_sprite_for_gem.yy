@@ -6,7 +6,7 @@
   "name":"scr_sprite_for_gem",
   "parent":{
     "name":"GEMS",
-    "path":"folders/Scripts/MAIN/CREATIONS/GEMS.yy",
+    "path":"folders/Scripts/MAIN/GEMS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

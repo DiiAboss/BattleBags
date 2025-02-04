@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_create_gem",
+  "%Name":"UPDATE_TIME_AND_SPEED",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_create_gem",
+  "name":"UPDATE_TIME_AND_SPEED",
   "parent":{
-    "name":"GEMS",
-    "path":"folders/Scripts/MAIN/GEMS.yy",
+    "name":"TIME",
+    "path":"folders/Scripts/TIME.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
