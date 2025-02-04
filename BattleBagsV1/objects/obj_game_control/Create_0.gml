@@ -16,7 +16,7 @@ global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------
-game_speed_default = 2;
+game_speed_default = 1;
 game_speed_start   = game_speed_default;
 
 global.modifier = game_speed_default / game_speed_start;

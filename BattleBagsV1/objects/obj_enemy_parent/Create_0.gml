@@ -27,7 +27,7 @@ enum ENEMY_ATTACK
 }
 
 queued_attack_timer = 0;
-max_queue_attack_timer = 20;
+max_queue_attack_timer = 60;
 
 // ----------------------------------
 // ✅ Enemy Stats
@@ -48,7 +48,7 @@ attack_queue_active = true; // ✅ Track that an attack was delayed
 attack_timer_increase_mod = 1;
 total_attacks = 1;
 attack_timer = 0;
-max_attack_timer = 300; // Attacks every 5 seconds
+max_attack_timer = 600; // Attacks every 10 seconds
 attack_default = 1;
 
 attacks_until_special_attack = 3; // Set this so after a certain amount of attacks, do a special attack;
