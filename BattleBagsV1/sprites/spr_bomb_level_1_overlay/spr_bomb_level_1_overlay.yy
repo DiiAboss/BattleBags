@@ -5,7 +5,7 @@
   "bbox_bottom":215,
   "bbox_left":24,
   "bbox_right":215,
-  "bbox_top":24,
+  "bbox_top":3,
   "collisionKind":1,
   "collisionTolerance":0,
   "DynamicTexturePage":false,
@@ -13,6 +13,8 @@
   "For3D":false,
   "frames":[
     {"$GMSpriteFrame":"","%Name":"fd0fcb36-f8de-4eb9-9c2a-117278995309","name":"fd0fcb36-f8de-4eb9-9c2a-117278995309","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"a7c1e04d-654a-4281-8da7-5c7698c1de14","name":"a7c1e04d-654a-4281-8da7-5c7698c1de14","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"fb2a13e5-bb74-4b92-9f79-3aa306eed5c6","name":"fb2a13e5-bb74-4b92-9f79-3aa306eed5c6","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
@@ -25,8 +27,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"gems",
-    "path":"folders/Sprites/gems.yy",
+    "name":"playerAttacks",
+    "path":"folders/Sprites/playerAttacks.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -49,7 +51,7 @@
     },
     "eventStubScript":null,
     "eventToFunction":{},
-    "length":1.0,
+    "length":3.0,
     "lockOrigin":false,
     "moments":{
       "$KeyframeStore<MomentsEventKeyframe>":"",
@@ -59,7 +61,7 @@
     },
     "name":"spr_bomb_level_1_overlay",
     "playback":1,
-    "playbackSpeed":30.0,
+    "playbackSpeed":10.0,
     "playbackSpeedType":0,
     "resourceType":"GMSequence",
     "resourceVersion":"2.0",
@@ -71,6 +73,12 @@
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
                 "0":{"$SpriteFrameKeyframe":"","Id":{"name":"fd0fcb36-f8de-4eb9-9c2a-117278995309","path":"sprites/spr_bomb_level_1_overlay/spr_bomb_level_1_overlay.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"206da36c-ab87-45c2-8e32-f915de4b32c5","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"a7c1e04d-654a-4281-8da7-5c7698c1de14","path":"sprites/spr_bomb_level_1_overlay/spr_bomb_level_1_overlay.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"ac173b8f-b5d8-4152-835b-c1418238ea82","IsCreationKey":false,"Key":1.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+            {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"fb2a13e5-bb74-4b92-9f79-3aa306eed5c6","path":"sprites/spr_bomb_level_1_overlay/spr_bomb_level_1_overlay.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"f0e5e8e8-463b-4e72-8141-a8a3070cde3e","IsCreationKey":false,"Key":2.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

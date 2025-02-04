@@ -47,7 +47,7 @@ function destroy_blocks_in_direction_from_point(_self, start_x, start_y, _dir_x,
 		
 		if (gem.type == BLOCK.BLACK)
 		{
-			grid[i, j] = create_gem(-99);
+			grid[i, j] = create_gem(BLOCK.RANDOM);
 		}
 		else
 		

@@ -28,8 +28,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"gems",
-    "path":"folders/Sprites/gems.yy",
+    "name":"enemy_attack",
+    "path":"folders/Sprites/enemy_attack.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

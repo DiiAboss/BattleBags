@@ -1,7 +1,6 @@
 function check_adjacent_black_blocks(_self, _x, _y, _list) {
     var directions = [
-        [-1, 0], [1, 0], [0, -1], [0, 1], // Left, Right, Up, Down
-        [-1, -1], [1, -1], [-1, 1], [1, 1] // Diagonal directions
+        [-1, 0], [1, 0], [0, -1], [0, 1] // Left, Right, Up, Down
     ];
 
     for (var i = 0; i < array_length(directions); i++) {
@@ -11,11 +10,12 @@ function check_adjacent_black_blocks(_self, _x, _y, _list) {
         if (dx >= 0 && dx < _self.width && dy >= 0 && dy < _self.height) {
             var gem = _self.grid[dx, dy];
             if (gem.type == BLOCK.BLACK) {
-                gem.popping = true;
+                ds_list_add(_list, [dx, dy]); // ✅ Store positions of black blocks
             }
         }
     }
 }
+
 
 function transform_black_blocks(_self, _list) {
     for (var i = 0; i < ds_list_size(_list); i++) {
@@ -29,19 +29,16 @@ function transform_black_blocks(_self, _list) {
 }
 
 function update_black_blocks(_self, _list) {
-    for (var i = 0; i < _self.width; i++) {
-        for (var j = 0; j < _self.height; j++) {
-            var gem = _self.grid[i, j];
+    for (var i = 0; i < ds_list_size(_list); i++) {
+        var pos = ds_list_find_value(_list, i);
+        var _x = pos[0];
+        var _y = pos[1];
 
-            if (gem.type == BLOCK.BLACK && gem.popping) {
-                gem.pop_timer--;
+        var gem = _self.grid[_x, _y];
 
-                if (gem.pop_timer <= 0) {
-                    // 🔥 **Transform black block into something else**
-                    _self.grid[i, j] = create_gem(irandom_range(0, _self.numberOfGemTypes - 1));
-                    gem.popping = false; // Stop the popping effect
-                }
-            }
+        if (gem.type == BLOCK.BLACK) {
+            // ✅ Transform into a new gem (use BLOCK.RANDOM for variety)
+            _self.grid[_x, _y] = create_gem(BLOCK.RANDOM);
         }
     }
 }

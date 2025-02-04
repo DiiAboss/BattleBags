@@ -5,7 +5,7 @@ function toss_down_row(_self, black_block = false, start_x = -1) {
     
     for (var i = 0; i < width; i++) 
 	{
-		var new_gem = create_gem(black_block ? BLOCK.BLACK : -99);
+		var new_gem = create_gem(black_block ? BLOCK.BLACK : BLOCK.RANDOM);
 		
         _self.grid[i, 0] = new_gem; // ✅ Place it in the grid at row 0
         new_gem.falling = true; // ✅ Mark as falling

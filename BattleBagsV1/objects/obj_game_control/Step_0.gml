@@ -24,6 +24,8 @@ if (mouse_check_button_pressed(mb_right))
 	instance_create_depth(mouse_x, mouse_y, depth - 1, obj_bomb);
 }
 
+
+
 //--------------------------------------------------------
 // CONTROLS
 //--------------------------------------------------------
@@ -99,7 +101,7 @@ if (keyboard_check_pressed(ord("Q"))) {
 	adjust_powerup_weights(POWERUP.BOMB, 2);
 
 	// Increase Wild Potion spawn rate by 5
-	adjust_powerup_weights(POWERUP.WILD_POTION, 5);
+	adjust_powerup_weights(POWERUP.EXP, 5);
 }
 
 // Space for speed up
@@ -123,7 +125,10 @@ else if (keyboard_check(vk_space)) {
 	    }
 }
 
-
+if (combo > highest_max_combo)
+{
+	highest_max_combo = combo;
+}
 
 total_time += 1;
 
@@ -298,18 +303,9 @@ if (!swap_in_progress && all_blocks_landed(self)) {
 spawn_timer = 60 / global.gameSpeed;
 shift_speed = 0.1 * global.gameSpeed;
 
-//if (all_pops_finished()) {
-//	// Now we can drop blocks
-//	drop_blocks(self);
-
-//	// ✅ If a match is found, increase combo
-//	if find_and_destroy_matches() {
-//		combo += 1;
-//	} 
-//}
-
 
 if (all_pops_finished()) {
+	
     // ✅ Drop blocks **AFTER** all pops finish
     drop_blocks(self);
 
@@ -392,8 +388,7 @@ function shift_up() {
 
     // 3️⃣ Spawn a new random row at the bottom
     for (var i = 0; i < width; i++) {
-        //grid[i, height - 1] = create_gem(irandom_range(0, numberOfGemTypes - 1));
-		grid[i, height - 1] = create_gem(-99);
+		grid[i, height - 1] = create_gem(BLOCK.RANDOM);
         gem_y_offsets[i, height - 1] = 0;
     }
 	
@@ -413,6 +408,9 @@ function find_and_destroy_matches() {
     var first_found = false; // ✅ Track the first block in the combo
     var total_match_points = 0; // ✅ Accumulates points for multiple matches
 	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
+
+	
+	global.black_blocks_to_transform = ds_list_create(); // ✅ Track black blocks to transform
 
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
@@ -576,9 +574,10 @@ function find_and_destroy_matches() {
         for (var j = 0; j < height; j++) {
             if (marked_for_removal[i, j]) {
                 found_any = true;
-                grid[i, j].shake_timer = 30; // Start shaking effect
+                grid[i, j].shake_timer = max_shake_timer; // Start shaking effect
 				
                 var gem = grid[i, j];
+				
                 var dx = i - global.lastSwapX;
                 var dy = j - global.lastSwapY;
                 var dist = sqrt(dx * dx + dy * dy);
@@ -681,32 +680,31 @@ if all_blocks_landed(self) {
 				{
 					return;
 				}
+
+					if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2;
+	                //if (gem.powerup == POWERUP.MULTI_3X) total_multiplier *= 3;
+	                //if (gem.powerup == POWERUP.MULTI_4X) total_multiplier *= 4;
+	                // ✅ You can add more multipliers here later!
+
+
+	                // 🔥 **Step 2: Loop Through Multipliers**
+	                process_powerup(self, _x, _y, gem, total_multiplier_next);
+					
+					total_blocks_destroyed++;
+					// **Destroy the block**
+					destroy_block(self, _x, _y);
+					
+					// **Create visual effect**
+	                effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
+
+	                // ✅ Create Attack Object with Score
+	                var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
+	                attack.color = pop_data.color;
 				
-				
+	                attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
 
-                if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2;
-                //if (gem.powerup == POWERUP.MULTI_3X) total_multiplier *= 3;
-                //if (gem.powerup == POWERUP.MULTI_4X) total_multiplier *= 4;
-                // ✅ You can add more multipliers here later!
-
-
-                // 🔥 **Step 2: Loop Through Multipliers**
-                process_powerup(self, _x, _y, gem, total_multiplier_next);
-
-                // **Destroy the block**
-                destroy_block(self, _x, _y);
-
-                // **Create visual effect**
-                effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
-
-                // ✅ Create Attack Object with Score
-                var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
-                attack.color = pop_data.color;
-				
-                attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
-
-                // ✅ Add accumulated match points to total_points
-                total_points += attack.damage;
+	                // ✅ Add accumulated match points to total_points
+	                total_points += attack.damage;
 
                 // Remove from pop_list
                 ds_list_delete(global.pop_list, i);
@@ -757,7 +755,11 @@ function process_powerup(_self, _x, _y, gem, total_multiplier) {
 
         case POWERUP.EXP:
             // ⭐ **Grant extra experience (scales infinitely)**
-            experience_points += (max_experience_points * 0.05) * total_multiplier;
+            var _experience_points = ((max_experience_points * 0.05) * total_multiplier);
+			    var px = (_x * gem_size) + board_x_offset;
+                var py = (_y * gem_size) + global_y_offset;
+			var _point_obj = instance_create_depth(px, py, depth-99, obj_experience_point);
+			_point_obj.value = _experience_points;
             break;
 
         case POWERUP.HEART:
@@ -822,6 +824,9 @@ function process_powerup(_self, _x, _y, gem, total_multiplier) {
     }
 }
 
+if (keyboard_check_pressed(vk_enter)) {
+    add_new_column(self);
+}
 
 function spawn_wild_block(_self, multiplier = 1) {
     var _rand_array = array_create(0); // Stores valid positions
@@ -966,7 +971,7 @@ function check_mega_block_transform(_self) {
                                 effect_create_depth(_self.depth, ef_explosion, (_x * gem_size), (_y * gem_size), 0.5, c_white);
 
                                 // ✅ **Transform the entire Mega Block**
-                                _self.grid[_x, _y] = create_gem(irandom(_self.numberOfGemTypes - 1));
+                                _self.grid[_x, _y] = create_gem(BLOCK.RANDOM);
                             }
                         }
 
@@ -982,5 +987,48 @@ function check_mega_block_transform(_self) {
 }
 
 
+function add_new_column(_self) {
+    var old_width = array_length(_self.grid);
+    var new_width = old_width + 1;
+    var height = array_length(_self.grid[0]);
+
+    // ✅ Step 1: Create a new grid with the new width
+    var new_grid = array_create(new_width);
+    
+    for (var i = 0; i < new_width; i++) {
+        new_grid[i] = array_create(height);
+        
+        for (var j = 0; j < height; j++) {
+            if (i < old_width) {
+                // ✅ Copy existing columns
+                new_grid[i][j] = _self.grid[i][j];
+            } else {
+                // ✅ Initialize new column with empty gems
+                new_grid[i][j] = create_gem(BLOCK.NONE);
+            }
+        }
+    }
+
+    // ✅ Step 2: Replace old grid with the new expanded grid
+    _self.grid = new_grid;
+
+    // ✅ Step 3: Expand gem offset arrays
+    _self.gem_x_offsets = array_create(new_width);
+    _self.gem_y_offsets = array_create(new_width);
+
+    for (var i = 0; i < new_width; i++) {
+        _self.gem_x_offsets[i] = array_create(height, 0);
+        _self.gem_y_offsets[i] = array_create(height, 0);
+    }
+
+    // ✅ Step 4: Expand lock array (if used)
+    _self.locked = array_create(new_width);
+    for (var i = 0; i < new_width; i++) {
+        _self.locked[i] = array_create(height, false);
+    }
+
+    // ✅ Step 5: Update width
+    _self.width = new_width;
+}
 
 

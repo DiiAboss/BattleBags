@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"INIT_BOARD",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"INIT_BOARD",
+  "parent":{
+    "name":"MAIN",
+    "path":"folders/Scripts/MAIN.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -4,9 +4,9 @@ enum BLOCK {
     LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
 }
 
-function create_gem(_type = -99, _powerup = weighted_random_powerup()) {
+function create_gem(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()) {
 	
-	if (_type == -99) { // If generating a new random gem
+	if (_type == BLOCK.RANDOM) { // If generating a new random gem
 		_type = weighted_random_gem(self);
     }
 	

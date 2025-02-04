@@ -14,6 +14,6 @@ function sprite_for_gem(gem_type) {
 		case BLOCK.BLACK:		return spr_black_gem; // Purple gem
 		case BLOCK.MEGA:		return spr_mega_gem; // Purple ge.
         default:
-            return spr_red_gem;    // Default gem (in case of an invalid value)
+            return spr_enemy_gem_overlay;    // Default gem (in case of an invalid value)
     }
 }

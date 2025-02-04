@@ -5,8 +5,10 @@ FPS = 60;
 mega_blocks = ds_list_create();
 
 
-
-
+total_blocks_destroyed = 0;
+total_combo_counter = 0;
+highest_max_combo   = 0;
+total_damage_dealt  = 0;
 
 
 global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
@@ -43,10 +45,17 @@ max_experience_points = max_exp_mod + ((max_exp_level_mod * level) + (level * le
 
 fight_for_your_life = false;
 
-
 // Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
-max_player_health = 10;
+
+
+health_per_heart = 4;
+
+total_hearts = 3;
+
+max_hearts = total_hearts * health_per_heart;
+max_player_health = max_hearts;
 player_health     = max_player_health;
+
 
 highest_points = 0;
 total_points   = 0;
@@ -82,6 +91,9 @@ global.grid_shake_amount = 0; // Grid shake intensity
 // Block Types
 // ------------------------------------------------------
 
+
+
+
 global_shape_function_init();
 
 
@@ -101,6 +113,10 @@ generate_all_upgrades();
 global.enemy_attack_queue = ds_list_create();
 
 
+spawn_rows = 6; // Number of initial rows to spawn
+width = 8;
+height = 16;
+
 // ------------------------------------------------------
 // Swap Mechanics
 // ------------------------------------------------------
@@ -119,8 +135,8 @@ WILD_BLOCK = -2;
 offset = 32;
 board_x_offset = 128;
 
-width = 8;
-height = 16;
+max_shake_timer = 30;
+
 global.topmost_row = height - 1;
 global.pop_list = ds_list_create();
 
@@ -135,46 +151,16 @@ global_y_offset = 0;
 
 total_multiplier_next = 1;
 
-// ------------------------------------------------------
-// Powerups System
-// ------------------------------------------------------
-powerups = array_create(7, -1);
-powerups[0] = create_powerup(POWERUP.SWORD);
-powerups[1] = create_powerup(POWERUP.BOW);
-powerups[2] = create_powerup(POWERUP.EXP);
-
-
-for (var i = 0; i < array_length(powerups) - 1; i++) {
-    if (powerups[i] != -1) {
-        powerups[i].chance = 10;
-    }
-}
-
-create_gem_spawn_rates();
-// ------------------------------------------------------
-// Create The Grid
-// ------------------------------------------------------
-grid = array_create(width);
-for (var i = 0; i < width; i++) {
-    grid[i] = array_create(height);
-    for (var j = 0; j < height; j++) {
-        grid[i][j] = create_gem(-1); // Initialize all cells as empty
-    }
-}
-
 global.fall_timer = 0;
 
 global.in_upgrade_menu = false;
 
 // ------------------------------------------------------
-// Create Gem Offset Arrays
+// Create The Grid
 // ------------------------------------------------------
-gem_x_offsets = array_create(width);
-gem_y_offsets = array_create(width);
-for (var i = 0; i < width; i++) {
-    gem_x_offsets[i] = array_create(height, 0);
-    gem_y_offsets[i] = array_create(height, 0);
-}
+
+create_gem_spawn_rates(self);
+initialize_game_board(self, width, height, spawn_rows);
 
 // ------------------------------------------------------
 // Gem Selection Variables
@@ -183,30 +169,7 @@ selected_x = -1;
 selected_y = -1;
 dragged = false;
 
-// ------------------------------------------------------
-// Initial Gem Spawn Rows
-// ------------------------------------------------------
-locked = array_create(width);
-for (var i = 0; i < width; i++) {
-    locked[i] = array_create(height, false);
-}
 
-spawn_rows = 6; // Number of initial rows to spawn
-spawn_rows = min(spawn_rows, height);
-for (var i = 0; i < width; i++) {
-    for (var j = height - spawn_rows; j < height; j++) {
-        grid[i][j] = create_gem(irandom(numberOfGemTypes - 1));
-    }
-}
-
-// Ensure the entire grid is valid
-for (var i = 0; i < width; i++) {
-    for (var j = 0; j < height; j++) {
-        if (is_undefined(grid[i][j]) || !is_struct(grid[i][j])) {
-            grid[i][j] = create_gem(-1);
-        }
-    }
-}
 
 // ------------------------------------------------------
 // Timers & Speeds

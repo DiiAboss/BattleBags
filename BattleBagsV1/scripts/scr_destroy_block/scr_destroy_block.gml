@@ -1,5 +1,14 @@
 function destroy_block(_self, _x, _y) {
-    _self.grid[_x, _y] = create_gem(-1); // Replace with an empty gem
-    _self.gem_y_offsets[_x, _y] = 0;
-    //update_topmost_row();
+    var gem = _self.grid[_x, _y];
+
+    if (gem == -1) return; // Prevent null errors
+
+    // ✅ If BLACK, store it for transformation (don't destroy immediately)
+    if (gem.type == BLOCK.BLACK) {
+        ds_list_add(global.black_blocks_to_transform, [_x, _y]);
+        return;
+    }
+
+    // ✅ Otherwise, process the destruction normally
+    _self.grid[_x, _y] = create_gem(BLOCK.NONE); // Remove block from grid
 }

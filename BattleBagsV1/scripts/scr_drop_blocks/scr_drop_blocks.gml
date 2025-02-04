@@ -10,10 +10,11 @@ function drop_blocks(_self, fall_speed = 2) {
 			
 
             if (gem.type != -1) { // Valid gem
-				//if (gem.frozen) && (gem.falling)
-				//{
-				//	gem.fall_delay = 1;
-				//}
+				if (gem.frozen) && (gem.falling)
+				{
+					gem.falling = false;
+					
+				}
 				
 				
 				
@@ -22,14 +23,14 @@ function drop_blocks(_self, fall_speed = 2) {
                 // ✅ If the block below is empty, make this block fall
                 if (below.type == -1) {
                     gem.falling = true; // ✅ Mark as falling
-
+					
                     // ✅ Countdown fall delay before moving
                     if (gem.fall_delay < gem.max_fall_delay) {
                         gem.fall_delay++;
                     } else {
                         // ✅ Move the gem **one row down**
                         _self.grid[i, j + 1] = gem;
-                        _self.grid[i, j] = create_gem(-1); // Clear old position
+                        _self.grid[i, j] = create_gem(BLOCK.NONE); // Clear old position
                         _self.gem_y_offsets[i, j + 1] = _self.gem_y_offsets[i, j]; // Keep offset
                         _self.gem_y_offsets[i, j] = 0; // Reset previous position
                         

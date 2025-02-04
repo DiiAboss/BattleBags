@@ -127,7 +127,8 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 
     var final_x = draw_x + center_offset - scaled_offset;
     var final_y = draw_y + center_offset - scaled_offset;
-
+	
+	
     draw_sprite_ext(
         sprite_for_gem(pop_data.gem_type),
         0,
@@ -155,14 +156,28 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 			
 			
 
-					draw_text(draw_x, draw_y, string(grid[pop_data.x, pop_data.y].popping))
+		draw_text(draw_x, draw_y, string(grid[pop_data.x, pop_data.y].shake_timer))
+		draw_text(draw_x + 12, draw_y, string(pop_data.scale))
+	
+}
 
+for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
+    var pop_data = ds_list_find_value(global.pop_list, idx);
+	
+		if (pop_data.bomb_tracker)
+		{
+			    // Base coords
+		    var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
+		    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset;
 			
-			if (pop_data.bomb_tracker)
-			{
-				draw_sprite(spr_bomb_overlay, 0, draw_x, draw_y);
-			}
+			var img_number = sprite_get_number(spr_bomb_overlay_wick);
+			var progress = img_number - (img_number * (grid[pop_data.x, pop_data.y].shake_timer / max_shake_timer));
 			
+			draw_sprite_ext(spr_bomb_level_1_overlay, -1, draw_x + irandom_range(1, -1), draw_y + irandom_range(1, -1), 1.1, 1.1, 0, c_white, 1);
+		}
+		
+}
+
 			// Draw the combo number if a combo is active
 		if (combo > 1) { // Only show if at least 2 matches have happened
 		    draw_set_font(f_b_font);
@@ -180,16 +195,14 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 			draw_set_font(fnt_basic);
 			draw_set_halign(fa_left);
 		}
-	
-}
 
 // Optional: Draw combo count
 draw_text(10, 40, "TIME: " + string(draw_time));
 draw_text(10, 60, "SPEED: " + string(game_speed_default));
-draw_text(10, 80, "EXP: " + string(experience_points) + " / " + string(max_experience_points));
+draw_text(10, 80, "BLOCKS: " + string(total_blocks_destroyed));
 draw_text(10, 100, "LEVEL: " + string(level));
 draw_text(10, 120, "COMBO: " + string(combo) );
-draw_text(10, 140, "cTIMER: " + string(combo_timer));
+draw_text(10, 140, "BEST COMBO: " + string(highest_max_combo));
 
 
 var y_start = 128;
@@ -222,34 +235,71 @@ draw_rectangle(board_x_offset - thickness, grid_height,
 draw_spawn_rates(self);
 
 
+//// ----------------------
+////  🔴 DRAW PLAYER HEALTH BAR
+//// ----------------------
+//var max_health = max_player_health; // Set max health (Adjust as needed)
+//var bar_width = width * gem_size; // Full grid width
+//var bar_height = 64; // Bar height
+//var bar_x = board_x_offset; // X Position
+//var bar_y = -10; // Slightly above the grid
+
+//// Calculate health percentage
+//var health_percent = clamp(player_health / max_health, 0, 1);
+//var health_bar_width = bar_width * health_percent;
+
+//// Draw background (gray full bar)
+//draw_set_color(c_black);
+//draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, false);
+
+//// Draw actual health bar (Red)
+//draw_set_color(c_red);
+//draw_rectangle(bar_x, bar_y, bar_x + health_bar_width, bar_y + bar_height, false);
+
+//// Draw Text (Health Number)
+//draw_set_color(c_white);
+//draw_set_halign(fa_center);
+//draw_text(bar_x + (bar_width / 2), bar_y + (bar_height / 2), "HP: " + string(player_health) + "/" + string(max_health));
+
+//// Reset Alignment
+//draw_set_halign(fa_left);
+
 // ----------------------
-//  🔴 DRAW PLAYER HEALTH BAR
+//  ❤️ DRAW PLAYER HEALTH (Hearts System)
 // ----------------------
-var max_health = max_player_health; // Set max health (Adjust as needed)
+//// Draw background (gray full bar)
+
 var bar_width = width * gem_size; // Full grid width
-var bar_height = 64; // Bar height
+var bar_height = 80; // Bar height
 var bar_x = board_x_offset; // X Position
-var bar_y = -10; // Slightly above the grid
-
-// Calculate health percentage
-var health_percent = clamp(player_health / max_health, 0, 1);
-var health_bar_width = bar_width * health_percent;
-
-// Draw background (gray full bar)
-draw_set_color(c_black);
-draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, false);
-
-// Draw actual health bar (Red)
+var bar_y = room_height-80; // Slightly above the grid
 draw_set_color(c_red);
-draw_rectangle(bar_x, bar_y, bar_x + health_bar_width, bar_y + bar_height, false);
-
-// Draw Text (Health Number)
+draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, false);
 draw_set_color(c_white);
-draw_set_halign(fa_center);
-draw_text(bar_x + (bar_width / 2), bar_y + (bar_height / 2), "HP: " + string(player_health) + "/" + string(max_health));
+draw_rectangle(bar_x, bar_y - 3, bar_x + bar_width, bar_y + 4, false);
+var heart_x = board_x_offset + 128; // Start X position (align left)
+var heart_y = room_height - 34; // Slightly above grid
+var heart_spacing = 128; // Space between hearts
 
-// Reset Alignment
-draw_set_halign(fa_left);
+// 🔥 Get health data
+var total_hearts = max_player_health div 4; // Total heart slots
+var full_hearts = player_health div 4; // How many full hearts
+var remainder = player_health mod 4; // Remaining health in partial heart
+
+// 🖼️ Loop through each heart slot
+for (var i = 0; i < total_hearts; i++) {
+    var _sprite_index = 0; // Default to empty heart
+
+    if (i < full_hearts) {
+        _sprite_index = 4; // Full heart
+    }
+    else if (i == full_hearts) {
+        _sprite_index = remainder; // Partial heart (1/4, 2/4, 3/4)
+    }
+
+    // Draw heart sprite with correct frame (sprite should have 5 frames: 0 = empty, 4 = full)
+    draw_sprite(spr_hearts, _sprite_index, heart_x + (i * heart_spacing), heart_y);
+}
 
 // ----------------------
 //  🔥 DRAW DANGER WARNING (Glowing Columns)
@@ -319,71 +369,6 @@ draw_set_halign(fa_left);
 draw_set_font(fnt_basic);
 
 
-
-
-
-//// 🛑 Always Draw the Preview Box (Even if No Attack is Queued)
-//var preview_x = board_x_offset + (width * gem_size) + 16;
-//var preview_y = 64;
-//var preview_size = 256; // Preview box size
-//var grid_size = 32;     // Size of each grid cell
-//var grid_spacing = 4;   // Spacing between blocks
-
-//// 🔲 Draw the preview box outline (always visible)
-//draw_rectangle(preview_x, preview_y, preview_x + preview_size, preview_y + preview_size, true);
-
-//// 🛑 Only draw attack preview if an attack is queued
-//if (ds_list_size(global.enemy_attack_queue) > 0) {
-//    var next_attack = ds_list_find_value(global.enemy_attack_queue, 0);
-
-//    // 🟥 Draw the Attack Timer Progress Overlay
-//    var attack_progress = obj_enemy_parent.attack_timer / obj_enemy_parent.max_attack_timer; // Progress % (1 = full)
-//    var bar_height = preview_size * attack_progress; // Calculate height
-//    draw_set_alpha(0.5);
-//    draw_rectangle(preview_x, preview_y, preview_x + preview_size, preview_y + bar_height, false);
-//    draw_set_alpha(1);
-
-//	 // 🔳 Draw Attack Grid or Display "FREEZE"
-//    if (next_attack == "FREEZE") {
-//        draw_set_halign(fa_center);
-//        draw_set_valign(fa_middle);
-//        draw_text(preview_x + preview_size / 2, preview_y + preview_size / 2, "FREEZE");
-//    }
-//	else
-//	{
-//	    // 🔳 Draw the Grid & Attack Blocks
-//	    if (ds_map_exists(global.shape_templates, next_attack)) {
-//	        var attack_shape = ds_map_find_value(global.shape_templates, next_attack);
-//	        var shape_width = array_length(attack_shape[0]);
-//	        var shape_height = array_length(attack_shape);
-
-//	        // 🔥 Centering Calculation
-//	        var total_width = (shape_width * grid_size) + ((shape_width - 1) * grid_spacing);
-//	        var total_height = (shape_height * grid_size) + ((shape_height - 1) * grid_spacing);
-//	        var offset_x = preview_x + (preview_size - total_width) / 2;
-//	        var offset_y = preview_y + (preview_size - total_height) / 2;
-
-//	        for (var j = 0; j < shape_height; j++) {
-//	            for (var i = 0; i < shape_width; i++) {
-//	                var grid_x = offset_x + (i * (grid_size + grid_spacing));
-//	                var grid_y = offset_y + (j * (grid_size + grid_spacing));
-
-//	                // 🔲 Draw Grid
-//	                //draw_rectangle(grid_x, grid_y, grid_x + grid_size, grid_y + grid_size, true);
-
-//	                // 🟥 Draw the Attack Blocks
-//	                if (attack_shape[j][i] != BLOCK.NONE) {
-//	                    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, false);
-//	                }
-//					//else
-//					//{
-//	                //    draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, true);
-//					//}
-//	            }
-//	        }
-//	    }
-//	}
-//}
 
 // 🛑 Always Draw the Preview Box (Even if No Attack is Queued)
 var preview_x = board_x_offset + (width * gem_size) + 16;

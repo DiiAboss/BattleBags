@@ -2,16 +2,16 @@
 // Color Spawn Weight System
 // ------------------------------------------------------
 
-function create_gem_spawn_rates(spawn_rate = 4)
+function create_gem_spawn_rates(game_control_object, spawn_rate = 12)
 {
-	global.color_spawn_weight = array_create(numberOfGemTypes, spawn_rate);
+	global.color_spawn_weight = array_create(game_control_object.numberOfGemTypes, spawn_rate);
 }
 
-function weighted_random_gem(_self) {
+function weighted_random_gem(game_control_object) {
     var total_weight = 0;
 
     // ✅ Calculate total weight
-    for (var i = 0; i < _self.numberOfGemTypes; i++) {
+    for (var i = 0; i < game_control_object.numberOfGemTypes; i++) {
         total_weight += global.color_spawn_weight[i];
     }
 
@@ -19,7 +19,7 @@ function weighted_random_gem(_self) {
     var rand = irandom(total_weight - 1);
     var cumulative_weight = 0;
 
-    for (var i = 0; i < _self.numberOfGemTypes; i++) {
+    for (var i = 0; i < game_control_object.numberOfGemTypes; i++) {
         cumulative_weight += global.color_spawn_weight[i];
 
         if (rand < cumulative_weight) {
@@ -27,5 +27,5 @@ function weighted_random_gem(_self) {
         }
     }
     
-    return 0; // Default to first color (should never happen)
+    return BLOCK.NONE; // Default to first color (should never happen)
 }

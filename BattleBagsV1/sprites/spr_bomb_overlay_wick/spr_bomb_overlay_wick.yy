@@ -32,8 +32,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"gems",
-    "path":"folders/Sprites/gems.yy",
+    "name":"playerAttacks",
+    "path":"folders/Sprites/playerAttacks.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
