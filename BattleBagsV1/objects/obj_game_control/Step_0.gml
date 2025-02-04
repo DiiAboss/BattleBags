@@ -125,6 +125,18 @@ else if (keyboard_check(vk_space)) {
 	    }
 }
 
+if (timer_block_slow_down > 0)
+{
+	global.gameSpeed  = game_speed_default * 0.5 * game_speed_combo_modifier;
+	timer_block_slow_down -= 1;
+}
+else
+{
+	timer_block_slow_down = 0;
+}
+
+
+
 if (combo > highest_max_combo)
 {
 	highest_max_combo = combo;
@@ -149,7 +161,7 @@ if (t_i_s % 30 == 0)
 
 
 if (keyboard_check_pressed(ord("1"))) {
-    toss_down_shape(self, string("h_1x2"));
+    increase_player_max_hearts(self, 1);
 }
 if (keyboard_check_pressed(ord("2"))) {
     toss_down_shape(self, "h_2x1");
@@ -295,6 +307,23 @@ if (!swap_in_progress && all_blocks_landed(self)) {
             grid[i, j].offset_y = 0;
         }
     }
+}
+    var j = 0;
+	var reset = true;
+for (var i = 0; i < width; i++) {
+
+        var gem = grid[i, 0]; // Retrieve the gem object
+
+        // Ensure the cell contains a valid gem object
+		if (gem.type != -1) && !gem.falling
+		{	
+				reset = false;
+		}
+}
+
+if (reset)
+{
+	lose_life_timer = 0;
 }
 
 // ------------------------------------------------------
@@ -719,6 +748,9 @@ if all_blocks_landed(self) {
 }
 
 
+
+
+
 function process_powerup(_self, _x, _y, gem, total_multiplier) {
     if (gem.powerup == -1) return; // No power-up, do nothing
 	
@@ -805,7 +837,7 @@ function process_powerup(_self, _x, _y, gem, total_multiplier) {
 
         case POWERUP.TIMER:
             // ⏳ **Slow down the game (max level 5)**
-            global.gameSpeed = max(0.5 / level, 0.1);
+				timer_block_slow_down += 30 * level;
             break;
 
         case POWERUP.FEATHER:

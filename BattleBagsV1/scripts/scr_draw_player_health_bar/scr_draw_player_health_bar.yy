@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_draw_player_health_bar",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_draw_player_health_bar",
+  "parent":{
+    "name":"PLAYER_HEALTH",
+    "path":"folders/Scripts/MAIN/PLAYER_HEALTH.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

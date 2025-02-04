@@ -48,6 +48,11 @@ fight_for_your_life = false;
 // Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
 
 
+timer_block_slow_down = 0;
+
+lose_life_max_timer = FPS * global.modifier * 3;
+lose_life_timer     = 0;
+
 health_per_heart = 4;
 
 total_hearts = 3;

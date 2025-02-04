@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_increase_player_max_health",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_increase_player_max_health",
+  "parent":{
+    "name":"PLAYER_HEALTH",
+    "path":"folders/Scripts/MAIN/PLAYER_HEALTH.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

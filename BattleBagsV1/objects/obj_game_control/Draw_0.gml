@@ -6,72 +6,58 @@ var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount)
 var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
 
 for (var i = 0; i < width; i++) {
+    var max_shake = 2; // Max shake intensity when blocks are above row 1
+    var shake_intensity = 0; // Default no shake
+
+    // 🔹 **Check if column has any blocks above row 1**
+    var above_blocks = false;
+    for (var j = 0; j >= -3; j--) { // Check rows 0, -1, -2, -3
+        if (i >= 0 && i < width && j >= 0 && grid[i, j].type != BLOCK.NONE && !grid[i, j].falling ) {
+            above_blocks = true;
+            break; // Stop checking if we find any block
+        }
+    }
+
+    // 🔥 **If blocks are above row 1, apply max shake**
+    if (above_blocks) {
+        shake_intensity = max_shake;
+    } 
+    // 🔥 **Otherwise, scale shake based on progress to row 0**
+    else if (grid[i, 1].type != BLOCK.NONE && !grid[i, 1].falling) {
+        var block_y = (1 * gem_size) + global_y_offset;
+        var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
+        shake_intensity = lerp(0, max_shake, progress);
+    }
+
+    // 🔹 Now loop through grid to draw blocks
     for (var j = 0; j < height; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
 
-        // Ensure the cell contains a valid gem object
-		if (gem.type != -1) {
-            var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x  + shake_x;
-            var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + shake_y;
-			
-					
-			if (grid[i, 1].type != -1 && !grid[i, 1].falling) { // 🚨 Column in danger
-                var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
-                var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
-				
-                var shake_intensity = lerp(0, 3, progress); // Shake increases as it gets closer
+        if (gem.type != BLOCK.NONE) {
+            var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+            var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset;
+
+            // 🔥 Apply shaking effect
+            if (shake_intensity > 0) {
                 draw_x += irandom_range(-shake_intensity, shake_intensity);
                 draw_y += irandom_range(-shake_intensity, shake_intensity);
             }
+			
+			var draw_x_with_global_shake = draw_x + shake_x;
+			var draw_y_with_global_shake = draw_y + shake_x;
+            // 🎨 **Draw the gem sprite**
+            draw_sprite(sprite_for_gem(gem.type), 0, draw_x_with_global_shake, draw_y_with_global_shake);
 
-			
-            // Fade bottom row
-            if (j == height - 1) {
-                draw_sprite_ext(
-                    sprite_for_gem(gem.type), 
-                    0, draw_x, draw_y, 
-                    1, 1, 0, c_white, darken_alpha
-                );
-            } else {
-                draw_sprite(sprite_for_gem(gem.type), 0, draw_x, draw_y);
+            // 🔥 **Draw special overlays**
+            if (gem.powerup != -1) {
+                draw_sprite(gem.powerup.sprite, 0, draw_x_with_global_shake, draw_y_with_global_shake);
             }
-
-            if (gem.type == BLOCK.WILD) {
-                draw_sprite(spr_wild_gem, 0, draw_x, draw_y);
+            if (gem.frozen) {
+                draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
             }
-			
-			if (gem.powerup != -1) {
-                draw_sprite(gem.powerup.sprite, 0, draw_x, draw_y);
+            if (gem.is_enemy_block) {
+                draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
             }
-					 // 🧊 If frozen, draw ice overlay
-	        if (gem.frozen) {
-				var _scale = 1;
-			
-				if (gem.freeze_timer > 120)
-				{
-					draw_sprite(spr_ice_cover, 0, draw_x, draw_y);
-				}
-				else
-				{
-					var _shake_x = draw_x + irandom_range(-3, 3);
-					var _shake_y = draw_y + irandom_range(-3, 3);
-					draw_sprite_ext(spr_ice_cover, 0, shake_x, shake_y, _scale, _scale, 0, c_white, 1);
-				}
-	        }
-		
-			if (gem.is_enemy_block)
-			{
-				draw_sprite(spr_enemy_gem_overlay, 0, draw_x, draw_y);
-			}
-			
-			
-
-			
-			//// Loop through all popping gems in global.pop_list
-			//					draw_text(draw_x, draw_y, string(gem.falling))
-			//draw_text(draw_x + 12, draw_y, string(gem.fall_delay > 0))
-			//draw_text(draw_x + 24, draw_y, string(gem.shake_timer))
-	
         }
     }
 }
@@ -201,8 +187,8 @@ draw_text(10, 40, "TIME: " + string(draw_time));
 draw_text(10, 60, "SPEED: " + string(game_speed_default));
 draw_text(10, 80, "BLOCKS: " + string(total_blocks_destroyed));
 draw_text(10, 100, "LEVEL: " + string(level));
-draw_text(10, 120, "COMBO: " + string(combo) );
-draw_text(10, 140, "BEST COMBO: " + string(highest_max_combo));
+draw_text(10, 120, "llt: " + string(lose_life_timer));
+draw_text(10, 140, "mCOMBO: " + string(highest_max_combo));
 
 
 var y_start = 128;
@@ -235,109 +221,47 @@ draw_rectangle(board_x_offset - thickness, grid_height,
 draw_spawn_rates(self);
 
 
-//// ----------------------
-////  🔴 DRAW PLAYER HEALTH BAR
-//// ----------------------
-//var max_health = max_player_health; // Set max health (Adjust as needed)
-//var bar_width = width * gem_size; // Full grid width
-//var bar_height = 64; // Bar height
-//var bar_x = board_x_offset; // X Position
-//var bar_y = -10; // Slightly above the grid
-
-//// Calculate health percentage
-//var health_percent = clamp(player_health / max_health, 0, 1);
-//var health_bar_width = bar_width * health_percent;
-
-//// Draw background (gray full bar)
-//draw_set_color(c_black);
-//draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, false);
-
-//// Draw actual health bar (Red)
-//draw_set_color(c_red);
-//draw_rectangle(bar_x, bar_y, bar_x + health_bar_width, bar_y + bar_height, false);
-
-//// Draw Text (Health Number)
-//draw_set_color(c_white);
-//draw_set_halign(fa_center);
-//draw_text(bar_x + (bar_width / 2), bar_y + (bar_height / 2), "HP: " + string(player_health) + "/" + string(max_health));
-
-//// Reset Alignment
-//draw_set_halign(fa_left);
-
+draw_player_hearts(self, player_health, max_player_health, board_x_offset, room_height - 34, width, spr_hearts, gem_size);
 // ----------------------
-//  ❤️ DRAW PLAYER HEALTH (Hearts System)
-// ----------------------
-//// Draw background (gray full bar)
-
-var bar_width = width * gem_size; // Full grid width
-var bar_height = 80; // Bar height
-var bar_x = board_x_offset; // X Position
-var bar_y = room_height-80; // Slightly above the grid
-draw_set_color(c_red);
-draw_rectangle(bar_x, bar_y, bar_x + bar_width, bar_y + bar_height, false);
-draw_set_color(c_white);
-draw_rectangle(bar_x, bar_y - 3, bar_x + bar_width, bar_y + 4, false);
-var heart_x = board_x_offset + 128; // Start X position (align left)
-var heart_y = room_height - 34; // Slightly above grid
-var heart_spacing = 128; // Space between hearts
-
-// 🔥 Get health data
-var total_hearts = max_player_health div 4; // Total heart slots
-var full_hearts = player_health div 4; // How many full hearts
-var remainder = player_health mod 4; // Remaining health in partial heart
-
-// 🖼️ Loop through each heart slot
-for (var i = 0; i < total_hearts; i++) {
-    var _sprite_index = 0; // Default to empty heart
-
-    if (i < full_hearts) {
-        _sprite_index = 4; // Full heart
-    }
-    else if (i == full_hearts) {
-        _sprite_index = remainder; // Partial heart (1/4, 2/4, 3/4)
-    }
-
-    // Draw heart sprite with correct frame (sprite should have 5 frames: 0 = empty, 4 = full)
-    draw_sprite(spr_hearts, _sprite_index, heart_x + (i * heart_spacing), heart_y);
-}
-
-// ----------------------
-//  🔥 DRAW DANGER WARNING (Glowing Columns)
+//   DRAW DANGER WARNING (Glowing Columns)
 // ----------------------
 
 for (var i = 0; i < width; i++) {
     var is_danger = false;
     var flash_alpha = 0;
     var flash_speed = 0;
+	
+	for (var j = 0; j <= 1; j++)
+	{
+	    // 🚨 Check if a block is in row 1
+	    if (grid[i, j].type != -1) && (!grid[i, j].falling) { 
+	        is_danger = true;
 
-    // 🚨 Check if a block is in row 1
-    if (grid[i, 1].type != -1) && (!grid[i, 1].falling) { 
-        is_danger = true;
+	        // 🔥 Calculate progression from row 1 to row 0
+	        var block_y = (1 * gem_size) + global_y_offset;  // Actual Y position of block
+	        var progress = 0.75 * (1 - clamp(block_y / gem_size, 0, 0.75)); // Normalize to range 0 - 1
 
-        // 🔥 Calculate progression from row 1 to row 0
-        var block_y = (1 * gem_size) + global_y_offset;  // Actual Y position of block
-        var progress = 0.75 * (1 - clamp(block_y / gem_size, 0, 0.75)); // Normalize to range 0 - 1
+	        // ✅ **Flashing starts slow & soft, increases as it moves up**
+	        flash_speed = lerp(1, 5, progress);  // Starts at speed 1, max at 20
+	        flash_alpha = lerp(0.2, 0.5, progress);  // Starts at alpha 0.2, max at 0.5
 
-        // ✅ **Flashing starts slow & soft, increases as it moves up**
-        flash_speed = lerp(1, 5, progress);  // Starts at speed 1, max at 20
-        flash_alpha = lerp(0.2, 0.5, progress);  // Starts at alpha 0.2, max at 0.5
+	        // ✅ Use sine wave to control smooth flashing
+	        var sine_wave = 0.25 + 0.25 * sin(degtorad(current_time * flash_speed));
+	        flash_alpha *= progress;
+	    }
 
-        // ✅ Use sine wave to control smooth flashing
-        var sine_wave = 0.25 + 0.25 * sin(degtorad(current_time * flash_speed));
-        flash_alpha *= progress;
-    }
+	    // 🔴 Apply red flashing effect if danger detected
+	    if (is_danger) {
+	        var col_x = board_x_offset + (i * gem_size);
+	        var col_y = 0;
+	        var col_width = gem_size;
+	        var col_height = room_height;
 
-    // 🔴 Apply red flashing effect if danger detected
-    if (is_danger) {
-        var col_x = board_x_offset + (i * gem_size);
-        var col_y = 0;
-        var col_width = gem_size;
-        var col_height = room_height;
-
-        draw_set_alpha(flash_alpha);
-        draw_rectangle_color(col_x, col_y, col_x + col_width, col_y + col_height, c_red, c_red, c_red, c_red, false);
-        draw_set_alpha(1); // Reset alpha
-    }
+	        draw_set_alpha(flash_alpha);
+	        draw_rectangle_color(col_x, col_y, col_x + col_width, col_y + col_height, c_red, c_red, c_red, c_red, false);
+	        draw_set_alpha(1); // Reset alpha
+	    }
+	}
 }
 
 
