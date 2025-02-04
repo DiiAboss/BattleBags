@@ -609,7 +609,7 @@ function find_and_destroy_matches() {
 					bomb_level: 0
                 };
 				
-				target_experience_points += (match_count + combo) + (global.modifier);
+				//target_experience_points += (match_count + combo) + (global.modifier);
 
                 grid[i, j].popping = true;
                 grid[i, j].pop_timer = dist * _start_delay;

@@ -79,6 +79,7 @@
     {"id":{"name":"BLACK_BLOCKS","path":"scripts/BLACK_BLOCKS/BLACK_BLOCKS.yy",},},
     {"id":{"name":"DIAGONAL_MATCHING","path":"scripts/DIAGONAL_MATCHING/DIAGONAL_MATCHING.yy",},},
     {"id":{"name":"ENEMY_ATTACK","path":"scripts/ENEMY_ATTACK/ENEMY_ATTACK.yy",},},
+    {"id":{"name":"ENEMY_DEFEATED","path":"scripts/ENEMY_DEFEATED/ENEMY_DEFEATED.yy",},},
     {"id":{"name":"EXPERIENCE_AND_LEVEL","path":"scripts/EXPERIENCE_AND_LEVEL/EXPERIENCE_AND_LEVEL.yy",},},
     {"id":{"name":"GLOBAL_SHAPE_TEMPLATES","path":"scripts/GLOBAL_SHAPE_TEMPLATES/GLOBAL_SHAPE_TEMPLATES.yy",},},
     {"id":{"name":"INIT_BOARD","path":"scripts/INIT_BOARD/INIT_BOARD.yy",},},

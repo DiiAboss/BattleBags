@@ -68,13 +68,4 @@ function generate_attack_shape(_attack, game_control_object) {
     return attack_name;
 }
 
-/// @function enemy_defeated
-/// @description Handles enemy defeat.
-function enemy_defeated(_self, game_control_object) {
-    // ✅ Grant Rewards
-    global.gold += gold_reward;
-    game_control_object.experience_points += exp_reward;
 
-    // ✅ Destroy enemy
-    instance_destroy();
-}

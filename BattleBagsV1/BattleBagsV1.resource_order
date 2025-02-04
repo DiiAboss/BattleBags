@@ -55,6 +55,7 @@
     {"name":"BLACK_BLOCKS","order":1,"path":"scripts/BLACK_BLOCKS/BLACK_BLOCKS.yy",},
     {"name":"DIAGONAL_MATCHING","order":4,"path":"scripts/DIAGONAL_MATCHING/DIAGONAL_MATCHING.yy",},
     {"name":"ENEMY_ATTACK","order":4,"path":"scripts/ENEMY_ATTACK/ENEMY_ATTACK.yy",},
+    {"name":"ENEMY_DEFEATED","order":6,"path":"scripts/ENEMY_DEFEATED/ENEMY_DEFEATED.yy",},
     {"name":"EXPERIENCE_AND_LEVEL","order":5,"path":"scripts/EXPERIENCE_AND_LEVEL/EXPERIENCE_AND_LEVEL.yy",},
     {"name":"GLOBAL_SHAPE_TEMPLATES","order":3,"path":"scripts/GLOBAL_SHAPE_TEMPLATES/GLOBAL_SHAPE_TEMPLATES.yy",},
     {"name":"INIT_BOARD","order":32,"path":"scripts/INIT_BOARD/INIT_BOARD.yy",},
