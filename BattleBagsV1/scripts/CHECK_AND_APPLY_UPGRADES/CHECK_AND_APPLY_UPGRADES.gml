@@ -11,8 +11,9 @@
 function check_and_apply_upgrades(_self)
 {
     // Only run if the player has pending upgrades
-    if (_self.target_level > 0 && !global.in_upgrade_menu && combo == 0) {
+    if (_self.target_level > 0 &&  _self.combo == 0) {
         
+
         // ✅ **Spawn the upgrade menu**
         bring_up_upgrade_menu();
         

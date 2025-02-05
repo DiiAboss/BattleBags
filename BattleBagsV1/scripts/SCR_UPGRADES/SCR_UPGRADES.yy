@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_bring_up_upgrade_menu",
+  "%Name":"SCR_UPGRADES",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_bring_up_upgrade_menu",
+  "name":"SCR_UPGRADES",
   "parent":{
     "name":"UPGRADES",
     "path":"folders/Scripts/MAIN/UPGRADES.yy",

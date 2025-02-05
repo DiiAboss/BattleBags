@@ -71,7 +71,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		bomb_tracker: _bomb_tracker,
 		bomb_level: _bomb_level,
 		is_big: false,
-		big_parent: [-1, -1]
+		big_parent: [-1, -1],
     };
 }
 

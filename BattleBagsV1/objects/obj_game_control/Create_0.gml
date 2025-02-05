@@ -1,31 +1,58 @@
 
 
+
 randomize();
+
 FPS = 60;
-mega_blocks = ds_list_create();
+
+depth = -1;
+//mega_blocks = ds_list_create();
+
+luck              = 0;
+damage_mod        = 0;
+health_pickup_mod = 0;
+gold_pickup_mod   = 0;
+exp_pick_mod      = 0;
+crit_chance_mod   = 0;
+crit_multi_mod    = 0;
+
+global.gold = 0;
+
+// these will be bound to keyboard keys and right clicks
+skills = [0,0,0,0];
+
+current_skill = 0;
 
 
 
 total_blocks_destroyed = 0;
-total_combo_counter = 0;
-highest_max_combo   = 0;
-total_damage_dealt  = 0;
+total_combo_counter    = 0;
+highest_max_combo      = 0;
+total_damage_dealt     = 0;
 
-// 🎵 Store current playing music IDs
+input = new Input();  // Controller support
+
+global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
+
+spawn_rows = 6; // Number of initial rows to spawn
+width	   = 8;
+height	   = 16;
+
+// ------------------------------------------------------
+// MUSIC
+// ------------------------------------------------------
+
+// Store current playing music IDs
 global.music_regular = -1;
 global.music_fight = -1;
 
-// 🎛 Volume controls
+// Volume controls
 global.music_regular_volume = 1;
 global.music_fight_volume = 0;
 
-// 🛑 Music fade transition speed
+// Music fade transition speed
 global.music_fade_speed = 0.02;
 
-
-
-
-global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
 
 // ------------------------------------------------------
 // Adjustable Stats
@@ -89,13 +116,19 @@ total_matches = 0;
 
 total_time = 0;
 time_in_seconds = total_time * FPS;
-global.gold	= 0;
+
 
 time_in_minutes = floor(time_in_seconds / 60);
 
 draw_time = string(time_in_minutes) + ":" + string(floor(time_in_seconds % 60));
 
 diagonal_matches = false;
+
+after_menu_counter_max = 2 * FPS;
+after_menu_counter = after_menu_counter_max;
+
+
+
 
 // ------------------------------------------------------
 // Global Variables & Game State
@@ -113,14 +146,15 @@ global.grid_shake_amount = 0; // Grid shake intensity
 global_shape_function_init();
 
 
-combo_timer = 0;
-max_combo_timer = 30;
+combo_timer		 = 0;
+max_combo_timer  = 30; // Half a second of grace
 
 // ✅ Initialize Global Upgrade System
-global.upgrades_list = ds_list_create(); // Stores all upgrades
+
+global.upgrades_list     = ds_list_create(); // Stores all upgrades
 global.selected_upgrades = array_create(3, -1); // Stores 3 upgrades per level-up
-global.target_level = 0; // Tracks pending level-ups
-global.in_upgrade_menu = false; // Tracks if menu is open
+global.target_level		 = 0; // Tracks pending level-ups
+global.in_upgrade_menu	 = false; // Tracks if menu is open
 
 // ✅ Populate the upgrade list
 generate_all_upgrades();
@@ -128,10 +162,6 @@ generate_all_upgrades();
 
 global.enemy_attack_queue = ds_list_create();
 
-
-spawn_rows = 6; // Number of initial rows to spawn
-width = 8;
-height = 16;
 
 // ------------------------------------------------------
 // Swap Mechanics
@@ -147,7 +177,7 @@ swap_info = {
 // Board Setup
 // ------------------------------------------------------
 global.gemSize = 64;
-WILD_BLOCK = -2;
+
 offset = 32;
 board_x_offset = 128;
 
@@ -181,15 +211,30 @@ initialize_game_board(self, width, height, spawn_rows);
 // ------------------------------------------------------
 // Gem Selection Variables
 // ------------------------------------------------------
+
 selected_x = -1;
 selected_y = -1;
 dragged = false;
 
-
-
 // ------------------------------------------------------
 // Timers & Speeds
 // ------------------------------------------------------
+
 spawn_timer = 60 / global.gameSpeed;
 shift_speed = 0.1 * global.gameSpeed;
 shift_timer = 0;
+
+
+// 💻 Console State
+console_active = false;
+console_input = "";
+console_history = [];
+max_history = 10; // Limit history size
+
+// 🎨 Visual Settings
+console_x = 10;
+console_y = room_height / 2;
+console_width = 200;
+console_height = 200;
+console_alpha = 0.75;
+//console_font = font_default;

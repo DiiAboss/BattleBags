@@ -57,7 +57,7 @@ if (attack_timer == 0) {
 }
 
 // ✅ Always increase attack timer
-attack_timer += (global.enemy_timer_game_speed / obj_game_control.game_speed_default);
+attack_timer += global.enemy_timer_game_speed * (obj_game_control.game_speed_default / global.gameSpeed);
 
 // ----------------------------------
 // ✅ QUEUED ATTACK SYSTEM - RELEASE ATTACKS EVERY 10 FRAMES

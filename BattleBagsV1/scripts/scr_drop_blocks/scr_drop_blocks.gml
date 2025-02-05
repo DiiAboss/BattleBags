@@ -31,9 +31,12 @@ function drop_blocks(_self, fall_speed = 2) {
                 var bottom_right = _self.grid[parent_x + 1, parent_y + 1];
 				var top_left     = _self.grid[parent_x,     parent_y];
 				var top_right    = _self.grid[parent_x + 1, parent_y];
-						
-				var empty_below_bottom_blocks = _self.grid[parent_x, parent_y + 2].type = BLOCK.NONE && _self.grid[parent_x + 1, parent_y + 2].type = BLOCK.NONE;
-
+				var empty_below_bottom_blocks = false;
+				
+				if (parent_y + 2 < height) { 
+				var empty_below_bottom_blocks = _self.grid[parent_x,     parent_y + 2].type = BLOCK.NONE 
+											 && _self.grid[parent_x + 1, parent_y + 2].type = BLOCK.NONE;
+				}
                     // ✅ Both lower parts must be empty
                     if (empty_below_bottom_blocks) {
 							

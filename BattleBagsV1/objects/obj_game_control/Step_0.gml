@@ -1,18 +1,36 @@
 
 
+var exp_inc = 0.0025;
+
 if (instance_exists(obj_upgrade_menu))
 {
 	global.in_upgrade_menu = true;
+	exp_inc = 1;
 }
 else
 {
-	global.in_upgrade_menu = false;
-	// ✅ Toggle Pause with "P" key
-	if (keyboard_check_pressed(ord("P"))) {
-	    global.paused = !global.paused; // Toggle the pause state
+	if (target_level <= 0)
+	{
+		if (after_menu_counter < after_menu_counter_max)
+		{
+			after_menu_counter += 1;
+		}
+		else
+		{
+			after_menu_counter = after_menu_counter_max;
+				global.in_upgrade_menu = false;
+			//✅ Toggle Pause with "P" key
+			if (keyboard_check_pressed(ord("P"))) {
+			    global.paused = !global.paused; // Toggle the pause state
+			}
+		}
 	}
-
+	else
+	{
+		check_and_apply_upgrades(self);
+	}
 }
+process_experience_points(self, target_experience_points, exp_inc);
 
 // ✅ Stop everything except the pause check
 if (global.paused) || global.in_upgrade_menu {
@@ -40,17 +58,15 @@ mouse_dragged(self);
 var hover_i = floor((mouse_x - board_x_offset) / gem_size);
 var hover_j = floor((mouse_y - global_y_offset) / gem_size);
 
-enable_debug_controls(self, hover_i, hover_j, true);
+
 
 var enable_shake = fight_for_your_life;
 
 process_grid_shake(enable_shake);
 
 
-check_and_apply_upgrades(self);
 
 
-process_experience_points(self, target_experience_points, 0.0025);
 	
 gem_shake(self);
 
@@ -96,33 +112,112 @@ if (swap_in_progress) {
     }
 }
 
+
+// Toggle Console On/Off
+if (keyboard_check_pressed(vk_f1)) { 
+    console_active = !console_active;
+}
+
+// If Console is Active, Process Input
+if (console_active) {
+    // Handle Backspace
+    if (keyboard_check_pressed(vk_backspace)) {
+        if (string_length(console_input) > 0) {
+            console_input = string_copy(console_input, 1, string_length(console_input) - 1);
+        }
+    }
+
+    // Handle Enter Key (Execute Command)
+    if (keyboard_check_pressed(vk_enter)) {
+        process_console_command(console_input);
+        console_input = ""; // Clear after execution
+    }
+    // 🖊 Handle Typing Input (One Character Per Press)
+    for (var i = 32; i <= 126; i++) { // ASCII Range for printable characters
+        if (keyboard_check_pressed(i)) {
+            if (string_length(console_input) < 50) {
+                console_input += chr(i); // Convert ASCII code to character
+            }
+        }
+    }
+}
+else
+{
+	enable_debug_controls(self, hover_i, hover_j, true);	
+}
+
+function process_console_command(cmd)
+{
+	/// process_console_command(cmd)
+
+// Convert input to lowercase for consistency
+cmd = string_lower(cmd);
+
+// Store in history
+array_insert(console_history, 0, cmd);
+if (array_length(console_history) > max_history) {
+    array_delete(console_history, max_history, 1);
+}
+
+// 📜 Process Commands
+if (cmd == "clear") {
+    console_history = [];
+} 
+else if (cmd == "showhealth") {
+    array_insert(console_history, 0, "Health: " + string(player_health));
+} 
+else if (string_pos("sethealth ", cmd) == 1) {
+    var value = real(string_delete(cmd, 1, 10)); // Remove "set_health " part
+    if (is_real(value)) {
+        global.player_health = value;
+        array_insert(console_history, 0, "Player health set to: " + string(value));
+    } else {
+        array_insert(console_history, 0, "Invalid value.");
+    }
+} 
+else if (cmd == "showmoney") {
+    array_insert(console_history, 0, "Gold: " + string(global.gold));
+}
+else if (string_pos("setspeed ", cmd) == 1) {
+    var value = real(string_delete(cmd, 1, 10)); 
+    if (is_real(value)) {
+        global.gameSpeed = value;
+        array_insert(console_history, 0, "Game speed set to: " + string(value));
+    }
+}
+
+else {
+    array_insert(console_history, 0, "Unknown command: " + cmd);
+}
+
+}
+
 function spawn_2x2_block(_self, _x, _y, _type) {
-    if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y >= _self.height - 1) return;
+    if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y >= _self.height) return;
 
-    // Ensure all 4 spaces are empty
-	_self.grid[_x,     _y]          = create_gem(BLOCK.NONE);
-	_self.grid[_x + 1, _y]		= create_gem(BLOCK.NONE);
-	_self.grid[_x,     _y + 1]		= create_gem(BLOCK.NONE);
-	_self.grid[_x + 1, _y + 1]	= create_gem(BLOCK.NONE);
+    // ✅ Generate unique, non-zero group_id
+    var group_id;
+    group_id = irandom_range(1, 999999); // ✅ No -1 or 0
 
-    var group_id       = irandom(999999); // Unique group ID for the 2x2 block
-    var big_gem        = create_gem(_type);
+
+    var big_gem = create_gem(_type);
     big_gem.is_big     = true;
     big_gem.group_id   = group_id;
-    big_gem.big_parent = [_x, _y]; // ✅ Assign itself as the parent
+    big_gem.big_parent = [_x, _y];
 
     _self.grid[_x, _y] = big_gem;
 
-    // ✅ Assign other 3 pieces to reference the parent
     var child_gem        = create_gem(_type);
-    child_gem.is_big     = big_gem.is_big;
-    child_gem.group_id   = big_gem.group_id;
-    child_gem.big_parent = big_gem.big_parent;
+    child_gem.is_big     = true;
+    child_gem.group_id   = group_id;
+    child_gem.big_parent = [_x, _y];
 
-    _self.grid[_x + 1, _y]     = child_gem;
-    _self.grid[_x,     _y + 1] = child_gem;
+    _self.grid[_x + 1, _y] = child_gem;
+    _self.grid[_x, _y + 1] = child_gem;
     _self.grid[_x + 1, _y + 1] = child_gem;
+    
 }
+
 
 
 // ------------------------------------------------------
@@ -261,44 +356,42 @@ function shift_up() {
         for (var i = 0; i < width; i++) {
             var gem = grid[i, j + 1];
 
-            // ✅ If it's part of a big block, move all 4 pieces
+            // ✅ If it's part of a big block, check if it needs bottom row
             if (gem.is_big) {
                 var parent_x = gem.big_parent[0];
                 var parent_y = gem.big_parent[1];
 
-                //  Only move if it's the **parent**
+                // ✅ Only process the parent block
                 if (i == parent_x && j + 1 == parent_y) {
                     var new_y = parent_y - 1;
-					
-					var bottom_left  = self.grid[parent_x,     parent_y + 1];
-                    var bottom_right = self.grid[parent_x + 1, parent_y + 1];
-					var top_left     = self.grid[parent_x,     parent_y];
-					var top_right    = self.grid[parent_x + 1, parent_y];
-					
-                    // ✅ Move the entire 2x2 block up
-                    grid[parent_x,     new_y]    = grid[parent_x,     parent_y]; // Top-left
-                    grid[parent_x + 1, new_y]    = grid[parent_x + 1, parent_y]; // Top-right
-                    grid[parent_x,     parent_y] = grid[parent_x,	  parent_y + 1]; // Bottom-left moves up
-                    grid[parent_x + 1, parent_y] = grid[parent_x + 1, parent_y + 1]; // Bottom-right moves up
 
+                    // ✅ Move entire 2x2 block up
+                    grid[parent_x,     new_y]    = grid[parent_x,     parent_y];
+                    grid[parent_x + 1, new_y]    = grid[parent_x + 1, parent_y];
+                    grid[parent_x,     parent_y] = grid[parent_x,     parent_y + 1];
+                    grid[parent_x + 1, parent_y] = grid[parent_x + 1, parent_y + 1];
 
-                    // 3️⃣ Update `big_parent` references
-                    grid[parent_x, new_y].big_parent         = [parent_x, new_y];
+                    // ✅ Update `big_parent`
+                    grid[parent_x,     new_y].big_parent     = [parent_x, new_y];
                     grid[parent_x + 1, new_y].big_parent     = [parent_x, new_y];
-                    grid[parent_x, new_y + 1].big_parent     = [parent_x, new_y];
+                    grid[parent_x,     new_y + 1].big_parent = [parent_x, new_y];
                     grid[parent_x + 1, new_y + 1].big_parent = [parent_x, new_y];
 
-                    // 4️⃣ Mark as "big"
-                    grid[parent_x, new_y].is_big         = true;
+                    // ✅ Mark as "big"
+                    grid[parent_x,     new_y].is_big     = true;
                     grid[parent_x + 1, new_y].is_big     = true;
-                    grid[parent_x, new_y + 1].is_big     = true;
+                    grid[parent_x,     new_y + 1].is_big = true;
                     grid[parent_x + 1, new_y + 1].is_big = true;
+
+                    // ✅ Clear space below if the block was at row 15
+                    if (new_y == height - 3) {
+                        grid[parent_x,     height ] = create_gem(BLOCK.RANDOM);
+                        grid[parent_x + 1, height ] = create_gem(BLOCK.RANDOM);
+                    }
                 }
             } 
-            else {
-                // ✅ Normal gem movement
-                grid[i, j] = grid[i, j + 1];  
-            }
+            // ✅ Normal gem movement
+            grid[i, j] = grid[i, j + 1];  
             
             // ✅ Carry offsets properly
             gem_y_offsets[i, j] = gem_y_offsets[i, j + 1];
@@ -316,15 +409,18 @@ function shift_up() {
         ds_list_replace(global.pop_list, k, pop_data);
     }
 
-    // 3️⃣ Spawn a new random row at the bottom
+    // 3️⃣ Spawn a new random row at the bottom **EXCLUDING BIG BLOCKS**
     for (var i = 0; i < width; i++) {
-        grid[i, height - 1] = create_gem(BLOCK.RANDOM);
-        gem_y_offsets[i, height - 1] = 0;
+        // ✅ Ensure **only spawn new blocks if no big blocks are present**
+            grid[i, height - 1] = create_gem(BLOCK.RANDOM);
     }
 
     // 4️⃣ Reset darken alpha so the new row fades in again
     darken_alpha = 0;
 }
+
+
+
 
 	
 function find_and_destroy_matches() {
@@ -580,7 +676,7 @@ if all_blocks_landed(self) {
 				_color = pop_data.color;
 			}
 			
-			effect_create_depth(depth, ef_smoke, px, py - 4, 2, _color);
+			effect_create_depth(depth + 1, ef_smoke, px, py - 4, 2, _color);
 			
         } else {
             // Grow effect
@@ -645,7 +741,7 @@ if all_blocks_landed(self) {
 
 
 // If a swap is queued and the offset is above our threshold, execute it
-if (self.global_y_offset >= 60 && global.swap_queue.active) {
+if ( global.swap_queue.active) {
     execute_swap(self, global.swap_queue.ax, global.swap_queue.ay, global.swap_queue.bx, global.swap_queue.by);
     global.swap_queue.active = false; // Clear the swap queue
 }

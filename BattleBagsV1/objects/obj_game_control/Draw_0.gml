@@ -5,6 +5,7 @@
 var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
 var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
 
+
 for (var i = 0; i < width; i++) {
     var max_shake = 2; // Max shake intensity when blocks are above row 1
     var shake_intensity = 0; // Default no shake
@@ -17,6 +18,8 @@ for (var i = 0; i < width; i++) {
             break; // Stop checking if we find any block
         }
     }
+	
+	
 
     // 🔥 **If blocks are above row 1, apply max shake**
     if (above_blocks) {
@@ -53,7 +56,24 @@ for (var i = 0; i < width; i++) {
 		        draw_sprite_ext(sprite_for_gem(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 		    }
 		} else {
-		    draw_sprite(sprite_for_gem(gem.type), 0, draw_x_with_global_shake, draw_y_with_global_shake);
+			if (j >= height -1)
+			{
+			        var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+			        var draw_y = ((height - 1) * gem_size) + global_y_offset + gem.offset_y + offset;
+
+			        // 🔥 Apply Darken Alpha Effect
+			        draw_set_alpha(darken_alpha);
+
+			        // ✅ Draw Normally but with Transparency
+			        draw_sprite(sprite_for_gem(gem.type), 0, draw_x, draw_y);
+
+			        // ✅ Reset Alpha After Drawing
+			        draw_set_alpha(1);
+			}
+			else
+			{
+				draw_sprite(sprite_for_gem(gem.type), 0, draw_x_with_global_shake, draw_y_with_global_shake);
+			}
 		}
             
 
@@ -67,9 +87,27 @@ for (var i = 0; i < width; i++) {
             if (gem.is_enemy_block) {
                 draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
             }
+			
+			if (gem.is_big) {
+				draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
+    
+		    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
+		        draw_text(draw_x, draw_y, "PARENT");
+				draw_text(draw_x+16, draw_y+16, string(gem.big_parent[1]) + "/" + string(height));
+		        // 🔥 **Draw a box around the 2x2 block**
+		        draw_rectangle(draw_x - 32, draw_y - 32, draw_x + gem_size * 2 - 32, draw_y + gem_size * 2 - 32, true);
+		    }
+			else
+			{
+
+				draw_text(draw_x, draw_y, "CHILD"); // 🔥 Draw "CHILD" for the other parts
+    
+			}
+}
         }
     }
 }
+
 
 
 // ----------------------------------------------------------------------
@@ -368,5 +406,53 @@ if (queue_size > 0) {
                 }
             }
         }
+    }
+}
+
+if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_exists(obj_upgrade_menu) {
+	
+	//draw_set_color(c_white);
+	//draw_set_alpha(0.3*(1 - (after_menu_counter / after_menu_counter_max)));
+    //draw_rectangle(0, 0, room_width, room_height, false);
+	
+	draw_set_color(c_black);
+    draw_set_alpha(0.9 * (1 - (after_menu_counter / after_menu_counter_max)));
+    draw_rectangle(0, 0, room_width, room_height, false);
+	draw_set_color(c_white);
+    
+	
+	
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_set_alpha(1);
+    
+    if (after_menu_counter < after_menu_counter_max) {
+        // ✅ Calculate remaining countdown time
+        var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / room_speed);
+        
+        draw_set_font(f_b_font); // ✅ Use the specified font
+        draw_text_transformed_color(board_x_offset + (0.5 * width * gem_size), room_height / 2, string(countdown_value), 3, 3, 0, c_yellow, c_green, c_blue, c_red, 1);
+    } else {
+        draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
+    }
+	 draw_set_font(fnt_basic); // ✅ Use the specified font
+    draw_set_halign(fa_left);
+}
+
+
+if (console_active) {
+    draw_set_alpha(console_alpha);
+    draw_set_color(c_white);
+    draw_rectangle(console_x, console_y, console_x + console_width, console_y + console_height, false);
+    draw_set_alpha(1);
+
+    // Draw Console Text
+    draw_set_color(c_black);
+    //draw_set_font(console_font);
+    draw_text(console_x + 10, console_y + 10, "> " + console_input);
+
+    // Draw Command History
+    for (var i = 0; i < min(array_length(console_history), max_history); i++) {
+        draw_text(console_x + 10, console_y + 30 + (i * 20), console_history[i]);
     }
 }
