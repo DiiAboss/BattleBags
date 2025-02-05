@@ -45,8 +45,17 @@ for (var i = 0; i < width; i++) {
 			
 			var draw_x_with_global_shake = draw_x + shake_x;
 			var draw_y_with_global_shake = draw_y + shake_x;
-            // 🎨 **Draw the gem sprite**
-            draw_sprite(sprite_for_gem(gem.type), 0, draw_x_with_global_shake, draw_y_with_global_shake);
+            // **Draw the gem sprite**
+			
+			if (gem.is_big) {
+		    // Only draw if this is the top-left (actual) parent
+		    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
+		        draw_sprite_ext(sprite_for_gem(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
+		    }
+		} else {
+		    draw_sprite(sprite_for_gem(gem.type), 0, draw_x_with_global_shake, draw_y_with_global_shake);
+		}
+            
 
             // 🔥 **Draw special overlays**
             if (gem.powerup != -1) {

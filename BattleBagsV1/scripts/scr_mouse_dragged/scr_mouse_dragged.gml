@@ -16,7 +16,7 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
         if (_self.selected_x >= 0 && _self.selected_x < width 
 		&&  _self.selected_y >= 0 && _self.selected_y < height 
 		&&  _self.grid[_self.selected_x, _self.selected_y].type != BLOCK.NONE
-		&&  _self.grid[_self.selected_x, _self.selected_y].type != BLOCK.MEGA)
+		&&  _self.grid[_self.selected_x, _self.selected_y].is_big == false)
 		{
             _self.dragged = false; // Prepare for dragging
         } 

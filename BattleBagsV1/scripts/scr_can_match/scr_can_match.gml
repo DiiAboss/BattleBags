@@ -5,9 +5,16 @@ function can_match(gem1, gem2) {
     // ❌ Black blocks can NEVER match (even with other black blocks)
     if (gem1.type == BLOCK.BLACK || gem2.type == BLOCK.BLACK) return false;
     if (gem1.type == BLOCK.MEGA || gem2.type == BLOCK.MEGA) return false;
+	
 
     // ❌ **Enemy blocks cannot match until they land**
     if (gem1.is_enemy_block || gem2.is_enemy_block) return false;
+
+		// ✅ 2x2 block handling: Always match by group_id
+    if (gem1.is_big || gem2.is_big) {
+        if (gem1.group_id == gem2.group_id) return false;
+    }
+
 
     // ✅ Normal matching conditions
     return gem1.type != -1 && gem2.type != -1 && (
@@ -16,3 +23,4 @@ function can_match(gem1, gem2) {
         gem2.type == BLOCK.WILD
     );
 }
+

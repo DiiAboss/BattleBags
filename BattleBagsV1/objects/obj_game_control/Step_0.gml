@@ -96,7 +96,33 @@ if (swap_in_progress) {
     }
 }
 
+function spawn_2x2_block(_self, _x, _y, _type) {
+    if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y >= _self.height - 1) return;
 
+    // Ensure all 4 spaces are empty
+	_self.grid[_x,     _y]          = create_gem(BLOCK.NONE);
+	_self.grid[_x + 1, _y]		= create_gem(BLOCK.NONE);
+	_self.grid[_x,     _y + 1]		= create_gem(BLOCK.NONE);
+	_self.grid[_x + 1, _y + 1]	= create_gem(BLOCK.NONE);
+
+    var group_id       = irandom(999999); // Unique group ID for the 2x2 block
+    var big_gem        = create_gem(_type);
+    big_gem.is_big     = true;
+    big_gem.group_id   = group_id;
+    big_gem.big_parent = [_x, _y]; // ✅ Assign itself as the parent
+
+    _self.grid[_x, _y] = big_gem;
+
+    // ✅ Assign other 3 pieces to reference the parent
+    var child_gem        = create_gem(_type);
+    child_gem.is_big     = big_gem.is_big;
+    child_gem.group_id   = big_gem.group_id;
+    child_gem.big_parent = big_gem.big_parent;
+
+    _self.grid[_x + 1, _y]     = child_gem;
+    _self.grid[_x,     _y + 1] = child_gem;
+    _self.grid[_x + 1, _y + 1] = child_gem;
+}
 
 
 // ------------------------------------------------------
@@ -106,7 +132,7 @@ global_y_offset -= shift_speed;
 
 if (global_y_offset <= -gem_size) {
     global_y_offset = 0;
-    shift_up();
+    shift_up(self);
 }
 
 darken_bottom_row(self);
@@ -168,6 +194,23 @@ for (var i = 0; i < width; i++) {
 	if (grid[i, 1].type != -1 && !grid[i, 1].falling) { 
 		var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
 		var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
+		    // ✅ Transition to fight music
+	    if (global.music_fight == -1) {
+	        global.music_fight = audio_play_sound(music_fast_music_test, 1, true);
+	    }
+    
+	    global.music_fight_volume = min(global.music_fight_volume + global.music_fade_speed, 1);
+	    global.music_regular_volume = max(global.music_regular_volume - global.music_fade_speed, 0);
+    
+	    // 🛑 Pause regular music if volume is 0
+	    if (global.music_regular_volume <= 0 && global.music_regular != -1) {
+	        audio_pause_sound(global.music_regular);
+	    }
+    
+	    // ▶️ Resume fight music if it was paused
+	    if (global.music_fight_volume > 0 && audio_is_paused(global.music_fight)) {
+	        audio_resume_sound(global.music_fight);
+	    }
 				
 		if (progress > 0 && combo > 0)
 		{
@@ -181,51 +224,116 @@ for (var i = 0; i < width; i++) {
 	else 
 	{
 			fight_for_your_life = false;
+
+	    // ✅ Transition back to regular music
+	    if (global.music_regular == -1) {
+	        global.music_regular = audio_play_sound(music_regular_music_test, 1, true);
+	    }
+    
+	    global.music_regular_volume = min(global.music_regular_volume + global.music_fade_speed, 1);
+	    global.music_fight_volume = max(global.music_fight_volume - global.music_fade_speed, 0);
+    
+	    // 🛑 Pause fight music if volume is 0
+	    if (global.music_fight_volume <= 0 && global.music_fight != -1) {
+	        audio_pause_sound(global.music_fight);
+	    }
+    
+	    // ▶️ Resume regular music if it was paused
+	    if (global.music_regular_volume > 0 && audio_is_paused(global.music_regular)) {
+	        audio_resume_sound(global.music_regular);
+	    }
 	}
 }
+
+
+// 🎚 Apply volume settings
+if (global.music_regular != -1) audio_sound_gain(global.music_regular, global.music_regular_volume, 0);
+if (global.music_fight != -1) audio_sound_gain(global.music_fight, global.music_fight_volume, 0);
+
 
 // -----------------------------------------------------------------------
 // FUNCTIONS
 // -----------------------------------------------------------------------
 
 function shift_up() {
-    // 1️⃣ First, shift the main board up
-    for (var i = 0; i < width; i++) {
-        for (var j = 0; j < height - 1; j++) {
-            grid[i, j] = grid[i, j + 1];             // Shift normal blocks up
-            gem_y_offsets[i, j] = gem_y_offsets[i, j + 1]; // Carry offsets
+    // 1️⃣ Process from bottom to top
+    for (var j = 0; j < height - 1; j++) {
+        for (var i = 0; i < width; i++) {
+            var gem = grid[i, j + 1];
+
+            // ✅ If it's part of a big block, move all 4 pieces
+            if (gem.is_big) {
+                var parent_x = gem.big_parent[0];
+                var parent_y = gem.big_parent[1];
+
+                //  Only move if it's the **parent**
+                if (i == parent_x && j + 1 == parent_y) {
+                    var new_y = parent_y - 1;
+					
+					var bottom_left  = self.grid[parent_x,     parent_y + 1];
+                    var bottom_right = self.grid[parent_x + 1, parent_y + 1];
+					var top_left     = self.grid[parent_x,     parent_y];
+					var top_right    = self.grid[parent_x + 1, parent_y];
+					
+                    // ✅ Move the entire 2x2 block up
+                    grid[parent_x,     new_y]    = grid[parent_x,     parent_y]; // Top-left
+                    grid[parent_x + 1, new_y]    = grid[parent_x + 1, parent_y]; // Top-right
+                    grid[parent_x,     parent_y] = grid[parent_x,	  parent_y + 1]; // Bottom-left moves up
+                    grid[parent_x + 1, parent_y] = grid[parent_x + 1, parent_y + 1]; // Bottom-right moves up
+
+
+                    // 3️⃣ Update `big_parent` references
+                    grid[parent_x, new_y].big_parent         = [parent_x, new_y];
+                    grid[parent_x + 1, new_y].big_parent     = [parent_x, new_y];
+                    grid[parent_x, new_y + 1].big_parent     = [parent_x, new_y];
+                    grid[parent_x + 1, new_y + 1].big_parent = [parent_x, new_y];
+
+                    // 4️⃣ Mark as "big"
+                    grid[parent_x, new_y].is_big         = true;
+                    grid[parent_x + 1, new_y].is_big     = true;
+                    grid[parent_x, new_y + 1].is_big     = true;
+                    grid[parent_x + 1, new_y + 1].is_big = true;
+                }
+            } 
+            else {
+                // ✅ Normal gem movement
+                grid[i, j] = grid[i, j + 1];  
+            }
+            
+            // ✅ Carry offsets properly
+            gem_y_offsets[i, j] = gem_y_offsets[i, j + 1];
         }
     }
 
-    // 2️⃣ Now, shift all popping gems in `global.pop_list`
+    // 2️⃣ Shift all popping gems in `global.pop_list`
     for (var k = 0; k < ds_list_size(global.pop_list); k++) {
         var pop_data = ds_list_find_value(global.pop_list, k);
         
-        // Move each popping gem up **one row**
-        pop_data.y -= 1; // ✅ Keeps the gem's position in sync with the grid
-        
-        // Ensure we update the stored offset properly
+        // ✅ Move each popping gem up **one row**
+        pop_data.y -= 1;
         pop_data.y_offset_global = global_y_offset;
         
-        // Save updated data back into `global.pop_list`
         ds_list_replace(global.pop_list, k, pop_data);
     }
 
     // 3️⃣ Spawn a new random row at the bottom
     for (var i = 0; i < width; i++) {
-		grid[i, height - 1] = create_gem(BLOCK.RANDOM);
+        grid[i, height - 1] = create_gem(BLOCK.RANDOM);
         gem_y_offsets[i, height - 1] = 0;
     }
-	
-    // 4️⃣ Reset alpha so the newly spawned row fades in again
+
+    // 4️⃣ Reset darken alpha so the new row fades in again
     darken_alpha = 0;
 }
+
 	
 function find_and_destroy_matches() {
-    var marked_for_removal = array_create(width, height);
-    var found_any = false;
-    var first_found = false; // ✅ Track the first block in the combo
-    var total_match_points = 0; // ✅ Accumulates points for multiple matches
+    var marked_for_removal	 = array_create(width, height);
+    var found_any			 = false;
+    var first_found			 = false; // ✅ Track the first block in the combo
+    var total_match_points	 = 0; // ✅ Accumulates points for multiple matches
+	
+	
 	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
 
 	
@@ -351,87 +459,97 @@ function find_and_destroy_matches() {
      //-------------------------
      //✅ DIAGONAL MATCHES (If enabled)
      //-------------------------
-    if (diagonal_matches) {
-         //**↘ Diagonal Matches (Top-Left to Bottom-Right)**
-        for (var j = 0; j < height - 2; j++) {
-            for (var i = 0; i < width - 2; i++) {
-                var match_count = 1;
-                var _x = i, _y = j;
-                while (_x + 1 < width && _y + 1 < height && can_match(grid[_x, _y], grid[_x + 1, _y + 1])) {
-                    match_count++;
-                    _x++; _y++;
-                }
-                if (match_count >= 3) mark_diagonal_match(marked_for_removal, i, j, match_count, "↘");
-            }
-        }
-		
-        //**↙ Diagonal Matches (Top-Right to Bottom-Left)**
-        for (var j = 0; j < height - 2; j++) {
-            for (var i = width - 1; i >= 2; i--) {
-                var match_count = 1;
-                var _x = i, _y = j;
-
-                while (_x - 1 >= 0 && _y + 1 < height && can_match(grid[_x, _y], grid[_x - 1, _y + 1])) {
-                    match_count++;
-                    _x--; _y++;
-                }
-
-                if (match_count >= 3) mark_diagonal_match(marked_for_removal, i, j, match_count, "↙");
-            }
-        }
-    }
-
+	 diagonal_match_process(self, diagonal_matches);
+	 
     // -------------------------
     // ✅ HANDLE MATCHED GEMS
     // -------------------------
-    for (var i = 0; i < width; i++) {
-        for (var j = 0; j < height; j++) {
-            if (marked_for_removal[i, j]) {
-                found_any = true;
-                grid[i, j].shake_timer = max_shake_timer; // Start shaking effect
-				
-                var gem = grid[i, j];
-				
-                var dx = i - global.lastSwapX;
-                var dy = j - global.lastSwapY;
-                var dist = sqrt(dx * dx + dy * dy);
-				var _start_delay = 5;
-				
-				if (gem.type == BLOCK.BLACK)
-				{
-					_start_delay = 20;
-				}
-				
-				
-                var pop_info = {
-                    x: i,
-                    y: j,
-                    gem_type: gem.type,
-                    timer: 0,
-                    start_delay: dist * _start_delay, // Wave effect
-                    scale: 1.0,
-                    popping: true,
-                    powerup: gem.powerup,
-					dir: gem.dir,
-                    offset_x: gem.offset_x,
-                    offset_y: gem.offset_y,
-                    color: gem.color,
-                    y_offset_global: global_y_offset,
-					match_size: match_count, // ✅ Store the match size
-					match_points: total_match_points,
-					bomb_tracker: false,               // Flag to mark this pop as bomb‐generated
-					bomb_level: 0
-                };
-				
-				//target_experience_points += (match_count + combo) + (global.modifier);
 
-                grid[i, j].popping = true;
-                grid[i, j].pop_timer = dist * _start_delay;
+	for (var i = 0; i < width; i++) {
+	    for (var j = 0; j < height; j++) {
+	        if (marked_for_removal[i, j]) {
+	            found_any = true;
+	            grid[i, j].shake_timer = max_shake_timer; // Start shaking effect
 
-                ds_list_add(global.pop_list, pop_info);
-            }
-        }
-    }
+	            var gem = grid[i, j];
+
+	            var dx = i - global.lastSwapX;
+	            var dy = j - global.lastSwapY;
+	            var dist = sqrt(dx * dx + dy * dy);
+	            var _start_delay = (gem.type == BLOCK.BLACK) ? 20 : 5; // Longer delay for black blocks
+
+	            // ✅ If it's a BIG BLOCK, transform it into separate blocks
+	            if (gem.is_big) {
+	                var group_id = gem.group_id;
+
+	                for (var _x = 0; _x < width; _x++) {
+	                    for (var _y = 0; _y < height; _y++) {
+	                        var other_gem = grid[_x, _y];
+
+	                        if (other_gem.group_id == group_id) {
+	                            // ✅ Convert each big block part into a small block of the same type
+	                            grid[_x, _y] = create_gem(gem.type);						
+							
+								 // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
+					            var pop_info = {
+					                x: _x,
+					                y: _y,
+					                gem_type: gem.type,
+					                timer: 0,
+					                start_delay: dist * _start_delay, // Wave effect
+					                scale: 1.0,
+					                popping: true,
+					                powerup: gem.powerup,
+					                dir: gem.dir,
+					                offset_x: gem.offset_x,
+					                offset_y: gem.offset_y,
+					                color: gem.color,
+					                y_offset_global: global_y_offset,
+					                match_size: match_count, // ✅ Store the match size
+					                match_points: total_match_points,
+					                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
+					                bomb_level: 0
+					            };
+							
+	                            grid[_x, _y].popping   = true;  // Start popping process
+	                            grid[_x, _y].pop_timer = dist * _start_delay;
+								
+								ds_list_add(global.pop_list, pop_info);
+	                        }
+	                    }
+	                }
+	            }
+
+	            // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
+	            var pop_info = {
+	                x: i,
+	                y: j,
+	                gem_type: gem.type,
+	                timer: 0,
+	                start_delay: dist * _start_delay, // Wave effect
+	                scale: 1.0,
+	                popping: true,
+	                powerup: gem.powerup,
+	                dir: gem.dir,
+	                offset_x: gem.offset_x,
+	                offset_y: gem.offset_y,
+	                color: gem.color,
+	                y_offset_global: global_y_offset,
+	                match_size: match_count, // ✅ Store the match size
+	                match_points: total_match_points,
+	                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
+	                bomb_level: 0
+	            };
+
+	            grid[i, j].popping   = true;
+	            grid[i, j].pop_timer = dist * _start_delay;
+
+	            ds_list_add(global.pop_list, pop_info);
+	        }
+	    }
+	}
+
+
 	
 	// ✅ Transform black blocks **after matches are removed**
     update_black_blocks(self, black_blocks_to_transform);
@@ -527,7 +645,7 @@ if all_blocks_landed(self) {
 
 
 // If a swap is queued and the offset is above our threshold, execute it
-if (self.global_y_offset >= 5 && global.swap_queue.active) {
+if (self.global_y_offset >= 60 && global.swap_queue.active) {
     execute_swap(self, global.swap_queue.ax, global.swap_queue.ay, global.swap_queue.bx, global.swap_queue.by);
     global.swap_queue.active = false; // Clear the swap queue
 }

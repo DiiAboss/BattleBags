@@ -5,10 +5,24 @@ FPS = 60;
 mega_blocks = ds_list_create();
 
 
+
 total_blocks_destroyed = 0;
 total_combo_counter = 0;
 highest_max_combo   = 0;
 total_damage_dealt  = 0;
+
+// 🎵 Store current playing music IDs
+global.music_regular = -1;
+global.music_fight = -1;
+
+// 🎛 Volume controls
+global.music_regular_volume = 1;
+global.music_fight_volume = 0;
+
+// 🛑 Music fade transition speed
+global.music_fade_speed = 0.02;
+
+
 
 
 global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
@@ -95,9 +109,6 @@ global.grid_shake_amount = 0; // Grid shake intensity
 // ------------------------------------------------------
 // Block Types
 // ------------------------------------------------------
-
-
-
 
 global_shape_function_init();
 

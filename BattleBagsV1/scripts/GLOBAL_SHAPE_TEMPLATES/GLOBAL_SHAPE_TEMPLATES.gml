@@ -26,8 +26,14 @@ function global_shape_function_init()
 	
 	ds_map_add(global.shape_templates, "triangle_down_3x3", [
 		[BLOCK.BLACK, BLOCK.RANDOM, BLOCK.RANDOM, BLOCK.RANDOM, BLOCK.BLACK],
-		[BLOCK.NONE,   BLOCK.BLACK, BLOCK.RANDOM, BLOCK.BLACK, BLOCK.NONE],
-		[BLOCK.NONE,   BLOCK.NONE,   BLOCK.BLACK, BLOCK.NONE,   BLOCK.NONE]
+		[BLOCK.NONE,  BLOCK.BLACK,  BLOCK.RANDOM, BLOCK.BLACK,  BLOCK.NONE],
+		[BLOCK.NONE,  BLOCK.NONE,   BLOCK.BLACK,  BLOCK.NONE,   BLOCK.NONE]
+	]);
+	
+	ds_map_add(global.shape_templates, "black_triangle_down_3x3", [
+		[BLOCK.BLACK, BLOCK.BLACK, BLOCK.BLACK, BLOCK.BLACK, BLOCK.BLACK],
+		[BLOCK.NONE,  BLOCK.BLACK, BLOCK.BLACK, BLOCK.BLACK, BLOCK.NONE],
+		[BLOCK.NONE,  BLOCK.NONE,  BLOCK.BLACK, BLOCK.NONE,  BLOCK.NONE]
 	]);
 
 	ds_map_add(global.shape_templates, "square_3x3", [
@@ -43,13 +49,31 @@ function global_shape_function_init()
 	    [BLOCK.RANDOM, BLOCK.RANDOM, BLOCK.RANDOM]
 	]);
 	ds_map_add(global.shape_templates, "cross", [
-	    [BLOCK.NONE, BLOCK.RANDOM, BLOCK.NONE],
+	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE],
 	    [BLOCK.RANDOM, BLOCK.RANDOM, BLOCK.RANDOM],
-	    [BLOCK.NONE, BLOCK.RANDOM, BLOCK.NONE]
+	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE]
 	]);
 	ds_map_add(global.shape_templates, "x_shape", [
 	    [BLOCK.RANDOM, BLOCK.NONE, BLOCK.RANDOM],
 	    [BLOCK.NONE, BLOCK.RANDOM, BLOCK.NONE],
 	    [BLOCK.RANDOM, BLOCK.NONE, BLOCK.RANDOM]
+	]);
+	
+	ds_map_add(global.shape_templates, "y_shape", [
+	    [BLOCK.RANDOM, BLOCK.NONE, BLOCK.RANDOM],
+	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE],
+	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE]
+	]);
+	
+	ds_map_add(global.shape_templates, "y_shape", [
+	    [BLOCK.RANDOM, BLOCK.NONE, BLOCK.RANDOM],
+	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE],
+	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE]
+	]);
+	
+		ds_map_add(global.shape_templates, "y_shape", [
+	    [BLOCK.RANDOM, BLOCK.NONE, BLOCK.RANDOM],
+	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE],
+	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE]
 	]);
 }

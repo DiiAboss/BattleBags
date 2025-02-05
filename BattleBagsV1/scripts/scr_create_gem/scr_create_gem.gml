@@ -69,7 +69,9 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		dir: _dir,
 		is_enemy_block: false,
 		bomb_tracker: _bomb_tracker,
-		bomb_level: _bomb_level
+		bomb_level: _bomb_level,
+		is_big: false,
+		big_parent: [-1, -1]
     };
 }
 

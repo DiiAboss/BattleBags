@@ -25,7 +25,20 @@
 //}
 function start_swap(_self, ax, ay, bx, by) {
     if (_self.swap_in_progress) return; // Prevent stacking swaps
+	 
+	  // If either block is part of a 2x2 block, ensure all pieces move together
+    var gemA = _self.grid[ax, ay];
+    var gemB = _self.grid[bx, by];
 
+    if (gemA.is_big || gemB.is_big) {
+        // Prevent swaps that would break the block apart
+        if (gemA.group_id != gemB.group_id) return;
+		var parentA = gemA.big_parent;
+        var parentB = gemB.big_parent;
+
+        if (parentA[0] != parentB[0] || parentA[1] != parentB[1]) return; // Ensure swapping whole block
+    }
+	
     // 🟥 If the row is currently shifting, store swap **before the transition completes**
     if (_self.global_y_offset == 0) {
         global.swap_queue.active = true;
