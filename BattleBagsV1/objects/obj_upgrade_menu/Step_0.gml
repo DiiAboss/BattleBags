@@ -1,9 +1,20 @@
-/// @description Handle user input for selecting upgrades
+
+if (!upgrade_pool[0])
+{
+	global.all_stats_maxed = true;
+}
+
+
+// ✅ If no upgrades are available, do NOT open the menu
+if (global.all_stats_maxed) {
+    //show_message("All upgrades have reached max level!");
+    instance_destroy();
+}
 
 // ✅ Press 1, 2, or 3 to choose an upgrade via keyboard
-if (keyboard_check_pressed(ord("1"))) apply_upgrade(upgrade[0]);
-if (keyboard_check_pressed(ord("2"))) apply_upgrade(upgrade[1]);
-if (keyboard_check_pressed(ord("3"))) apply_upgrade(upgrade[2]);
+if (keyboard_check_pressed(ord("1"))) apply_upgrade(upgrade_pool[0]);
+if (keyboard_check_pressed(ord("2"))) apply_upgrade(upgrade_pool[1]);
+if (keyboard_check_pressed(ord("3"))) apply_upgrade(upgrade_pool[2]);
 
 // ✅ Check for mouse click on upgrades (Fixes click issue)
 if (mouse_check_button_pressed(mb_left)) {
@@ -18,7 +29,8 @@ if (mouse_check_button_pressed(mb_left)) {
         if (mx >= btn.x - hitbox_size / 2 && mx <= btn.x + hitbox_size / 2 &&
             my >= btn.y - hitbox_size / 2 && my <= btn.y + hitbox_size / 2) {
 
-            apply_upgrade(upgrade[i]);
+			
+            apply_upgrade(upgrade_pool[i]);
 			
 			instance_destroy();
 

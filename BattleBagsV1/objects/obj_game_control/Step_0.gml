@@ -27,7 +27,9 @@ else
 	}
 	else
 	{
+
 		check_and_apply_upgrades(self);
+
 	}
 }
 process_experience_points(self, target_experience_points, exp_inc);

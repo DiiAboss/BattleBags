@@ -13,7 +13,7 @@ var mouse_x_pos = mouse_x;
 var mouse_y_pos = mouse_y;
 
 //  Detect mouse hovering over upgrades
-for (var i = 0; i < array_size; i++) {
+for (var i = 0; i < array_length(upgrade_pool); i++) {
     var btn = global.upgrade_positions[i];
 
     if (mouse_x_pos > btn.x - 128 && mouse_x_pos < btn.x + 128 &&
@@ -23,49 +23,53 @@ for (var i = 0; i < array_size; i++) {
 }
 
 // ✅ Draw Upgrade Frames with Hover Effect
-for (var i = 0; i < array_size; i++) {
+for (var i = 0; i < array_length(upgrade_pool); i++) {
     var btn = global.upgrade_positions[i];
-    var upgrade_data = upgrade[i];
+	
+	if (upgrade_pool[i])
+	{	
+	    var upgrade_data = upgrade_pool[i];
+		
+		    //  Base Scaling & Rotation
+		    var scale = 1.0;
+		    var rotation = 0;
 
-    //  Base Scaling & Rotation
-    var scale = 1.0;
-    var rotation = 0;
+		    //  Apply hover effect
+		    if (i == hover_index) {
+		        scale = 1.1; // Slightly enlarged
+		        rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
+		    }
 
-    //  Apply hover effect
-    if (i == hover_index) {
-        scale = 1.1; // Slightly enlarged
-        rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
-    }
+		    // ✅ Fix Center Origin Issue: Adjust Draw Position
+		    var draw_x = btn.x;
+		    var draw_y = btn.y;
 
-    // ✅ Fix Center Origin Issue: Adjust Draw Position
-    var draw_x = btn.x;
-    var draw_y = btn.y;
+		    //  Draw upgrade frame with animation (now using correct centering)
+		    draw_sprite_ext(spr_upgrade_frame, upgrade_pool[i].level, draw_x, draw_y, scale, scale, rotation, c_white, 1);
 
-    //  Draw upgrade frame with animation (now using correct centering)
-    draw_sprite_ext(spr_upgrade_frame, upgrade_data.level, draw_x, draw_y, scale, scale, rotation, c_white, 1);
-
-    //  Upgrade Name (Above Frame)
-    draw_set_halign(fa_center);
-    draw_text(draw_x, draw_y - 80, upgrade_data.name);
-	//  Display upgrade descriptions centered **below all upgrades**
-	var desc_y_position = 500;
-	draw_set_alpha(0.5);
-	draw_text(global.upgrade_positions[i].x, desc_y_position, upgrade[i].desc);
-	draw_set_alpha(1);
-    //  Display affected block or powerup sprite next to the frame
-    var sprite_to_draw = get_upgrade_sprite(upgrade_data.effect);
-    draw_sprite(sprite_to_draw, 0, draw_x, draw_y); // Positioned next to upgrade frame
+		    //  Upgrade Name (Above Frame)
+		    draw_set_halign(fa_center);
+		    draw_text(draw_x, draw_y - 80, upgrade_data.name);
+			//  Display upgrade descriptions centered **below all upgrades**
+			var desc_y_position = 500;
+			draw_set_alpha(0.5);
+			draw_text(global.upgrade_positions[i].x, desc_y_position, upgrade_pool[i].desc);
+			draw_set_alpha(1);
+		    //  Display affected block or powerup sprite next to the frame
+		    var sprite_to_draw = get_upgrade_sprite(upgrade_data.effect);
+		    draw_sprite(sprite_to_draw, 0, draw_x, draw_y); // Positioned next to upgrade frame
+	}
 }
 
-if (hover_index != -1)
+if (hover_index != -1) && (upgrade_pool[hover_index])
 {
-//  Display upgrade descriptions centered **below all upgrades**
-var desc_y_position = 500;
-draw_set_halign(fa_center);
-draw_text(global.upgrade_positions[hover_index].x, desc_y_position, upgrade[hover_index].desc);
+	//  Display upgrade descriptions centered **below all upgrades**
+	var desc_y_position = 500;
+	draw_set_halign(fa_center);
+	draw_text(global.upgrade_positions[hover_index].x, desc_y_position, upgrade_pool[hover_index].desc);
 
 // 🔢 Display **Current Stat Value**
-    var stat_value = get_upgrade_current_stat(upgrade[hover_index].effect);
+    var stat_value = get_upgrade_current_stat(upgrade_pool[hover_index].effect);
     draw_set_color(c_lime);
     draw_text(global.upgrade_positions[hover_index].x, desc_y_position + 20, "Current Value: " + string(stat_value));
 }

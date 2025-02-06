@@ -36,13 +36,13 @@ if (keyboard_check_pressed(vk_space)) {
 }
 	if (keyboard_check_pressed(vk_shift)) {
 		//toss_down_row(_self, true);
-		//play_next_song();
+		play_next_song();
 	}
 		if (keyboard_check(vk_shift)) {
 		//toss_down_row(_self, true);
 		//play_next_song();
-		_self.global_y_offset = -63;
-		_self.shift_speed = 0;
+		//_self.global_y_offset = -63;
+		//_self.shift_speed = 0;
 	}
 
 	if keyboard_check_pressed(ord("E")) {
@@ -101,7 +101,7 @@ if (keyboard_check_pressed(vk_space)) {
 
 	if keyboard_check_pressed(vk_alt)
 	{
-		_self.target_experience_points += 100;
+		_self.target_experience_points += 10000;
 	}
 	
 	if (keyboard_check_pressed(ord("0"))) {

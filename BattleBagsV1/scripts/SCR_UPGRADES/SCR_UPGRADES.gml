@@ -1,16 +1,3 @@
-//function create_upgrade(_name, _desc, _effect, _level = -1) {
-	
-//	var new_level = _level = -1 ? get_upgrade_level() : _level; 
-	
-//    var upgrade = {
-//        name: _name,
-//        desc: _desc,
-//        effect: _effect,
-//		level: new_level
-//    };
-//    return upgrade;
-//}
-
 
 /// @desc Struct for an upgrade
 ///
@@ -31,8 +18,14 @@ function create_upgrade(_name, _desc, _effect, _rarity, _max_level, _start_unloc
         unlocked: _start_unlocked
     };
 }
-function bring_up_upgrade_menu()
-{
+function bring_up_upgrade_menu() {
+
+    // ✅ If no upgrades are available, do NOT open the menu
+    if (global.all_stats_maxed)  {
+        //show_message("All upgrades have reached max level!");
+        return;
+    }
+
     if (!instance_exists(obj_upgrade_menu)) {
         instance_create_depth(0, 0, 0, obj_upgrade_menu);
     } else {
@@ -53,6 +46,8 @@ function get_upgrade_level(luck = 0) {
     if (roll < 98) return 5;  // 1% chance (unchanged)
     return 6;  // 1% chance (unchanged)
 }
+
+
 function generate_all_upgrades() {
     global.upgrade_pool      = ds_list_create();
     global.unlocked_upgrades = ds_list_create();
@@ -169,74 +164,15 @@ function generate_all_upgrades() {
 	3, 
 	true));
 	
-//    // 💥 **Power-Up Spawn Rate Upgrades**
-//    ds_list_add(global.upgrades, create_upgrade("More Bombs", "Bomb power-ups appear more often.", "more_bombs"));
-//    ds_list_add(global.upgrades, create_upgrade("More Multi-2X", "Multi-2X power-ups appear more often.", "more_multi"));
-//    ds_list_add(global.upgrades, create_upgrade("More Bows", "Bow power-ups appear more often.", "more_bows"));
-//    ds_list_add(global.upgrades, create_upgrade("More EXP", "EXP power-ups appear more often.", "more_exp"));
-//    ds_list_add(global.upgrades, create_upgrade("More Hearts", "Heart power-ups appear more often.", "more_hearts"));
-//    ds_list_add(global.upgrades, create_upgrade("More Money", "Money power-ups appear more often.", "more_money"));
-//    ds_list_add(global.upgrades, create_upgrade("More Timers", "Timer power-ups appear more often.", "more_timers"));
-//    ds_list_add(global.upgrades, create_upgrade("More Wild Potions", "Wild Potion power-ups appear more often.", "more_wild_potions"));	
-	
-	
-    //ds_list_add(global.upgrade_pool, create_upgrade("Critical Chance", "Increases chance for critical hits.", "crit_chance", 3, 5, false));
-    //ds_list_add(global.upgrade_pool, create_upgrade("Gold Multiplier", "Gain extra gold from matches.",       "gold_pickup_mod", 4, 3, false));
-	
-
     // 🔥 Unlock **only** starting upgrades
     for (var i = 0; i < ds_list_size(global.upgrade_pool); i++) {
         var upgrade = ds_list_find_value(global.upgrade_pool, i);
+		
+		
         if (upgrade.unlocked) ds_list_add(global.unlocked_upgrades, upgrade);
     }
 }
 
-//function generate_all_upgrades() {
-//    //// ✅ Ensure upgrades list is initialized
-
-//    global.upgrades = ds_list_create();
-
-
-//    // **Color Spawn Rate Upgrades**
-//    ds_list_add(global.upgrades, create_upgrade(
-//		"More Red Blocks",    
-//		"Red blocks appear more often.", 
-//		"more_red"));
-
-//    ds_list_add(global.upgrades, create_upgrade(
-		//"More Green Blocks",  
-		//"Green blocks appear more often.", 
-		//"more_green"));
-//    ds_list_add(global.upgrades, create_upgrade(
-//		"More Pink Blocks",   
-//		"Pink blocks appear more often.", 
-//		"more_pink"));
-//    ds_list_add(global.upgrades, create_upgrade(
-		//"More Light Blue Blocks", 
-		//"Light Blue blocks appear more often.", 
-		//"more_light_blue"));
-//    ds_list_add(global.upgrades, create_upgrade(
-//		"More Purple Blocks", 
-//		"Purple blocks appear more often.", 
-//		"more_purple"));
-//    ds_list_add(global.upgrades, create_upgrade(
-//		"More Orange Blocks", 
-//		"Orange blocks appear more often.", 
-//		"more_orange"));
-
-//    // 💥 **Power-Up Spawn Rate Upgrades**
-//    ds_list_add(global.upgrades, create_upgrade("More Bombs", "Bomb power-ups appear more often.", "more_bombs"));
-//    ds_list_add(global.upgrades, create_upgrade("More Multi-2X", "Multi-2X power-ups appear more often.", "more_multi"));
-//    ds_list_add(global.upgrades, create_upgrade("More Bows", "Bow power-ups appear more often.", "more_bows"));
-//    ds_list_add(global.upgrades, create_upgrade("More EXP", "EXP power-ups appear more often.", "more_exp"));
-//    ds_list_add(global.upgrades, create_upgrade("More Hearts", "Heart power-ups appear more often.", "more_hearts"));
-//    ds_list_add(global.upgrades, create_upgrade("More Money", "Money power-ups appear more often.", "more_money"));
-//    ds_list_add(global.upgrades, create_upgrade("More Timers", "Timer power-ups appear more often.", "more_timers"));
-//    ds_list_add(global.upgrades, create_upgrade("More Wild Potions", "Wild Potion power-ups appear more often.", "more_wild_potions"));
-
-//    // ⏩ **Game Speed Modifier**
-//    ds_list_add(global.upgrades, create_upgrade("Extra Time", "Slows game speed by " + string(0.1 * get_upgrade_level()) + "x.", "extra_time"));
-//}
 
 function get_random_upgrade() {
     var roll = irandom(99);
@@ -268,8 +204,15 @@ function apply_upgrade(upgrade) {
 	
 	var _self = obj_game_control;
 	
+	if !(upgrade)
+	{
+		global.all_stats_maxed = true;
+		return;
+		
+	}
+	
     if (upgrade.level < upgrade.max_level) {
-        upgrade.level++;
+        upgrade.level+=5;
 
         // 🔥 Apply Effects Based on Level
         switch (upgrade.effect) {
@@ -309,34 +252,6 @@ function unlock_upgrade(_effect, _cost) {
     }
     return false; // ❌ Not enough gold or already unlocked
 }
-
-
-//function apply_upgrade(upgrade) {
-//    var level = get_upgrade_level(); // Assign level dynamically
-
-//    switch (upgrade.effect) {
-//        case "more_red": global.color_spawn_weight[BLOCK.RED] += level; break;
-//        case "more_yellow": global.color_spawn_weight[BLOCK.YELLOW] += level; break;
-//        case "more_green": global.color_spawn_weight[BLOCK.GREEN] += level; break;
-//        case "more_pink": global.color_spawn_weight[BLOCK.PINK] += level; break;
-//        case "more_light_blue": global.color_spawn_weight[BLOCK.LIGHTBLUE] += level; break;
-//        case "more_purple": global.color_spawn_weight[BLOCK.PURPLE] += level; break;
-//        case "more_orange": global.color_spawn_weight[BLOCK.ORANGE] += level; break;
-
-//        case "more_bombs": adjust_powerup_weights(POWERUP.BOMB, level); break;
-//        case "more_multi": adjust_powerup_weights(POWERUP.MULTI_2X, level); break;
-//        case "more_bows": adjust_powerup_weights(POWERUP.BOW, level); break;
-//        case "more_exp": adjust_powerup_weights(POWERUP.EXP, level); break;
-//        case "more_hearts": adjust_powerup_weights(POWERUP.HEART, level); break;
-//        case "more_money": adjust_powerup_weights(POWERUP.MONEY, level); break;
-//        case "more_timers": adjust_powerup_weights(POWERUP.TIMER, level); break;
-//        case "more_wild_potions": adjust_powerup_weights(POWERUP.WILD_POTION, level); break;
-
-//        case "extra_time": global.gameSpeed -= (0.1 * level); break;
-//    }
-
-//    instance_destroy(obj_upgrade_menu);
-//}
 
 /// @function get_upgrade_current_stat(effect)
 /// @description Retrieves the current value of the specified upgrade effect.

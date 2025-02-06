@@ -170,7 +170,7 @@ global.in_upgrade_menu	 = false; // Tracks if menu is open
 // ✅ Populate the upgrade list
 generate_all_upgrades();
 
-
+global.all_stats_maxed = false;
 global.enemy_attack_queue = ds_list_create();
 
 
