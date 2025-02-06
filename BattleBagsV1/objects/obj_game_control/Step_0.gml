@@ -65,9 +65,25 @@ var enable_shake = fight_for_your_life;
 process_grid_shake(enable_shake);
 
 
+function play_next_song() {
+    // ✅ Stop any currently playing music
+    audio_stop_all();
 
+    // ✅ Move to the next song in the list
+    current_song += 1;
 
-	
+    // ✅ Loop back to the first song when reaching the end
+    if (current_song >= array_length(songs)) {
+        current_song = 0;
+    }
+
+    // ✅ Play the new song
+    audio_play_sound(songs[current_song], true, false);
+}
+
+	if (!audio_is_playing(songs[current_song])) {
+    play_next_song();
+}
 gem_shake(self);
 
 
@@ -322,7 +338,7 @@ for (var i = 0; i < width; i++) {
 
 	    // ✅ Transition back to regular music
 	    if (global.music_regular == -1) {
-	        global.music_regular = audio_play_sound(music_regular_music_test, 1, true);
+	        global.music_regular = audio_play_sound(songs[current_song], 1, true);
 	    }
     
 	    global.music_regular_volume = min(global.music_regular_volume + global.music_fade_speed, 1);
@@ -739,7 +755,7 @@ function find_and_destroy_matches() {
 	            var dy = j - global.lastSwapY;
 	            var dist = sqrt(dx * dx + dy * dy);
 	            var _start_delay = (gem.type == BLOCK.BLACK) ? 20 : 5; // Longer delay for black blocks
-
+			
 	            // ✅ If it's a BIG BLOCK, transform it into separate blocks
 	            if (gem.is_big) {
 	                var group_id = gem.group_id;
@@ -807,7 +823,8 @@ function find_and_destroy_matches() {
 
 	            grid[i, j].popping   = true;
 	            grid[i, j].pop_timer = dist * _start_delay;
-
+					var _pitch = clamp(1 + (0.2 * combo), 0.5, 5);
+					audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
 	            ds_list_add(global.pop_list, pop_info);
 	        }
 	    }
@@ -892,8 +909,13 @@ if all_blocks_landed(self) {
 
 	                // ✅ Add accumulated match points to total_points
 	                total_points += attack.damage;
-
-                // Remove from pop_list
+					
+					var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
+					var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
+					
+                
+				audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
+				// Remove from pop_list
                 ds_list_delete(global.pop_list, i);
                 i--; 
                 continue;

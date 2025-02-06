@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"snd_pre_bubble_pop_test",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":1,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":0.545442,
+  "name":"snd_pre_bubble_pop_test",
+  "parent":{
+    "name":"group1",
+    "path":"folders/Sounds/group1.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"snd_pre_bubble_pop_test.wav",
+  "type":0,
+  "volume":0.24,
+}

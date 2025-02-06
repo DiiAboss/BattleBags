@@ -2,8 +2,8 @@ function draw_line_DDA_ext(x1, y1, x2, y2, _step)
 {
 	var sx = x1;
 	var sy = y1;
-	var tx = x2;
-	var ty = ty;
+	var tx = x1;
+	var ty = x2;
 	var step = _step;
 
 	var xr = abs(tx - sx);

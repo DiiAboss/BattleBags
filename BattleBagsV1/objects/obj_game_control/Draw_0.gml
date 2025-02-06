@@ -431,6 +431,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
         var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / room_speed);
         
         draw_set_font(f_b_font); // ✅ Use the specified font
+		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4, (room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);
         draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2), room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
     } else {
         draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");

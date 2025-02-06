@@ -1,0 +1,25 @@
+{
+  "$GMSound":"",
+  "%Name":"Sound7",
+  "audioGroupId":{
+    "name":"audiogroup_default",
+    "path":"audiogroups/audiogroup_default",
+  },
+  "bitDepth":0,
+  "bitRate":128,
+  "compression":0,
+  "conversionMode":0,
+  "duration":214.93552,
+  "name":"Sound7",
+  "parent":{
+    "name":"group1",
+    "path":"folders/Sounds/group1.yy",
+  },
+  "preload":false,
+  "resourceType":"GMSound",
+  "resourceVersion":"2.0",
+  "sampleRate":44100,
+  "soundFile":"Sound7.mp3",
+  "type":0,
+  "volume":0.6,
+}

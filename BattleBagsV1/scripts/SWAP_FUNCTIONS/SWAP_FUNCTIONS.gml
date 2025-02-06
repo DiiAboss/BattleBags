@@ -48,7 +48,12 @@ function start_swap(_self, ax, ay, bx, by) {
         global.swap_queue.by = by;
         return; // Don't execute yet
     }
+	
+	var _pitch = clamp(1 + (0.05 * _self.combo), 0.5, 5);
+	audio_play_sound(snd_swap_test_1, 10, false, 0.5, 0, _pitch);
+	
 
+	
     execute_swap(_self, ax, ay, bx, by); // ✅ Otherwise, execute immediately
 }
 

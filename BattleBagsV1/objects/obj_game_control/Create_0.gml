@@ -5,6 +5,9 @@ randomize();
 
 FPS = 60;
 
+songs = [music_regular_music_test, Sound7, sound_regular_music_test_3];
+current_song = 0;
+
 depth = -1;
 //mega_blocks = ds_list_create();
 
