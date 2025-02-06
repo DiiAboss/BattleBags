@@ -13,6 +13,13 @@
 
 
 /// @desc Struct for an upgrade
+///
+/// @param _name
+/// @param _desc
+/// @param _effect
+/// @param _rarity
+/// @param _max_level
+
 function create_upgrade(_name, _desc, _effect, _rarity, _max_level, _start_unlocked = false) {
     return {
         name: _name,
@@ -47,14 +54,135 @@ function get_upgrade_level(luck = 0) {
     return 6;  // 1% chance (unchanged)
 }
 function generate_all_upgrades() {
-    global.upgrade_pool = ds_list_create();
+    global.upgrade_pool      = ds_list_create();
     global.unlocked_upgrades = ds_list_create();
 
     // **Example Upgrades**
-    ds_list_add(global.upgrade_pool, create_upgrade("More Red Blocks", "Red blocks appear more often.", "more_red", 1, 5, true));
-    ds_list_add(global.upgrade_pool, create_upgrade("More Bombs", "Bomb power-ups appear more often.", "more_bombs", 2, 3, true));
-    ds_list_add(global.upgrade_pool, create_upgrade("Critical Chance", "Increases chance for critical hits.", "crit_chance", 3, 5, false));
-    ds_list_add(global.upgrade_pool, create_upgrade("Gold Multiplier", "Gain extra gold from matches.", "gold_pickup_mod", 4, 3, false));
+	
+    ds_list_add(global.upgrade_pool, create_upgrade(
+	"More Red Blocks", 
+	"Red blocks appear more often.",       
+	"more_red", 
+	1, 
+	5,
+	true));
+    
+	ds_list_add(global.upgrade_pool, create_upgrade(
+		"More Yellow Blocks",                // Name
+		"Yellow blocks appear more often.",  // Description
+		"more_yellow",                       // effect
+		1,								     // rarity
+		5,
+		true));									 // max_level
+
+		
+	ds_list_add(global.upgrade_pool, create_upgrade(
+		"More Green Blocks",  
+		"Green blocks appear more often.", 
+		"more_green",                       // effect
+		1,								     // rarity
+		5,
+	true));
+	ds_list_add(global.upgrade_pool, create_upgrade(
+		"More Pink Blocks",   
+		"Pink blocks appear more often.", 
+		"more_pink",                       // effect
+		1,								     // rarity
+		5,
+	true));
+	ds_list_add(global.upgrade_pool, create_upgrade(
+		"More Light Blue Blocks", 
+		"Light Blue blocks appear more often.", 
+		"more_light_blue",                       // effect
+		1,								     // rarity
+		5,
+	true));
+	ds_list_add(global.upgrade_pool, create_upgrade(
+		"More Purple Blocks", 
+		"Purple blocks appear more often.", 
+		"more_purple",                       // effect
+		1,								     // rarity
+		5,
+	true));
+	ds_list_add(global.upgrade_pool, create_upgrade(
+		"More Orange Blocks", 
+		"Orange blocks appear more often.", 
+		"more_orange",                       // effect
+		1,								     // rarity
+		5,
+	true));
+	ds_list_add(global.upgrade_pool, create_upgrade(
+		"More Blue Blocks", 
+		"Blue blocks appear more often.", 
+		"more_blue",                       // effect
+		1,								     // rarity
+		5,
+	true));
+	
+	
+	
+	ds_list_add(global.upgrade_pool, create_upgrade(
+	"More Bombs",      
+	"Bomb power-ups appear more often.",   
+	"more_bombs", 
+	2,
+	3, 
+	true));
+	
+	ds_list_add(global.upgrade_pool, create_upgrade(
+	"More Multi-2X",      
+	"Multi-2X power-ups appear more often.",   
+	"more_multi", 
+	2,
+	3, 
+	true));
+	
+	ds_list_add(global.upgrade_pool, create_upgrade(
+	"More Bows",      
+	"Bow power-ups appear more often.",   
+	"more_bows", 
+	2,
+	3, 
+	true));
+	
+	ds_list_add(global.upgrade_pool, create_upgrade(
+	"More Hearts", "Heart power-ups appear more often.", "more_hearts", 
+	2,
+	3, 
+	true));
+	
+	ds_list_add(global.upgrade_pool, create_upgrade(
+	"More Money", "Money power-ups appear more often.", "more_money", 
+	2,
+	3, 
+	true));
+	
+	ds_list_add(global.upgrade_pool, create_upgrade(
+	"More Timers", "Timer power-ups appear more often.", "more_timers", 
+	2,
+	3, 
+	true));
+	
+	ds_list_add(global.upgrade_pool, create_upgrade(
+	"More Wild Potions", "Wild Potion power-ups appear more often.", "more_wild_potions", 
+	2,
+	3, 
+	true));
+	
+//    // 💥 **Power-Up Spawn Rate Upgrades**
+//    ds_list_add(global.upgrades, create_upgrade("More Bombs", "Bomb power-ups appear more often.", "more_bombs"));
+//    ds_list_add(global.upgrades, create_upgrade("More Multi-2X", "Multi-2X power-ups appear more often.", "more_multi"));
+//    ds_list_add(global.upgrades, create_upgrade("More Bows", "Bow power-ups appear more often.", "more_bows"));
+//    ds_list_add(global.upgrades, create_upgrade("More EXP", "EXP power-ups appear more often.", "more_exp"));
+//    ds_list_add(global.upgrades, create_upgrade("More Hearts", "Heart power-ups appear more often.", "more_hearts"));
+//    ds_list_add(global.upgrades, create_upgrade("More Money", "Money power-ups appear more often.", "more_money"));
+//    ds_list_add(global.upgrades, create_upgrade("More Timers", "Timer power-ups appear more often.", "more_timers"));
+//    ds_list_add(global.upgrades, create_upgrade("More Wild Potions", "Wild Potion power-ups appear more often.", "more_wild_potions"));	
+	
+	
+    //ds_list_add(global.upgrade_pool, create_upgrade("Critical Chance", "Increases chance for critical hits.", "crit_chance", 3, 5, false));
+    //ds_list_add(global.upgrade_pool, create_upgrade("Gold Multiplier", "Gain extra gold from matches.",       "gold_pickup_mod", 4, 3, false));
+	
 
     // 🔥 Unlock **only** starting upgrades
     for (var i = 0; i < ds_list_size(global.upgrade_pool); i++) {
@@ -74,22 +202,19 @@ function generate_all_upgrades() {
 //		"More Red Blocks",    
 //		"Red blocks appear more often.", 
 //		"more_red"));
+
 //    ds_list_add(global.upgrades, create_upgrade(
-//		"More Yellow Blocks", 
-//		"Yellow blocks appear more often.", 
-//		"more_yellow"));
-//    ds_list_add(global.upgrades, create_upgrade(
-//		"More Green Blocks",  
-//		"Green blocks appear more often.", 
-//		"more_green"));
+		//"More Green Blocks",  
+		//"Green blocks appear more often.", 
+		//"more_green"));
 //    ds_list_add(global.upgrades, create_upgrade(
 //		"More Pink Blocks",   
 //		"Pink blocks appear more often.", 
 //		"more_pink"));
 //    ds_list_add(global.upgrades, create_upgrade(
-//		"More Light Blue Blocks", 
-//		"Light Blue blocks appear more often.", 
-//		"more_light_blue"));
+		//"More Light Blue Blocks", 
+		//"Light Blue blocks appear more often.", 
+		//"more_light_blue"));
 //    ds_list_add(global.upgrades, create_upgrade(
 //		"More Purple Blocks", 
 //		"Purple blocks appear more often.", 
@@ -149,9 +274,22 @@ function apply_upgrade(upgrade) {
         // 🔥 Apply Effects Based on Level
         switch (upgrade.effect) {
             case "more_red": global.color_spawn_weight[BLOCK.RED] += upgrade.level; break;
+			case "more_green": global.color_spawn_weight[BLOCK.GREEN] += upgrade.level; break;
+			case "more_yellow": global.color_spawn_weight[BLOCK.YELLOW] += upgrade.level; break;
+			case "more_pink": global.color_spawn_weight[BLOCK.PINK] += upgrade.level; break;
+			case "more_purple": global.color_spawn_weight[BLOCK.PURPLE] += upgrade.level; break;
+			case "more_orange": global.color_spawn_weight[BLOCK.ORANGE] += upgrade.level; break;
+			case "more_light_blue": global.color_spawn_weight[BLOCK.LIGHTBLUE] += upgrade.level; break;
+			case "more_blue": global.color_spawn_weight[BLOCK.BLUE] += upgrade.level; break;
             case "more_bombs": adjust_powerup_weights(POWERUP.BOMB, upgrade.level); break;
-            case "crit_chance": _self.crit_chance_mod += 5; break;
-            case "gold_pickup_mod": _self.gold_pickup_mod += 10; break;
+			case "more_multi": adjust_powerup_weights(POWERUP.MULTI_2X, upgrade.level); break;
+			case "more_bows": adjust_powerup_weights(POWERUP.BOW, upgrade.level); break;
+			case "more_exp": adjust_powerup_weights(POWERUP.EXP, upgrade.level); break;
+			case "more_hearts": adjust_powerup_weights(POWERUP.HEART, upgrade.level); break;
+			case "more_timers": adjust_powerup_weights(POWERUP.TIMER, upgrade.level); break;
+			case "more_wild_potions": adjust_powerup_weights(POWERUP.WILD_POTION, upgrade.level); break;
+            //case "crit_chance": _self.crit_chance_mod += 5; break;
+            //case "gold_pickup_mod": _self.gold_pickup_mod += 10; break;
         }
     }
 }

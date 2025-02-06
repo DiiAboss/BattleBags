@@ -40,6 +40,9 @@ function check_game_over(_self) {
 // 💀 Final Game Over Function
 function trigger_final_game_over() {
     show_message("Game Over! Your health reached 0.");
+	
+	ds_list_destroy(global.upgrades_list);
+	
     game_restart(); // Or transition to a game over screen
 }
 
