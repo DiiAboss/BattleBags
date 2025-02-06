@@ -1,16 +1,13 @@
 {
   "$GMObject":"",
-  "%Name":"obj_enemy_tracker",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"obj_map_point_parent",
+  "eventList":[],
   "managed":true,
-  "name":"obj_enemy_tracker",
+  "name":"obj_map_point_parent",
   "overriddenProperties":[],
   "parent":{
-    "name":"Enemies",
-    "path":"folders/Objects/GAME_OBJECTS/Enemies.yy",
+    "name":"GAME_MAP_OBJECTS",
+    "path":"folders/Objects/GAME_MAP_OBJECTS.yy",
   },
   "parentObjectId":null,
   "persistent":false,

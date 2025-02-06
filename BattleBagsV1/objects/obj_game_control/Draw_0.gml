@@ -416,7 +416,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
     //draw_rectangle(0, 0, room_width, room_height, false);
 	
 	draw_set_color(c_black);
-    draw_set_alpha(0.9 * (1 - (after_menu_counter / after_menu_counter_max)));
+    draw_set_alpha(0.9 * (1 - (after_menu_counter / (after_menu_counter_max + 10))));
     draw_rectangle(0, 0, room_width, room_height, false);
 	draw_set_color(c_white);
     
@@ -431,7 +431,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
         var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / room_speed);
         
         draw_set_font(f_b_font); // ✅ Use the specified font
-        draw_text_transformed_color((room_width / 2) - (after_menu_counter * 3), room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
+        draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2), room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
     } else {
         draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
     }

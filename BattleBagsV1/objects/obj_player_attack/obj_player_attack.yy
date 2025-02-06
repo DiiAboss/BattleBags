@@ -11,8 +11,8 @@
   "name":"obj_player_attack",
   "overriddenProperties":[],
   "parent":{
-    "name":"group1",
-    "path":"folders/Objects/group1.yy",
+    "name":"GAME_OBJECTS",
+    "path":"folders/Objects/GAME_OBJECTS.yy",
   },
   "parentObjectId":null,
   "persistent":false,

@@ -30,7 +30,11 @@ total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
 
+
+
 input = new Input();  // Controller support
+iType = "click_and_drag";
+
 
 global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
 

@@ -1,16 +1,13 @@
 {
   "$GMObject":"",
-  "%Name":"obj_experience_point",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"obj_player_marker",
+  "eventList":[],
   "managed":true,
-  "name":"obj_experience_point",
+  "name":"obj_player_marker",
   "overriddenProperties":[],
   "parent":{
-    "name":"GAME_OBJECTS",
-    "path":"folders/Objects/GAME_OBJECTS.yy",
+    "name":"GAME_MAP_OBJECTS",
+    "path":"folders/Objects/GAME_MAP_OBJECTS.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -31,8 +28,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_exp_powerup_2",
-    "path":"sprites/spr_exp_powerup_2/spr_exp_powerup_2.yy",
+    "name":"spr_hearts",
+    "path":"sprites/spr_hearts/spr_hearts.yy",
   },
   "spriteMaskId":null,
   "visible":true,
