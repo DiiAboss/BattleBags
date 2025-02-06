@@ -110,38 +110,36 @@ for (var i = 0; i < width; i++) {
 
 
 
-// ----------------------------------------------------------------------
-// 2) HIGHLIGHT HOVERED GEM
-//    Convert mouse coords to grid coords, subtracting offset for X
-//    and offset + global_y_offset for Y.
-// ----------------------------------------------------------------------
-var hover_i = floor((mouse_x - board_x_offset) / gem_size);
-var hover_j = floor((mouse_y - global_y_offset) / gem_size);
+if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
+    var hover_i = hovered_block[0];
+    var hover_j = hovered_block[1];
 
-if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
-    var hover_gem = grid[hover_i, hover_j]; // Get the hovered gem
+    if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
+        var hover_gem = grid[hover_i, hover_j];
 
-    if (hover_gem.type != -1) {
-        var rect_x1 = board_x_offset + (hover_i * gem_size);
-        var rect_y1 = (hover_j * gem_size) + global_y_offset;
-        var rect_x2 = rect_x1 + gem_size;
-        var rect_y2 = rect_y1 + gem_size;
+        if (hover_gem.type != BLOCK.NONE) {
+            var rect_x1 = board_x_offset + (hover_i * gem_size);
+            var rect_y1 = (hover_j * gem_size) + global_y_offset;
+            var rect_x2 = rect_x1 + gem_size;
+            var rect_y2 = rect_y1 + gem_size;
 
-        draw_set_alpha(0.3);
-        draw_set_color(c_yellow);
-        draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
+            draw_set_alpha(0.3);
+            draw_set_color(c_yellow);
+            draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
 
-        draw_set_color(c_white);
-        draw_set_alpha(1.0);
+            draw_set_color(c_white);
+            draw_set_alpha(1.0);
 
-        // OPTIONAL: Show gem info in the corner
-        draw_text(10, 10,
-            "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-            ") | Type: " + string(hover_gem.type) + 
-            " | Powerup: " + string(hover_gem.powerup)
-        );
+            // ✅ OPTIONAL: Show gem info in the corner
+            draw_text(10, 10,
+                "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
+                ") | Type: " + string(hover_gem.type) + 
+                " | Powerup: " + string(hover_gem.powerup)
+            );
+        }
     }
 }
+
 
 // ----------------------------------------------------------------------
 // 3) DRAW POPPING GEMS (from global.pop_list)
@@ -232,7 +230,7 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 // Optional: Draw combo count
 draw_text(10, 40, "TIME: " + string(draw_time));
 draw_text(10, 60, "SPEED: " + string(game_speed_default));
-draw_text(10, 80, "BLOCKS: " + string(total_blocks_destroyed));
+draw_text(10, 80, "BLOCKS: " + string(global_y_offset));
 draw_text(10, 100, "LEVEL: " + string(level));
 draw_text(10, 120, "llt: " + string(lose_life_timer));
 draw_text(10, 140, "mCOMBO: " + string(highest_max_combo));

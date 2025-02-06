@@ -5,8 +5,12 @@ randomize();
 
 FPS = 60;
 
-songs = [music_regular_music_test, Sound7, sound_regular_music_test_3];
+songs = [Sound7, sound_regular_music_test_3];
 current_song = 0;
+
+
+selected_piece = [-1, -1];
+hovered_block = [-1, -1];
 
 depth = -1;
 //mega_blocks = ds_list_create();

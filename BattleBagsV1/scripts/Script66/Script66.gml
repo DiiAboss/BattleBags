@@ -48,11 +48,20 @@ function generate_map() {
 }
 
 
-
 function connect_nodes(_node_grid) {
     var num_rows = array_length(_node_grid);
 
-    // 🔹 Loop from **bottom to top**, ensuring r > 0 to avoid negative index
+    // ✅ Step 1: Ensure the start node connects to the row above
+    var start_row = _node_grid[num_rows - 1];
+    var first_row = _node_grid[num_rows - 2];
+
+    if (start_row != undefined && first_row != undefined && array_length(first_row) > 0) {
+        var start_node = start_row[0]; // 🔹 Start node is always the first node
+        var parent_index = irandom(array_length(first_row) - 1);
+        start_node.parent = first_row[parent_index]; // 🔹 Connect to a random node above
+    }
+
+    // ✅ Step 2: Loop through and connect the rest of the rows
     for (var r = num_rows - 2; r > 0; r--) { // ✅ Ensures `r - 1` is always valid
         var current_row = _node_grid[r];
         var above_row = _node_grid[r - 1];
@@ -77,6 +86,7 @@ function connect_nodes(_node_grid) {
         }
     }
 }
+
 
 
 

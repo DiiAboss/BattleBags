@@ -87,30 +87,61 @@ function play_next_song() {
 gem_shake(self);
 
 
+
+
+
+
+
+if (global.swap_queue.active) {
+    // ✅ Make sure we only shift the row if a swap was NOT already shifted
+    if (_self.global_y_offset == 0) {
+        global.swap_queue.ay -= 1;
+        global.swap_queue.by -= 1;
+    }
+
+    // ✅ Execute the swap AFTER adjusting its position
+    execute_swap(self, global.swap_queue.ax, global.swap_queue.ay, global.swap_queue.bx, global.swap_queue.by);
+    
+    global.swap_queue.active = false; // Clear the swap queue
+}
+
+
 if (swap_in_progress) {
     swap_info.progress += swap_info.speed;
 
+    // 🛑 Check if the swap is happening **mid-shift** (before progress reaches 1)
+    if (swap_info.progress < 1 && global_y_offset == 0) {
+        // 🔹 Move swap targets UP by one row since the board just shifted
+        swap_info.from_y -= 1;
+        swap_info.to_y -= 1;
+    }
+
     if (swap_info.progress >= 1) {
         swap_info.progress = 1;
-		
-        // Complete the swap in the grid
-        var temp = grid[swap_info.from_x, swap_info.from_y];
-        grid[swap_info.from_x, swap_info.from_y] = grid[swap_info.to_x, swap_info.to_y];
-        grid[swap_info.to_x, swap_info.to_y] = temp;
 
-        // Reset offsets for both cells
+        // ✅ Ensure the swap happens at the correct row based on whether we just shifted
+        if (global_y_offset != 0) {
+            var temp = grid[swap_info.from_x, swap_info.from_y];
+            grid[swap_info.from_x, swap_info.from_y] = grid[swap_info.to_x, swap_info.to_y];
+            grid[swap_info.to_x, swap_info.to_y] = temp;
+        } else {
+            // 🔹 If the board just moved up, apply the swap **one row higher**
+            var temp = grid[swap_info.from_x, swap_info.from_y - 1];
+            grid[swap_info.from_x, swap_info.from_y - 1] = grid[swap_info.to_x, swap_info.to_y - 1];
+            grid[swap_info.to_x, swap_info.to_y - 1] = temp;
+        }
+
+        // Reset offsets
         grid[swap_info.from_x, swap_info.from_y].offset_x = 0;
         grid[swap_info.from_x, swap_info.from_y].offset_y = 0;
         grid[swap_info.to_x, swap_info.to_y].offset_x = 0;
         grid[swap_info.to_x, swap_info.to_y].offset_y = 0;
 
-        // End swap
         swap_in_progress = false;
     } else {
         // Animate the swap
         var distance = gem_size * swap_info.progress;
 
-        // Update offsets for smooth animation
         if (swap_info.from_x < swap_info.to_x) {
             grid[swap_info.from_x, swap_info.from_y].offset_x =  distance;
             grid[swap_info.to_x,   swap_info.to_y].offset_x   = -distance;
@@ -127,6 +158,7 @@ if (swap_in_progress) {
         }
     }
 }
+
 
 
 // Toggle Console On/Off
@@ -410,9 +442,12 @@ function shift_up() {
             grid[i, j] = grid[i, j + 1];  
             
             // ✅ Carry offsets properly
-            gem_y_offsets[i, j] = gem_y_offsets[i, j + 1];
+            //gem_y_offsets[i, j] = gem_y_offsets[i, j + 1];
+			
         }
     }
+	
+
 
     // 2️⃣ Shift all popping gems in `global.pop_list`
     for (var k = 0; k < ds_list_size(global.pop_list); k++) {
@@ -434,6 +469,9 @@ function shift_up() {
     // 4️⃣ Reset darken alpha so the new row fades in again
     darken_alpha = 0;
 }
+
+			
+
 
 function check_puzzle_match(_self, _x, _y) {
     // ✅ Bounds check (to avoid out-of-grid errors)
@@ -887,9 +925,7 @@ if all_blocks_landed(self) {
 					return;
 				}
 
-					if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2;
-	                //if (gem.powerup == POWERUP.MULTI_3X) total_multiplier *= 3;
-	                // ✅ You can add more multipliers here later!
+					if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2
 
 	                //Loop Through Multipliers
 	                process_powerup(self, _x, _y, gem, total_multiplier_next);
@@ -930,11 +966,7 @@ if all_blocks_landed(self) {
 
 
 
-// If a swap is queued and the offset is above our threshold, execute it
-if ( global.swap_queue.active) {
-    execute_swap(self, global.swap_queue.ax, global.swap_queue.ay, global.swap_queue.bx, global.swap_queue.by);
-    global.swap_queue.active = false; // Clear the swap queue
-}
+
 
 function create_puzzle_gem(_type, _group_id, _img_number) {
     var gem = create_gem(_type);
@@ -964,7 +996,7 @@ function spawn_puzzle_blocks(_self) {
             }
         }
 
-        if (!is_duplicate && _self.grid[start_x, start_y].type == BLOCK.NONE) {
+        if (!is_duplicate && _self.grid[start_x, start_y].type != BLOCK.PUZZLE_1) {
             array_push(random_pos_array, position);
         }
     }

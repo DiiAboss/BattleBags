@@ -21,5 +21,5 @@
   "sampleRate":44100,
   "soundFile":"sound_regular_music_test_3.ogg",
   "type":0,
-  "volume":0.65,
+  "volume":0.05,
 }

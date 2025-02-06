@@ -21,5 +21,5 @@
   "sampleRate":44100,
   "soundFile":"music_fast_music_test.wav",
   "type":0,
-  "volume":0.2,
+  "volume":0.16,
 }

@@ -21,5 +21,5 @@
   "sampleRate":44100,
   "soundFile":"Sound7.mp3",
   "type":0,
-  "volume":0.6,
+  "volume":0.04,
 }
