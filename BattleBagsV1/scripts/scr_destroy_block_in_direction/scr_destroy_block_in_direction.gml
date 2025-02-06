@@ -40,6 +40,7 @@ function destroy_blocks_in_direction_from_point(_self, start_x, start_y, _dir_x,
 			bomb_tracker: false,
 			bomb_level: 1,
 			dir: gem.dir,
+			img_number: gem.img_number,
         };
 
         gem.popping = true;

@@ -1,6 +1,6 @@
 
 enum BLOCK {
-    RANDOM = -99,MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    RANDOM = -99, PUZZLE_1 = -4, MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
     LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
 }
 
@@ -31,16 +31,16 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 	var _color = c_white;
 	
 	switch(_type) {
-		case BLOCK.RED: _color = c_red; break;
+		case BLOCK.RED:    _color = c_red; break;
 		case BLOCK.YELLOW: _color = c_yellow; break;
-		case BLOCK.GREEN: _color = c_lime; break;
-		case BLOCK.PINK: _color = c_fuchsia; break;
+		case BLOCK.GREEN:  _color = c_lime; break;
+		case BLOCK.PINK:   _color = c_fuchsia; break;
 		case BLOCK.PURPLE: _color = c_purple; break;
 		case BLOCK.LIGHTBLUE: _color = c_silver; break;
 		case BLOCK.ORANGE: _color = c_orange; break;
-		case BLOCK.BLUE: _color = c_blue; break;
-		case BLOCK.BLACK: _color = c_black; break;
-		case BLOCK.MEGA: _color = c_white; break;
+		case BLOCK.BLUE:   _color = c_blue; break;
+		case BLOCK.BLACK:  _color = c_black; break;
+		case BLOCK.MEGA:   _color = c_white; break;
 	}
 	
     return {
@@ -72,6 +72,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		bomb_level: _bomb_level,
 		is_big: false,
 		big_parent: [-1, -1],
+		img_number: -1,
     };
 }
 

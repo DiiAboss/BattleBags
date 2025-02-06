@@ -17,7 +17,8 @@ function create_pop_info(_self, cell_x, cell_y, origin_x, origin_y, blocks_destr
          match_size: blocks_destroyed,   // Save how many blocks were destroyed so far
          match_points: _match_points,       // Total points for this explosion
          bomb_tracker: _bomb_tracker,               // Flag to mark this pop as bomb‐generated
-         bomb_level: _bomb_level
+         bomb_level: _bomb_level,
+		 img_number: _self.grid[cell_x, cell_y].img_number,
     };
 }
 

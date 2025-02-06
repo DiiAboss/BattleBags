@@ -72,7 +72,7 @@ for (var i = 0; i < width; i++) {
 			}
 			else
 			{
-				draw_sprite(sprite_for_gem(gem.type), 0, draw_x_with_global_shake, draw_y_with_global_shake);
+				draw_sprite(sprite_for_gem(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake);
 			}
 		}
             
@@ -164,7 +164,7 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 	
     draw_sprite_ext(
         sprite_for_gem(pop_data.gem_type),
-        0,
+        pop_data.img_number,
         final_x + pop_data.offset_x,
         final_y + pop_data.offset_y,
         pop_data.scale * 1.2, 
@@ -431,7 +431,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
         var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / room_speed);
         
         draw_set_font(f_b_font); // ✅ Use the specified font
-        draw_text_transformed_color(board_x_offset + (0.5 * width * gem_size), room_height / 2, string(countdown_value), 3, 3, 0, c_yellow, c_green, c_blue, c_red, 1);
+        draw_text_transformed_color((room_width / 2) - (after_menu_counter * 3), room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
     } else {
         draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
     }
