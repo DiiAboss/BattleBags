@@ -6,7 +6,6 @@ function can_match(gem1, gem2) {
     if (gem1.type == BLOCK.BLACK || gem2.type == BLOCK.BLACK) return false;
     if (gem1.type == BLOCK.MEGA || gem2.type == BLOCK.MEGA) return false;
 	
-
     // ❌ **Enemy blocks cannot match until they land**
     if (gem1.is_enemy_block || gem2.is_enemy_block) return false;
 	

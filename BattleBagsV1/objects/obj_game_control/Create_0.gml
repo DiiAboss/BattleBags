@@ -47,7 +47,12 @@ global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
 
 spawn_rows = 6; // Number of initial rows to spawn
 width	   = 8;
-height	   = 16;
+
+
+height	   = 24;
+top_playable_row = 4;
+bottom_playable_row = 20;
+
 
 // ------------------------------------------------------
 // MUSIC
@@ -104,6 +109,8 @@ timer_block_slow_down = 0;
 
 lose_life_max_timer = FPS * global.modifier * 3;
 lose_life_timer     = 0;
+
+blocks_in_danger = false;
 
 health_per_heart = 4;
 

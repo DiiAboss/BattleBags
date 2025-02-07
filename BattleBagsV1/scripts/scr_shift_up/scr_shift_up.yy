@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_shift_up",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_shift_up",
+  "parent":{
+    "name":"MATCH_AND_BOARD",
+    "path":"folders/Scripts/MAIN/MATCH_AND_BOARD.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

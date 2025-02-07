@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BLOCK_2x2",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BLOCK_2x2",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

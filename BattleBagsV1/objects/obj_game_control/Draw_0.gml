@@ -5,28 +5,25 @@
 var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
 var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
 
+var draw_y_start = camera_get_view_y(view_get_camera(view_current));
+
 
 for (var i = 0; i < width; i++) {
     var max_shake = 2; // Max shake intensity when blocks are above row 1
     var shake_intensity = 0; // Default no shake
 
     // 🔹 **Check if column has any blocks above row 1**
-    var above_blocks = false;
-    for (var j = 0; j >= -3; j--) { // Check rows 0, -1, -2, -3
-        if (i >= 0 && i < width && j >= 0 && grid[i, j].type != BLOCK.NONE && !grid[i, j].falling ) {
-            above_blocks = true;
-            break; // Stop checking if we find any block
-        }
-    }
-	
-	
+    var above_blocks = global.topmost_row <= top_playable_row - 1;
 
+	draw_text(10, draw_y_start + 0, "TOPROW: " + string(global.topmost_row));
+	draw_text(10, draw_y_start + 10, "above: " + string(above_blocks));
+	
     // 🔥 **If blocks are above row 1, apply max shake**
     if (above_blocks) {
         shake_intensity = max_shake;
     } 
-    // 🔥 **Otherwise, scale shake based on progress to row 0**
-    else if (grid[i, 1].type != BLOCK.NONE && !grid[i, 1].falling) {
+    // **Otherwise, scale shake based on progress to row 0**
+    else if (grid[i, top_playable_row].type != BLOCK.NONE && !grid[i, top_playable_row].falling) {
         var block_y = (1 * gem_size) + global_y_offset;
         var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
         shake_intensity = lerp(0, max_shake, progress);
@@ -56,19 +53,17 @@ for (var i = 0; i < width; i++) {
 		        draw_sprite_ext(sprite_for_gem(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 		    }
 		} else {
-			if (j >= height -1)
+			if (j >= bottom_playable_row)
 			{
-			        var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-			        var draw_y = ((height - 1) * gem_size) + global_y_offset + gem.offset_y + offset;
+			        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+			        var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset;
+					
+					if (j == bottom_playable_row)
+					{		
+				        // ✅ Draw Normally but with Transparency
+				        draw_sprite_ext(sprite_for_gem(gem.type), 0, _draw_x, _draw_y, 1, 1, 0 ,c_white, darken_alpha);
+					}
 
-			        // 🔥 Apply Darken Alpha Effect
-			        draw_set_alpha(darken_alpha);
-
-			        // ✅ Draw Normally but with Transparency
-			        draw_sprite(sprite_for_gem(gem.type), 0, draw_x, draw_y);
-
-			        // ✅ Reset Alpha After Drawing
-			        draw_set_alpha(1);
 			}
 			else
 			{
@@ -133,12 +128,21 @@ if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
             draw_set_alpha(1.0);
 
             // ✅ OPTIONAL: Show gem info in the corner
-            draw_text(10, 10,
+            draw_text(10, draw_y_start + 10,
                 "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
                 ") | Type: " + string(hover_gem.type) + 
                 " | Powerup: " + string(hover_gem.powerup)
             );
         }
+		else
+		{
+			// ✅ OPTIONAL: Show gem info in the corner
+            draw_text(10, draw_y_start + 10,
+                "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
+                ") | Type: " + string(hover_gem.type) + 
+                " | Powerup: " + string(hover_gem.powerup)
+            );
+		}
     }
 }
 
@@ -172,9 +176,9 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
         0,
         c_white,
         1.0
-    );
+		);
 	
-		if (pop_data.powerup != -1) {
+	if (pop_data.powerup != -1) {
         draw_sprite_ext(pop_data.powerup.sprite,
 		0,
 		final_x,
@@ -184,13 +188,8 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
         0,
         c_white,
         1.0
-    );
-            }
-			
-			
-
-		draw_text(draw_x, draw_y, string(grid[pop_data.x, pop_data.y].shake_timer))
-		draw_text(draw_x + 12, draw_y, string(pop_data.scale))
+		);
+	}
 	
 }
 
@@ -211,64 +210,67 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 		
 }
 
-			// Draw the combo number if a combo is active
-		if (combo > 1) { // Only show if at least 2 matches have happened
-		    draw_set_font(f_b_font);
-		    draw_set_halign(fa_center);
-		    draw_set_valign(fa_middle);
+// Draw the combo number if a combo is active
+if (combo > 1) { // Only show if at least 2 matches have happened
+	draw_set_font(f_b_font);
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_middle);
     
-		    var px = (global.combo_x * gem_size) + board_x_offset + (gem_size / 2);
-		    var py = (global.combo_y * gem_size) + global_y_offset + (gem_size / 2);
+	var px = (global.combo_x * gem_size) + board_x_offset + (gem_size / 2);
+	var py = (global.combo_y * gem_size) + global_y_offset + (gem_size / 2);
 			
 			
-			draw_text_color(px+2 + irandom_range(-1, 1), py+2 + irandom_range(-1, 1), string(combo) + "x!", c_black, c_black, c_black, c_black, 1);
-			draw_text_color(px + irandom_range(-1, 1), py + irandom_range(-1, 1), string(combo) + "x!", c_yellow, c_yellow, c_white, c_white, 1);
-		    //draw_text(px, py, string(combo) + "x!");
+	draw_text_color(px+2 + irandom_range(-1, 1), py+2 + irandom_range(-1, 1), string(combo) + "x!", c_black, c_black, c_black, c_black, 1);
+	draw_text_color(px + irandom_range(-1, 1), py + irandom_range(-1, 1), string(combo) + "x!", c_yellow, c_yellow, c_white, c_white, 1);
+	//draw_text(px, py, string(combo) + "x!");
 			
-			draw_set_font(fnt_basic);
-			draw_set_halign(fa_left);
-		}
+	draw_set_font(fnt_basic);
+	draw_set_halign(fa_left);
+}
 
 // Optional: Draw combo count
-draw_text(10, 40, "TIME: " + string(draw_time));
-draw_text(10, 60, "SPEED: " + string(game_speed_default));
-draw_text(10, 80, "BLOCKS: " + string(global_y_offset));
-draw_text(10, 100, "LEVEL: " + string(level));
-draw_text(10, 120, "llt: " + string(lose_life_timer));
-draw_text(10, 140, "mCOMBO: " + string(highest_max_combo));
+draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
+draw_text(10, draw_y_start + 60, "SPEED: " + string(game_speed_default));
+draw_text(10, draw_y_start + 80, "BLOCKS: " + string(global_y_offset));
+draw_text(10, draw_y_start + 100, "LEVEL: " + string(level));
+draw_text(10, draw_y_start + 120, "darken: " + string(darken_alpha));
+draw_text(10, draw_y_start + 140, "bpr: " + string(bottom_playable_row));
 
 
-var y_start = 128;
-var y_end   = room_height - 128; 
+var y_start = draw_y_start + 128;
+var y_end   = draw_y_start + camera_get_view_height(view_get_camera(view_current)) - 128; 
 var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
 
-draw_rectangle_color(board_x_offset * 0.5, 128, board_x_offset * 0.9, room_height - 128, c_white, c_white, c_white, c_white, true);
-draw_rectangle_color(board_x_offset * 0.5, y_end - draw_exp_y, board_x_offset * 0.9, room_height - 128, c_fuchsia, c_purple, c_purple, c_purple, false);
+draw_rectangle_color(board_x_offset * 0.5, y_start,            board_x_offset * 0.9, y_end, c_white, c_white, c_white, c_white, true);
+draw_rectangle_color(board_x_offset * 0.5, y_end, board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
 
-//var gem_size = 64; // Size of each cell
+
 var thickness = 5; // Thickness of the outline
 
 // Calculate grid dimensions
-var grid_width = width * gem_size;
-var grid_height = room_height;
 
+var grid_width = width * gem_size;
+var grid_height = camera_get_view_height(view_get_camera(view_current));
+var view_diff = room_height - grid_height;
 // Set outline color
 draw_set_color(c_white);
 
 // Draw thick outline around the grid
-draw_rectangle(board_x_offset - thickness, - thickness, 
-               board_x_offset + grid_width + thickness, thickness, false); // Top
-draw_rectangle(board_x_offset - thickness, - thickness, 
-               board_x_offset + 1, grid_height + thickness, false); // Left
-draw_rectangle(board_x_offset + grid_width, - thickness, 
-               board_x_offset + grid_width + thickness, grid_height + thickness, false); // Right
-draw_rectangle(board_x_offset - thickness, grid_height, 
-               board_x_offset + grid_width + thickness, grid_height + thickness, false); // Bottom
+draw_rectangle(board_x_offset - thickness, view_diff - thickness, 
+               board_x_offset + grid_width + thickness,view_diff + thickness, false); // Top
+draw_rectangle(board_x_offset - thickness,view_diff - thickness, 
+               board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
+draw_rectangle(board_x_offset + grid_width, view_diff - thickness, 
+               board_x_offset + grid_width + thickness, view_diff + grid_height - thickness, false); // Right
+draw_rectangle(board_x_offset - thickness, view_diff + grid_height, 
+               board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, false); // Bottom
 
 draw_spawn_rates(self);
 
 
-draw_player_hearts(self, player_health, max_player_health, board_x_offset, room_height - 34, width, spr_hearts, gem_size);
+draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, spr_hearts, gem_size);
+
+
 // ----------------------
 //   DRAW DANGER WARNING (Glowing Columns)
 // ----------------------
@@ -323,7 +325,7 @@ draw_set_color(c_white);
 
 // Define position (top-right of the screen)
 var points_x = (room_width * 0.5) + 128;
-var points_y = 20;
+var points_y = draw_y_start + 20;
 
 // Draw background box (optional for visibility)
 var box_width = 150;
@@ -343,7 +345,7 @@ draw_set_font(fnt_basic);
 
 // 🛑 Always Draw the Preview Box (Even if No Attack is Queued)
 var preview_x = board_x_offset + (width * gem_size) + 16;
-var preview_y = 64;
+var preview_y = draw_y_start + 64;
 var preview_size = 256; // Preview box size
 var grid_size = 32;     // Size of each grid cell
 var grid_spacing = 4;   // Spacing between blocks
@@ -417,7 +419,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
 	
 	draw_set_color(c_black);
     draw_set_alpha(0.9 * (1 - (after_menu_counter / (after_menu_counter_max + 10))));
-    draw_rectangle(0, 0, room_width, room_height, false);
+    draw_rectangle(0, draw_y_start, room_width, room_height, false);
 	draw_set_color(c_white);
     
 	
@@ -431,8 +433,8 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
         var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / room_speed);
         
         draw_set_font(f_b_font); // ✅ Use the specified font
-		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4, (room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);
-        draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2), room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
+		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4,(room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);
+        draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2),room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
     } else {
         draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
     }
@@ -450,10 +452,10 @@ if (console_active) {
     // Draw Console Text
     draw_set_color(c_black);
     //draw_set_font(console_font);
-    draw_text(console_x + 10, console_y + 10, "> " + console_input);
+    draw_text(console_x + 10, draw_y_start + console_y + 10, "> " + console_input);
 
     // Draw Command History
     for (var i = 0; i < min(array_length(console_history), max_history); i++) {
-        draw_text(console_x + 10, console_y + 30 + (i * 20), console_history[i]);
+        draw_text(console_x + 10, draw_y_start + console_y + 30 + (i * 20), console_history[i]);
     }
 }

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"PUZZLE_BLOCKS",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"PUZZLE_BLOCKS",
+  "parent":{
+    "name":"TIME",
+    "path":"folders/Scripts/TIME.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

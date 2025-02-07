@@ -4,8 +4,10 @@ upgrade_pool = array_create(array_size);
 
 global.upgrade_positions = array_create(array_size); // Store button positions
 
+draw_y_start = camera_get_view_y(view_get_camera(view_current));
+
 var x_start = (room_width / 2) - (384 * 1);
-var y_start = 300;
+var y_start = draw_y_start + 300;
 
 // ✅ Create a temporary list to store only upgrades BELOW max level
 var available_upgrades = ds_list_create();

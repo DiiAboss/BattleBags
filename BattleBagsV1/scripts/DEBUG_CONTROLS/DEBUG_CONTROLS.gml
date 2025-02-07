@@ -44,6 +44,11 @@ if (keyboard_check_pressed(vk_space)) {
 		//_self.global_y_offset = -63;
 		//_self.shift_speed = 0;
 	}
+	
+	if (keyboard_check_pressed(vk_tab))
+	{
+		spawn_puzzle_blocks(self);
+	}
 
 	if keyboard_check_pressed(ord("E")) {
 		activate_bomb_gem(_self, hover_x, hover_y);

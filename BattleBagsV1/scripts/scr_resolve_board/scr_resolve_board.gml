@@ -3,7 +3,7 @@ function resolve_board() {
     var keepGoing = true;
     while (keepGoing) {
         // find_and_destroy_matches now returns 'true' if something was destroyed
-        keepGoing = find_and_destroy_matches();
+        keepGoing = find_and_destroy_matches(self);
         if (keepGoing) {
             drop_blocks(self);
         }

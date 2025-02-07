@@ -51,7 +51,7 @@ for (var i = 0; i < array_length(upgrade_pool); i++) {
 		    draw_set_halign(fa_center);
 		    draw_text(draw_x, draw_y - 80, upgrade_data.name);
 			//  Display upgrade descriptions centered **below all upgrades**
-			var desc_y_position = 500;
+			var desc_y_position = 500 + draw_y_start;
 			draw_set_alpha(0.5);
 			draw_text(global.upgrade_positions[i].x, desc_y_position, upgrade_pool[i].desc);
 			draw_set_alpha(1);
@@ -64,7 +64,7 @@ for (var i = 0; i < array_length(upgrade_pool); i++) {
 if (hover_index != -1) && (upgrade_pool[hover_index])
 {
 	//  Display upgrade descriptions centered **below all upgrades**
-	var desc_y_position = 500;
+	var desc_y_position = 500 + draw_y_start;
 	draw_set_halign(fa_center);
 	draw_text(global.upgrade_positions[hover_index].x, desc_y_position, upgrade_pool[hover_index].desc);
 

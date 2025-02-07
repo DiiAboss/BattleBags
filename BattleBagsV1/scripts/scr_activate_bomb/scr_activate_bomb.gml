@@ -65,7 +65,7 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
         var cx = coords[k].x;
         var cy = coords[k].y;
 
-        if (cx >= 0 && cx < _self.width && cy >= 0 && cy < _self.height &&
+        if (cx >= 0 && cx < _self.width && cy >= 0 && cy <= _self.bottom_playable_row &&
             _self.grid[cx, cy].type != -1) {
 				_self.grid[cx, cy].shake_timer = max_shake_timer * 4;
 

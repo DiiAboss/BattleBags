@@ -11,20 +11,21 @@ function check_game_over(_self) {
     
 	    var blocks_destroyed = 0;
 	    // Define the top-of-screen threshold (0 means anything at or above y = 0 counts)
-	    var threshold = 0;
+	    var threshold = _self.top_playable_row;
 	
 		for (var i = 0; i < _self.width; i++) {
-			var j = 0;
-			var gem = _self.grid[i, j];
-			if (gem.type != -1 && !gem.falling && gem.fall_delay == 0) {
-	            grid[i, j] = create_gem(BLOCK.NONE);
-	            blocks_destroyed++;
-	        }
+			for (var j = 0; j < threshold; j++) {
+				var gem = _self.grid[i, j];
+				if (gem.type != -1 && !gem.falling && gem.fall_delay == 0) {
+		            grid[i, j] = create_gem(BLOCK.NONE);
+		            blocks_destroyed++;
+		        }
+			}
 		}
     
 	    // If we destroyed any blocks, subtract that many from player health
 	    if (blocks_destroyed > 0) {
-	        player_health -= 4;
+	        player_health -= _self.health_per_heart;
 	        global.grid_shake_amount = 10; // Trigger a shake effect
 			blocks_destroyed = 0;
 	        _self.lose_life_timer = 0;
