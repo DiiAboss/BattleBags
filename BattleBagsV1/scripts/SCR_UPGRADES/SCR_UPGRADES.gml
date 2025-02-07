@@ -212,7 +212,7 @@ function apply_upgrade(upgrade) {
 	}
 	
     if (upgrade.level < upgrade.max_level) {
-        upgrade.level+=5;
+        upgrade.level+=1;
 
         // 🔥 Apply Effects Based on Level
         switch (upgrade.effect) {

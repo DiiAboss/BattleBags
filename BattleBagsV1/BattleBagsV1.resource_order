@@ -136,6 +136,7 @@
     {"name":"spr_enemy_golem_light_1","order":4,"path":"sprites/spr_enemy_golem_light_1/spr_enemy_golem_light_1.yy",},
     {"name":"spr_enemy_rat","order":2,"path":"sprites/spr_enemy_rat/spr_enemy_rat.yy",},
     {"name":"spr_exp_powerup_2","order":17,"path":"sprites/spr_exp_powerup_2/spr_exp_powerup_2.yy",},
+    {"name":"spr_gem_hovered_border","order":17,"path":"sprites/spr_gem_hovered_border/spr_gem_hovered_border.yy",},
     {"name":"spr_gem_test_2","order":14,"path":"sprites/spr_gem_test_2/spr_gem_test_2.yy",},
     {"name":"spr_goo_cover","order":1,"path":"sprites/spr_goo_cover/spr_goo_cover.yy",},
     {"name":"spr_hearts","order":7,"path":"sprites/spr_hearts/spr_hearts.yy",},
@@ -169,5 +170,6 @@
     {"name":"spr_upgrade_gem_spawn_up","order":5,"path":"sprites/spr_upgrade_gem_spawn_up/spr_upgrade_gem_spawn_up.yy",},
     {"name":"spr_wild_gem","order":7,"path":"sprites/spr_wild_gem/spr_wild_gem.yy",},
     {"name":"spr_yellow_gem","order":5,"path":"sprites/spr_yellow_gem/spr_yellow_gem.yy",},
+    {"name":"Sprite59","order":10,"path":"sprites/Sprite59/Sprite59.yy",},
   ],
 }
