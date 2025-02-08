@@ -205,9 +205,9 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 			var img_number = sprite_get_number(spr_bomb_overlay_wick);
 			var progress = img_number - (img_number * (grid[pop_data.x, pop_data.y].shake_timer / max_shake_timer));
 			
-			draw_sprite_ext(spr_bomb_level_1_overlay, -1, draw_x + irandom_range(1, -1), draw_y + irandom_range(1, -1), 1.1, 1.1, 0, c_white, 1);
-		}
-		
+			draw_sprite_ext(spr_bomb_overlay_wick, 0, draw_x, draw_y, 1.2, 1.2, 0, c_white, 1);
+			
+		}	
 }
 
 // Draw the combo number if a combo is active

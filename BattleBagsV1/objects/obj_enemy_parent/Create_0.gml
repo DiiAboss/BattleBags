@@ -72,3 +72,13 @@ attack_patterns = [
 	ENEMY_ATTACK.regular_2x1,
 	ENEMY_ATTACK.regular_2x2
 ];
+self.enemy_attack = "triangle_down_3x3";
+width = 5;
+/// @description Initialize Enemy Variables
+enemy_attack_preview = array_create(5); // Max 4 rows of preview blocks
+for (var i = 0; i < 5; i++) {
+    enemy_attack_preview[i] = array_create(width, BLOCK.NONE);
+}
+
+preview_build_timer = 0; // Tracks time before adding a row
+preview_rows_built = 0; // How many rows have been added so far

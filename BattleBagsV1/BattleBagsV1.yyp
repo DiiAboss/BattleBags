@@ -182,6 +182,7 @@
     {"id":{"name":"spr_bomb_overlay","path":"sprites/spr_bomb_overlay/spr_bomb_overlay.yy",},},
     {"id":{"name":"spr_cursed_gem_2","path":"sprites/spr_cursed_gem_2/spr_cursed_gem_2.yy",},},
     {"id":{"name":"spr_cursed_gem","path":"sprites/spr_cursed_gem/spr_cursed_gem.yy",},},
+    {"id":{"name":"spr_enemy_attack_preview","path":"sprites/spr_enemy_attack_preview/spr_enemy_attack_preview.yy",},},
     {"id":{"name":"spr_enemy_fly","path":"sprites/spr_enemy_fly/spr_enemy_fly.yy",},},
     {"id":{"name":"spr_enemy_gem_overlay","path":"sprites/spr_enemy_gem_overlay/spr_enemy_gem_overlay.yy",},},
     {"id":{"name":"spr_enemy_golem_earth_1","path":"sprites/spr_enemy_golem_earth_1/spr_enemy_golem_earth_1.yy",},},

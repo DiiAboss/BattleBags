@@ -32,7 +32,7 @@ function enable_debug_controls(_self, hover_x, hover_y, debug_active = true)
 	}
 
 if (keyboard_check_pressed(vk_space)) {
-    //spawn_2x2_block(_self, hover_x, hover_y, BLOCK.RED); // Spawns a big RED block
+    spawn_2x2_block(_self, hover_x, hover_y, BLOCK.RED); // Spawns a big RED block
 }
 	if (keyboard_check_pressed(vk_shift)) {
 		//toss_down_row(_self, true);

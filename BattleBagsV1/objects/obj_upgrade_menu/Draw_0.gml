@@ -5,7 +5,7 @@ draw_rectangle(0, 0, room_width, room_height, false);
 draw_set_alpha(1);
 draw_set_color(c_white);
 draw_set_halign(fa_center);
-draw_text(room_width / 2, 80, "Choose an Upgrade");
+draw_text(room_width / 2, draw_y_start + 80, "Choose an Upgrade");
 
 // ️ Mouse Hover Detection & Selection Logic
 var hover_index = -1;
@@ -78,7 +78,7 @@ if (hover_index != -1) && (upgrade_pool[hover_index])
 // 🎨 Display Gem Spawn Rates (LEFT SIDE)
 // ------------------------------------
 var gem_x = (room_width / 2) - 178;  // Left Position
-var gem_y = room_height / 1.75;
+var gem_y = room_height / 1.75 + draw_y_start;
 var gem_line_spacing = 22;
 
 draw_set_color(c_white);
@@ -86,7 +86,7 @@ draw_set_halign(fa_left);
 draw_text(gem_x, gem_y - 20, "🎨 Gem Spawn Rates:");
 
 var gem_percentages = get_color_spawn_percentages(self);
-var gem_names = ["Red", "Yellow", "Green", "Blue", "Purple", "Orange", "Pink", "Blue"];
+var gem_names = [   "Red",     "Yellow",     "Green",     "Lightblue",     "Purple",     "Orange",     "Pink",     "Blue"];
 var gem_keys = [BLOCK.RED, BLOCK.YELLOW, BLOCK.GREEN, BLOCK.LIGHTBLUE, BLOCK.PURPLE, BLOCK.ORANGE, BLOCK.PINK, BLOCK.BLUE];
 
 for (var i = 0; i < array_length(gem_keys); i++) {
@@ -99,7 +99,7 @@ for (var i = 0; i < array_length(gem_keys); i++) {
 // 💥 Display Power-Up Spawn Rates (RIGHT SIDE)
 // --------------------------------------
 var powerup_x = (room_width / 2) + 64;  // Right Position
-var powerup_y = room_height / 1.75;
+var powerup_y = room_height / 1.75 + draw_y_start;
 var powerup_line_spacing = 22;
 
 draw_set_color(c_white);

@@ -25,8 +25,7 @@
   "height":240,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"553eae2d-21dc-4e7e-8ab0-c9e9f5749c6b","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"553eae2d-21dc-4e7e-8ab0-c9e9f5749c6b","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
-    {"$GMImageLayer":"","%Name":"6880b65d-3c65-495e-b0f8-2c3b0653c948","blendMode":0,"displayName":"default","isLocked":false,"name":"6880b65d-3c65-495e-b0f8-2c3b0653c948","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"f68bd91b-000e-4b69-8ebb-fda6a8a88298","blendMode":0,"displayName":"default","isLocked":false,"name":"f68bd91b-000e-4b69-8ebb-fda6a8a88298","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_bomb_overlay_wick",
   "nineSlice":null,

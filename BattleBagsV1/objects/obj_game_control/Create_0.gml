@@ -43,14 +43,19 @@ input = new Input();  // Controller support
 iType = "click_and_drag";
 
 
-global.swap_queue = { active: false, ax: -1, ay: -1, bx: -1, by: -1 };
+global.swap_queue = { 
+	active: false, 
+	ax: -1, 
+	ay: -1, 
+	bx: -1, 
+	by: -1 };
 
 spawn_rows = 6; // Number of initial rows to spawn
 width	   = 8;
 
 
-height	   = 24;
-top_playable_row = 4;
+height			    = 24;
+top_playable_row    = 4;
 bottom_playable_row = 20;
 
 
@@ -102,7 +107,7 @@ max_experience_points = max_exp_mod + ((max_exp_level_mod * level) + (level * le
 
 fight_for_your_life = false;
 
-// Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
+
 
 
 timer_block_slow_down = 0;
@@ -112,7 +117,7 @@ lose_life_timer     = 0;
 
 blocks_in_danger = false;
 
-health_per_heart = 4;
+health_per_heart = 4; // Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
 
 total_hearts = 3;
 
@@ -194,7 +199,7 @@ swap_info = {
 // ------------------------------------------------------
 // Board Setup
 // ------------------------------------------------------
-global.gemSize = 64;
+//global.gemSize = 64;
 
 offset = 32;
 board_x_offset = 128;

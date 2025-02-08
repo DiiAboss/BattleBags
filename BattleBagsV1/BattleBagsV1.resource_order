@@ -134,6 +134,7 @@
     {"name":"spr_bomb_overlay","order":10,"path":"sprites/spr_bomb_overlay/spr_bomb_overlay.yy",},
     {"name":"spr_cursed_gem_2","order":3,"path":"sprites/spr_cursed_gem_2/spr_cursed_gem_2.yy",},
     {"name":"spr_cursed_gem","order":5,"path":"sprites/spr_cursed_gem/spr_cursed_gem.yy",},
+    {"name":"spr_enemy_attack_preview","order":6,"path":"sprites/spr_enemy_attack_preview/spr_enemy_attack_preview.yy",},
     {"name":"spr_enemy_fly","order":1,"path":"sprites/spr_enemy_fly/spr_enemy_fly.yy",},
     {"name":"spr_enemy_gem_overlay","order":4,"path":"sprites/spr_enemy_gem_overlay/spr_enemy_gem_overlay.yy",},
     {"name":"spr_enemy_golem_fire_1","order":1,"path":"sprites/spr_enemy_golem_fire_1/spr_enemy_golem_fire_1.yy",},

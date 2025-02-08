@@ -6,6 +6,8 @@ function enemy_attack_basic(_self, game_control_object) {
 
     // 🔥 Add attack to queue **for preview & execution**
     ds_list_add(global.enemy_attack_queue, attack_pattern);
+	
+	return attack_pattern;
 }
 
 /// @function enemy_attack_special

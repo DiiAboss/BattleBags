@@ -18,8 +18,8 @@ function spawn_2x2_block(_self, _x, _y, _type) {
     child_gem.group_id   = group_id;
     child_gem.big_parent = [_x, _y];
 
-    _self.grid[_x + 1, _y] = child_gem;
-    _self.grid[_x, _y + 1] = child_gem;
+    _self.grid[_x + 1, _y]     = child_gem;
+    _self.grid[_x, _y + 1]     = child_gem;
     _self.grid[_x + 1, _y + 1] = child_gem;
     
 }
