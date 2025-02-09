@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_weighted_random_gem",
+  "%Name":"SPRITE_FOR_BLOCK",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_weighted_random_gem",
+  "name":"SPRITE_FOR_BLOCK",
   "parent":{
     "name":"BLOCKS",
     "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS/BLOCKS.yy",

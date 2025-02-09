@@ -12,16 +12,33 @@ for (var i = 0; i < width; i++) {
     var max_shake = 2; // Max shake intensity when blocks are above row 1
     var shake_intensity = 0; // Default no shake
 
-    // 🔹 **Check if column has any blocks above row 1**
-    var above_blocks = global.topmost_row <= top_playable_row - 1;
+    // **Check if column has any blocks above row 1**
+    var above_blocks = global.topmost_row <= top_playable_row;
 
 	draw_text(10, draw_y_start + 0, "TOPROW: " + string(global.topmost_row));
 	draw_text(10, draw_y_start + 10, "above: " + string(above_blocks));
 	
+	var danger_row = 99;
+	
+	if (above_blocks)
+	{
+		for (var ii = 0; ii <= top_playable_row; ii++) { 
+	        if (grid[i, ii].type != BLOCK.NONE) {
+	            danger_row = ii;
+	            break;
+	        }
+	    }
+	}
+	else
+	{
+		danger_row = 99;
+	}
+	
     // 🔥 **If blocks are above row 1, apply max shake**
-    if (above_blocks) {
+    if (danger_row <= top_playable_row) {
         shake_intensity = max_shake;
-    } 
+    }
+	
     // **Otherwise, scale shake based on progress to row 0**
     else if (grid[i, top_playable_row].type != BLOCK.NONE && !grid[i, top_playable_row].falling) {
         var block_y = (1 * gem_size) + global_y_offset;
@@ -30,7 +47,7 @@ for (var i = 0; i < width; i++) {
     }
 
     // 🔹 Now loop through grid to draw blocks
-    for (var j = 0; j < height; j++) {
+    for (var j = top_playable_row; j < bottom_playable_row; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
 
 		gem.x_scale = gem.falling ? 0.95 : 1;
@@ -40,8 +57,8 @@ for (var i = 0; i < width; i++) {
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
             var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset;
 
-            // 🔥 Apply shaking effect
-            if (shake_intensity > 0) {
+            //  Apply shaking effect
+            if (shake_intensity > 0) && (i <= top_playable_row){
                 draw_x += irandom_range(-shake_intensity, shake_intensity);
                 draw_y += irandom_range(-shake_intensity, shake_intensity);
             }
@@ -55,65 +72,53 @@ for (var i = 0; i < width; i++) {
 		    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
 		        draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 		    }
-		} else {
-			if (j >= bottom_playable_row)
-			{
-			        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-			        var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset;
+			} else {
+				if (j >= bottom_playable_row)
+				{
+				        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+				        var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset;
 					
-					if (j == bottom_playable_row)
-					{		
-				        // ✅ Draw Normally but with Transparency
-				        draw_sprite_ext(sprite_for_block(gem.type), 0, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
-					}
+						if (j == bottom_playable_row)
+						{		
+					        // ✅ Draw Normally but with Transparency
+					        draw_sprite_ext(sprite_for_block(gem.type), 0, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
+						}
 
+				}
+				else
+				{
+					draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
+				}
 			}
-			else
-			{
-				draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
-			}
-		}
             
 
-            // 🔥 **Draw special overlays**
-            if (gem.powerup != -1) {
-                draw_sprite(gem.powerup.sprite, 0, draw_x_with_global_shake, draw_y_with_global_shake);
-            }
-            if (gem.frozen) {
-                draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
-            }
-            if (gem.is_enemy_block) {
-                draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
-            }
+	            // 🔥 **Draw special overlays**
+	            if (gem.powerup != -1) {
+	                draw_sprite(gem.powerup.sprite, 0, draw_x_with_global_shake, draw_y_with_global_shake);
+	            }
+	            if (gem.frozen) {
+	                draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
+	            }
+	            if (gem.is_enemy_block) {
+	                draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
+	            }
 			
-            //if (!is_block_empty(gem)) {
-            //    draw_sprite_ext(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake, 0.5, 0.5, 45, c_yellow, 1);
-            //}
-			
-			//if (is_block_popping(gem)) {
-            //    draw_sprite_ext(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake, 0.3, 0.3, 45, c_blue, 1);
-            //}
-			
-			//if (!is_block_settled(gem)) {
-            //    draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
-            //}
-			
-			if (gem.is_big) {
-				draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
+				if (gem.is_big) {
+					draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
     
-		    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
-		        draw_text(draw_x, draw_y, "PARENT");
-				draw_text(draw_x+16, draw_y+16, string(gem.big_parent[1]) + "/" + string(height));
-		        // 🔥 **Draw a box around the 2x2 block**
-		        draw_rectangle(draw_x - 32, draw_y - 32, draw_x + gem_size * 2 - 32, draw_y + gem_size * 2 - 32, true);
-		    }
-			else
-			{
+			    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
+			        draw_text(draw_x, draw_y, "PARENT");
+					draw_text(draw_x+16, draw_y+16, string(gem.big_parent[1]) + "/" + string(height));
+			        // 🔥 **Draw a box around the 2x2 block**
+			        draw_rectangle(draw_x - 32, draw_y - 32, draw_x + gem_size * 2 - 32, draw_y + gem_size * 2 - 32, true);
+			    }
+				else
+				{
 
-				draw_text(draw_x, draw_y, "CHILD"); // 🔥 Draw "CHILD" for the other parts
+					draw_text(draw_x, draw_y, "CHILD"); // 🔥 Draw "CHILD" for the other parts
     
+				}
 			}
-}
         }
     }
 }
@@ -247,7 +252,7 @@ if (combo > 1) { // Only show if at least 2 matches have happened
 // Optional: Draw combo count
 draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
 draw_text(10, draw_y_start + 60, "SPEED: " + string(game_speed_default));
-draw_text(10, draw_y_start + 80, "BLOCKS: " + string(global_y_offset));
+draw_text(10, draw_y_start + 80, "toprow: " + string(global.topmost_row));
 draw_text(10, draw_y_start + 100, "LEVEL: " + string(level));
 draw_text(10, draw_y_start + 120, "Combo: " + string(combo));
 draw_text(10, draw_y_start + 140, "cTimer: " + string(combo_timer));
@@ -291,43 +296,43 @@ draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_
 //   DRAW DANGER WARNING (Glowing Columns)
 // ----------------------
 
-for (var i = 0; i < width; i++) {
-    var is_danger = false;
-    var flash_alpha = 0;
-    var flash_speed = 0;
+//for (var i = 0; i < width; i++) {
+//    var is_danger = false;
+//    var flash_alpha = 0;
+//    var flash_speed = 0;
 	
-	for (var j = 0; j <= 1; j++)
-	{
-	    // 🚨 Check if a block is in row 1
-	    if (grid[i, j].type != -1) && (!grid[i, j].falling) { 
-	        is_danger = true;
+//	for (var j = 0; j <= top_playable_row; j++)
+//	{
+//	    //  Check if a block is in row 1
+//	    if (lose_life_timer > 0) { 
+//	        is_danger = true;
 
-	        // 🔥 Calculate progression from row 1 to row 0
-	        var block_y = (1 * gem_size) + global_y_offset;  // Actual Y position of block
-	        var progress = 0.75 * (1 - clamp(block_y / gem_size, 0, 0.75)); // Normalize to range 0 - 1
+//	        //  Calculate progression from row 1 to row 0
+//	        var block_y = (1 * gem_size) + global_y_offset;  // Actual Y position of block
+//	        var progress = (clamp(block_y / gem_size, 0, 0.25)); // Normalize to range 0 - 1
 
-	        // ✅ **Flashing starts slow & soft, increases as it moves up**
-	        flash_speed = lerp(1, 5, progress);  // Starts at speed 1, max at 20
-	        flash_alpha = lerp(0.2, 0.5, progress);  // Starts at alpha 0.2, max at 0.5
+//	        // ✅ **Flashing starts slow & soft, increases as it moves up**
+//	        flash_speed = lerp(1, 5, progress);  // Starts at speed 1, max at 20
+//	        flash_alpha = lerp(0.2, 0.5, progress);  // Starts at alpha 0.2, max at 0.5
 
-	        // ✅ Use sine wave to control smooth flashing
-	        var sine_wave = 0.25 + 0.25 * sin(degtorad(current_time * flash_speed));
-	        flash_alpha *= progress;
-	    }
+//	        // ✅ Use sine wave to control smooth flashing
+//	        var sine_wave = 0.25 + 0.25 * sin(degtorad(current_time * flash_speed));
+//	        flash_alpha *= progress;
+//	    }
 
-	    // 🔴 Apply red flashing effect if danger detected
-	    if (is_danger) {
-	        var col_x = board_x_offset + (i * gem_size);
-	        var col_y = 0;
-	        var col_width = gem_size;
-	        var col_height = room_height;
+//	    //  Apply red flashing effect if danger detected
+//	    if (is_danger) {
+//	        var col_x = board_x_offset + (i * gem_size);
+//	        var col_y = 0;
+//	        var col_width = gem_size;
+//	        var col_height = room_height;
 
-	        draw_set_alpha(flash_alpha);
-	        draw_rectangle_color(col_x, col_y, col_x + col_width, col_y + col_height, c_red, c_red, c_red, c_red, false);
-	        draw_set_alpha(1); // Reset alpha
-	    }
-	}
-}
+//	        draw_set_alpha(flash_alpha);
+//	        draw_rectangle_color(col_x, col_y, col_x + col_width, col_y + col_height, c_red, c_red, c_red, c_red, false);
+//	        draw_set_alpha(1); // Reset alpha
+//	    }
+//	}
+//}
 
 
 // ----------------------
@@ -359,7 +364,7 @@ draw_set_font(fnt_basic);
 
 
 
-// 🛑 Always Draw the Preview Box (Even if No Attack is Queued)
+//  Always Draw the Preview Box (Even if No Attack is Queued)
 var preview_x = board_x_offset + (width * gem_size) + 16;
 var preview_y = draw_y_start + 64;
 var preview_size = 256; // Preview box size
@@ -367,7 +372,7 @@ var grid_size = 32;     // Size of each grid cell
 var grid_spacing = 4;   // Spacing between blocks
 
 
-// 🛑 Always Draw the Preview Box Outlines for Upcoming Attacks
+//  Always Draw the Preview Box Outlines for Upcoming Attacks
 var max_attacks_shown = 5; // 🔥 Show up to 5 upcoming attacks
 var queue_size = min(ds_list_size(global.enemy_attack_queue), max_attacks_shown);
 
@@ -393,19 +398,19 @@ if (queue_size > 0) {
             draw_set_alpha(1);
         }
 
-        // 🔳 Draw Attack Grid or Display "FREEZE"
+        //  Draw Attack Grid or Display "FREEZE"
         if (next_attack == "FREEZE") {
             draw_set_halign(fa_center);
             draw_set_valign(fa_middle);
             draw_text(preview_x + preview_size / 2, attack_offset_y + preview_size / 2, "FREEZE");
         } else {
-            // 🔳 Draw the Grid & Attack Blocks
+            //  Draw the Grid & Attack Blocks
             if (ds_map_exists(global.shape_templates, next_attack)) {
                 var attack_shape = ds_map_find_value(global.shape_templates, next_attack);
                 var shape_width = array_length(attack_shape[0]);
                 var shape_height = array_length(attack_shape);
 
-                // 🔥 Centering Calculation
+                //  Centering Calculation
                 var total_width = (shape_width * grid_size) + ((shape_width - 1) * grid_spacing);
                 var total_height = (shape_height * grid_size) + ((shape_height - 1) * grid_spacing);
                 var offset_x = preview_x + (preview_size - total_width) / 2;
@@ -416,7 +421,7 @@ if (queue_size > 0) {
                         var grid_x = offset_x + (i * (grid_size + grid_spacing));
                         var grid_y = offset_y + (j * (grid_size + grid_spacing));
 
-                        // 🟥 Draw the Attack Blocks
+                        //  Draw the Attack Blocks
                         if (attack_shape[j][i] != BLOCK.NONE) {
                             draw_rectangle(grid_x + 2, grid_y + 2, grid_x + grid_size - 2, grid_y + grid_size - 2, false);
                         }

@@ -28,13 +28,13 @@ function are_playable_blocks_settled(_self){
     return settled;
 }
 
-function is_block_settled(block)
+function is_playable_block_settled(block)
 {
 	var settled = false;
-	if !is_block_popping(block)
-	|| !is_block_falling(block)
-	|| !is_block_enemy(block)
-	|| block.type != BLOCK.NONE
+	if !is_block_empty(block)
+	&& !is_block_falling(block)
+	&& !is_block_enemy(block)
+	&& !is_block_popping(block)
 	{
 		settled = true;
 	}
@@ -48,7 +48,7 @@ function is_block_empty(block)
 
 function is_block_falling(block)
 {
-	return block.falling || block.fall_delay < block.max_fall_delay;
+	return block.falling || block.fall_delay > 0;
 }
 
 function is_block_popping(block)

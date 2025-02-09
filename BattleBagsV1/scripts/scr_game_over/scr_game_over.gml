@@ -15,10 +15,10 @@ function check_game_over(_self)
 		    var threshold = _self.top_playable_row;
 	
 			for (var i = 0; i < _self.width; i++) {
-				for (var j = 0; j < threshold; j++) {
+				for (var j = 0; j <= threshold; j++) {
 					var gem = _self.grid[i, j];
-					if (gem.type != -1 && !gem.falling && gem.fall_delay == 0) {
-			            grid[i, j] = create_block(BLOCK.NONE);
+					if (is_playable_block_settled(gem))  {
+			            grid[i, 0] = create_block(BLOCK.NONE);
 			            blocks_destroyed++;
 			        }
 				}
@@ -28,18 +28,17 @@ function check_game_over(_self)
 		    if (blocks_destroyed > 0) {
 		        player_health -= _self.health_per_heart;
 		        global.grid_shake_amount = 10; // Trigger a shake effect
-				blocks_destroyed = 0;
-		        _self.lose_life_timer = 0;
-		
 		        if (player_health <= 0) {
 		            trigger_final_game_over();
 		        }
+				
+				_self.lose_life_timer = 0;	
 		    }
 		}
 	}
 	else
 	{
-		_self.lose_life_timer = _self.lose_life_max_timer;
+		_self.lose_life_timer = 0;
 	}
 }
 

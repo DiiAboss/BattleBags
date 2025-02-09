@@ -72,11 +72,11 @@ function drop_blocks(_self, fall_speed = 2) {
                         // ✅ Move the gem **one row down**
                         _self.grid[i, j + 1] = gem;
                         _self.grid[i, j] = create_block(BLOCK.NONE); // Clear old position
-                        _self.gem_y_offsets[i, j + 1] = _self.gem_y_offsets[i, j]; // Keep offset
-                        _self.gem_y_offsets[i, j] = 0; // Reset previous position
+                        //_self.gem_y_offsets[i, j + 1] = _self.gem_y_offsets[i, j]; // Keep offset
+                        //_self.gem_y_offsets[i, j] = 0; // Reset previous position
                         
                         // ✅ Reset fall delay
-                        gem.fall_delay = 1;
+                        gem.fall_delay = gem.max_fall_delay;
                         has_fallen = true; // ✅ A block has moved, so we need another pass
                     }
                 } 
@@ -109,7 +109,7 @@ function drop_blocks(_self, fall_speed = 2) {
 
             if (gem.type != -1 && below.falling) {
                 gem.falling = true; // ✅ Keep the entire stack "falling"
-				gem.fall_delay = 1;
+				gem.fall_delay = below.fall_delay;
             }
         }
     }

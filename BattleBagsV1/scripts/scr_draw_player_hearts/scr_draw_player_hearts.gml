@@ -12,10 +12,17 @@
 /// @param {real} health_per_heart - Health per heart (default: 4)
 function draw_player_hearts(_self, player_health, max_player_health, _x, _y, width, sprite = spr_hearts, size = 64, health_per_heart = 4) {
     
+	
+	var lose_life_timer = _self.lose_life_timer;
+	var lose_life_max_timer = _self.lose_life_max_timer;
+	
+	var lose_life_percentage = lose_life_timer / lose_life_max_timer;
+	var last_heart = ceil(player_health / health_per_heart) - 1;
+	
     // Calculate total hearts needed
-    var total_hearts = max_player_health div health_per_heart;
-    var full_hearts = player_health div health_per_heart;
-    var remainder = player_health mod health_per_heart;
+    var total_hearts = max_player_health / health_per_heart;
+    var full_heart   = player_health / health_per_heart;
+    var remainder    = player_health % health_per_heart;
     
     // Set max allowed width for hearts
     var max_width = width * size;
@@ -32,9 +39,10 @@ function draw_player_hearts(_self, player_health, max_player_health, _x, _y, wid
         heart_spacing *= scale;
         size *= scale;
     }
-    draw_rectangle(_x, _y - 36, _x + (width * size), _y + 80, false);
-	draw_set_color(c_black);
-	//draw_rectangle(_x, _y - 36, _x + bar_width, bar_y + 4, false);
+	draw_set_alpha(lose_life_percentage);
+    draw_rectangle(_x, _y - 16, _x + (width * size) * lose_life_percentage, _y + 16, false);
+	
+
     // Calculate the **centered starting X position**
     var start_x = center_x - ((total_hearts * heart_spacing) / 2);
     
@@ -42,14 +50,25 @@ function draw_player_hearts(_self, player_health, max_player_health, _x, _y, wid
     for (var i = 0; i < total_hearts; i++) {
         var _sprite_index = 0; // Default empty heart
 
-        if (i < full_hearts) {
+        if (i < full_heart) {
             _sprite_index = health_per_heart; // Full heart
         }
-        else if (i == full_hearts) {
+        else if (i == full_heart) {
             _sprite_index = remainder; // Partial heart (1/4, 2/4, 3/4)
         }
-
-        // Draw heart sprite, centered dynamically
-        draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, scale, scale, 0, c_white, 1);
+		
+		if (i == last_heart)
+		{
+			draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, lose_life_percentage, lose_life_percentage, 0, c_white, 1);
+		}
+		else
+		{
+			var percent = max(0, lose_life_percentage - 0.2);
+	        // Draw heart sprite, centered dynamically
+	        draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, percent, percent, 0, c_white, 1);
+		}
+		draw_set_alpha(1);
+		
+		
     }
 }
