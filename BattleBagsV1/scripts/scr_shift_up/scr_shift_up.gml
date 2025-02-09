@@ -72,4 +72,5 @@ function shift_up(_self) {
 
     // 4️⃣ Reset darken alpha so the new row fades in again
     _self.darken_alpha = 0;
+	number_of_rows_spawned ++;
 }

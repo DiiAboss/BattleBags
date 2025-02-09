@@ -151,7 +151,7 @@ after_menu_counter_max = 2 * FPS;
 after_menu_counter = after_menu_counter_max;
 
 
-
+number_of_rows_spawned = 0;
 
 // ------------------------------------------------------
 // Global Variables & Game State

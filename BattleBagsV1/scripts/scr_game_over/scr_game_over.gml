@@ -12,13 +12,13 @@ function check_game_over(_self)
 		{  
 		    var blocks_destroyed = 0;
 		    // Define the top-of-screen threshold (0 means anything at or above y = 0 counts)
-		    var threshold = _self.top_playable_row;
+		    var top_row = _self.top_playable_row;
 	
 			for (var i = 0; i < _self.width; i++) {
-				for (var j = 0; j <= threshold; j++) {
+				for (var j = 0; j < top_row; j++) {
 					var gem = _self.grid[i, j];
-					if (is_playable_block_settled(gem))  {
-			            grid[i, 0] = create_block(BLOCK.NONE);
+					if (are_playable_blocks_settled(self))  {
+			            //grid[i, 0] = create_block(BLOCK.NONE);
 			            blocks_destroyed++;
 			        }
 				}
@@ -38,7 +38,15 @@ function check_game_over(_self)
 	}
 	else
 	{
-		_self.lose_life_timer = 0;
+		if (_self.lose_life_timer > 0)
+		{
+			_self.lose_life_timer -= 1;
+		}
+		else
+		{
+			_self.lose_life_timer = 0;
+		}
+			
 	}
 }
 

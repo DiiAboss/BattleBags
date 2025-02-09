@@ -47,7 +47,7 @@ for (var i = 0; i < width; i++) {
     }
 
     // 🔹 Now loop through grid to draw blocks
-    for (var j = top_playable_row; j < bottom_playable_row; j++) {
+    for (var j = top_playable_row; j <= bottom_playable_row; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
 
 		gem.x_scale = gem.falling ? 0.95 : 1;
@@ -80,6 +80,7 @@ for (var i = 0; i < width; i++) {
 					
 						if (j == bottom_playable_row)
 						{		
+							//draw_set_alpha(darken_alpha);
 					        // ✅ Draw Normally but with Transparency
 					        draw_sprite_ext(sprite_for_block(gem.type), 0, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
 						}
@@ -252,7 +253,7 @@ if (combo > 1) { // Only show if at least 2 matches have happened
 // Optional: Draw combo count
 draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
 draw_text(10, draw_y_start + 60, "SPEED: " + string(game_speed_default));
-draw_text(10, draw_y_start + 80, "toprow: " + string(global.topmost_row));
+draw_text(10, draw_y_start + 80, "alpha: " + string(darken_alpha));
 draw_text(10, draw_y_start + 100, "LEVEL: " + string(level));
 draw_text(10, draw_y_start + 120, "Combo: " + string(combo));
 draw_text(10, draw_y_start + 140, "cTimer: " + string(combo_timer));

@@ -31,7 +31,7 @@ function are_playable_blocks_settled(_self){
 function is_playable_block_settled(block)
 {
 	var settled = false;
-	if !is_block_empty(block)
+	if is_block_empty(block)
 	&& !is_block_falling(block)
 	&& !is_block_enemy(block)
 	&& !is_block_popping(block)

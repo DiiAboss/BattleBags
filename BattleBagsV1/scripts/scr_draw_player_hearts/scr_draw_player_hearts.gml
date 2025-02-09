@@ -16,6 +16,8 @@ function draw_player_hearts(_self, player_health, max_player_health, _x, _y, wid
 	var lose_life_timer = _self.lose_life_timer;
 	var lose_life_max_timer = _self.lose_life_max_timer;
 	
+	if (lose_life_timer <= 0) return;
+	
 	var lose_life_percentage = lose_life_timer / lose_life_max_timer;
 	var last_heart = ceil(player_health / health_per_heart) - 1;
 	
@@ -59,7 +61,7 @@ function draw_player_hearts(_self, player_health, max_player_health, _x, _y, wid
 		
 		if (i == last_heart)
 		{
-			draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, lose_life_percentage, lose_life_percentage, 0, c_white, 1);
+			draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, lose_life_percentage + 0.2, lose_life_percentage + 0.2, irandom_range(-4, 4), c_white, 1);
 		}
 		else
 		{
