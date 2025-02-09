@@ -48,7 +48,7 @@ function is_block_empty(block)
 
 function is_block_falling(block)
 {
-	return block.falling || block.fall_delay > 0;
+	return block.falling || block.fall_delay < block.max_fall_delay;
 }
 
 function is_block_popping(block)
