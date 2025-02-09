@@ -10,6 +10,8 @@ color = c_white;
 spd = 8;
 damage = obj_game_control.combo + 1;
 
+alarm[0] = 600;
+
 if (instance_exists(obj_enemy_parent))
 {
 	target = instance_nearest(x, y, obj_enemy_parent);

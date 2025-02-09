@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"INIT_BOARD",
   "parent":{
-    "name":"MAIN",
-    "path":"folders/Scripts/MAIN.yy",
+    "name":"BOARD",
+    "path":"folders/Scripts/MAIN/BOARD.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

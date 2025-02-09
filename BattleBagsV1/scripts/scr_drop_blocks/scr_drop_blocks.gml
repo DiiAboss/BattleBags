@@ -9,7 +9,7 @@ function drop_blocks(_self, fall_speed = 2) {
             var gem = _self.grid[i, j];
 			
 
-            if (gem.type != -1) { // Valid gem
+            if (gem.type != BLOCK.NONE) { // Valid gem
 				if (gem.frozen) && (gem.falling)
 				{
 					gem.falling = false;
@@ -19,7 +19,7 @@ function drop_blocks(_self, fall_speed = 2) {
             var below = _self.grid[i, j + 1];
 			//gem.falling = below.popping;
             // ✅ If the block below is empty, make this block fall
-            if (below.type == -1) {
+            if (below.type == BLOCK.NONE) && (below.popping == false){
                 gem.falling = true; // ✅ Mark as falling
 					
 				// ✅ Handle 2x2 Block Falling
@@ -34,8 +34,8 @@ function drop_blocks(_self, fall_speed = 2) {
 				var empty_below_bottom_blocks = false;
 				
 				if (parent_y + 2 < height) { 
-				var empty_below_bottom_blocks = _self.grid[parent_x,     parent_y + 2].type = BLOCK.NONE 
-											 && _self.grid[parent_x + 1, parent_y + 2].type = BLOCK.NONE;
+				var empty_below_bottom_blocks = _self.grid[parent_x,     parent_y + 2].type == BLOCK.NONE 
+											 && _self.grid[parent_x + 1, parent_y + 2].type == BLOCK.NONE;
 				}
                     // ✅ Both lower parts must be empty
                     if (empty_below_bottom_blocks) {
@@ -45,8 +45,8 @@ function drop_blocks(_self, fall_speed = 2) {
                         _self.grid[parent_x,     parent_y + 1]  = top_left; // set the block below the parent block to the new parent block
                         _self.grid[parent_x + 1, parent_y + 1]  = top_right;  // set the block below the parent block to the new parent block
 
-						_self.grid[parent_x,     parent_y] = create_gem(BLOCK.NONE); // set the old top row to null
-                        _self.grid[parent_x + 1, parent_y] = create_gem(BLOCK.NONE);
+						_self.grid[parent_x,     parent_y] = create_block(BLOCK.NONE); // set the old top row to null
+                        _self.grid[parent_x + 1, parent_y] = create_block(BLOCK.NONE);
 							
 						// Update parent reference
                         _self.grid[parent_x,     parent_y + 2].big_parent = [parent_x, parent_y + 1];
@@ -71,7 +71,7 @@ function drop_blocks(_self, fall_speed = 2) {
                     } else {
                         // ✅ Move the gem **one row down**
                         _self.grid[i, j + 1] = gem;
-                        _self.grid[i, j] = create_gem(BLOCK.NONE); // Clear old position
+                        _self.grid[i, j] = create_block(BLOCK.NONE); // Clear old position
                         _self.gem_y_offsets[i, j + 1] = _self.gem_y_offsets[i, j]; // Keep offset
                         _self.gem_y_offsets[i, j] = 0; // Reset previous position
                         
@@ -93,7 +93,7 @@ function drop_blocks(_self, fall_speed = 2) {
 	
 	    // 🔥 THIRD PASS: Explicitly Mark **Bottom-Row Blocks as Landed**
     for (var i = 0; i < width; i++) {
-        var gem = _self.grid[i, height - 1]; // Last row
+        var gem = _self.grid[i, _self.bottom_playable_row]; // Last row
 
         if (gem.type != -1) { // Valid gem
             gem.falling = false; // ✅ Ensure it is settled
@@ -103,7 +103,7 @@ function drop_blocks(_self, fall_speed = 2) {
 
     // ✅ Ensure we **propagate falling status** upward in columns
     for (var i = 0; i < width; i++) {
-        for (var j = height - 2; j >= 0; j--) {
+        for (var j = _self.bottom_playable_row; j >= 0; j--) {
             var gem = _self.grid[i, j];
             var below = _self.grid[i, j + 1];
 
@@ -117,10 +117,10 @@ function drop_blocks(_self, fall_speed = 2) {
     // ✅ **New Check: Reset `is_enemy_block` only when fully landed**
     if (!has_fallen) {
         for (var i = 0; i < width; i++) {
-            for (var j = 0; j < height; j++) {
+            for (var j = 0; j < _self.bottom_playable_row; j++) {
                 var gem = _self.grid[i, j];
 
-                if (gem.type != -1 && !gem.falling) {
+                if (gem.type != BLOCK.NONE && !gem.falling) {
                     gem.is_enemy_block = false; // ✅ Now safe to reset
 					gem.fall_delay = 0;
                 }

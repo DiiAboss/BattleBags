@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"DIAGONAL_MATCHING",
+  "%Name":"MUSIC_AND_SONGS",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"DIAGONAL_MATCHING",
+  "name":"MUSIC_AND_SONGS",
   "parent":{
-    "name":"MATCHES",
-    "path":"folders/Scripts/MAIN/MATCHES.yy",
+    "name":"MUSIC_AND_SOUNDS",
+    "path":"folders/Scripts/MUSIC_AND_SOUNDS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

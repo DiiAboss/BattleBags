@@ -12,6 +12,6 @@ function destroy_block(_self, _x, _y) {
     }
 	
     // ✅ Otherwise, process the destruction normally
-    _self.grid[_x, _y] = create_gem(BLOCK.NONE); // Remove block from grid
+    _self.grid[_x, _y] = create_block(BLOCK.NONE); // Remove block from grid
 }
 

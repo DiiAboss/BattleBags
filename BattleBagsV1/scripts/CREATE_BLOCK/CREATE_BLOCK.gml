@@ -4,10 +4,10 @@ enum BLOCK {
     LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
 }
 
-function create_gem(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()) {
+function create_block(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()) {
 	
 	if (_type == BLOCK.RANDOM) { // If generating a new random gem
-		_type = weighted_random_gem(self);
+		_type = weighted_random_block(self);
     }
 	
 if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
@@ -54,7 +54,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		shake_timer: 0,    
 		color: _color,
 		fall_delay: 0,
-		max_fall_delay: 10, 
+		max_fall_delay: 5, 
 		freeze_timer: 0,   
         frozen: false,      
 		damage: 1,
@@ -73,6 +73,8 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		is_big: false,
 		big_parent: [-1, -1],
 		img_number: -1,
+		x_scale: 1,
+		y_scale: 1
     };
 }
 

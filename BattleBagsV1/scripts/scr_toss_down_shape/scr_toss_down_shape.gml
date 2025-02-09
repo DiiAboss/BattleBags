@@ -41,7 +41,7 @@ function toss_down_shape(_self, shape_name, is_enemy_attack = false, _start_x = 
                 }
 
                 // ✅ Create the gem with the assigned color
-                var new_gem = create_gem(gem_color, POWERUP.NONE);
+                var new_gem = create_block(gem_color, POWERUP.NONE);
                 _self.grid[gem_x, gem_y] = new_gem;
 
 				// 🔥 **Mark as an enemy block**

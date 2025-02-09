@@ -1,39 +1,45 @@
 
-function check_game_over(_self) {
+function check_game_over(_self) 
+{
     // Do nothing if the combo is active
-    if (_self.combo > 0) return;
-	if (lose_life_timer < lose_life_max_timer)
+    if (_self.combo == 0)
 	{
-		lose_life_timer += 1;
+		if (lose_life_timer < lose_life_max_timer)
+		{
+			lose_life_timer += 1;
+		}
+		else
+		{  
+		    var blocks_destroyed = 0;
+		    // Define the top-of-screen threshold (0 means anything at or above y = 0 counts)
+		    var threshold = _self.top_playable_row;
+	
+			for (var i = 0; i < _self.width; i++) {
+				for (var j = 0; j < threshold; j++) {
+					var gem = _self.grid[i, j];
+					if (gem.type != -1 && !gem.falling && gem.fall_delay == 0) {
+			            grid[i, j] = create_block(BLOCK.NONE);
+			            blocks_destroyed++;
+			        }
+				}
+			}
+    
+		    // If we destroyed any blocks, subtract that many from player health
+		    if (blocks_destroyed > 0) {
+		        player_health -= _self.health_per_heart;
+		        global.grid_shake_amount = 10; // Trigger a shake effect
+				blocks_destroyed = 0;
+		        _self.lose_life_timer = 0;
+		
+		        if (player_health <= 0) {
+		            trigger_final_game_over();
+		        }
+		    }
+		}
 	}
 	else
-		{
-    
-	    var blocks_destroyed = 0;
-	    // Define the top-of-screen threshold (0 means anything at or above y = 0 counts)
-	    var threshold = _self.top_playable_row;
-	
-		for (var i = 0; i < _self.width; i++) {
-			for (var j = 0; j < threshold; j++) {
-				var gem = _self.grid[i, j];
-				if (gem.type != -1 && !gem.falling && gem.fall_delay == 0) {
-		            grid[i, j] = create_gem(BLOCK.NONE);
-		            blocks_destroyed++;
-		        }
-			}
-		}
-    
-	    // If we destroyed any blocks, subtract that many from player health
-	    if (blocks_destroyed > 0) {
-	        player_health -= _self.health_per_heart;
-	        global.grid_shake_amount = 10; // Trigger a shake effect
-			blocks_destroyed = 0;
-	        _self.lose_life_timer = 0;
-		
-	        if (player_health <= 0) {
-	            trigger_final_game_over();
-	        }
-	    }
+	{
+		_self.lose_life_timer = _self.lose_life_max_timer;
 	}
 }
 

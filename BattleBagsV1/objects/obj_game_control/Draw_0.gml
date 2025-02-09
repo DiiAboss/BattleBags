@@ -33,6 +33,9 @@ for (var i = 0; i < width; i++) {
     for (var j = 0; j < height; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
 
+		gem.x_scale = gem.falling ? 0.95 : 1;
+		gem.y_scale = gem.falling ? 1.05 : 1;
+		
         if (gem.type != BLOCK.NONE) {
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
             var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset;
@@ -50,7 +53,7 @@ for (var i = 0; i < width; i++) {
 			if (gem.is_big) {
 		    // Only draw if this is the top-left (actual) parent
 		    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
-		        draw_sprite_ext(sprite_for_gem(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
+		        draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 		    }
 		} else {
 			if (j >= bottom_playable_row)
@@ -61,13 +64,13 @@ for (var i = 0; i < width; i++) {
 					if (j == bottom_playable_row)
 					{		
 				        // ✅ Draw Normally but with Transparency
-				        draw_sprite_ext(sprite_for_gem(gem.type), 0, _draw_x, _draw_y, 1, 1, 0 ,c_white, darken_alpha);
+				        draw_sprite_ext(sprite_for_block(gem.type), 0, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
 					}
 
 			}
 			else
 			{
-				draw_sprite(sprite_for_gem(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake);
+				draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
 			}
 		}
             
@@ -82,6 +85,18 @@ for (var i = 0; i < width; i++) {
             if (gem.is_enemy_block) {
                 draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
             }
+			
+            //if (!is_block_empty(gem)) {
+            //    draw_sprite_ext(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake, 0.5, 0.5, 45, c_yellow, 1);
+            //}
+			
+			//if (is_block_popping(gem)) {
+            //    draw_sprite_ext(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake, 0.3, 0.3, 45, c_blue, 1);
+            //}
+			
+			//if (!is_block_settled(gem)) {
+            //    draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
+            //}
 			
 			if (gem.is_big) {
 				draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
@@ -122,7 +137,8 @@ if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
             draw_set_color(c_yellow);
             draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
 			// ✅ Draw Normally but with Transparency
-			draw_sprite_ext(sprite_for_gem(hover_gem.type), 0, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
+			draw_sprite_ext(sprite_for_block(hover_gem.type), 0, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
+			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
 			draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
             draw_set_color(c_white);
             draw_set_alpha(1.0);
@@ -167,7 +183,7 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 	
 	
     draw_sprite_ext(
-        sprite_for_gem(pop_data.gem_type),
+        sprite_for_block(pop_data.gem_type),
         pop_data.img_number,
         final_x + pop_data.offset_x,
         final_y + pop_data.offset_y,
@@ -233,8 +249,8 @@ draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
 draw_text(10, draw_y_start + 60, "SPEED: " + string(game_speed_default));
 draw_text(10, draw_y_start + 80, "BLOCKS: " + string(global_y_offset));
 draw_text(10, draw_y_start + 100, "LEVEL: " + string(level));
-draw_text(10, draw_y_start + 120, "darken: " + string(darken_alpha));
-draw_text(10, draw_y_start + 140, "bpr: " + string(bottom_playable_row));
+draw_text(10, draw_y_start + 120, "Combo: " + string(combo));
+draw_text(10, draw_y_start + 140, "cTimer: " + string(combo_timer));
 
 
 var y_start = draw_y_start + 128;

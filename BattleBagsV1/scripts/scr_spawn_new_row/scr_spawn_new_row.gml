@@ -13,6 +13,6 @@ function spawn_new_row(_self) {
     }
     // Add a new random row at the bottom
     for (var i = 0; i < width; i++) {
-        _self.grid[i, height - 1] = create_gem(BLOCK.RANDOM);
+        _self.grid[i, height - 1] = create_block(BLOCK.RANDOM);
     }
 }

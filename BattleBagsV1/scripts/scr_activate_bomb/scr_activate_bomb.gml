@@ -1,5 +1,5 @@
 /// Helper: Create pop info for a bomb‐exploded cell
-function create_pop_info(_self, cell_x, cell_y, origin_x, origin_y, blocks_destroyed, _match_points, _bomb_tracker, _bomb_level) {
+function create_bomb_pop_info(_self, cell_x, cell_y, origin_x, origin_y, blocks_destroyed, _match_points, _bomb_tracker, _bomb_level) {
     var wave_multiplier = 15;
     return {
          x: cell_x,
@@ -81,11 +81,11 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
 				
 				if (k) = 0
 				{
-					var pop_info = create_pop_info(_self, cx, cy, _x, _y, blocks_destroyed, total_match_points, true, bomb_level);
+					var pop_info = create_bomb_pop_info(_self, cx, cy, _x, _y, blocks_destroyed, total_match_points, true, bomb_level);
 				}
 				else
 				{
-					var pop_info = create_pop_info(_self, cx, cy, _x, _y, blocks_destroyed, total_match_points, false, bomb_level);
+					var pop_info = create_bomb_pop_info(_self, cx, cy, _x, _y, blocks_destroyed, total_match_points, false, bomb_level);
 				}
 				ds_list_add(global.pop_list, pop_info);
             }

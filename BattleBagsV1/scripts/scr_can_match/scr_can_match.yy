@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_can_match",
   "parent":{
-    "name":"MATCH_AND_BOARD",
-    "path":"folders/Scripts/MAIN/MATCH_AND_BOARD.yy",
+    "name":"MATCHES",
+    "path":"folders/Scripts/MAIN/MATCHES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,5 +1,5 @@
 function create_puzzle_gem(_type, _group_id, _img_number) {
-    var gem = create_gem(_type);
+    var gem = create_block(_type);
     gem.group_id = _group_id;
     gem.img_number = _img_number;
     return gem;

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"DEBUG_CONTROLS",
   "parent":{
-    "name":"PLAYER_CONTROLS",
-    "path":"folders/Scripts/MAIN/PLAYER_CONTROLS.yy",
+    "name":"DEBUGGING",
+    "path":"folders/Scripts/MAIN/DEBUGGING.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

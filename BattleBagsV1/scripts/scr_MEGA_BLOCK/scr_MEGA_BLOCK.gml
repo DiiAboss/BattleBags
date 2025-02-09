@@ -100,7 +100,7 @@ function check_mega_block_transform(_self) {
                                 effect_create_depth(_self.depth, ef_explosion, (_x * gem_size), (_y * gem_size), 0.5, c_white);
 
                                 // ✅ **Transform the entire Mega Block**
-                                _self.grid[_x, _y] = create_gem(BLOCK.RANDOM);
+                                _self.grid[_x, _y] = create_block(BLOCK.RANDOM);
                             }
                         }
 

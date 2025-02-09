@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"Script64",
+  "%Name":"CREATE_POP_INFO",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Script64",
+  "name":"CREATE_POP_INFO",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"BLOCKS_AND_POPS",
+    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

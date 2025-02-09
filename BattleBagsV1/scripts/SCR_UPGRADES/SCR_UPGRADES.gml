@@ -1,23 +1,5 @@
 
-/// @desc Struct for an upgrade
-///
-/// @param _name
-/// @param _desc
-/// @param _effect
-/// @param _rarity
-/// @param _max_level
 
-function create_upgrade(_name, _desc, _effect, _rarity, _max_level, _start_unlocked = false) {
-    return {
-        name: _name,
-        desc: _desc,
-        effect: _effect,
-        rarity: _rarity,     // 1 = Common, 2 = Uncommon, 3 = Rare, 4 = Epic, 5 = Legendary
-        max_level: _max_level,
-        level: 0,            // Start at level 0
-        unlocked: _start_unlocked
-    };
-}
 function bring_up_upgrade_menu() {
 
     // ✅ If no upgrades are available, do NOT open the menu
@@ -294,14 +276,14 @@ function get_upgrade_current_stat(effect) {
 /// @desc Returns the correct sprite for an upgrade, based on the block or powerup it affects.
 function get_upgrade_sprite(effect) {
     switch (effect) {
-        case "more_red":        return sprite_for_gem(BLOCK.RED);
-        case "more_yellow":     return sprite_for_gem(BLOCK.YELLOW);
-        case "more_green":      return sprite_for_gem(BLOCK.GREEN);
-        case "more_pink":       return sprite_for_gem(BLOCK.PINK);
-        case "more_light_blue": return sprite_for_gem(BLOCK.LIGHTBLUE);
-        case "more_purple":     return sprite_for_gem(BLOCK.PURPLE);
-        case "more_orange":     return sprite_for_gem(BLOCK.ORANGE);
-		case "more_blue":       return sprite_for_gem(BLOCK.BLUE);
+        case "more_red":        return sprite_for_block(BLOCK.RED);
+        case "more_yellow":     return sprite_for_block(BLOCK.YELLOW);
+        case "more_green":      return sprite_for_block(BLOCK.GREEN);
+        case "more_pink":       return sprite_for_block(BLOCK.PINK);
+        case "more_light_blue": return sprite_for_block(BLOCK.LIGHTBLUE);
+        case "more_purple":     return sprite_for_block(BLOCK.PURPLE);
+        case "more_orange":     return sprite_for_block(BLOCK.ORANGE);
+		case "more_blue":       return sprite_for_block(BLOCK.BLUE);
         case "more_bombs":      return spr_powerup_bomb;
         case "more_multi":      return spr_powerup_2x_multi;
         case "more_bows":       return spr_powerup_destroy_to_right;

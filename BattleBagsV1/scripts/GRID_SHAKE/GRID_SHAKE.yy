@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"GRID_SHAKE",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"BOARD",
+    "path":"folders/Scripts/MAIN/BOARD.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

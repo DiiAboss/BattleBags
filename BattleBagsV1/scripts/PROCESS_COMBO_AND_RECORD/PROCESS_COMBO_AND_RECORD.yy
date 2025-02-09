@@ -6,7 +6,7 @@
   "name":"PROCESS_COMBO_AND_RECORD",
   "parent":{
     "name":"COMBO",
-    "path":"folders/Scripts/COMBO.yy",
+    "path":"folders/Scripts/MAIN/COMBO.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

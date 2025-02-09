@@ -15,7 +15,7 @@ function add_new_column(_self) {
                 new_grid[i][j] = _self.grid[i][j];
             } else {
                 // ✅ Initialize new column with empty gems
-                new_grid[i][j] = create_gem(BLOCK.NONE);
+                new_grid[i][j] = create_block(BLOCK.NONE);
             }
         }
     }

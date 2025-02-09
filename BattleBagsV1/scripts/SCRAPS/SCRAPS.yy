@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_create_gem",
+  "%Name":"SCRAPS",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_create_gem",
+  "name":"SCRAPS",
   "parent":{
-    "name":"GEMS",
-    "path":"folders/Scripts/MAIN/GEMS.yy",
+    "name":"OTHER",
+    "path":"folders/Scripts/MAIN/OTHER.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

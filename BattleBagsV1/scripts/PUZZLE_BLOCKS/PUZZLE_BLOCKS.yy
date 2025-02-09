@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"PUZZLE_BLOCKS",
   "parent":{
-    "name":"TIME",
-    "path":"folders/Scripts/TIME.yy",
+    "name":"BLOCKS_AND_POPS",
+    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

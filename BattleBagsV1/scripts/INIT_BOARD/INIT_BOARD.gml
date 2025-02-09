@@ -16,7 +16,7 @@ function initialize_game_board(_self, width = 8, height = 24, spawn_row = 6)
     for (var i = 0; i < width; i++) {
         _self.grid[i] = array_create(height);
         for (var j = 0; j < height; j++) {
-            _self.grid[i][j] = create_gem(BLOCK.NONE); // Initialize all cells as empty
+            _self.grid[i][j] = create_block(BLOCK.NONE); // Initialize all cells as empty
         }
     }
 
@@ -43,7 +43,7 @@ function initialize_game_board(_self, width = 8, height = 24, spawn_row = 6)
     _self.spawn_rows += top_playable_row;
     for (var i = 0; i < width; i++) {
         for (var j = bottom_playable_row - _self.spawn_rows; j < height; j++) {
-            _self.grid[i][j] = create_gem(BLOCK.RANDOM);
+            _self.grid[i][j] = create_block(BLOCK.RANDOM);
         }
     }
 
@@ -51,7 +51,7 @@ function initialize_game_board(_self, width = 8, height = 24, spawn_row = 6)
     for (var i = 0; i < width; i++) {
         for (var j = 0; j < height; j++) {
             if (is_undefined(_self.grid[i][j]) || !is_struct(_self.grid[i][j])) {
-                _self.grid[i][j] = create_gem(BLOCK.NONE);
+                _self.grid[i][j] = create_block(BLOCK.NONE);
             }
         }
     }

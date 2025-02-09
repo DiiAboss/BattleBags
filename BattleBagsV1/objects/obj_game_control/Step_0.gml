@@ -60,17 +60,11 @@ mouse_dragged(self);
 var hover_i = floor((mouse_x - board_x_offset) / gem_size);
 var hover_j = floor((mouse_y - global_y_offset) / gem_size);
 
+process_grid_shake(fight_for_your_life);
 
-
-var enable_shake = fight_for_your_life;
-
-process_grid_shake(enable_shake);
-
-
-if (!audio_is_playing(songs[current_song])) {
-play_next_song();
-}
 gem_shake(self);
+
+
 
 
 
@@ -214,12 +208,12 @@ if (!swap_in_progress && all_blocks_landed(self)) {
 }
 
 
-
+drop_blocks(self);
 
 if (all_pops_finished()) {
 	
     // ✅ Drop blocks **AFTER** all pops finish
-    drop_blocks(self);
+    
 
     // ✅ If a new match is found, **increase** combo instead of resetting
     if find_and_destroy_matches(self) {
@@ -227,6 +221,7 @@ if (all_pops_finished()) {
         combo += 1;
     } 
 }
+
 
 process_combo_timer_and_record_max(self);
 
@@ -238,24 +233,7 @@ for (var i = 0; i < width; i++) {
 	if (grid[i, 1].type != -1 && !grid[i, 1].falling) { 
 		var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
 		var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
-		    // ✅ Transition to fight music
-	    if (global.music_fight == -1) {
-	        global.music_fight = audio_play_sound(music_fast_music_test, 1, true);
-	    }
-    
-	    global.music_fight_volume = min(global.music_fight_volume + global.music_fade_speed, 1);
-	    global.music_regular_volume = max(global.music_regular_volume - global.music_fade_speed, 0);
-    
-	    // 🛑 Pause regular music if volume is 0
-	    if (global.music_regular_volume <= 0 && global.music_regular != -1) {
-	        audio_pause_sound(global.music_regular);
-	    }
-    
-	    // ▶️ Resume fight music if it was paused
-	    if (global.music_fight_volume > 0 && audio_is_paused(global.music_fight)) {
-	        audio_resume_sound(global.music_fight);
-	    }
-				
+	
 		if (progress > 0 && combo > 0)
 		{
 			fight_for_your_life = true;
@@ -267,33 +245,23 @@ for (var i = 0; i < width; i++) {
 	} 
 	else 
 	{
-			fight_for_your_life = false;
-
-	    // ✅ Transition back to regular music
-	    if (global.music_regular == -1) {
-	        global.music_regular = audio_play_sound(songs[current_song], 1, true);
-	    }
-    
-	    global.music_regular_volume = min(global.music_regular_volume + global.music_fade_speed, 1);
-	    global.music_fight_volume = max(global.music_fight_volume - global.music_fade_speed, 0);
-    
-	    // 🛑 Pause fight music if volume is 0
-	    if (global.music_fight_volume <= 0 && global.music_fight != -1) {
-	        audio_pause_sound(global.music_fight);
-	    }
-    
-	    // ▶️ Resume regular music if it was paused
-	    if (global.music_regular_volume > 0 && audio_is_paused(global.music_regular)) {
-	        audio_resume_sound(global.music_regular);
-	    }
+		fight_for_your_life = false;	
 	}
 }
 
 
-// 🎚 Apply volume settings
-if (global.music_regular != -1) audio_sound_gain(global.music_regular, global.music_regular_volume, 0);
-if (global.music_fight != -1) audio_sound_gain(global.music_fight, global.music_fight_volume, 0);
+if (fight_for_your_life)
+{
+	transition_to_fast_song();	
+}
+else
+{
+	transition_to_regular_song(songs[current_song]);  
+}
 
+// Apply volume settings
+apply_volume_settings();
+process_play_next_song(songs[current_song]);
 
 // -----------------------------------------------------------------------
 // FUNCTIONS
@@ -383,7 +351,3 @@ if all_blocks_landed(self) {
         ds_list_replace(global.pop_list, i, pop_data);
     }
 }
-
-
-
-

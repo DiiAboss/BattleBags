@@ -6,7 +6,7 @@
   "name":"scr_activate_bomb",
   "parent":{
     "name":"SKILLS",
-    "path":"folders/Scripts/SKILLS.yy",
+    "path":"folders/Scripts/MAIN/SKILLS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

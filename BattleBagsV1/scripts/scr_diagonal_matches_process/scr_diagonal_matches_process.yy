@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_diagonal_matches_process",
   "parent":{
-    "name":"MATCH_AND_BOARD",
-    "path":"folders/Scripts/MAIN/MATCH_AND_BOARD.yy",
+    "name":"MATCHES",
+    "path":"folders/Scripts/MAIN/MATCHES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -29,6 +29,10 @@ function find_and_destroy_matches(_self) {
 			{
 				_self.grid[xx, yy].popping = true;
 			}
+			else
+			{
+				_self.grid[xx, yy].popping = false;
+			}
 			
         }
     }
@@ -157,7 +161,7 @@ function find_and_destroy_matches(_self) {
 	            var dx = i - global.lastSwapX;
 	            var dy = j - global.lastSwapY;
 	            var dist = sqrt(dx * dx + dy * dy);
-	            var _start_delay = (gem.type == BLOCK.BLACK) ? 20 : 5; // Longer delay for black blocks
+	            var _start_delay = (gem.type == BLOCK.BLACK) ? 5 : 5; // Longer delay for black blocks
 			
 	            // ✅ If it's a BIG BLOCK, transform it into separate blocks
 	            if (gem.is_big) {
@@ -169,7 +173,7 @@ function find_and_destroy_matches(_self) {
 
 	                        if (other_gem.group_id == group_id) {
 	                            // ✅ Convert each big block part into a small block of the same type
-	                            _self.grid[_x, _y] = create_gem(gem.type);						
+	                            _self.grid[_x, _y] = create_block(gem.type);						
 							
 								 // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
 					            var pop_info = {

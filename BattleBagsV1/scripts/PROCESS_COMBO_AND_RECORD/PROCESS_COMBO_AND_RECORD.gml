@@ -2,7 +2,7 @@ function process_combo_timer_and_record_max(_self)
 {
 	
 	// ✅ Ensure combo resets **ONLY when no movement remains**
-	if (!blocks_still_moving(_self)){
+	if (are_playable_blocks_settled(_self)){
 		if (_self.combo_timer < _self.max_combo_timer)
 		{
 			_self.combo_timer ++;

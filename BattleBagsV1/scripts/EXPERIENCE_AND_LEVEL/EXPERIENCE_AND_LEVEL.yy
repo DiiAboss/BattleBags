@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"EXPERIENCE_AND_LEVEL",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"EXPERIENCE",
+    "path":"folders/Scripts/MAIN/EXPERIENCE.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

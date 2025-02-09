@@ -43,8 +43,8 @@ function shift_up(_self) {
 
                     // ✅ Clear space below if the block was at the last row
                     if (new_y == height - 2) {
-                        _self.grid[parent_x,     height - 1] = create_gem(BLOCK.RANDOM);
-                        _self.grid[parent_x + 1, height - 1] = create_gem(BLOCK.RANDOM);
+                        _self.grid[parent_x,     height - 1] = create_block(BLOCK.RANDOM);
+                        _self.grid[parent_x + 1, height - 1] = create_block(BLOCK.RANDOM);
                     }
                 }
             } 
@@ -67,7 +67,7 @@ function shift_up(_self) {
     // 3️⃣ Spawn a new random row at the **very bottom of the grid**
     for (var i = 0; i < width; i++) {
         // ✅ Ensure **only spawn new blocks in the last row**
-        _self.grid[i, height - 1] = create_gem(BLOCK.RANDOM);
+        _self.grid[i, height - 1] = create_block(BLOCK.RANDOM);
     }
 
     // 4️⃣ Reset darken alpha so the new row fades in again

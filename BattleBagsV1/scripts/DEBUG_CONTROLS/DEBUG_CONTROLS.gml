@@ -1,12 +1,27 @@
 // Script Created By DiiAboss AKA Dillon Abotossaway
 function enable_debug_controls(_self, hover_x, hover_y, debug_active = true)
 {
-	// 🌟 Horizontal Destruction
+	
+	//  Horizontal Destruction
 	if (keyboard_check_pressed(ord("L"))) { 
-	    destroy_blocks_in_direction_from_point(_self, hover_x, hover_y, +1, 0); // 🔴 Right
+	    var final_pos = [-1, -1];
+		final_pos = destroy_blocks_in_direction_from_point(_self, hover_x, hover_y, +1, 0); // Right
+		
+		var bow_obj = instance_create_depth(board_x_offset + hover_x * _self.gem_size, (hover_y * _self.gem_size) + _self.global_y_offset + 32, depth-99, obj_bow);
+		
+		bow_obj.final_pos = final_pos;
+		
 	}
 	if (keyboard_check_pressed(ord("J"))) { 
-	    destroy_blocks_in_direction_from_point(_self, hover_x, hover_y, -1, 0); // 🔵 Left
+		
+			    var final_pos = [-1, -1];
+		final_pos = destroy_blocks_in_direction_from_point(_self, hover_x, hover_y, -1, 0); // Left
+		
+		var bow_obj = instance_create_depth(board_x_offset + hover_x * _self.gem_size, (hover_y * _self.gem_size) + _self.global_y_offset + 32, depth-99, obj_bow);
+		
+		bow_obj.final_pos = final_pos;
+		
+	    
 	}
 
 	// 🌟 Vertical Destruction

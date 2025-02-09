@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_sprite_for_gem",
   "parent":{
-    "name":"GEMS",
-    "path":"folders/Scripts/MAIN/GEMS.yy",
+    "name":"BLOCKS",
+    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS/BLOCKS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

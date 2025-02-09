@@ -170,7 +170,7 @@ global_shape_function_init();
 
 
 combo_timer		 = 0;
-max_combo_timer  = 30; // Half a second of grace
+max_combo_timer  = 60; // Half a second of grace
 
 // ✅ Initialize Global Upgrade System
 
@@ -228,7 +228,7 @@ global.in_upgrade_menu = false;
 // Create The Grid
 // ------------------------------------------------------
 
-create_gem_spawn_rates(self);
+create_block_spawn_rates(self);
 initialize_game_board(self, width, height, spawn_rows);
 
 // ------------------------------------------------------

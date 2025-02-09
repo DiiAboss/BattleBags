@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_draw_line_DDA_ext",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"OTHER",
+    "path":"folders/Scripts/MAIN/OTHER.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

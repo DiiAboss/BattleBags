@@ -32,7 +32,7 @@ function draw_player_hearts(_self, player_health, max_player_health, _x, _y, wid
         heart_spacing *= scale;
         size *= scale;
     }
-    draw_rectangle(_x, _y - 48, _x + (width * size), _y + 80, false);
+    draw_rectangle(_x, _y - 36, _x + (width * size), _y + 80, false);
 	draw_set_color(c_black);
 	//draw_rectangle(_x, _y - 36, _x + bar_width, bar_y + 4, false);
     // Calculate the **centered starting X position**

@@ -112,7 +112,7 @@ if (enemy_attack_ready && obj_game_control.combo > 0) {
     attack_queue_active = true; // ✅ Track that an attack was delayed
 }
 
-if (attack_queue_active && obj_game_control.combo == 0) {
+if (attack_queue_active) {
     if (ds_list_size(global.enemy_attack_queue) > 0) {
         if (queued_attack_timer >= max_queue_attack_timer) {
             var attack_to_execute = ds_list_find_value(global.enemy_attack_queue, 0);

@@ -2,12 +2,12 @@
 // Color Spawn Weight System
 // ------------------------------------------------------
 
-function create_gem_spawn_rates(game_control_object, spawn_rate = 12)
+function create_block_spawn_rates(game_control_object, spawn_rate = 12)
 {
 	global.color_spawn_weight = array_create(game_control_object.numberOfGemTypes, spawn_rate);
 }
 
-function weighted_random_gem(game_control_object) {
+function weighted_random_block(game_control_object) {
     var total_weight = 0;
 
     // ✅ Calculate total weight

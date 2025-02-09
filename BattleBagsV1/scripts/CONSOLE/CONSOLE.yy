@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"CONSOLE",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"DEBUGGING",
+    "path":"folders/Scripts/MAIN/DEBUGGING.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

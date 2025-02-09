@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_is_top_row_filled",
   "parent":{
-    "name":"MATCH_AND_BOARD",
-    "path":"folders/Scripts/MAIN/MATCH_AND_BOARD.yy",
+    "name":"BOARD",
+    "path":"folders/Scripts/MAIN/BOARD.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

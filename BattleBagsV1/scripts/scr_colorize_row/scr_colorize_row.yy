@@ -6,7 +6,7 @@
   "name":"scr_colorize_row",
   "parent":{
     "name":"SKILLS",
-    "path":"folders/Scripts/SKILLS.yy",
+    "path":"folders/Scripts/MAIN/SKILLS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,5 +1,7 @@
 function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
 	
+	var input = _self.input;
+	
 	var width = _self.width;
 	var height = _self.height;
 	var board_x_offset = _self.board_x_offset;

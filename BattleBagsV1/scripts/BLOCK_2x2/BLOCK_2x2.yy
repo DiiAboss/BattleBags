@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"BLOCK_2x2",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"BLOCKS_AND_POPS",
+    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

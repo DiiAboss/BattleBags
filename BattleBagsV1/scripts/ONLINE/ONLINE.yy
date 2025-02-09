@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ONLINE",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"ONLINE_STUFF",
+    "path":"folders/Scripts/ONLINE_STUFF.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

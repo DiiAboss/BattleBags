@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"DIAGONAL_MATCHING",
+  "%Name":"CREATE_BLOCK",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"DIAGONAL_MATCHING",
+  "name":"CREATE_BLOCK",
   "parent":{
-    "name":"MATCHES",
-    "path":"folders/Scripts/MAIN/MATCHES.yy",
+    "name":"BLOCKS",
+    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS/BLOCKS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
