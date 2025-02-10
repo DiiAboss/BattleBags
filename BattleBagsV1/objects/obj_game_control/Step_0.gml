@@ -208,18 +208,15 @@ if (!swap_in_progress && all_blocks_landed(self)) {
 }
 
 
-drop_blocks(self);
-
+ 
 if (all_pops_finished()) {
 	
-    // ✅ Drop blocks **AFTER** all pops finish
-    
-
-    // ✅ If a new match is found, **increase** combo instead of resetting
-    if find_and_destroy_matches(self) {
+	drop_blocks(self);
+	// ✅ If a new match is found, **increase** combo instead of resetting
+	if find_and_destroy_matches(self) {
 		combo_timer = 0;
-        combo += 1;
-    } 
+	    combo += 1;
+	}
 }
 
 
