@@ -1,18 +1,22 @@
 function drop_blocks(_self, fall_speed = 2) {
     var width = _self.width;
     var height = _self.height;
+	var top_row = _self.top_playable_row;
+	var bottom_row = _self.bottom_playable_row;
     var gem_size = _self.gem_size;
     var has_fallen = false; // ✅ Track if any block has moved
 
-    for (var j = height - 2; j >= 0; j--) { // Process from bottom-up
+    for (var j = bottom_row; j >= 0; j--) { // Process from bottom-up
         for (var i = 0; i < width; i++) {
             var gem = _self.grid[i, j];
 			
 
             if (gem.type != BLOCK.NONE) { // Valid gem
-				if (gem.frozen) && (gem.falling)
+				if (gem.frozen)
 				{
+					gem.fall_delay = 0;
 					gem.falling = false;
+					continue;
 					
 				}
 				
@@ -45,8 +49,10 @@ function drop_blocks(_self, fall_speed = 2) {
                         _self.grid[parent_x,     parent_y + 1]  = top_left; // set the block below the parent block to the new parent block
                         _self.grid[parent_x + 1, parent_y + 1]  = top_right;  // set the block below the parent block to the new parent block
 
-						_self.grid[parent_x,     parent_y] = create_block(BLOCK.NONE); // set the old top row to null
-                        _self.grid[parent_x + 1, parent_y] = create_block(BLOCK.NONE);
+						//_self.grid[parent_x,     parent_y] = create_block(BLOCK.NONE); // set the old top row to null
+                       // _self.grid[parent_x + 1, parent_y] = create_block(BLOCK.NONE);
+					   destroy_block(self, parent_x, parent_y);
+					   destroy_block(self, parent_x +1, parent_y);
 							
 						// Update parent reference
                         _self.grid[parent_x,     parent_y + 2].big_parent = [parent_x, parent_y + 1];
@@ -71,7 +77,8 @@ function drop_blocks(_self, fall_speed = 2) {
                     } else {
                         // ✅ Move the gem **one row down**
                         _self.grid[i, j + 1] = gem;
-                        _self.grid[i, j] = create_block(BLOCK.NONE); // Clear old position
+						_self.grid[i, j] = create_block(BLOCK.NONE);
+                        //destroy_block(self, i, j);
                         //_self.gem_y_offsets[i, j + 1] = _self.gem_y_offsets[i, j]; // Keep offset
                         //_self.gem_y_offsets[i, j] = 0; // Reset previous position
                         
@@ -108,14 +115,14 @@ function drop_blocks(_self, fall_speed = 2) {
             var below = _self.grid[i, j + 1];
 
             if (below.type != BLOCK.NONE && below.falling) {
-                gem.falling = true; // ✅ Keep the entire stack "falling"
+                gem.falling = below.falling; // ✅ Keep the entire stack "falling"
 				gem.fall_delay = below.fall_delay;
             }
         }
     }
 
     // ✅ **New Check: Reset `is_enemy_block` only when fully landed**
-    if (!has_fallen) {
+
         for (var i = 0; i < width; i++) {
             for (var j = 0; j < _self.bottom_playable_row; j++) {
                 var gem = _self.grid[i, j];
@@ -126,7 +133,7 @@ function drop_blocks(_self, fall_speed = 2) {
                 }
             }
         }
-    }
+    
 }
 
 

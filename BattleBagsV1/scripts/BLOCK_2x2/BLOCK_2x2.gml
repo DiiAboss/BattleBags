@@ -16,10 +16,14 @@ function spawn_2x2_block(_self, _x, _y, _type) {
 
 
     // ✅ Clear the 2x2 space **before** placing the big block
-    _self.grid[_x, _y]         = create_block(BLOCK.NONE);
-    _self.grid[_x + 1, _y]     = create_block(BLOCK.NONE);
-    _self.grid[_x, _y + 1]     = create_block(BLOCK.NONE);
-    _self.grid[_x + 1, _y + 1] = create_block(BLOCK.NONE);
+	destroy_block(self, _x, _y);
+	destroy_block(self, _x +1, _y);
+	destroy_block(self, _x, _y + 1);
+	destroy_block(self, _x + 1, _y + 1);
+    //_self.grid[_x, _y]         = create_block(BLOCK.NONE);
+    //_self.grid[_x + 1, _y]     = create_block(BLOCK.NONE);
+    //_self.grid[_x, _y + 1]     = create_block(BLOCK.NONE);
+    //_self.grid[_x + 1, _y + 1] = create_block(BLOCK.NONE);
 
     // ✅ Generate unique, non-zero group_id
     var group_id = irandom_range(1, 999999); // ✅ No -1 or 0

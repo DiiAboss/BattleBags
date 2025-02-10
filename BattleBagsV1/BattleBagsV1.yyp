@@ -213,6 +213,7 @@
     {"id":{"name":"spr_mega_gem","path":"sprites/spr_mega_gem/spr_mega_gem.yy",},},
     {"id":{"name":"spr_none","path":"sprites/spr_none/spr_none.yy",},},
     {"id":{"name":"spr_orange_gem","path":"sprites/spr_orange_gem/spr_orange_gem.yy",},},
+    {"id":{"name":"spr_Oshki","path":"sprites/spr_Oshki/spr_Oshki.yy",},},
     {"id":{"name":"spr_pink_gem","path":"sprites/spr_pink_gem/spr_pink_gem.yy",},},
     {"id":{"name":"spr_player_attack","path":"sprites/spr_player_attack/spr_player_attack.yy",},},
     {"id":{"name":"spr_powerup_1","path":"sprites/spr_powerup_1/spr_powerup_1.yy",},},

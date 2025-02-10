@@ -47,9 +47,39 @@ if (attack_timer >= max_attack_timer) {
 if (attack_timer == 0) { 
     // ✅ SELECT NEXT ATTACK
     if (total_attacks % attacks_until_special_attack == 0) {
-        self.enemy_attack = "triangle_down_3x3";
+		var atk = choose(0, 0, 1, 1, 1);
+		var atk2 = atk;
+		if (obj_game_control.player_level > 10)
+		{
+			atk2 = choose(atk, atk, 2);
+		}
+		
+		if (atk2 == atk)
+		{
+			if (atk == 0)
+			{
+				self.enemy_attack = "triangle_down_3x3";
+			}
+			else
+			{
+				enemy_attack_freeze(self, obj_game_control);
+			}
+		}
+		else
+		{
+			spawn_puzzle_blocks(obj_game_control);
+		}
     } else {
-        self.enemy_attack = enemy_attack_basic(self, obj_game_control);
+		var atk = choose(0,0,0,1);
+		if (atk == 0)
+		{
+			self.enemy_attack = enemy_attack_basic(self, obj_game_control);
+			
+		}
+		else
+		{
+			enemy_attack_freeze(self, obj_game_control);
+		}
     }
 
     self.enemy_attack_ready = true; // ✅ Mark attack as selected

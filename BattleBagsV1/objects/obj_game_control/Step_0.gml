@@ -70,7 +70,7 @@ gem_shake(self);
 
 if (global.swap_queue.active) {
     // ✅ Make sure we only shift the row if a swap was NOT already shifted
-    if (_self.global_y_offset == 0) {
+    if (global_y_offset == 0) {
         global.swap_queue.ay -= 1;
         global.swap_queue.by -= 1;
     }

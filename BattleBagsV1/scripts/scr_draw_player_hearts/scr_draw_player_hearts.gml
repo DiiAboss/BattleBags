@@ -16,7 +16,7 @@ function draw_player_hearts(_self, player_health, max_player_health, _x, _y, wid
 	var lose_life_timer = _self.lose_life_timer;
 	var lose_life_max_timer = _self.lose_life_max_timer;
 	
-	if (lose_life_timer <= 0) return;
+	//if (lose_life_timer <= 0) return;
 	
 	var lose_life_percentage = lose_life_timer / lose_life_max_timer;
 	var last_heart = ceil(player_health / health_per_heart) - 1;
@@ -41,9 +41,11 @@ function draw_player_hearts(_self, player_health, max_player_health, _x, _y, wid
         heart_spacing *= scale;
         size *= scale;
     }
-	draw_set_alpha(lose_life_percentage);
-    draw_rectangle(_x, _y - 16, _x + (width * size) * lose_life_percentage, _y + 16, false);
+	draw_rectangle(_x, _y - 16, _x + (width * size), _y + 16, false);
 	
+	draw_set_alpha(lose_life_percentage);
+    draw_rectangle_color(_x, _y - 16, _x + (width * size) * lose_life_percentage, _y + 16, c_red, c_red, c_red, c_red, false);
+	draw_set_alpha(1);
 
     // Calculate the **centered starting X position**
     var start_x = center_x - ((total_hearts * heart_spacing) / 2);
@@ -61,15 +63,15 @@ function draw_player_hearts(_self, player_health, max_player_health, _x, _y, wid
 		
 		if (i == last_heart)
 		{
-			draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, lose_life_percentage + 0.2, lose_life_percentage + 0.2, irandom_range(-4, 4), c_white, 1);
+			draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, 1.2, 1.2, 1 + irandom_range(-3 * lose_life_percentage, 3 * lose_life_percentage), c_white, 1);
 		}
 		else
 		{
 			var percent = max(0, lose_life_percentage - 0.2);
 	        // Draw heart sprite, centered dynamically
-	        draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, percent, percent, 0, c_white, 1);
+	        draw_sprite_ext(sprite, _sprite_index, start_x + (i * heart_spacing), _y, 0.8, 0.8, 0, c_white, 1);
 		}
-		draw_set_alpha(1);
+		
 		
 		
     }

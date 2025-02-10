@@ -1,4 +1,3 @@
-/// @description Insert description here
-// You can write your code in this editor
-//global.upgrades = ds_list_create();
+/// @Goto menu room after setting screen size.
+
 room_goto_next();

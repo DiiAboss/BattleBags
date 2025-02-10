@@ -4,16 +4,16 @@ function freeze_block(_self, _x, _y, freeze_duration = 10) {
 
     var gem = _self.grid[freeze_x, freeze_y];
 
-    if (gem.type != -1 && !gem.frozen) { // Ensure it's a valid and unfrozen block
+    if (gem.type != BLOCK.NONE && !gem.frozen) { // Ensure it's a valid and unfrozen block
         gem.frozen = true;
-        gem.freeze_timer = gamespeed_fps * freeze_duration; // Freeze duration in seconds
+        gem.freeze_timer = 60 * freeze_duration; // Freeze duration in seconds
     }
 }
 
 
 function enemy_attack_freeze(_self, game_control_object) {
     var width = game_control_object.width;
-    var height = game_control_object.height;
+    var height = game_control_object.bottom_playable_row;
 
     // **How many blocks to freeze?** (Depends on attack level)
     var num_blocks_to_freeze = _self.attack; // **Freeze count scales with attack power**
@@ -23,7 +23,7 @@ function enemy_attack_freeze(_self, game_control_object) {
     
     for (var i = 0; i < width; i++) {
         for (var j = 0; j < height; j++) {
-            if (game_control_object.grid[i, j].type != -1 && !game_control_object.grid[i, j].frozen) {
+            if (game_control_object.grid[i, j].type != BLOCK.NONE && !game_control_object.grid[i, j].frozen) {
                 ds_list_add(candidates, {x: i, y: j});
             }
         }
