@@ -143,7 +143,7 @@ if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
             draw_set_color(c_yellow);
             draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
 			// ✅ Draw Normally but with Transparency
-			draw_sprite_ext(sprite_for_block(hover_gem.type), 0, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
+			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
 			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
 			draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
             draw_set_color(c_white);
