@@ -2,7 +2,7 @@
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 function sprite_for_block(gem_type) {
     switch (gem_type) {
-		case BLOCK.WILD:		return spr_wild_gem;
+		case BLOCK.WILD:		return spr_Oshki;
         case BLOCK.RED:			return spr_red_gem;    // Red gem
         case BLOCK.YELLOW:		return spr_yellow_gem;   // Blue gem
         case BLOCK.GREEN:		return spr_green_gem;  // Green gem
