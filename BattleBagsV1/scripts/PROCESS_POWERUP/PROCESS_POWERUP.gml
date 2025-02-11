@@ -28,7 +28,7 @@ function process_powerup(_self, _x, _y, gem, total_multiplier) {
             break;
 
         case POWERUP.BOMB:
-            // 💣 **Explode in larger areas based on level**
+            // **Explode in larger areas based on level**
             activate_bomb_gem(_self, _x, _y, level);
             break;
 

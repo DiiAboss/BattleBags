@@ -6,7 +6,7 @@
   "name":"scr_all_blocks_landed",
   "parent":{
     "name":"BLOCKS_AND_POPS",
-    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS.yy",
+    "path":"folders/Scripts/MAIN/BOARD/BLOCKS_AND_POPS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

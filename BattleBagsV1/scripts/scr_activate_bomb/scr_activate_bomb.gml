@@ -31,10 +31,9 @@ function get_bomb_start_level() {
 }
 
 function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
+	
 	// ✅ **Prevent bombs from activating on blank spaces**
-    if (_self.grid[_x, _y] == -1 || _self.grid[_x, _y].type == BLOCK.NONE) {
-        return; // ❌ Stop function early if the bomb is on an invalid space
-    }
+    if (_self.grid[_x, _y] == -1 || _self.grid[_x, _y].type == BLOCK.NONE) return; // ❌ Stop function early if the bomb is on an invalid space
 	
     var blocks_destroyed = 0;
     var total_match_points = 0;
@@ -64,20 +63,24 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
     for (var k = 0; k < array_length(coords); k++) {
         var cx = coords[k].x;
         var cy = coords[k].y;
+		var bottom_row = _self.bottom_playable_row;
 
-        if (cx >= 0 && cx < _self.width && cy >= 0 && cy <= _self.bottom_playable_row &&
-            _self.grid[cx, cy].type != -1) {
-				_self.grid[cx, cy].shake_timer = max_shake_timer * 4;
+        if (cx >= 0 
+		 && cx < _self.width 
+		 && cy >= 0 
+		 && cy <= bottom_row 
+		 && _self.grid[cx, cy].type != BLOCK.NONE) {
+			 
+			_self.grid[cx, cy].shake_timer = max_shake_timer * 4; // What the hell is the 4 here for?
+            var block = _self.grid[cx, cy];
 
-            var gem = _self.grid[cx, cy];
-
-            if (gem.type == BLOCK.BLACK) {
+            if (block.type == BLOCK.BLACK) {
                 ds_list_add(black_blocks_to_transform, [cx, cy]); // ✅ Store black blocks for later transformation
             } else {
                 blocks_destroyed++;
                 total_match_points += calculate_match_points(_self, 1);
-                gem.popping = true;
-                //gem.pop_timer = 60;
+                block.popping = true;
+                //block.pop_timer = 60;
 				
 				if (k) = 0
 				{

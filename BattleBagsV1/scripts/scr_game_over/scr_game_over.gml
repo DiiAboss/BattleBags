@@ -29,7 +29,7 @@ function check_game_over(_self)
 		        player_health -= _self.health_per_heart;
 		        global.grid_shake_amount = 10; // Trigger a shake effect
 		        if (player_health <= 0) {
-		            trigger_final_game_over();
+		            trigger_final_game_over(_self);
 		        }
 				
 				_self.lose_life_timer = 0;	
@@ -51,14 +51,42 @@ function check_game_over(_self)
 }
 
 
-// 💀 Final Game Over Function
-function trigger_final_game_over() {
-    show_message("Game Over! Your health reached 0.");
-	
-	ds_list_destroy(global.upgrades_list);
-	
-    game_restart(); // Or transition to a game over screen
+function trigger_final_game_over(_self) {
+    // ✅ Prevent duplicate triggers
+    if (_self.game_over_state) return;
+
+    _self.game_over_state = true;
+    _self.game_over_timer = 0;
+    _self.game_over_pop_delay = 20; // Start slow
+    ds_list_clear(_self.game_over_popping);
+
+    var width = _self.width;
+    var bottom_row = _self.bottom_playable_row;
+    var top_row = _self.top_playable_row;
+
+    // ✅ Add all blocks to the pop queue in order (top-left to bottom-right)
+    for (var _y = top_row; _y <= bottom_row; _y++) {
+        for (var _x = 0; _x < width; _x++) {
+            var block = _self.grid[_x, _y];
+
+            if (block.type != BLOCK.NONE) {
+                // ✅ Remove powerups, set to game-over sprite
+                block.powerup = POWERUP.NONE;
+                block.type = BLOCK.GAME_OVER; 
+
+                // ✅ Add block to pop queue with increasing delays
+                var pop_data = {
+                    x: _x,
+                    y: _y,
+                    pop_delay: _self.game_over_pop_delay
+                };
+                ds_list_add(_self.game_over_popping, pop_data);
+                _self.game_over_pop_delay -= 1; // Speed up as we go
+            }
+        }
+    }
 }
+
 
 
 function legacy_game_over()

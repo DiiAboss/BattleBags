@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Script77",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Script77",
+  "parent":{
+    "name":"MATCHES",
+    "path":"folders/Scripts/MAIN/BOARD/MATCHES.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

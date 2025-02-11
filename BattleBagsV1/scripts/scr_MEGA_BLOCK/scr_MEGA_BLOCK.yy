@@ -6,7 +6,7 @@
   "name":"scr_MEGA_BLOCK",
   "parent":{
     "name":"MEGA_BLOCK",
-    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS/MEGA_BLOCK.yy",
+    "path":"folders/Scripts/MAIN/BOARD/BLOCKS_AND_POPS/MEGA_BLOCK.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

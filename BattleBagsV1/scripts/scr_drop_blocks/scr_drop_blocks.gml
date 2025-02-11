@@ -39,7 +39,7 @@ function drop_blocks(_self, fall_speed = 2) {
 				
 				if (parent_y + 2 < height) { 
 				var empty_below_bottom_blocks = _self.grid[parent_x,     parent_y + 2].type == BLOCK.NONE 
-											 && _self.grid[parent_x + 1, parent_y + 2].type == BLOCK.NONE;
+											 && _self.grid[parent_x + 1, parent_y + 2].type == BLOCK.NONE; // If the block below is empty return true, else false.
 				}
                     // ✅ Both lower parts must be empty
                     if (empty_below_bottom_blocks) {
@@ -78,9 +78,6 @@ function drop_blocks(_self, fall_speed = 2) {
                         // ✅ Move the gem **one row down**
                         _self.grid[i, j + 1] = gem;
 						_self.grid[i, j] = create_block(BLOCK.NONE);
-                        //destroy_block(self, i, j);
-                        //_self.gem_y_offsets[i, j + 1] = _self.gem_y_offsets[i, j]; // Keep offset
-                        //_self.gem_y_offsets[i, j] = 0; // Reset previous position
                         
                         // ✅ Reset fall delay
                         gem.fall_delay = 1;
@@ -98,7 +95,7 @@ function drop_blocks(_self, fall_speed = 2) {
         }
     }
 	
-	    // 🔥 THIRD PASS: Explicitly Mark **Bottom-Row Blocks as Landed**
+	// 🔥 THIRD PASS: Explicitly Mark **Bottom-Row Blocks as Landed**
     for (var i = 0; i < width; i++) {
         var gem = _self.grid[i, _self.bottom_playable_row]; // Last row
 
@@ -122,18 +119,16 @@ function drop_blocks(_self, fall_speed = 2) {
     }
 
     // ✅ **New Check: Reset `is_enemy_block` only when fully landed**
+    for (var i = 0; i < width; i++) {
+        for (var j = 0; j < _self.bottom_playable_row; j++) {
+            var gem = _self.grid[i, j];
 
-        for (var i = 0; i < width; i++) {
-            for (var j = 0; j < _self.bottom_playable_row; j++) {
-                var gem = _self.grid[i, j];
-
-                if (gem.type != BLOCK.NONE && !gem.falling) {
-                    gem.is_enemy_block = false; // ✅ Now safe to reset
-					gem.fall_delay = 0;
-                }
+            if (gem.type != BLOCK.NONE && !gem.falling) {
+                gem.is_enemy_block = false; // ✅ Now safe to reset
+				gem.fall_delay = 0;
             }
         }
-    
+    }  
 }
 
 

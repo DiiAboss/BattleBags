@@ -9,6 +9,21 @@ songs = [Sound7, sound_regular_music_test_3];
 current_song = 0;
 
 
+game_over_state = false;
+game_over_timer = 0;
+game_over_pop_delay = 20; // Starts slow
+game_over_popping = ds_list_create(); // Stores all blocks to pop in order
+
+// ✅ Game Over UI
+game_over_ui_x = 128; // Left side panel width
+game_over_ui_y = 128;
+game_over_ui_width = 400;
+game_over_ui_height = room_height;
+
+game_over_option_selected = -1; // -1 = None, 0 = Restart, 1 = Main Menu
+game_over_show_options = false; // Will show after all blocks are popped
+
+
 selected_piece = [-1, -1];
 hovered_block = [-1, -1];
 
@@ -58,7 +73,7 @@ height			    = 24;
 top_playable_row    = 4;
 bottom_playable_row = 20;
 
-
+self.match_list = ds_list_create(); // Stores matches before popping
 // ------------------------------------------------------
 // MUSIC
 // ------------------------------------------------------

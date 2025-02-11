@@ -6,7 +6,7 @@
   "name":"WEIGHTED_RANDOM_BLOCK",
   "parent":{
     "name":"BLOCKS",
-    "path":"folders/Scripts/MAIN/BLOCKS_AND_POPS/BLOCKS.yy",
+    "path":"folders/Scripts/MAIN/BOARD/BLOCKS_AND_POPS/BLOCKS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

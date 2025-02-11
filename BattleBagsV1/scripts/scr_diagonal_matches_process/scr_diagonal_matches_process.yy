@@ -6,7 +6,7 @@
   "name":"scr_diagonal_matches_process",
   "parent":{
     "name":"MATCHES",
-    "path":"folders/Scripts/MAIN/MATCHES.yy",
+    "path":"folders/Scripts/MAIN/BOARD/MATCHES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,4 +1,58 @@
+if (game_over_state) {
+    game_over_timer++;
 
+    if (ds_list_size(game_over_popping) > 0) {
+        var pop_data = ds_list_find_value(game_over_popping, 0);
+
+        if (game_over_timer >= pop_data.pop_delay) {
+            var _x = pop_data.x;
+            var _y = pop_data.y;
+
+            // ✅ Visual pop effect
+            effect_create_depth(depth, ef_smoke, (_x * gem_size) + board_x_offset, (_y * gem_size), 2, c_gray);
+            
+            // ✅ Remove the block
+            destroy_block(self, _x, _y);
+            ds_list_delete(game_over_popping, 0);
+
+            // ✅ Speed up popping over time
+            game_over_pop_delay = max(1, game_over_pop_delay - 1);
+        }
+    } else {
+        // ✅ All blocks have popped, show menu options
+        game_over_show_options = true;
+    }
+
+    // ✅ Handle Mouse Input for Menu Options
+    if (game_over_show_options) {
+        var mx = mouse_x;
+        var my = mouse_y;
+
+        var restart_x = game_over_ui_x + 50;
+        var restart_y = game_over_ui_y + 350;
+        var menu_x = game_over_ui_x + 50;
+        var menu_y = game_over_ui_y + 420;
+        var button_width = 300;
+        var button_height = 50;
+
+        if (mx >= restart_x && mx <= restart_x + button_width && my >= restart_y && my <= restart_y + button_height) {
+            game_over_option_selected = 0;
+            if (mouse_check_button_pressed(mb_left)) {
+                room_restart();
+            }
+        } else if (mx >= menu_x && mx <= menu_x + button_width && my >= menu_y && my <= menu_y + button_height) {
+            game_over_option_selected = 1;
+            if (mouse_check_button_pressed(mb_left)) {
+                room_goto(rm_main_menu);
+            }
+        } else {
+            game_over_option_selected = -1; // Reset selection if not hovering over buttons
+        }
+    }
+}
+
+else
+{
 
 var exp_inc = 0.0025;
 
@@ -170,6 +224,10 @@ else
 	enable_debug_controls(self, hover_i, hover_j, true);	
 }
 
+if (keyboard_check_pressed(vk_backspace))
+{
+	trigger_final_game_over(self);
+}
 
 // ------------------------------------------------------
 // SMOOTH UPWARD MOVEMENT + SHIFT
@@ -208,63 +266,17 @@ if (!swap_in_progress && all_blocks_landed(self)) {
 }
 
 
- 
 if (all_pops_finished()) {
 	
 	drop_blocks(self);
 	// ✅ If a new match is found, **increase** combo instead of resetting
 	if find_and_destroy_matches(self) {
 		combo_timer = 0;
-	    combo += 1;
-	}
+		combo += 1;
+	}	
 }
 
 
-process_combo_timer_and_record_max(self);
-
-update_freeze_timer(self);
-
-find_all_puzzle_matches(self);	
-
-for (var i = 0; i < width; i++) {
-	if (grid[i, 1].type != -1 && !grid[i, 1].falling) { 
-		var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
-		var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
-	
-		if (progress > 0 && combo > 0)
-		{
-			fight_for_your_life = true;
-		}
-		else
-		{
-			fight_for_your_life = false;
-		}
-	} 
-	else 
-	{
-		fight_for_your_life = false;	
-	}
-}
-
-
-if (fight_for_your_life)
-{
-	transition_to_fast_song();	
-}
-else
-{
-	transition_to_regular_song(songs[current_song]);  
-}
-
-// Apply volume settings
-apply_volume_settings();
-process_play_next_song(songs[current_song]);
-
-// -----------------------------------------------------------------------
-// FUNCTIONS
-// -----------------------------------------------------------------------
-
-//if all_blocks_landed(self) {
 	
 for (var i = 0; i < ds_list_size(global.pop_list); i++) {
     var pop_data = ds_list_find_value(global.pop_list, i);
@@ -347,4 +359,64 @@ for (var i = 0; i < ds_list_size(global.pop_list); i++) {
     // Write back updated pop_data
     ds_list_replace(global.pop_list, i, pop_data);
 }
-//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+process_combo_timer_and_record_max(self);
+
+update_freeze_timer(self);
+
+find_all_puzzle_matches(self);	
+
+for (var i = 0; i < width; i++) {
+	if (grid[i, 1].type != -1 && !grid[i, 1].falling) { 
+		var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
+		var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
+	
+		if (progress > 0 && combo > 0)
+		{
+			fight_for_your_life = true;
+		}
+		else
+		{
+			fight_for_your_life = false;
+		}
+	} 
+	else 
+	{
+		fight_for_your_life = false;	
+	}
+}
+
+
+if (fight_for_your_life)
+{
+	transition_to_fast_song();	
+}
+else
+{
+	transition_to_regular_song(songs[current_song]);  
+}
+
+// Apply volume settings
+apply_volume_settings();
+process_play_next_song(songs[current_song]);
+}
+// -----------------------------------------------------------------------
+// FUNCTIONS
+// -----------------------------------------------------------------------

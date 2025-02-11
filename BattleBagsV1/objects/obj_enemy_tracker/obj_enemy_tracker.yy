@@ -9,8 +9,8 @@
   "name":"obj_enemy_tracker",
   "overriddenProperties":[],
   "parent":{
-    "name":"Enemies",
-    "path":"folders/Objects/GAME_OBJECTS/Enemies.yy",
+    "name":"CONTROL",
+    "path":"folders/Objects/GAME_OBJECTS/Enemies/CONTROL.yy",
   },
   "parentObjectId":null,
   "persistent":false,

@@ -1,4 +1,4 @@
-
+#region works
 // Script Created By DiiAboss AKA Dillon Abotossaway
 ///@function find_and_destroy_matches
 ///
@@ -7,9 +7,9 @@
 ///@param {id} _self - The game object managing the board.
 ///@return {bool} - Returns `true` if any matches were found.
 function find_and_destroy_matches(_self) {
-    var width = _self.width;
-	  var height = _self.height;
-    var marked_for_removal	 = array_create(width, height);
+    var width				 = _self.width;
+	var bottom_row		     = _self.bottom_playable_row;
+    var marked_for_removal	 = array_create(width, bottom_row);
     var found_any			 = false;
     var first_found			 = false; // ✅ Track the first block in the combo
     var total_match_points	 = 0;     // ✅ Accumulates points for multiple matches
@@ -22,7 +22,7 @@ function find_and_destroy_matches(_self) {
 
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
-        for (var yy = 0; yy < height; yy++) {
+        for (var yy = 0; yy <= bottom_row; yy++) {
             marked_for_removal[xx, yy] = false;
 			
 			if (_self.grid[xx, yy].shake_timer > 0)
@@ -105,7 +105,7 @@ function find_and_destroy_matches(_self) {
                     for (var k = 0; k < match_count; k++) {
                         var yy = start_idx + k;
 						
-                        if (yy >= 0 && yy < height) {
+                        if (yy >= 0 && yy <= bottom_row) {
                             marked_for_removal[i, yy] = true;
 
                             if (!first_found) {
@@ -125,7 +125,7 @@ function find_and_destroy_matches(_self) {
         if (match_count >= 3) {
             for (var k = 0; k < match_count; k++) {
                 var yy = start_idx + k;
-                if (yy >= 0 && yy < height) {
+                if (yy >= 0 && yy <= bottom_row) {
                     marked_for_removal[i, yy] = true;
 
                     if (!first_found) {
@@ -168,7 +168,7 @@ function find_and_destroy_matches(_self) {
 	                var group_id = gem.group_id;
 
 	                for (var _x = 0; _x < width; _x++) {
-	                    for (var _y = 0; _y < height; _y++) {
+	                    for (var _y = 0; _y <= bottom_row; _y++) {
 	                        var other_gem = grid[_x, _y];
 
 	                        if (other_gem.group_id == group_id) {
@@ -242,3 +242,6 @@ function find_and_destroy_matches(_self) {
 	
     return found_any;
 }
+
+#endregion
+

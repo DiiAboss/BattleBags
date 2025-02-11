@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"DRAW_ENEMY_ATTACK_PREVIEW",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DRAW_ENEMY_ATTACK_PREVIEW",
+  "parent":{
+    "name":"DRAW",
+    "path":"folders/Scripts/DRAW.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

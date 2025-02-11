@@ -1,10 +1,12 @@
 function spawn_wild_block(_self, multiplier = 1) {
+	
     var _rand_array = array_create(0); // Stores valid positions
+	var bottom_row = _self.bottom_playable_row;
 
     // ✅ Find valid positions for wild blocks
-    for (var j = 0; j < _self.height; j++) {
+    for (var j = 0; j < bottom_row; j++) {
         for (var i = 0; i < _self.width; i++) {
-            if (_self.grid[i, j].type != -1) { // Only non-empty slots
+            if (_self.grid[i, j].type != BLOCK.NONE) { // Only non-empty slots
                 array_push(_rand_array, { x: i, y: j }); // ✅ Store x, y coordinates
             }
         }
