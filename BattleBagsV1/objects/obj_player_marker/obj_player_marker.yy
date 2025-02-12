@@ -28,8 +28,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_hearts",
-    "path":"sprites/spr_hearts/spr_hearts.yy",
+    "name":"spr_hearts_old",
+    "path":"sprites/spr_hearts_old/spr_hearts_old.yy",
   },
   "spriteMaskId":null,
   "visible":true,
