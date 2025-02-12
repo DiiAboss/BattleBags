@@ -6,7 +6,7 @@
   "name":"SWAP_FUNCTIONS",
   "parent":{
     "name":"SWAP",
-    "path":"folders/Scripts/MAIN/SWAP.yy",
+    "path":"folders/Scripts/MAIN/BOARD/BLOCKS_AND_POPS/SWAP.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

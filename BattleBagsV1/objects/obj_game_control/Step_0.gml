@@ -1,3 +1,7 @@
+//input.Update(self);
+
+
+
 if (game_over_state) {
     game_over_timer++;
 
@@ -109,7 +113,11 @@ process_gameboard_speed(self);
 //--------------------------------------------------------
 // CONTROLS
 //--------------------------------------------------------
-mouse_dragged(self);
+if (control_mode == "modern") {
+    mouse_dragged(self);
+} else if (control_mode == "legacy") {
+    mouse_legacy_swap(self);
+}
 
 var hover_i = floor((mouse_x - board_x_offset) / gem_size);
 var hover_j = floor((mouse_y - global_y_offset) / gem_size);

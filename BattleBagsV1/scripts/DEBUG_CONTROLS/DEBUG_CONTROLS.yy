@@ -6,7 +6,7 @@
   "name":"DEBUG_CONTROLS",
   "parent":{
     "name":"DEBUGGING",
-    "path":"folders/Scripts/MAIN/DEBUGGING.yy",
+    "path":"folders/Scripts/MAIN/PLAYER_CONTROLS/DEBUGGING.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

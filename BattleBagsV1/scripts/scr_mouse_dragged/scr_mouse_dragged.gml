@@ -34,6 +34,12 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
 		&&  _self.grid[_self.selected_x, _self.selected_y].is_big == false)
 		{
             _self.dragged = false; // Prepare for dragging
+			if _self.grid[hover_x, hover_y].freeze_timer > 0
+			{
+				_self.grid[hover_x, hover_y].freeze_timer -= 20;
+				effect_create_depth(_self.depth - 99, ef_smoke, (hover_x * gem_size) + board_x_offset + 32, (hover_y * gem_size) + global_y_offset + 32, 1, c_blue);
+			}
+			
         } 
 		else 
 		{
@@ -64,3 +70,40 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
 }
 
 
+function mouse_legacy_swap(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
+    var width          = _self.width;
+    var height         = _self.height;
+    var board_x_offset = _self.board_x_offset;
+    var gem_size       = _self.gem_size;
+    var global_y_offset = _self.global_y_offset;
+
+    // 🔹 Convert mouse coordinates to grid indices
+    var hover_x = floor((pointer_x - board_x_offset) / gem_size);
+    var hover_y = floor((pointer_y - global_y_offset) / gem_size);
+
+    // ✅ Store hovered block for UI feedback
+    if (hover_x >= 0 && hover_x < width && hover_y >= 0 && hover_y < height) {
+        _self.hovered_block = [hover_x, hover_y];
+    } else {
+        _self.hovered_block = [-1, -1]; // Reset if out of bounds
+    }
+
+    // ✅ When the left mouse button is pressed, attempt to swap
+    if (mouse_check_button_pressed(mb_left)) {
+        if (hover_x >= 0 && hover_x < width - 1 // Ensure it's not on the right edge
+            && hover_y >= 0 && hover_y < height
+            //&& _self.grid[hover_x, hover_y].type != BLOCK.NONE // Must be a valid block
+            && _self.grid[hover_x, hover_y].is_big == false) { // Cannot swap big blocks
+
+            var target_x = hover_x + 1;
+            var target_y = hover_y;
+
+            // ✅ Check if the right-side block is valid for swapping
+            //if (_self.grid[target_x, target_y].type != BLOCK.NONE 
+                if _self.grid[target_x, target_y].is_big == false {
+                
+                start_swap(_self, hover_x, hover_y, target_x, target_y);
+            }
+        }
+    }
+}

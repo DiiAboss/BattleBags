@@ -4,7 +4,7 @@ function freeze_block(_self, _x, _y, freeze_duration = 10) {
 
     var gem = _self.grid[freeze_x, freeze_y];
 
-    if (gem.type != BLOCK.NONE && !gem.frozen) { // Ensure it's a valid and unfrozen block
+    if (gem.type != BLOCK.NONE && !gem.frozen && !gem.is_big) { // Ensure it's a valid and unfrozen block
         gem.frozen = true;
         gem.freeze_timer = 60 * freeze_duration; // Freeze duration in seconds
     }

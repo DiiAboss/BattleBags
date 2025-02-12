@@ -116,10 +116,74 @@ for (var i = 0; i < width; i++) {
             // **Draw the gem sprite**
 			
 			if (gem.is_big) {
-		    // Only draw if this is the top-left (actual) parent
-		    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
-		        draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
-		    }
+				if (gem.type == BLOCK.MEGA)
+				{
+					 var parent_x = gem.big_parent[0];
+			        var parent_y = gem.big_parent[1];
+
+			        // ✅ Only process once per **Mega Block Parent**
+			        if (i == parent_x && j == parent_y) {
+			            var _width = self.grid[parent_x, parent_y].mega_width;
+			            var _height = self.grid[parent_x, parent_y].mega_height;
+
+			            // ✅ Iterate over the whole Mega Block
+			            for (var bx = 0; bx < _width; bx++) {
+			                for (var by = 0; by < _height; by++) {
+			                    var block_x = parent_x + bx;
+			                    var block_y = parent_y + by;
+
+			                    var draw_x = board_x_offset + (block_x * gem_size);
+			                    var draw_y = global_y_offset + (block_y * gem_size);
+
+			                    // 🔥 Determine correct sprite variation
+			                    var _sprite_index = 0;
+			                    var rotation = 0;
+
+			                    var left = (block_x > 0 && self.grid[block_x - 1, block_y].type == BLOCK.MEGA);
+			                    var right = (block_x < _width - 1 && self.grid[block_x + 1, block_y].type == BLOCK.MEGA);
+			                    var up = (block_y > 0 && self.grid[block_x, block_y - 1].type == BLOCK.MEGA);
+			                    var down = (block_y < _height - 1 && self.grid[block_x, block_y + 1].type == BLOCK.MEGA);
+
+			                    // 🔥 Assign Subsprite Based on Open Sides
+			                    if (!left && !right && !up && !down) {
+			                        _sprite_index = 0; // Fully closed
+			                    } else if (!left && right && !up && !down) {
+			                        _sprite_index = 1; // Open right
+			                    } else if (left && !right && !up && !down) {
+			                        _sprite_index = 1; rotation = 180; // Open left
+			                    } else if (!left && !right && up && !down) {
+			                        _sprite_index = 1; rotation = 90; // Open up
+			                    } else if (!left && !right && !up && down) {
+			                        _sprite_index = 1; rotation = 270; // Open down
+			                    } else if (left && right && !up && !down) {
+			                        _sprite_index = 2; // Open both left/right
+			                    } else if (!left && !right && up && down) {
+			                        _sprite_index = 2; rotation = 90; // Open both up/down
+			                    } else if (left && right && up && !down) {
+			                        _sprite_index = 3; // Open 3 sides left/right/up
+			                    } else if (left && right && !up && down) {
+			                        _sprite_index = 3; rotation = 270; // Open 3 sides left/right/down
+			                    } else if (left && !right && up && down) {
+			                        _sprite_index = 3; rotation = 180; // Open 3 sides left/up/down
+			                    } else if (!left && right && up && down) {
+			                        _sprite_index = 3; rotation = 90; // Open 3 sides right/up/down
+			                    } else if (left && right && up && down) {
+			                        _sprite_index = 4; // Open all sides
+			                    }
+
+			                    // 🔥 Draw the Mega Block Piece with Correct Rotation
+			                    draw_sprite_ext(sprite_for_block(BLOCK.MEGA), _sprite_index, draw_x + gem_size / 2, draw_y + gem_size / 2, 1, 1, rotation, c_white, 1);
+			                }
+			            }
+			        }
+				}
+				else
+				{
+				    // Only draw if this is the top-left (actual) parent
+				    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
+				        draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
+					}
+			    }
 			} else {
 				if (j >= bottom_playable_row)
 				{
@@ -153,21 +217,24 @@ for (var i = 0; i < width; i++) {
 	            }
 			
 				if (gem.is_big) {
-					draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
-    
-			    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
-			        draw_text(draw_x, draw_y, "PARENT");
-					draw_text(draw_x+16, draw_y+16, string(gem.big_parent[1]) + "/" + string(height));
-			        // 🔥 **Draw a box around the 2x2 block**
-			        draw_rectangle(draw_x - 32, draw_y - 32, draw_x + gem_size * 2 - 32, draw_y + gem_size * 2 - 32, true);
-			    }
-				else
-				{
-
-					draw_text(draw_x, draw_y, "CHILD"); // 🔥 Draw "CHILD" for the other parts
-    
+					var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+				     var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset;
+					draw_text(_draw_x, _draw_y, string(gem.mega_width));
 				}
-			}
+    
+			//    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
+			//        draw_text(draw_x, draw_y, "PARENT");
+			//		draw_text(draw_x+16, draw_y+16, string(gem.big_parent[1]) + "/" + string(height));
+			//        // 🔥 **Draw a box around the 2x2 block**
+			//        draw_rectangle(draw_x - 32, draw_y - 32, draw_x + gem_size * 2 - 32, draw_y + gem_size * 2 - 32, true);
+			//    }
+			//	else
+			//	{
+
+			//		draw_text(draw_x, draw_y, "CHILD"); // 🔥 Draw "CHILD" for the other parts
+    
+			//	}
+			//}
         }
     }
 }
@@ -180,7 +247,34 @@ if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
 
     if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
         var hover_gem = grid[hover_i, hover_j];
-
+		var rect_x1 = board_x_offset + (hover_i * gem_size);
+        var rect_y1 = (hover_j * gem_size) + global_y_offset;
+        var rect_x2 = rect_x1 + gem_size;
+        var rect_y2 = rect_y1 + gem_size;
+		var scale = 1.1;
+		
+		if (swap_in_progress)
+		{
+			scale = 1;
+		}
+		
+		
+		if (control_mode == "legacy") {
+				if (hover_i + 1 < width)
+				{
+					var hover_gem2 = grid[hover_i + 1, hover_j];
+					draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+					
+					if (hover_gem2.type != BLOCK.NONE)
+					{
+						draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+						draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+					}
+				}
+				
+				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+		}
+		
         if (hover_gem.type != BLOCK.NONE) {
             var rect_x1 = board_x_offset + (hover_i * gem_size);
             var rect_y1 = (hover_j * gem_size) + global_y_offset;
@@ -191,9 +285,16 @@ if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
             draw_set_color(c_yellow);
             draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
 			// ✅ Draw Normally but with Transparency
-			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
-			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
-			draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
+			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+			
+			if (control_mode == "modern") {
+			    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+			//} else if (control_mode == "legacy") {
+			//	draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
+			//    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
+			}
+			//draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
             draw_set_color(c_white);
             draw_set_alpha(1.0);
 

@@ -72,6 +72,7 @@ function execute_swap(_self, ax, ay, bx, by) {
         _self.swap_info.to_x   = bx;
         _self.swap_info.to_y   = by - 1;
         _self.swap_info.progress = 0;
+		_self.swap_info.speed = 0.15;
     }
     else
     {

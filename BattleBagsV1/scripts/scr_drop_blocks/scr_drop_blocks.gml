@@ -1,134 +1,126 @@
 function drop_blocks(_self, fall_speed = 2) {
     var width = _self.width;
     var height = _self.height;
-	var top_row = _self.top_playable_row;
-	var bottom_row = _self.bottom_playable_row;
-    var gem_size = _self.gem_size;
     var has_fallen = false; // ✅ Track if any block has moved
 
-    for (var j = bottom_row; j >= 0; j--) { // Process from bottom-up
+    //  Process from **bottom-up** (ensures things fall properly)
+    for (var j = height - 2; j >= 0; j--) {
         for (var i = 0; i < width; i++) {
             var gem = _self.grid[i, j];
-			
 
-            if (gem.type != BLOCK.NONE) { // Valid gem
-				if (gem.frozen)
-				{
-					gem.fall_delay = 0;
-					gem.falling = false;
-					continue;
-					
-				}
-				
-            var below = _self.grid[i, j + 1];
-			//gem.falling = below.popping;
-            // ✅ If the block below is empty, make this block fall
-            if (below.type == BLOCK.NONE) && (below.popping == false){
-                gem.falling = true; // ✅ Mark as falling
-					
-				// ✅ Handle 2x2 Block Falling
-            if (gem.is_big) {
-                var parent_x = gem.big_parent[0];
-                var parent_y = gem.big_parent[1];
-					
-                var bottom_left  = _self.grid[parent_x,     parent_y + 1];
-                var bottom_right = _self.grid[parent_x + 1, parent_y + 1];
-				var top_left     = _self.grid[parent_x,     parent_y];
-				var top_right    = _self.grid[parent_x + 1, parent_y];
-				var empty_below_bottom_blocks = false;
-				
-				if (parent_y + 2 < height) { 
-				var empty_below_bottom_blocks = _self.grid[parent_x,     parent_y + 2].type == BLOCK.NONE 
-											 && _self.grid[parent_x + 1, parent_y + 2].type == BLOCK.NONE; // If the block below is empty return true, else false.
-				}
-                    // ✅ Both lower parts must be empty
-                    if (empty_below_bottom_blocks) {
-							
-						_self.grid[parent_x,     parent_y + 2]  = bottom_left; // set the block below the parent block to the new parent block
-                        _self.grid[parent_x + 1, parent_y + 2]  = bottom_right;  // set the block below the parent block to the new parent block
-                        _self.grid[parent_x,     parent_y + 1]  = top_left; // set the block below the parent block to the new parent block
-                        _self.grid[parent_x + 1, parent_y + 1]  = top_right;  // set the block below the parent block to the new parent block
+            if (gem.type != BLOCK.NONE) { // ✅ Only process valid blocks
+                var below = _self.grid[i, j + 1];
 
-						//_self.grid[parent_x,     parent_y] = create_block(BLOCK.NONE); // set the old top row to null
-                       // _self.grid[parent_x + 1, parent_y] = create_block(BLOCK.NONE);
-					   destroy_block(self, parent_x, parent_y);
-					   destroy_block(self, parent_x +1, parent_y);
-							
-						// Update parent reference
-                        _self.grid[parent_x,     parent_y + 2].big_parent = [parent_x, parent_y + 1];
-                        _self.grid[parent_x + 1, parent_y + 2].big_parent = [parent_x, parent_y + 1];
-						_self.grid[parent_x,     parent_y + 1].big_parent = [parent_x, parent_y + 1];
-                        _self.grid[parent_x + 1, parent_y + 1].big_parent = [parent_x, parent_y + 1];
-							
-                        has_fallen = true;
-                    }
-					else
+                //  **Frozen blocks never fall**
+                if (gem.frozen) {					
+                    gem.fall_delay = 0;
+                    gem.falling = false;
+                    continue;
+                }
+
+                //  **Handle 2x2 Block Falling**
+                if (gem.is_big) {
+                    var parent_x = gem.big_parent[0];
+                    var parent_y = gem.big_parent[1];
+					var parent_block = _self.grid[parent_x, parent_y];
+					var big_block_width = parent_block.mega_width;
+					var big_block_height = parent_block.mega_height;
+					
+                    // ✅ Only process once for **parent block**
+                    if (i == parent_x && j == parent_y) {
+                    var bottom_left  = _self.grid[parent_x,     parent_y + 1];
+                    var bottom_right = _self.grid[parent_x + 1, parent_y + 1];
+					
+					var can_fall = true;
+					
+					for (var bbx = 0; bbx < big_block_width; bbx++)
 					{
-						_self.grid[parent_x,     parent_y + 1].falling = false; // set the block below the parent block to the new parent block
-                        _self.grid[parent_x + 1, parent_y + 1].falling = false;  // set the block below the parent block to the new parent block
-						_self.grid[parent_x,     parent_y].falling = false; // set the block below the parent block to the new parent block
-                        _self.grid[parent_x + 1,  parent_y].falling = false;  // set the block below the parent block to the new parent block
+						var _block_x = parent_x + bbx;
+						var _block_y = parent_y + big_block_height;
+						
+						if (_self.grid[_block_x, _block_y].type != BLOCK.NONE) {
+							can_fall = false;
+                        }
 					}
+
+					// ✅ Check if the **entire bottom row** of the block can fall
+                        if (can_fall) {
+                            // ✅ Apply **fall delay**
+                            if (gem.fall_delay < gem.max_fall_delay) {
+                                gem.fall_delay++;
+                                continue; // 🔹 Wait until delay finishes
+                            }
+							
+							// ✅ Move the entire Mega Block **down one row**
+                            for (var bbx = 0; bbx < big_block_width; bbx++) {
+                                for (var bby = big_block_height - 1; bby >= 0; bby--) {
+                                    var old_x = parent_x + bbx;
+                                    var old_y = parent_y + bby;
+                                    var new_x = old_x;
+                                    var new_y = old_y + 1; // ✅ **Move down using your logic**
+
+                                    _self.grid[new_x, new_y] = _self.grid[old_x, old_y]; // Move
+                                    _self.grid[old_x, old_y] = create_block(BLOCK.NONE); // Clear
+                                    _self.grid[new_x, new_y].big_parent = [parent_x, parent_y + 1]; // ✅ Update parent
+                                }
+                            }
+
+                            gem.fall_delay = 1;
+                            has_fallen = true;
+                        } else {
+							// ✅ **If it can’t fall, all blocks stop falling**
+                            for (var bx = 0; bx < big_block_width; bx++) {
+                                for (var by = 0; by < big_block_height; by++) {
+                                    var block_x = parent_x + bx;
+                                    var block_y = parent_y + by;
+                                    _self.grid[block_x, block_y].falling = false;
+									_self.grid[block_x, block_y].fall_delay = 0;
+									//has_fallen = true;
+                                }
+                            }
+                        }
+                    }
                 } 
-					
-                    // ✅ Countdown fall delay before moving
+                // 🔹 **Normal Single Block Falling**
+                else if (below.type == BLOCK.NONE) {
+                    // ✅ Apply **fall delay**
                     if (gem.fall_delay < gem.max_fall_delay) {
                         gem.fall_delay++;
-                    } else {
-                        // ✅ Move the gem **one row down**
-                        _self.grid[i, j + 1] = gem;
-						_self.grid[i, j] = create_block(BLOCK.NONE);
-                        
-                        // ✅ Reset fall delay
-                        gem.fall_delay = 1;
-                        has_fallen = true; // ✅ A block has moved, so we need another pass
+                        continue; // 🔹 Wait until delay finishes
                     }
-                } 
-                else {
-                    // ✅ **Only stop falling if this is the lowest block in a stack**
-                    if (gem.falling) && (!below.falling) {
-                        gem.falling = false;
-						gem.fall_delay = 0;
-                    }
+
+                    _self.grid[i, j + 1] = gem;
+                    _self.grid[i, j] = create_block(BLOCK.NONE);
+                    gem.fall_delay = 0;
+                    has_fallen = true;
                 }
             }
         }
     }
-	
-	// 🔥 THIRD PASS: Explicitly Mark **Bottom-Row Blocks as Landed**
-    for (var i = 0; i < width; i++) {
-        var gem = _self.grid[i, _self.bottom_playable_row]; // Last row
 
-        if (gem.type != BLOCK.NONE) { // Valid gem
-            gem.falling = false; // ✅ Ensure it is settled
-            gem.fall_delay = 0;
-        }
+    return has_fallen; // ✅ If anything fell, we need another update pass
+}
+
+function can_mega_block_fall(_self, _x, _y) {
+    var parent_x = _self.grid[_x, _y].big_parent[0];
+    var parent_y = _self.grid[_x, _y].big_parent[1];
+    var group_id = _self.grid[parent_x, parent_y].group_id;
+    
+    var width = _self.grid[parent_x, parent_y].mega_width;
+    var height = _self.grid[parent_x, parent_y].mega_height;
+    
+    // ✅ Check if all **bottom row** parts can fall
+    for (var i = 0; i < width; i++) {
+        var block_x = parent_x + i;
+        var block_y = parent_y + height - 1; // Bottom-most row of the block
+        
+        if (block_y + 1 >= _self.height) return false; // 🔹 Prevent out-of-bounds
+
+        var below = _self.grid[block_x, block_y + 1];
+        if (below.type != BLOCK.NONE) return false; // 🔥 If ANY part is blocked, no fall
     }
 
-    // ✅ Ensure we **propagate falling status** upward in columns
-    for (var i = 0; i < width; i++) {
-        for (var j = _self.bottom_playable_row; j >= 0; j--) {
-            var gem = _self.grid[i, j];
-            var below = _self.grid[i, j + 1];
-
-            if (below.type != BLOCK.NONE && below.falling) {
-                gem.falling = below.falling; // ✅ Keep the entire stack "falling"
-				gem.fall_delay = below.fall_delay;
-            }
-        }
-    }
-
-    // ✅ **New Check: Reset `is_enemy_block` only when fully landed**
-    for (var i = 0; i < width; i++) {
-        for (var j = 0; j < _self.bottom_playable_row; j++) {
-            var gem = _self.grid[i, j];
-
-            if (gem.type != BLOCK.NONE && !gem.falling) {
-                gem.is_enemy_block = false; // ✅ Now safe to reset
-				gem.fall_delay = 0;
-            }
-        }
-    }  
+    return true; // ✅ If all bottom parts can fall, return true
 }
 
 

@@ -74,7 +74,9 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		big_parent: [-1, -1],
 		img_number: -1,
 		x_scale: 1,
-		y_scale: 1
+		y_scale: 1,
+		mega_width: -1,
+		mega_height: -1,
     };
 }
 

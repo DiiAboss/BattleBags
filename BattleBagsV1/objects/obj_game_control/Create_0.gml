@@ -52,11 +52,12 @@ total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
 
-
+control_mode = "modern";
 
 input = new Input();  // Controller support
 iType = "click_and_drag";
 
+big_block_enabled = true;
 
 global.swap_queue = { 
 	active: false, 

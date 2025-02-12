@@ -19,7 +19,7 @@ function find_and_destroy_matches(_self) {
 
 	
 	global.black_blocks_to_transform = ds_list_create(); // ✅ Track black blocks to transform
-
+	check_2x2_match(self);
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
         for (var yy = 0; yy <= bottom_row; yy++) {
@@ -191,7 +191,7 @@ function find_and_destroy_matches(_self) {
 					                color: gem.color,
 					                y_offset_global: _self.global_y_offset,
 					                match_size: match_count, // ✅ Store the match size
-					                match_points: total_match_points,
+					                match_points: total_match_points * 1.5,
 					                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 					                bomb_level: 0,
 									img_number: gem.img_number,
@@ -199,7 +199,8 @@ function find_and_destroy_matches(_self) {
 							
 	                            _self.grid[_x, _y].popping   = true;  // Start popping process
 	                            _self.grid[_x, _y].pop_timer = dist * _start_delay;
-								
+								var _pitch = clamp(0.75 + (0.2 * _self.combo), 0.5, 5);
+								audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
 								ds_list_add(global.pop_list, pop_info);
 	                        }
 	                    }
@@ -230,8 +231,8 @@ function find_and_destroy_matches(_self) {
 
 	            _self.grid[i, j].popping   = true;
 	            _self.grid[i, j].pop_timer = dist * _start_delay;
-					var _pitch = clamp(1 + (0.2 * _self.combo), 0.5, 5);
-					audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
+				var _pitch = clamp(1 + (0.2 * _self.combo), 0.5, 5);
+				audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
 	            ds_list_add(global.pop_list, pop_info);
 	        }
 	    }

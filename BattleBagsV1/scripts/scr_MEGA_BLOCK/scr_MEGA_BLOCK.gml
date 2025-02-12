@@ -29,20 +29,36 @@ function create_mega_block(_width, _height) {
     };
 }
 
-function spawn_mega_block(_self, _x, _y, _width, _height) {
-    var mega_block = create_mega_block(_width, _height);
-    mega_block.x = _x;
-    mega_block.y = 0; // ✅ Start above screen
-    mega_block.group_id = irandom(999999); // ✅ Unique ID for tracking
-	mega_block.falling = true;
+function spawn_mega_block(_self, _x, _y, _shape_name) {
+    if (!ds_map_exists(global.shape_templates, _shape_name)) return;
 
-    // ✅ Reserve space in the grid for the entire Mega Block
-    for (var i = 0; i < _width; i++) {
-        for (var j = 0; j < _height; j++) {
-            _self.grid[_x + i, _y + j] = mega_block; // Assign reference to the same object
+    var shape = ds_map_find_value(global.shape_templates, _shape_name);
+    var shape_width = array_length(shape[0]);
+    var shape_height = array_length(shape);
+
+    if (_x < 0 || _x + shape_width > _self.width || _y < 0 || _y + shape_height > _self.height) return;
+
+    var group_id = irandom_range(1, 999999);
+
+    for (var j = 0; j < shape_height; j++) {
+        for (var i = 0; i < shape_width; i++) {
+            if (shape[j][i] != BLOCK.NONE) {
+                var mega_gem = create_block(BLOCK.MEGA);
+                mega_gem.is_big = true;
+                mega_gem.group_id = group_id;
+                mega_gem.big_parent = [_x, _y];
+                mega_gem.falling = true;
+                mega_gem.is_enemy_block = true;
+                mega_gem.mega_width = shape_width;
+                mega_gem.mega_height = shape_height; // ✅ Store dimensions
+
+                _self.grid[_x + i, _y + j] = mega_gem;
+            }
         }
     }
 }
+
+
 
 
 
