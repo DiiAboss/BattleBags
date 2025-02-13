@@ -1,4 +1,4 @@
-#region works
+
 // Script Created By DiiAboss AKA Dillon Abotossaway
 ///@function find_and_destroy_matches
 ///
@@ -250,5 +250,4 @@ function find_and_destroy_matches(_self) {
     return found_any;
 }
 
-#endregion
 

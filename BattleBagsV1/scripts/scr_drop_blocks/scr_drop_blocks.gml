@@ -35,8 +35,8 @@ function drop_blocks(_self, fall_speed = 2) {
 
                         // ✅ **If slime HP runs out, return to normal**
                         if (gem.slime_hp <= 0) {
-                            gem.max_fall_delay = 2;  // ✅ Normal falling speed
-                            gem.swap_speed = 1.0;    // ✅ Normal swap speed
+                            gem.max_fall_delay = 5;  // ✅ Normal falling speed
+                            gem.swap_speed = 0.15;    // ✅ Normal swap speed
                         }
 
                         gem.fall_delay = 0;

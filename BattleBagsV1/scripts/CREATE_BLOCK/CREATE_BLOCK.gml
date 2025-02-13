@@ -54,7 +54,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		shake_timer: 0,    
 		color: _color,
 		fall_delay: 0,
-		max_fall_delay: 3, 
+		max_fall_delay: 5, 
 		freeze_timer: 0,   
         frozen: false,      
 		damage: 1,

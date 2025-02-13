@@ -23,7 +23,7 @@ function create_bomb_pop_info(_self, cell_x, cell_y, origin_x, origin_y, blocks_
 }
 
 function get_bomb_start_level() {
-    // Ensure the upgrade exists before retrieving it
+     //Ensure the upgrade exists before retrieving it
     //if (ds_list_find_value(global.upgrades, UPGRADE.BOMB_START_LEVEL)) {
     //    return 1 + ds_list_find_value(global.upgrades, UPGRADE.BOMB_START_LEVEL);
     //}
@@ -80,7 +80,7 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
                 blocks_destroyed++;
                 total_match_points += calculate_match_points(_self, 1);
                 block.popping = true;
-                //block.pop_timer = 60;
+                block.pop_timer = 10;
 				
 				if (k) = 0
 				{

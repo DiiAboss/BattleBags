@@ -59,11 +59,25 @@ function execute_swap(_self, ax, ay, bx, by) {
 	if (_self.grid[ax, ay].slime_hp > 0)
 	{
 		_self.grid[ax, ay].slime_hp -= 1;
-	}
+	} else
 	
 		if (_self.grid[bx, by].slime_hp > 0)
 	{
 		_self.grid[bx, by].slime_hp -= 1;
+	} else
+	
+	{
+		// ✅ **If slime HP runs out, return to normal**
+		if (_self.grid[ax, ay].slime_hp <= 0) {
+		    _self.grid[ax, ay].max_fall_delay = 5;  // ✅ Normal falling speed
+		    _self.grid[ax, ay].swap_speed = 0.15;    // ✅ Normal swap speed
+		}
+		
+		// ✅ **If slime HP runs out, return to normal**
+		if (_self.grid[bx, by].slime_hp <= 0) {
+		    _self.grid[bx, by].max_fall_delay = 5;  // ✅ Normal falling speed
+		    _self.grid[bx, by].swap_speed = 0.15;    // ✅ Normal swap speed
+		}
 	}
 	
 
