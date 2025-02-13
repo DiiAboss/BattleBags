@@ -338,3 +338,17 @@ function debug_draw_mega_block_checks(_self, _x, _y) {
 	    }
 	}
 }
+    
+function process_all_mega_blocks(_self)
+{  
+    var width = _self.width;
+    var bottom_row = _self.bottom_playable_row;
+    for (var _x = 0; _x < width; _x++)
+    {
+        for (var _y = 0; _y < bottom_playable_row; _y++)
+        {
+            process_mega_blocks(_self, _x, _y);
+        }
+    }
+    
+}

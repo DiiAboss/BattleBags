@@ -43,7 +43,7 @@ attack_patterns = [
 ];
 
 /// ✅ Attack Preview System
-self.enemy_attack = "triangle_down_3x3";
+enemy_attack = "triangle_down_3x3";
 grid_width = 5;
 enemy_attack_preview = array_create(5);
 

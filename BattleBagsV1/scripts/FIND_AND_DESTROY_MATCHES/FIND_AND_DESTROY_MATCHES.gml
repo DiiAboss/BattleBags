@@ -202,7 +202,12 @@ function find_and_destroy_matches(_self) {
 	                            _self.grid[_x, _y].popping   = true;  // Start popping process
 	                            _self.grid[_x, _y].pop_timer = dist * _start_delay;
 								var _pitch = clamp(0.75 + (0.2 * _self.combo), 0.5, 5);
-								audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
+                                if !(_self.game_over_state)
+                                {
+                                    audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
+                                }
+                                
+								
 								ds_list_add(global.pop_list, pop_info);
 	                        }
 	                    }
@@ -234,7 +239,10 @@ function find_and_destroy_matches(_self) {
 	            _self.grid[i, j].popping   = true;
 	            _self.grid[i, j].pop_timer = dist * _start_delay;
 				var _pitch = clamp(1 + (0.2 * _self.combo), 0.5, 5);
-				audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
+                if !(_self.game_over_state)
+                {
+                    audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
+                }
 	            ds_list_add(global.pop_list, pop_info);
 	        }
 	    }

@@ -1,23 +1,28 @@
 
 function check_game_over(_self) 
 {
+    
     // Do nothing if the combo is active
     if (_self.combo == 0)
 	{
-		if (lose_life_timer < lose_life_max_timer)
+		if (_self.lose_life_timer < _self.lose_life_max_timer)
 		{
-			lose_life_timer += 1;
+			_self.lose_life_timer += 1;
 		}
 		else
 		{  
 		    var blocks_destroyed = 0;
 		    // Define the top-of-screen threshold (0 means anything at or above y = 0 counts)
 		    var top_row = _self.top_playable_row;
-	
-			for (var _x = 0; _x < _self.width; _x++) {
+            var width = _self.width;
+            
+			for (var _x = 0; _x < width; _x++) {
 				for (var _y = 0; _y < top_row; _y++) {
 					var gem = _self.grid[_x, _y];
-                        if (!gem.falling && gem.fall_delay < gem.max_fall_delay && !gem.is_enemy_block) blocks_destroyed++;
+                        if (!gem.falling && gem.fall_delay < gem.max_fall_delay && !gem.is_enemy_block) 
+                        {
+                            blocks_destroyed++;
+                        }
 				}
 			}
     

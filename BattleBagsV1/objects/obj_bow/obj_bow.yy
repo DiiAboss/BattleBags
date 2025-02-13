@@ -11,8 +11,8 @@
   "name":"obj_bow",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"PLAYER",
+    "path":"folders/Objects/GAME_OBJECTS/PLAYER.yy",
   },
   "parentObjectId":null,
   "persistent":false,

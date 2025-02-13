@@ -1,62 +1,9 @@
 //input.Update(self);
 
+game_over_screen(self, game_over_state);
 
+if (game_over_state) return;
 
-if (game_over_state) {
-    game_over_timer++;
-
-    if (ds_list_size(game_over_popping) > 0) {
-        var pop_data = ds_list_find_value(game_over_popping, 0);
-
-        if (game_over_timer >= pop_data.pop_delay) {
-            var _x = pop_data.x;
-            var _y = pop_data.y;
-
-            // ✅ Visual pop effect
-            effect_create_depth(depth, ef_smoke, (_x * gem_size) + board_x_offset, (_y * gem_size), 2, c_gray);
-            
-            // ✅ Remove the block
-            destroy_block(self, _x, _y);
-            ds_list_delete(game_over_popping, 0);
-
-            // ✅ Speed up popping over time
-            game_over_pop_delay = max(1, game_over_pop_delay - 1);
-        }
-    } else {
-        // ✅ All blocks have popped, show menu options
-        game_over_show_options = true;
-    }
-
-    // ✅ Handle Mouse Input for Menu Options
-    if (game_over_show_options) {
-        var mx = mouse_x;
-        var my = mouse_y;
-
-        var restart_x = game_over_ui_x + 50;
-        var restart_y = game_over_ui_y + 350;
-        var menu_x = game_over_ui_x + 50;
-        var menu_y = game_over_ui_y + 420;
-        var button_width = 300;
-        var button_height = 50;
-
-        if (mx >= restart_x && mx <= restart_x + button_width && my >= restart_y && my <= restart_y + button_height) {
-            game_over_option_selected = 0;
-            if (mouse_check_button_pressed(mb_left)) {
-                room_restart();
-            }
-        } else if (mx >= menu_x && mx <= menu_x + button_width && my >= menu_y && my <= menu_y + button_height) {
-            game_over_option_selected = 1;
-            if (mouse_check_button_pressed(mb_left)) {
-                room_goto(rm_main_menu);
-            }
-        } else {
-            game_over_option_selected = -1; // Reset selection if not hovering over buttons
-        }
-    }
-}
-
-else
-{
 
 var exp_inc = 0.0025;
 
@@ -90,6 +37,8 @@ else
 
 	}
 }
+
+
 process_experience_points(self, target_experience_points, exp_inc);
 
 // ✅ Stop everything except the pause check
@@ -109,7 +58,6 @@ update_draw_time(self);
 
 process_gameboard_speed(self);
 
-
 //--------------------------------------------------------
 // CONTROLS
 //--------------------------------------------------------
@@ -126,92 +74,17 @@ process_grid_shake(fight_for_your_life);
 
 gem_shake(self);
 
-for (var _x = 0; _x < width; _x++)
-{
-	for (var _y = 0; _y < bottom_playable_row; _y++)
-	{
-		process_mega_blocks(self, _x, _y);
-	}
-}
 
-
-
-if (global.swap_queue.active) {
-    // ✅ Make sure we only shift the row if a swap was NOT already shifted
-    if (global_y_offset == 0) {
-        global.swap_queue.ay -= 1;
-        global.swap_queue.by -= 1;
-    }
-
-    // ✅ Execute the swap AFTER adjusting its position
-    execute_swap(self, global.swap_queue.ax, global.swap_queue.ay, global.swap_queue.bx, global.swap_queue.by);
-    
-    global.swap_queue.active = false; // Clear the swap queue
-}
-
-
-//if (swap_in_progress) {
-//    swap_info.progress += swap_info.speed;
-
-//    //  Check if the swap is happening **mid-shift** (before progress reaches 1)
-//    if (swap_info.progress < 1 && global_y_offset == 0) {
-//        //  Move swap targets UP by one row since the board just shifted
-//        swap_info.from_y -= 1;
-//        swap_info.to_y -= 1;
-//    }
-
-//    if (swap_info.progress >= 1) {
-//        swap_info.progress = 1;
-
-//        // ✅ Ensure the swap happens at the correct row based on whether we just shifted
-//        if (global_y_offset != 0) {
-//            var temp = grid[swap_info.from_x, swap_info.from_y];
-//            grid[swap_info.from_x, swap_info.from_y] = grid[swap_info.to_x, swap_info.to_y];
-//            grid[swap_info.to_x, swap_info.to_y] = temp;
-//        } else {
-//            // 🔹 If the board just moved up, apply the swap **one row higher**
-//            var temp = grid[swap_info.from_x, swap_info.from_y - 1];
-//            grid[swap_info.from_x, swap_info.from_y - 1] = grid[swap_info.to_x, swap_info.to_y - 1];
-//            grid[swap_info.to_x, swap_info.to_y - 1] = temp;
-//        }
-
-//        // Reset offsets
-//        grid[swap_info.from_x, swap_info.from_y].offset_x = 0;
-//        grid[swap_info.from_x, swap_info.from_y].offset_y = 0;
-//        grid[swap_info.to_x, swap_info.to_y].offset_x = 0;
-//        grid[swap_info.to_x, swap_info.to_y].offset_y = 0;
-
-//        swap_in_progress = false;
-//    } else {
-//        // Animate the swap
-//        var distance = gem_size * swap_info.progress;
-
-//        if (swap_info.from_x < swap_info.to_x) {
-//            grid[swap_info.from_x, swap_info.from_y].offset_x =  distance;
-//            grid[swap_info.to_x,   swap_info.to_y].offset_x   = -distance;
-//        } else if (swap_info.from_x > swap_info.to_x) {
-//            grid[swap_info.from_x, swap_info.from_y].offset_x = -distance;
-//            grid[swap_info.to_x,   swap_info.to_y].offset_x   =  distance;
-//        }
-//        if (swap_info.from_y < swap_info.to_y) {
-//            grid[swap_info.from_x, swap_info.from_y].offset_y =  distance;
-//            grid[swap_info.to_x,   swap_info.to_y].offset_y   = -distance;
-//        } else if (swap_info.from_y > swap_info.to_y) {
-//            grid[swap_info.from_x, swap_info.from_y].offset_y = -distance;
-//            grid[swap_info.to_x,   swap_info.to_y].offset_y   =  distance;
-//        }
-//    }
-//}
-
-process_swap(self, swap_info);
-
-
+process_all_mega_blocks(self);
 
 
 if (!obj_game_manager.console_active)
 {
-	enable_debug_controls(self, hover_i, hover_j, true);	
+    enable_debug_controls(self, hover_i, hover_j, true);	
 }
+
+process_swap(self, swap_info);
+
 
 // ------------------------------------------------------
 // SMOOTH UPWARD MOVEMENT + SHIFT
@@ -230,6 +103,7 @@ update_topmost_row(self);
 
 
 var reset = true;
+
 if (global.topmost_row <= top_playable_row) {
     check_game_over(self);
 	reset = false;
@@ -250,8 +124,9 @@ if (!swap_in_progress && all_blocks_landed(self)) {
 }
 
 
+// Have to find a way to drop blocks while locking in matches
 if (all_pops_finished()) {
-	
+    
 	drop_blocks(self);
 	// ✅ If a new match is found, **increase** combo instead of resetting
 	if find_and_destroy_matches(self) {
@@ -261,7 +136,7 @@ if (all_pops_finished()) {
 }
 
 
-	
+
 for (var i = 0; i < ds_list_size(global.pop_list); i++) {
     var pop_data = ds_list_find_value(global.pop_list, i);
 		
@@ -331,8 +206,11 @@ for (var i = 0; i < ds_list_size(global.pop_list); i++) {
 				var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
 				var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
 					
-                
-			audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
+            if !(game_over_state)
+            {
+                audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
+            }
+			 
 			// Remove from pop_list
             ds_list_delete(global.pop_list, i);
             i--; 
@@ -346,21 +224,6 @@ for (var i = 0; i < ds_list_size(global.pop_list); i++) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 process_combo_timer_and_record_max(self);
 
 update_freeze_timer(self);
@@ -368,23 +231,26 @@ update_freeze_timer(self);
 find_all_puzzle_matches(self);	
 
 for (var i = 0; i < width; i++) {
-	if (grid[i, 1].type != -1 && !grid[i, 1].falling) { 
-		var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
-		var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
-	
-		if (progress > 0 && combo > 0)
-		{
-			fight_for_your_life = true;
-		}
-		else
-		{
-			fight_for_your_life = false;
-		}
-	} 
-	else 
-	{
-		fight_for_your_life = false;	
-	}
+    for (var _y = 0; _y <= top_playable_row; _y++)
+    {
+        if (grid[i, _y].type != BLOCK.NONE && !grid[i, _y].falling && !grid[i, _y].is_enemy_block) { 
+            var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
+            var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
+        
+            if (progress > 0 && combo > 0)
+            {
+                fight_for_your_life = true;
+            }
+            else
+            {
+                fight_for_your_life = false;
+            }
+        } 
+        else 
+        {
+            fight_for_your_life = false;	
+        }
+    }
 }
 
 
@@ -400,7 +266,7 @@ else
 // Apply volume settings
 apply_volume_settings();
 process_play_next_song(songs[current_song]);
-}
+
 // -----------------------------------------------------------------------
 // FUNCTIONS
 // -----------------------------------------------------------------------

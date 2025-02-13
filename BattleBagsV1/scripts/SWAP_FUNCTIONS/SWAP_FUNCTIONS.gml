@@ -36,6 +36,20 @@ function start_swap(_self, ax, ay, bx, by) {
 
 function process_swap(_self, swap_info)
 {
+    if (global.swap_queue.active) {
+        // ✅ Make sure we only shift the row if a swap was NOT already shifted
+        if (_self.global_y_offset == 0) {
+            global.swap_queue.ay -= 1;
+            global.swap_queue.by -= 1;
+        }
+    
+        // ✅ Execute the swap AFTER adjusting its position
+        execute_swap(self, global.swap_queue.ax, global.swap_queue.ay, global.swap_queue.bx, global.swap_queue.by);
+        
+        global.swap_queue.active = false; // Clear the swap queue
+    }
+    
+    
 	if (_self.swap_in_progress) {
 	    swap_info.progress += swap_info.speed;
 
@@ -89,6 +103,59 @@ function process_swap(_self, swap_info)
 	    }
 	}
 }
+
+//if (swap_in_progress) {
+//    swap_info.progress += swap_info.speed;
+
+//    //  Check if the swap is happening **mid-shift** (before progress reaches 1)
+//    if (swap_info.progress < 1 && global_y_offset == 0) {
+//        //  Move swap targets UP by one row since the board just shifted
+//        swap_info.from_y -= 1;
+//        swap_info.to_y -= 1;
+//    }
+
+//    if (swap_info.progress >= 1) {
+//        swap_info.progress = 1;
+
+//        // ✅ Ensure the swap happens at the correct row based on whether we just shifted
+//        if (global_y_offset != 0) {
+//            var temp = grid[swap_info.from_x, swap_info.from_y];
+//            grid[swap_info.from_x, swap_info.from_y] = grid[swap_info.to_x, swap_info.to_y];
+//            grid[swap_info.to_x, swap_info.to_y] = temp;
+//        } else {
+//            // 🔹 If the board just moved up, apply the swap **one row higher**
+//            var temp = grid[swap_info.from_x, swap_info.from_y - 1];
+//            grid[swap_info.from_x, swap_info.from_y - 1] = grid[swap_info.to_x, swap_info.to_y - 1];
+//            grid[swap_info.to_x, swap_info.to_y - 1] = temp;
+//        }
+
+//        // Reset offsets
+//        grid[swap_info.from_x, swap_info.from_y].offset_x = 0;
+//        grid[swap_info.from_x, swap_info.from_y].offset_y = 0;
+//        grid[swap_info.to_x, swap_info.to_y].offset_x = 0;
+//        grid[swap_info.to_x, swap_info.to_y].offset_y = 0;
+
+//        swap_in_progress = false;
+//    } else {
+//        // Animate the swap
+//        var distance = gem_size * swap_info.progress;
+
+//        if (swap_info.from_x < swap_info.to_x) {
+//            grid[swap_info.from_x, swap_info.from_y].offset_x =  distance;
+//            grid[swap_info.to_x,   swap_info.to_y].offset_x   = -distance;
+//        } else if (swap_info.from_x > swap_info.to_x) {
+//            grid[swap_info.from_x, swap_info.from_y].offset_x = -distance;
+//            grid[swap_info.to_x,   swap_info.to_y].offset_x   =  distance;
+//        }
+//        if (swap_info.from_y < swap_info.to_y) {
+//            grid[swap_info.from_x, swap_info.from_y].offset_y =  distance;
+//            grid[swap_info.to_x,   swap_info.to_y].offset_y   = -distance;
+//        } else if (swap_info.from_y > swap_info.to_y) {
+//            grid[swap_info.from_x, swap_info.from_y].offset_y = -distance;
+//            grid[swap_info.to_x,   swap_info.to_y].offset_y   =  distance;
+//        }
+//    }
+//}
 
 function create_swap_info()
 {

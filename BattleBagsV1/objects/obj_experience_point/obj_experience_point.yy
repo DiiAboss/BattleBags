@@ -9,8 +9,8 @@
   "name":"obj_experience_point",
   "overriddenProperties":[],
   "parent":{
-    "name":"GAME_OBJECTS",
-    "path":"folders/Objects/GAME_OBJECTS.yy",
+    "name":"PLAYER",
+    "path":"folders/Objects/GAME_OBJECTS/PLAYER.yy",
   },
   "parentObjectId":null,
   "persistent":false,

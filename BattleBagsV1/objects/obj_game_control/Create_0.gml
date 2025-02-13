@@ -263,3 +263,5 @@ game_over_ui_height = room_height;
 
 game_over_option_selected = -1; // -1 = None, 0 = Restart, 1 = Main Menu
 game_over_show_options = false; // Will show after all blocks are popped
+
+game_over_blocks_popped = 0;
