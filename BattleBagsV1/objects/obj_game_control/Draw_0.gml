@@ -77,10 +77,7 @@ for (var i = 0; i < width; i++) {
 	        }
 	    }
 	}
-	else
-	{
-		danger_row = 99;
-	}
+
 	
     // 🔥 **If blocks are above row 1, apply max shake**
     if (danger_row <= top_playable_row) {
@@ -131,48 +128,18 @@ for (var i = 0; i < width; i++) {
 			                for (var by = 0; by < _height; by++) {
 			                    var block_x = parent_x + bx;
 			                    var block_y = parent_y + by;
-
+								
+								if (grid[block_x, block_y].type == BLOCK.NONE) continue; //
+								
 			                    var draw_x = board_x_offset + (block_x * gem_size);
 			                    var draw_y = global_y_offset + (block_y * gem_size);
 
-			                    // 🔥 Determine correct sprite variation
+			                    //  Determine correct sprite variation
 			                    var _sprite_index = 0;
 			                    var rotation = 0;
-
-			                    var left = (block_x > 0 && self.grid[block_x - 1, block_y].type == BLOCK.MEGA);
-			                    var right = (block_x < _width - 1 && self.grid[block_x + 1, block_y].type == BLOCK.MEGA);
-			                    var up = (block_y > 0 && self.grid[block_x, block_y - 1].type == BLOCK.MEGA);
-			                    var down = (block_y < _height - 1 && self.grid[block_x, block_y + 1].type == BLOCK.MEGA);
-
-			                    // 🔥 Assign Subsprite Based on Open Sides
-			                    if (!left && !right && !up && !down) {
-			                        _sprite_index = 0; // Fully closed
-			                    } else if (!left && right && !up && !down) {
-			                        _sprite_index = 1; // Open right
-			                    } else if (left && !right && !up && !down) {
-			                        _sprite_index = 1; rotation = 180; // Open left
-			                    } else if (!left && !right && up && !down) {
-			                        _sprite_index = 1; rotation = 90; // Open up
-			                    } else if (!left && !right && !up && down) {
-			                        _sprite_index = 1; rotation = 270; // Open down
-			                    } else if (left && right && !up && !down) {
-			                        _sprite_index = 2; // Open both left/right
-			                    } else if (!left && !right && up && down) {
-			                        _sprite_index = 2; rotation = 90; // Open both up/down
-			                    } else if (left && right && up && !down) {
-			                        _sprite_index = 3; // Open 3 sides left/right/up
-			                    } else if (left && right && !up && down) {
-			                        _sprite_index = 3; rotation = 270; // Open 3 sides left/right/down
-			                    } else if (left && !right && up && down) {
-			                        _sprite_index = 3; rotation = 180; // Open 3 sides left/up/down
-			                    } else if (!left && right && up && down) {
-			                        _sprite_index = 3; rotation = 90; // Open 3 sides right/up/down
-			                    } else if (left && right && up && down) {
-			                        _sprite_index = 4; // Open all sides
-			                    }
-
-			                    // 🔥 Draw the Mega Block Piece with Correct Rotation
-			                    draw_sprite_ext(sprite_for_block(BLOCK.MEGA), _sprite_index, draw_x + gem_size / 2, draw_y + gem_size / 2, 1, 1, rotation, c_white, 1);
+								
+								 //  Draw the Mega Block Piece with Correct Rotation
+			                    draw_sprite_ext(sprite_for_block(BLOCK.MEGA), 0, draw_x + gem_size / 2, draw_y + gem_size / 2, 1, 1, rotation, c_white, 1);
 			                }
 			            }
 			        }
@@ -183,8 +150,10 @@ for (var i = 0; i < width; i++) {
 				    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
 				        draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 					}
+					 
 			    }
-			} else {
+			} 
+			else {
 				if (j >= bottom_playable_row)
 				{
 				        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
@@ -212,6 +181,9 @@ for (var i = 0; i < width; i++) {
 	            if (gem.frozen) {
 	                draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
 	            }
+				if (gem.slime_hp > 0) {
+	                draw_sprite(spr_goo_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
+	            }
 	            if (gem.is_enemy_block) {
 	                draw_sprite(spr_enemy_gem_overlay, 0, draw_x_with_global_shake, draw_y_with_global_shake);
 	            }
@@ -235,9 +207,15 @@ for (var i = 0; i < width; i++) {
     
 			//	}
 			//}
+			
         }
     }
 }
+
+
+
+
+
 
 
 
@@ -327,7 +305,7 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
     // Base coords
     var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
     var draw_y = (pop_data.y * gem_size) + offset + global_y_offset;
-
+	
     // Because you want the gem to expand around its true center,
     // apply an extra center calculation using half the gem size.
     var center_offset = 0; 

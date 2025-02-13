@@ -16,14 +16,16 @@ function find_and_destroy_matches(_self) {
 	
 	
 	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
-
 	
 	global.black_blocks_to_transform = ds_list_create(); // ✅ Track black blocks to transform
+	
 	check_2x2_match(self);
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
         for (var yy = 0; yy <= bottom_row; yy++) {
             marked_for_removal[xx, yy] = false;
+			
+			
 			
 			if (_self.grid[xx, yy].shake_timer > 0)
 			{
@@ -237,8 +239,12 @@ function find_and_destroy_matches(_self) {
 	        }
 	    }
 	}
+	
+	
 	// ✅ Transform black blocks **after matches are removed**
     update_black_blocks(self, black_blocks_to_transform);
+	
+
     ds_list_destroy(black_blocks_to_transform);
 	
     return found_any;

@@ -40,5 +40,6 @@ if (is_array(enemy_attack_preview)) {
 }
 
  animate_attack_targets(self, "FREEZE"); // ✅ Show animation first
+ animate_attack_targets(self, "SLIME"); // ✅ Show animation first
 }
 

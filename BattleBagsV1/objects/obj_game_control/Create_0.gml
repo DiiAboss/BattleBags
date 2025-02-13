@@ -52,7 +52,7 @@ total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
 
-control_mode = "modern";
+control_mode = "legacy";
 
 input = new Input();  // Controller support
 iType = "click_and_drag";

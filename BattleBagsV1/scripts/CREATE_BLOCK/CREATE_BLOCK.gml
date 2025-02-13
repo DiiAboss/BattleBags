@@ -77,6 +77,8 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		y_scale: 1,
 		mega_width: -1,
 		mega_height: -1,
+		slime_hp: -1,
+		swap_speed: 0.15
     };
 }
 

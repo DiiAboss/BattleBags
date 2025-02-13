@@ -126,7 +126,13 @@ process_grid_shake(fight_for_your_life);
 
 gem_shake(self);
 
-
+for (var _x = 0; _x < width; _x++)
+{
+	for (var _y = 0; _y < bottom_playable_row; _y++)
+	{
+		process_mega_blocks(self, _x, _y);
+	}
+}
 
 
 

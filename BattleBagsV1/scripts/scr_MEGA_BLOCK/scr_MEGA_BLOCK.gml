@@ -48,6 +48,7 @@ function spawn_mega_block(_self, _x, _y, _shape_name) {
                 mega_gem.group_id = group_id;
                 mega_gem.big_parent = [_x, _y];
                 mega_gem.falling = true;
+				mega_gem.fall_delay = 1;
                 mega_gem.is_enemy_block = true;
                 mega_gem.mega_width = shape_width;
                 mega_gem.mega_height = shape_height; // ✅ Store dimensions
@@ -58,75 +59,282 @@ function spawn_mega_block(_self, _x, _y, _shape_name) {
     }
 }
 
+function check_adjacent_mega_blocks(_self, _x, _y, _list) {
+    var gem = _self.grid[_x, _y];
 
+    // ✅ Only process Mega Blocks
+    if (gem.is_big) {
+        var parent_x = gem.big_parent[0];
+        var parent_y = gem.big_parent[1];
+        var parent_block = _self.grid[parent_x, parent_y];
 
+        var big_block_width = parent_block.mega_width;
+        var big_block_height = parent_block.mega_height;
 
+        var directions = [
+            [-1, 0], [1, 0], [0, -1], [0, 1] // Left, Right, Up, Down
+        ];
 
-function check_mega_block_transform(_self) {
-    var transformed_groups = ds_map_create(); // ✅ Track which groups already transformed
+        // 🔥 Loop through each part of the Mega Block
+        for (var bx = 0; bx < big_block_width; bx++) {
+            for (var by = 0; by < big_block_height; by++) {
+                var block_x = parent_x + bx;
+                var block_y = parent_y + by;
 
-    for (var j = 0; j < _self.height; j++) {
-        for (var i = 0; i < _self.width; i++) {
-            var gem = _self.grid[i, j];
+                // 🔥 Now check adjacent spaces for **each part** of the Mega Block
+                for (var i = 0; i < array_length(directions); i++) {
+                    var dx = block_x + directions[i][0];
+                    var dy = block_y + directions[i][1];
 
-            // ✅ Only process Mega Blocks
-            if (gem.type == BLOCK.MEGA) {
-                var group_id = gem.group_id;
+                    // ✅ Check if within bounds
+                    if (dx >= 0 && dx < _self.width && dy >= 0 && dy < _self.height) {
+                        var target_block = _self.grid[dx, dy];
 
-                // ✅ Skip if this group has already transformed
-                if (ds_map_exists(transformed_groups, group_id)) {
-                    continue;
-                }
-
-                var transform = false;
-
-                // ✅ **Check if any part of the Mega Block is next to a popping block**
-                for (var bx = 0; bx < gem.width; bx++) {
-                    for (var by = 0; by < gem.height; by++) {
-                        var _x = gem.x + bx;
-                        var _y = gem.y + by;
-
-                        for (var dx = -1; dx <= 1; dx++) {
-                            for (var dy = -1; dy <= 1; dy++) {
-                                if (dx == 0 && dy == 0) continue; // Skip itself
-                                var nx = _x + dx;
-                                var ny = _y + dy;
-
-                                if (nx >= 0 && nx < _self.width && ny >= 0 && ny < _self.height) {
-                                    if (_self.grid[nx, ny] != -1 && _self.grid[nx, ny].popping) {
-                                        transform = true;
-                                    }
+                        // ✅ Ensure it's a Mega Block & NOT part of the same group
+                        if (target_block.type == BLOCK.MEGA && target_block.group_id != parent_block.group_id) {
+                            var already_added = false;
+                            
+                            // ✅ Check if it's already in the list
+                            for (var j = 0; j < ds_list_size(_list); j++) {
+                                var existing_pos = ds_list_find_value(_list, j);
+                                if (existing_pos[0] == dx && existing_pos[1] == dy) {
+                                    already_added = true;
+                                    break;
                                 }
                             }
-                        }
-                    }
-                }
 
-                // ✅ **Trigger transformation**
-                if (transform) {
-                    gem.pop_timer += 1; // Start the popping delay
-
-                    if (gem.pop_timer >= 30) { // 🔥 **Wait before transformation**
-                        for (var bx = 0; bx < gem.width; bx++) {
-                            for (var by = 0; by < gem.height; by++) {
-                                var _x = gem.x + bx + board_x_offset;
-                                var _y = gem.y + by;
-
-                                // 🔥 **Create a pop effect before transformation**
-                                effect_create_depth(_self.depth, ef_explosion, (_x * gem_size), (_y * gem_size), 0.5, c_white);
-
-                                // ✅ **Transform the entire Mega Block**
-                                _self.grid[_x, _y] = create_block(BLOCK.RANDOM);
+                            // ✅ Add to list if it's not already present
+                            if (!already_added) {
+                                ds_list_add(_list, [dx, dy]);
                             }
                         }
-
-                        // ✅ **Mark this group as transformed**
-                        ds_map_add(transformed_groups, group_id, true);
                     }
                 }
             }
         }
     }
+}
 
-    ds_map_destroy(transformed_groups); // ✅ Cleanup memory
+
+
+
+
+function update_mega_blocks(_self, _list) {
+    for (var i = 0; i < ds_list_size(_list); i++) {
+        var pos = ds_list_find_value(_list, i);
+        var _x = pos[0];
+        var _y = pos[1];
+
+        var gem = _self.grid[_x, _y];
+
+        if (gem.type == BLOCK.MEGA) {
+            var parent_x = gem.big_parent[0];
+            var parent_y = gem.big_parent[1];
+            var parent_block = _self.grid[parent_x, parent_y];
+
+            var big_block_width = parent_block.mega_width;
+            var big_block_height = parent_block.mega_height;
+
+            //  Loop through each part of the Mega Block
+            for (var bx = 0; bx < big_block_width; bx++) {
+                for (var by = 0; by < big_block_height; by++) {
+                    var block_x = parent_x + bx;
+                    var block_y = parent_y + by;
+
+                    // ✅ Transform each piece individually into a new random block
+                    _self.grid[block_x, block_y] = create_block(BLOCK.RANDOM);
+
+                    // ✅ Add to pop list (fixed version)
+                    var pop_info = {
+                        x: block_x,
+                        y: block_y,
+                        gem_type: BLOCK.RANDOM,
+                        timer: 0,
+                        start_delay: 5, // 🔥 Give a small delay so we see the effect
+                        scale: 1.0,
+                        popping: true,
+                        powerup: -1,
+                        dir: 0,
+                        offset_x: 0,
+                        offset_y: 0,
+                        color: c_red, // 🔥 Make sure we mark them correctly
+                        y_offset_global: _self.global_y_offset,
+                        match_size: 1,
+                        match_points: 10, // Placeholder, adjust as needed
+                        bomb_tracker: false,
+                        bomb_level: 0,
+                        img_number: -1,
+                    };
+
+                    ds_list_add(global.pop_list, pop_info);
+                    
+                    // 🔥 **Create a pop effect**
+                    var draw_x = (block_x * 64) + _self.board_x_offset + 32;
+                    var draw_y = (block_y * 64) + _self.global_y_offset + 32;
+                    effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
+                }
+            }
+        }
+    }
+}
+
+function process_mega_blocks(_self, _x, _y) {
+    var gem_size = 64; // Grid size
+    var offset = 32; // Center offset
+    var board_x_offset = _self.board_x_offset;
+    var global_y_offset = _self.global_y_offset;
+
+    var gem = _self.grid[_x, _y];
+
+    // 🔥 Only process Mega Blocks
+    if (gem.type == BLOCK.MEGA) {
+        var parent_x = gem.big_parent[0];
+        var parent_y = gem.big_parent[1];
+        var parent_block = _self.grid[parent_x, parent_y];
+
+        var big_block_width = parent_block.mega_width;
+        var big_block_height = parent_block.mega_height;
+
+        var directions = [
+            [-1, 0], [1, 0], [0, -1], [0, 1] // Left, Right, Up, Down
+        ];
+
+        // 🔥 Loop through each block of the Mega Block
+        for (var bx = 0; bx < big_block_width; bx++) {
+            for (var by = 0; by < big_block_height; by++) {
+                var block_x = parent_x + bx;
+                var block_y = parent_y + by;
+
+                 // 🔥 Now check adjacent spaces for **each part** of the Mega Block
+                for (var i = 0; i < array_length(directions); i++) {
+                    var dx = block_x + directions[i][0];
+                    var dy = block_y + directions[i][1];
+
+                    // ✅ Check if within bounds
+                    if (dx >= 0 && dx < _self.width && dy >= 0 && dy < _self.height) {
+                        var target_block = _self.grid[dx, dy];
+
+                        // ✅ Determine color: 🔴 Red = empty, 🔵 Blue = occupied
+                        var popping_found = (target_block.popping);
+						
+						
+						
+                        var draw_x = (dx * gem_size) + board_x_offset + offset + gem.offset_x;
+                        var draw_y = (dy * gem_size) + global_y_offset + offset + gem.offset_y;
+						
+						if (popping_found)
+						{
+							if target_block.group_id != parent_block.group_id
+							{
+								//  Loop through each part of the Mega Block
+					            for (var bx = 0; bx < big_block_width; bx++) {
+					                for (var by = 0; by < big_block_height; by++) {
+					                    var block_x = parent_x + bx;
+					                    var block_y = parent_y + by;
+
+					                    // ✅ Transform each piece individually into a new random block
+					                    _self.grid[block_x, block_y] = create_block(BLOCK.RANDOM);
+
+					                    //// ✅ Add to pop list (fixed version)
+					                    //var pop_info = {
+					                    //    x: block_x,
+					                    //    y: block_y,
+					                    //    gem_type: BLOCK.RANDOM,
+					                    //    timer: 0,
+					                    //    start_delay: 5, // 🔥 Give a small delay so we see the effect
+					                    //    scale: 1.0,
+					                    //    popping: true,
+					                    //    powerup: -1,
+					                    //    dir: 0,
+					                    //    offset_x: 0,
+					                    //    offset_y: 0,
+					                    //    color: c_red, // 🔥 Make sure we mark them correctly
+					                    //    y_offset_global: _self.global_y_offset,
+					                    //    match_size: 1,
+					                    //    match_points: 10, // Placeholder, adjust as needed
+					                    //    bomb_tracker: false,
+					                    //    bomb_level: 0,
+					                    //    img_number: -1,
+					                    //};
+
+					                    //ds_list_add(global.pop_list, pop_info);
+                    
+					                    // 🔥 **Create a pop effect**
+					                    var draw_x = (block_x * 64) + _self.board_x_offset + 32;
+					                    var draw_y = (block_y * 64) + _self.global_y_offset + 32;
+					                    effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
+					                }
+					            }
+							}
+						}                   
+	                }
+	            }
+	        }
+	    }
+	}
+}
+
+
+function debug_draw_mega_block_checks(_self, _x, _y) {
+    var gem_size = 64; // Grid size
+    var offset = 32; // Center offset
+    var board_x_offset = _self.board_x_offset;
+    var global_y_offset = _self.global_y_offset;
+
+    var gem = _self.grid[_x, _y];
+
+    // 🔥 Only process Mega Blocks
+    if (gem.is_big) {
+        var parent_x = gem.big_parent[0];
+        var parent_y = gem.big_parent[1];
+        var parent_block = _self.grid[parent_x, parent_y];
+
+        var big_block_width = parent_block.mega_width;
+        var big_block_height = parent_block.mega_height;
+
+        var directions = [
+            [-1, 0], [1, 0], [0, -1], [0, 1] // Left, Right, Up, Down
+        ];
+
+        // 🔥 Loop through each block of the Mega Block
+        for (var bx = 0; bx < big_block_width; bx++) {
+            for (var by = 0; by < big_block_height; by++) {
+                var block_x = parent_x + bx;
+                var block_y = parent_y + by;
+
+                 // 🔥 Now check adjacent spaces for **each part** of the Mega Block
+                for (var i = 0; i < array_length(directions); i++) {
+                    var dx = block_x + directions[i][0];
+                    var dy = block_y + directions[i][1];
+
+                    // ✅ Check if within bounds
+                    if (dx >= 0 && dx < _self.width && dy >= 0 && dy < _self.height) {
+                        var target_block = _self.grid[dx, dy];
+
+                        // ✅ Determine color: 🔴 Red = empty, 🔵 Blue = occupied
+                        var color = (target_block.popping) ? c_red : c_blue;
+						
+						
+						
+                        var draw_x = (dx * gem_size) + board_x_offset + offset + gem.offset_x;
+                        var draw_y = (dy * gem_size) + global_y_offset + offset + gem.offset_y;
+						if (color == c_red)
+						{
+							if target_block.group_id != parent_block.group_id
+						{
+							draw_rectangle(draw_x - 8, draw_y - 8, draw_x + 8, draw_y + 8, false);
+							//effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
+						}
+						}
+                        draw_set_color(color);
+
+                        
+						
+						draw_set_color(c_white);
+                    
+	                }
+	            }
+	        }
+	    }
+	}
 }

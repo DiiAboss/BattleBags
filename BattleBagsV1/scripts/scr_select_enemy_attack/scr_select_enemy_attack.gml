@@ -3,6 +3,7 @@ enum ENEMY_ATTACK_TYPE {
     BASIC,   // Regular shape attacks
     SPECIAL, // Triangle attack or other unique patterns
     FREEZE,  // Freezes player movement
+	SLIME,
     UNKNOWN  // Any undefined attack
 }
 
@@ -12,7 +13,7 @@ function select_enemy_attack(_self) {
     var attacks_until_special = _self.attacks_until_special_attack;
 
     if (total_attacks % attacks_until_special == 0) {
-        var atk_type = choose(ENEMY_ATTACK_TYPE.FREEZE, ENEMY_ATTACK_TYPE.FREEZE);
+        var atk_type = choose(ENEMY_ATTACK_TYPE.SLIME, ENEMY_ATTACK_TYPE.SLIME);
 
         if (obj_game_control.player_level > 10) {
             atk_type = choose(atk_type, atk_type, ENEMY_ATTACK_TYPE.BASIC);
@@ -23,6 +24,9 @@ function select_enemy_attack(_self) {
         } else if (atk_type == ENEMY_ATTACK_TYPE.FREEZE) {
             _self.enemy_attack = "FREEZE";
             select_attack_targets(_self, "FREEZE"); // ✅ Generate target blocks
+        } else if (atk_type == ENEMY_ATTACK_TYPE.SLIME) {
+            _self.enemy_attack = "SLIME";
+            select_attack_targets(_self, "SLIME"); // ✅ Generate target blocks
         }
 
     } else {
@@ -55,7 +59,7 @@ function select_attack_targets(_self, attack_type) {
     var grid_bottom_row = obj_game_control.bottom_playable_row;
     var grid_top_row    = obj_game_control.top_playable_row;
 
-    if (attack_type == "FREEZE") {
+    if (attack_type == "FREEZE") || (attack_type == "SLIME") {
         var num_targets = irandom_range(1, 4); // 🔥 Random number of blocks to freeze
         var candidates = ds_list_create();
 
@@ -97,6 +101,9 @@ function execute_attack_on_targets(_self, attack_type) {
     if (attack_type == "FREEZE") {
         enemy_attack_freeze(_self, obj_game_control);
     }
+	    if (attack_type == "SLIME") {
+        enemy_attack_slime(_self, obj_game_control);
+    }
 
     // ✅ Clear the target list after execution
     ds_list_clear(_self.target_blocks);
@@ -111,8 +118,12 @@ function process_attack_queue(_self) {
             ds_list_delete(global.enemy_attack_queue, 0);
 
             if (attack_to_execute == "FREEZE") {
-               
                 _self.pending_attack = "FREEZE"; // ✅ Store attack for delayed execution
+                alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
+            
+			} else if (attack_to_execute == "SLIME") {
+               
+                _self.pending_attack = "SLIME"; // ✅ Store attack for delayed execution
                 alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
             } else {
                 toss_down_shape(obj_game_control, attack_to_execute, true);
@@ -141,10 +152,12 @@ function animate_attack_targets(_self, attack_type) {
         if (attack_type == "FREEZE") {
             var px = (target_x * obj_game_control.gem_size) + obj_game_control.board_x_offset + 32;
             var py = (target_y * obj_game_control.gem_size) + obj_game_control.global_y_offset + 32;
-			//effect_create_depth(_self.depth - 99, ef_smoke, px + irandom(64), py + irandom(64), 2, c_blue);
-            //effect_create_depth(_self.depth - 99, ef_smoke, px + irandom(64), py + irandom(64), 2, c_blue);
-			//effect_create_depth(_self.depth - 99, ef_smoke, px + irandom(64), py + irandom(64), 2, c_blue);
-			//effect_create_depth(_self.depth - 99, ef_smoke, px + irandom(64), py + irandom(64), 2, c_blue);
+			draw_sprite(spr_enemy_gem_overlay, 0, px, py);
+        }
+		
+		        if (attack_type == "SLIME") {
+            var px = (target_x * obj_game_control.gem_size) + obj_game_control.board_x_offset + 32;
+            var py = (target_y * obj_game_control.gem_size) + obj_game_control.global_y_offset + 32;
 			draw_sprite(spr_enemy_gem_overlay, 0, px, py);
         }
     }

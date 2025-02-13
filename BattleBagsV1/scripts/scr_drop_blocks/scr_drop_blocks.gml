@@ -7,7 +7,7 @@ function drop_blocks(_self, fall_speed = 2) {
     for (var j = height - 2; j >= 0; j--) {
         for (var i = 0; i < width; i++) {
             var gem = _self.grid[i, j];
-
+			process_mega_blocks(_self, i, j);
             if (gem.type != BLOCK.NONE) { // ✅ Only process valid blocks
                 var below = _self.grid[i, j + 1];
 
@@ -16,6 +16,32 @@ function drop_blocks(_self, fall_speed = 2) {
                     gem.fall_delay = 0;
                     gem.falling = false;
                     continue;
+                }
+				
+                // 🔹 **Slime Block Falling**
+                if (gem.slime_hp > 0) { 
+                    if (below.type == BLOCK.NONE) {
+                        if (gem.fall_delay < gem.max_fall_delay) {
+                            gem.fall_delay++;
+                            continue;
+                        }
+
+                        // ✅ **Move block down**
+                        _self.grid[i, j + 1] = gem;
+                        _self.grid[i, j] = create_block(BLOCK.NONE);
+
+                        // 🔥 **Reduce Slime HP when moving**
+                        gem.slime_hp -= 1;
+
+                        // ✅ **If slime HP runs out, return to normal**
+                        if (gem.slime_hp <= 0) {
+                            gem.max_fall_delay = 2;  // ✅ Normal falling speed
+                            gem.swap_speed = 1.0;    // ✅ Normal swap speed
+                        }
+
+                        gem.fall_delay = 0;
+                        has_fallen = true;
+                    }
                 }
 
                 //  **Handle 2x2 Block Falling**
@@ -38,7 +64,8 @@ function drop_blocks(_self, fall_speed = 2) {
 						var _block_x = parent_x + bbx;
 						var _block_y = parent_y + big_block_height;
 						
-						if (_self.grid[_block_x, _block_y].type != BLOCK.NONE) {
+						
+						if (_self.grid[_block_x, _block_y] && _self.grid[_block_x, _block_y].type != BLOCK.NONE) {
 							can_fall = false;
                         }
 					}
@@ -75,18 +102,19 @@ function drop_blocks(_self, fall_speed = 2) {
                                     var block_y = parent_y + by;
                                     _self.grid[block_x, block_y].falling = false;
 									_self.grid[block_x, block_y].fall_delay = 0;
-									//has_fallen = true;
+									_self.grid[block_x, block_y].is_enemy_block = false;
+									has_fallen = true;
                                 }
                             }
                         }
                     }
                 } 
-                // 🔹 **Normal Single Block Falling**
+                //  **Normal Single Block Falling**
                 else if (below.type == BLOCK.NONE) {
                     // ✅ Apply **fall delay**
                     if (gem.fall_delay < gem.max_fall_delay) {
                         gem.fall_delay++;
-                        continue; // 🔹 Wait until delay finishes
+                        continue; //  Wait until delay finishes
                     }
 
                     _self.grid[i, j + 1] = gem;

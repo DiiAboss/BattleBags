@@ -55,6 +55,17 @@ function execute_swap(_self, ax, ay, bx, by) {
         ax < 0 || ax >= width || ay < 0 || ay >= height ||
         bx < 0 || bx >= width || by < 0 || by >= height
     ) return;
+	
+	if (_self.grid[ax, ay].slime_hp > 0)
+	{
+		_self.grid[ax, ay].slime_hp -= 1;
+	}
+	
+		if (_self.grid[bx, by].slime_hp > 0)
+	{
+		_self.grid[bx, by].slime_hp -= 1;
+	}
+	
 
     // ✅ Prevent swapping if one of the gems is being destroyed
     if (is_being_destroyed(ax, ay) || is_being_destroyed(bx, by)) return;
@@ -64,6 +75,8 @@ function execute_swap(_self, ax, ay, bx, by) {
 
     // ✅ Prevent swapping MEGA blocks
     if (_self.grid[ax, ay].type == BLOCK.MEGA || _self.grid[bx, by].type == BLOCK.MEGA) return;
+	
+	var _swap_speed = min(_self.grid[ax, ay].swap_speed, _self.grid[bx, by].swap_speed);
 
     // 🔹 Handle row shifting logic
     if (_self.global_y_offset == 0) {
@@ -72,7 +85,7 @@ function execute_swap(_self, ax, ay, bx, by) {
         _self.swap_info.to_x   = bx;
         _self.swap_info.to_y   = by - 1;
         _self.swap_info.progress = 0;
-		_self.swap_info.speed = 0.15;
+		_self.swap_info.speed = _swap_speed;
     }
     else
     {
@@ -82,6 +95,6 @@ function execute_swap(_self, ax, ay, bx, by) {
         _self.swap_info.to_x   = bx;
         _self.swap_info.to_y   = by;
         _self.swap_info.progress = 0;
-        _self.swap_info.speed = 0.15;
+        _self.swap_info.speed = _swap_speed;
     }
 }
