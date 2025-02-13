@@ -65,9 +65,11 @@ function drop_blocks(_self, fall_speed = 2) {
 						var _block_y = parent_y + big_block_height;
 						
 						
-						if (_self.grid[_block_x, _block_y] && _self.grid[_block_x, _block_y].type != BLOCK.NONE) {
-							can_fall = false;
-                        }
+						if (_self.grid[_block_x, _block_y]){
+							if (_self.grid[_block_x, _block_y].type != BLOCK.NONE) {
+								can_fall = false;
+							}
+						}
 					}
 
 					// ✅ Check if the **entire bottom row** of the block can fall
@@ -122,6 +124,10 @@ function drop_blocks(_self, fall_speed = 2) {
                     gem.fall_delay = 0;
                     has_fallen = true;
                 }
+				else
+				{
+					gem.is_enemy_block = false;
+				}
             }
         }
     }
