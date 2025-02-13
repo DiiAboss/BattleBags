@@ -13,7 +13,7 @@ function select_enemy_attack(_self) {
     var attacks_until_special = _self.attacks_until_special_attack;
 
     if (total_attacks % attacks_until_special == 0) {
-        var atk_type = choose(ENEMY_ATTACK_TYPE.SLIME, ENEMY_ATTACK_TYPE.SLIME);
+        var atk_type = choose(ENEMY_ATTACK_TYPE.SLIME, ENEMY_ATTACK_TYPE.FREEZE, ENEMY_ATTACK_TYPE.BASIC);
 
         if (obj_game_control.player_level > 10) {
             atk_type = choose(atk_type, atk_type, ENEMY_ATTACK_TYPE.BASIC);
@@ -30,7 +30,7 @@ function select_enemy_attack(_self) {
         }
 
     } else {
-        var atk_type = choose(ENEMY_ATTACK_TYPE.FREEZE, ENEMY_ATTACK_TYPE.FREEZE);
+        var atk_type = choose(ENEMY_ATTACK_TYPE.BASIC, ENEMY_ATTACK_TYPE.BASIC);
         
         if (atk_type == ENEMY_ATTACK_TYPE.BASIC) {
             _self.enemy_attack = enemy_attack_basic(_self, obj_game_control);
