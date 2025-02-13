@@ -1,5 +1,5 @@
 function spawn_2x2_block(_self, _x, _y, _type) {
-    if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y >= _self.height - 1) return;
+    if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y >= _self.bottom_playable_row) return;
 
     // ✅ Check if space is available (NO big blocks already there)
     if (_self.grid[_x, _y].is_big || _self.grid[_x + 1, _y].is_big ||
@@ -52,9 +52,12 @@ function spawn_2x2_block(_self, _x, _y, _type) {
 
 function check_2x2_match(_self, big_block_enabled = true) {
     if (!big_block_enabled) return; // ✅ Only run if enabled
-
-    for (var _x = 0; _x < _self.width - 1; _x++) {
-        for (var _y = 0; _y < _self.height - 1; _y++) {
+	
+	var width = _self.width;
+	var bottom_row = _self.bottom_playable_row;
+	
+    for (var _x = 0; _x < width - 1; _x++) {
+        for (var _y = 0; _y < bottom_row; _y++) {
             // ✅ Check if a 2x2 match exists
             if (is_2x2_match(_self, _x, _y)) {
                 spawn_2x2_block(_self, _x, _y, _self.grid[_x, _y].type); 
@@ -66,7 +69,7 @@ function check_2x2_match(_self, big_block_enabled = true) {
 function is_2x2_match(_self, _x, _y) {
     // ✅ Bounds check
     if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y >= _self.height - 1) return false;
-
+	
     // ✅ Retrieve 4 adjacent blocks
     var gem_0 = _self.grid[_x, _y];         // Top-left
     var gem_1 = _self.grid[_x + 1, _y];     // Top-right

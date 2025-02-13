@@ -65,10 +65,14 @@ function drop_blocks(_self, fall_speed = 2) {
 						var _block_y = parent_y + big_block_height;
 						
 						
-						if (_self.grid[_block_x, _block_y]){
+						if (_block_y < height){
 							if (_self.grid[_block_x, _block_y].type != BLOCK.NONE) {
 								can_fall = false;
 							}
+						}
+						else
+						{
+							break;
 						}
 					}
 
@@ -126,6 +130,8 @@ function drop_blocks(_self, fall_speed = 2) {
                 }
 				else
 				{
+					gem.fall_delay = below.fall_delay;
+					gem.falling = below.falling;
 					gem.is_enemy_block = false;
 				}
             }

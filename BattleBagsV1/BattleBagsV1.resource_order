@@ -9,6 +9,7 @@
     {"name":"Enemies","order":4,"path":"folders/Objects/GAME_OBJECTS/Enemies.yy",},
     {"name":"CONTROL","order":8,"path":"folders/Objects/GAME_OBJECTS/Enemies/CONTROL.yy",},
     {"name":"PARENTS","order":7,"path":"folders/Objects/GAME_OBJECTS/Enemies/PARENTS.yy",},
+    {"name":"ENVIRONMENT","order":7,"path":"folders/Objects/GAME_OBJECTS/ENVIRONMENT.yy",},
     {"name":"MENU_OBJECTS","order":3,"path":"folders/Objects/MENU_OBJECTS.yy",},
     {"name":"ONLINE","order":5,"path":"folders/Objects/ONLINE.yy",},
     {"name":"SKILL_TREE_OBJECTS","order":2,"path":"folders/Objects/SKILL_TREE_OBJECTS.yy",},
