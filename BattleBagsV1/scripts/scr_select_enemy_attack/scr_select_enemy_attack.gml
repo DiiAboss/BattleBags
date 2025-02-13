@@ -1,6 +1,7 @@
 /// @description Enum for Enemy Attack Types
 enum ENEMY_ATTACK_TYPE {
     BASIC,   // Regular shape attacks
+	BLOCK,
     SPECIAL, // Triangle attack or other unique patterns
     FREEZE,  // Freezes player movement
 	SLIME,
@@ -12,7 +13,7 @@ function select_enemy_attack(_self) {
     var total_attacks = _self.total_attacks;
     var attacks_until_special = _self.attacks_until_special_attack;
 	
-	var special_attack_array = [ENEMY_ATTACK_TYPE.SLIME, ENEMY_ATTACK_TYPE.FREEZE, ENEMY_ATTACK_TYPE.BASIC];
+	var special_attack_array = [ENEMY_ATTACK_TYPE.SLIME, ENEMY_ATTACK_TYPE.FREEZE, ENEMY_ATTACK_TYPE.BLOCK, ENEMY_ATTACK_TYPE.SPECIAL];
 	var basic_attack_array   = [ENEMY_ATTACK_TYPE.BASIC];
 	
 	var s_array_max  = array_length(special_attack_array) - 1;
@@ -48,6 +49,10 @@ function select_enemy_attack(_self) {
 		case (ENEMY_ATTACK_TYPE.SLIME):
 			_self.enemy_attack = "SLIME";
 			select_attack_targets(_self, "SLIME"); // ✅ Generate target blocks
+		break;
+		
+		case (ENEMY_ATTACK_TYPE.BLOCK):
+			_self.enemy_attack = "BLOCK";
 		break;
 	}
 
@@ -138,6 +143,10 @@ function process_attack_queue(_self) {
 				case ("SLIME"):
 					_self.pending_attack = "SLIME"; // ✅ Store attack for delayed execution
 					alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
+				break;
+				
+				case ("BLOCK"):
+					spawn_mega_block(obj_game_control, irandom_range(0, 5), 2, "block_1x3");
 				break;
 				
 				default:

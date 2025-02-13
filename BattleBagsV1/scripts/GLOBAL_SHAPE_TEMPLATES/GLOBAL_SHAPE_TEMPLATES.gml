@@ -48,6 +48,9 @@ function global_shape_function_init()
 	    [BLOCK.RANDOM, BLOCK.RANDOM, BLOCK.RANDOM],
 	    [BLOCK.RANDOM, BLOCK.RANDOM, BLOCK.RANDOM]
 	]);
+		ds_map_add(global.shape_templates, "block_1x3", [
+	    [BLOCK.RANDOM, BLOCK.RANDOM, BLOCK.RANDOM]
+	]);
 	ds_map_add(global.shape_templates, "cross", [
 	    [BLOCK.NONE,   BLOCK.RANDOM, BLOCK.NONE],
 	    [BLOCK.RANDOM, BLOCK.RANDOM, BLOCK.RANDOM],

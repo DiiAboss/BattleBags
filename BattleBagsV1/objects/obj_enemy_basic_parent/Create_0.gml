@@ -4,7 +4,7 @@
 
 /// ✅ Attack Queue Timers
 queued_attack_timer = 0;
-max_queued_attack_timer = 120;
+max_queued_attack_timer = 300;
 
 /// ✅ Enemy Stats
 hp = 100;
