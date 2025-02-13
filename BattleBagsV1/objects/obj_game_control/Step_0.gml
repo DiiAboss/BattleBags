@@ -150,97 +150,67 @@ if (global.swap_queue.active) {
 }
 
 
-if (swap_in_progress) {
-    swap_info.progress += swap_info.speed;
+//if (swap_in_progress) {
+//    swap_info.progress += swap_info.speed;
 
-    // 🛑 Check if the swap is happening **mid-shift** (before progress reaches 1)
-    if (swap_info.progress < 1 && global_y_offset == 0) {
-        // 🔹 Move swap targets UP by one row since the board just shifted
-        swap_info.from_y -= 1;
-        swap_info.to_y -= 1;
-    }
+//    //  Check if the swap is happening **mid-shift** (before progress reaches 1)
+//    if (swap_info.progress < 1 && global_y_offset == 0) {
+//        //  Move swap targets UP by one row since the board just shifted
+//        swap_info.from_y -= 1;
+//        swap_info.to_y -= 1;
+//    }
 
-    if (swap_info.progress >= 1) {
-        swap_info.progress = 1;
+//    if (swap_info.progress >= 1) {
+//        swap_info.progress = 1;
 
-        // ✅ Ensure the swap happens at the correct row based on whether we just shifted
-        if (global_y_offset != 0) {
-            var temp = grid[swap_info.from_x, swap_info.from_y];
-            grid[swap_info.from_x, swap_info.from_y] = grid[swap_info.to_x, swap_info.to_y];
-            grid[swap_info.to_x, swap_info.to_y] = temp;
-        } else {
-            // 🔹 If the board just moved up, apply the swap **one row higher**
-            var temp = grid[swap_info.from_x, swap_info.from_y - 1];
-            grid[swap_info.from_x, swap_info.from_y - 1] = grid[swap_info.to_x, swap_info.to_y - 1];
-            grid[swap_info.to_x, swap_info.to_y - 1] = temp;
-        }
+//        // ✅ Ensure the swap happens at the correct row based on whether we just shifted
+//        if (global_y_offset != 0) {
+//            var temp = grid[swap_info.from_x, swap_info.from_y];
+//            grid[swap_info.from_x, swap_info.from_y] = grid[swap_info.to_x, swap_info.to_y];
+//            grid[swap_info.to_x, swap_info.to_y] = temp;
+//        } else {
+//            // 🔹 If the board just moved up, apply the swap **one row higher**
+//            var temp = grid[swap_info.from_x, swap_info.from_y - 1];
+//            grid[swap_info.from_x, swap_info.from_y - 1] = grid[swap_info.to_x, swap_info.to_y - 1];
+//            grid[swap_info.to_x, swap_info.to_y - 1] = temp;
+//        }
 
-        // Reset offsets
-        grid[swap_info.from_x, swap_info.from_y].offset_x = 0;
-        grid[swap_info.from_x, swap_info.from_y].offset_y = 0;
-        grid[swap_info.to_x, swap_info.to_y].offset_x = 0;
-        grid[swap_info.to_x, swap_info.to_y].offset_y = 0;
+//        // Reset offsets
+//        grid[swap_info.from_x, swap_info.from_y].offset_x = 0;
+//        grid[swap_info.from_x, swap_info.from_y].offset_y = 0;
+//        grid[swap_info.to_x, swap_info.to_y].offset_x = 0;
+//        grid[swap_info.to_x, swap_info.to_y].offset_y = 0;
 
-        swap_in_progress = false;
-    } else {
-        // Animate the swap
-        var distance = gem_size * swap_info.progress;
+//        swap_in_progress = false;
+//    } else {
+//        // Animate the swap
+//        var distance = gem_size * swap_info.progress;
 
-        if (swap_info.from_x < swap_info.to_x) {
-            grid[swap_info.from_x, swap_info.from_y].offset_x =  distance;
-            grid[swap_info.to_x,   swap_info.to_y].offset_x   = -distance;
-        } else if (swap_info.from_x > swap_info.to_x) {
-            grid[swap_info.from_x, swap_info.from_y].offset_x = -distance;
-            grid[swap_info.to_x,   swap_info.to_y].offset_x   =  distance;
-        }
-        if (swap_info.from_y < swap_info.to_y) {
-            grid[swap_info.from_x, swap_info.from_y].offset_y =  distance;
-            grid[swap_info.to_x,   swap_info.to_y].offset_y   = -distance;
-        } else if (swap_info.from_y > swap_info.to_y) {
-            grid[swap_info.from_x, swap_info.from_y].offset_y = -distance;
-            grid[swap_info.to_x,   swap_info.to_y].offset_y   =  distance;
-        }
-    }
-}
+//        if (swap_info.from_x < swap_info.to_x) {
+//            grid[swap_info.from_x, swap_info.from_y].offset_x =  distance;
+//            grid[swap_info.to_x,   swap_info.to_y].offset_x   = -distance;
+//        } else if (swap_info.from_x > swap_info.to_x) {
+//            grid[swap_info.from_x, swap_info.from_y].offset_x = -distance;
+//            grid[swap_info.to_x,   swap_info.to_y].offset_x   =  distance;
+//        }
+//        if (swap_info.from_y < swap_info.to_y) {
+//            grid[swap_info.from_x, swap_info.from_y].offset_y =  distance;
+//            grid[swap_info.to_x,   swap_info.to_y].offset_y   = -distance;
+//        } else if (swap_info.from_y > swap_info.to_y) {
+//            grid[swap_info.from_x, swap_info.from_y].offset_y = -distance;
+//            grid[swap_info.to_x,   swap_info.to_y].offset_y   =  distance;
+//        }
+//    }
+//}
+
+process_swap(self, swap_info);
 
 
 
-// Toggle Console On/Off
-if (keyboard_check_pressed(vk_f1)) { 
-    console_active = !console_active;
-}
 
-// If Console is Active, Process Input
-if (console_active) {
-    // Handle Backspace
-    if (keyboard_check_pressed(vk_backspace)) {
-        if (string_length(console_input) > 0) {
-            console_input = string_copy(console_input, 1, string_length(console_input) - 1);
-        }
-    }
-
-    // Handle Enter Key (Execute Command)
-    if (keyboard_check_pressed(vk_enter)) {
-        process_console_command(console_input);
-        console_input = ""; // Clear after execution
-    }
-    // 🖊 Handle Typing Input (One Character Per Press)
-    for (var i = 32; i <= 126; i++) { // ASCII Range for printable characters
-        if (keyboard_check_pressed(i)) {
-            if (string_length(console_input) < 50) {
-                console_input += chr(i); // Convert ASCII code to character
-            }
-        }
-    }
-}
-else
+if (!obj_game_manager.console_active)
 {
 	enable_debug_controls(self, hover_i, hover_j, true);	
-}
-
-if (keyboard_check_pressed(vk_backspace))
-{
-	trigger_final_game_over(self);
 }
 
 // ------------------------------------------------------

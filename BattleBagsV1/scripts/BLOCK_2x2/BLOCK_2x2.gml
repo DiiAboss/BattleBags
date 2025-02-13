@@ -1,5 +1,5 @@
 function spawn_2x2_block(_self, _x, _y, _type) {
-    if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y >= _self.bottom_playable_row) return;
+    if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y + 1 >= _self.bottom_playable_row) return;
 
     // ✅ Check if space is available (NO big blocks already there)
     if (_self.grid[_x, _y].is_big || _self.grid[_x + 1, _y].is_big ||

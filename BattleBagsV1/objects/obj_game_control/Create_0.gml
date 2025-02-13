@@ -9,19 +9,7 @@ songs = [Sound7, sound_regular_music_test_3];
 current_song = 0;
 
 
-game_over_state = false;
-game_over_timer = 0;
-game_over_pop_delay = 20; // Starts slow
-game_over_popping = ds_list_create(); // Stores all blocks to pop in order
 
-// ✅ Game Over UI
-game_over_ui_x = 128; // Left side panel width
-game_over_ui_y = 128;
-game_over_ui_width = 400;
-game_over_ui_height = room_height;
-
-game_over_option_selected = -1; // -1 = None, 0 = Restart, 1 = Main Menu
-game_over_show_options = false; // Will show after all blocks are popped
 
 
 selected_piece = [-1, -1];
@@ -59,12 +47,7 @@ iType = "click_and_drag";
 
 big_block_enabled = true;
 
-global.swap_queue = { 
-	active: false, 
-	ax: -1, 
-	ay: -1, 
-	bx: -1, 
-	by: -1 };
+
 
 spawn_rows = 6; // Number of initial rows to spawn
 width	   = 8;
@@ -124,8 +107,6 @@ max_experience_points = max_exp_mod + ((max_exp_level_mod * level) + (level * le
 fight_for_your_life = false;
 
 
-
-
 timer_block_slow_down = 0;
 
 lose_life_max_timer = FPS * global.modifier * 3;
@@ -133,10 +114,9 @@ lose_life_timer     = 0;
 
 blocks_in_danger = false;
 
+
 health_per_heart = 4; // Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
-
 total_hearts = 3;
-
 max_hearts = total_hearts * health_per_heart;
 max_player_health = max_hearts;
 player_health     = max_player_health;
@@ -181,9 +161,7 @@ global.grid_shake_amount = 0; // Grid shake intensity
 // ------------------------------------------------------
 // Block Types
 // ------------------------------------------------------
-
 global_shape_function_init();
-
 
 combo_timer		 = 0;
 max_combo_timer  = 60; // Half a second of grace
@@ -206,18 +184,19 @@ global.enemy_attack_queue = ds_list_create();
 // Swap Mechanics
 // ------------------------------------------------------
 swap_in_progress = false;
-global.needs_match_check = false;
-swap_info = {
-    from_x: -1, from_y: -1, to_x: -1, to_y: -1,
-    progress: 0, speed: 0.1
-};
+swap_info = create_swap_info();
+global.swap_queue = { 
+	active: false, 
+	ax: -1, 
+	ay: -1, 
+	bx: -1, 
+	by: -1 
+	};
 
 // ------------------------------------------------------
 // Board Setup
 // ------------------------------------------------------
-//global.gemSize = 64;
 
-offset = 32;
 board_x_offset = 128;
 
 max_shake_timer = 30;
@@ -231,12 +210,13 @@ player_level = 0;
 combo = 0;
 numberOfGemTypes = 8;
 darken_alpha = 0;
+
 gem_size = 64;
+offset = gem_size * 0.5;
 global_y_offset = 0;
 
 total_multiplier_next = 1;
 
-global.fall_timer = 0;
 
 global.in_upgrade_menu = false;
 
@@ -264,16 +244,22 @@ shift_speed = 0.1 * global.gameSpeed;
 shift_timer = 0;
 
 
-// 💻 Console State
-console_active = false;
-console_input = "";
-console_history = [];
-max_history = 10; // Limit history size
 
-// 🎨 Visual Settings
-console_x = 10;
-console_y = room_height / 2;
-console_width = 200;
-console_height = 200;
-console_alpha = 0.75;
-//console_font = font_default;
+
+// ------------------------------------------------------
+// Game Over UI
+// ------------------------------------------------------
+
+game_over_state = false;
+game_over_timer = 0;
+game_over_pop_delay = 20; // Starts slow
+game_over_popping = ds_list_create(); // Stores all blocks to pop in order
+
+// ✅ Game Over UI
+game_over_ui_x = 128; // Left side panel width
+game_over_ui_y = 128;
+game_over_ui_width = 400;
+game_over_ui_height = room_height;
+
+game_over_option_selected = -1; // -1 = None, 0 = Restart, 1 = Main Menu
+game_over_show_options = false; // Will show after all blocks are popped

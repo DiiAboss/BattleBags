@@ -14,13 +14,10 @@ function check_game_over(_self)
 		    // Define the top-of-screen threshold (0 means anything at or above y = 0 counts)
 		    var top_row = _self.top_playable_row;
 	
-			for (var i = 0; i < _self.width; i++) {
-				for (var j = 0; j < top_row; j++) {
-					var gem = _self.grid[i, j];
-					if (are_playable_blocks_settled(self))  {
-			            //grid[i, 0] = create_block(BLOCK.NONE);
-			            blocks_destroyed++;
-			        }
+			for (var _x = 0; _x < _self.width; _x++) {
+				for (var _y = 0; _y < top_row; _y++) {
+					var gem = _self.grid[_x, _y];
+                        if (!gem.falling && gem.fall_delay < gem.max_fall_delay && !gem.is_enemy_block) blocks_destroyed++;
 				}
 			}
     

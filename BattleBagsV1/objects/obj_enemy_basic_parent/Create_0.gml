@@ -12,7 +12,7 @@ max_hp = 100;
 defense = 0;
 attack_power = 1;
 gold_reward = 10;
-exp_reward = 5;
+exp_reward = 25;
 
 /// ✅ Attack Timers
 enemy_attack_ready = true;

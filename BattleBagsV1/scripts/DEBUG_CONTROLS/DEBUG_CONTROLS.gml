@@ -23,6 +23,11 @@ function enable_debug_controls(_self, hover_x, hover_y, debug_active = true)
 		
 	    
 	}
+	
+	if (keyboard_check_pressed(vk_backspace))
+	{
+		trigger_final_game_over(self);
+	}
 
 	// 🌟 Vertical Destruction
 	if (keyboard_check_pressed(ord("I"))) { 
@@ -50,7 +55,7 @@ if (keyboard_check_pressed(vk_end)) {
     spawn_2x2_block(_self, hover_x, hover_y, BLOCK.RED); // Spawns a big RED block
 }
 if (keyboard_check_pressed(vk_home)) {
-    spawn_mega_block(self, irandom_range(0, _self.width), 4, "square_3x3"); // Spawn **1x3 Line Mega Block**
+    spawn_mega_block(self, irandom_range(0, _self.width), 4, "line_1x3"); // Spawn **1x3 Line Mega Block**
 }
 	if (keyboard_check_pressed(vk_shift)) {
 		//toss_down_row(_self, true);

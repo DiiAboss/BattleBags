@@ -10,6 +10,19 @@ player_stats =
 
 
 
+//  Console State
+console_active = false;
+console_input = "";
+console_history = [];
+max_history = 10; // Limit history size
+
+//  Visual Settings
+console_x = 10;
+console_y = room_height / 2;
+console_width = 200;
+console_height = 200;
+console_alpha = 0.75;
 
 
 
+//show_debug_overlay(true);

@@ -60,10 +60,17 @@ if (gem.is_big) {
                 var old_y = data[1];
                 var new_x = data[2];
                 var new_y_pos = data[3];
-
+				
+				if (new_y_pos < 0)
+				{
+					return;
+				}
+				
                 // ✅ Move block to new position
                 _self.grid[new_x, new_y_pos] = _self.grid[old_x, old_y];
-                _self.grid[old_x, old_y] = create_block(BLOCK.NONE);
+                
+                _self.grid[old_x, old_y] = _self.grid[old_x, old_y + 1]; // This actually worked (I used to create an empty block here...
+                
                 _self.grid[new_x, new_y_pos].big_parent = [parent_x, new_y]; // ✅ Update parent reference
             }
 
@@ -108,31 +115,3 @@ if (gem.is_big) {
     _self.darken_alpha = 0;
 	number_of_rows_spawned ++;
 }
-
-
-            //// ✅ If it's part of a big block, check if it needs bottom row
-            //if (gem.is_big) {
-            //    var parent_x = gem.big_parent[0];
-            //    var parent_y = gem.big_parent[1];
-
-            //    // ✅ Only process the parent block
-            //    if (i == parent_x && j + 1 == parent_y) {
-            //        var new_y = parent_y - 1;
-
-            //        // ✅ Move entire 2x2 block up
-            //        _self.grid[parent_x,     new_y]    = _self.grid[parent_x,     parent_y];
-            //        _self.grid[parent_x + 1, new_y]    = _self.grid[parent_x + 1, parent_y];
-            //        _self.grid[parent_x,     parent_y] = _self.grid[parent_x,     parent_y + 1];
-            //        _self.grid[parent_x + 1, parent_y] = _self.grid[parent_x + 1, parent_y + 1];
-
-            //        // ✅ Update big_parent
-            //        _self.grid[parent_x,     new_y].big_parent     = [parent_x, new_y];
-            //        _self.grid[parent_x + 1, new_y].big_parent     = [parent_x, new_y];
-            //        _self.grid[parent_x,     new_y + 1].big_parent = [parent_x, new_y];
-            //        _self.grid[parent_x + 1, new_y + 1].big_parent = [parent_x, new_y];
-
-            //        // ✅ Mark as "big"
-            //        _self.grid[parent_x,     new_y].is_big     = true;
-            //        _self.grid[parent_x + 1, new_y].is_big     = true;
-            //        _self.grid[parent_x,     new_y + 1].is_big = true;
-            //        _self.grid[parent_x + 1, new_y + 1].is_big = true;

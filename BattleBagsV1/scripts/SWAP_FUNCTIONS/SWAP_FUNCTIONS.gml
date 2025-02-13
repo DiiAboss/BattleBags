@@ -34,6 +34,76 @@ function start_swap(_self, ax, ay, bx, by) {
 }
 
 
+function process_swap(_self, swap_info)
+{
+	if (_self.swap_in_progress) {
+	    swap_info.progress += swap_info.speed;
+
+	    // 🛑 Check if the swap is happening **mid-shift** (before progress reaches 1)
+	    if (swap_info.progress < 1 && _self.global_y_offset == 0) {
+	        // 🔹 Move swap targets UP by one row since the board just shifted
+	        swap_info.from_y -= 1;
+	        swap_info.to_y -= 1;
+	    }
+
+	    if (swap_info.progress >= 1) {
+	        swap_info.progress = 1;
+
+	        // ✅ Ensure the swap happens at the correct row based on whether we just shifted
+	        if (_self.global_y_offset != 0) {
+	            var temp = grid[swap_info.from_x, swap_info.from_y];
+	            _self.grid[swap_info.from_x, swap_info.from_y] = _self.grid[swap_info.to_x, swap_info.to_y];
+	            _self.grid[swap_info.to_x, swap_info.to_y] = temp;
+	        } else {
+	            // 🔹 If the board just moved up, apply the swap **one row higher**
+	            var temp = grid[swap_info.from_x, swap_info.from_y - 1];
+	            _self.grid[swap_info.from_x, swap_info.from_y - 1] = _self.grid[swap_info.to_x, swap_info.to_y - 1];
+	            _self.grid[swap_info.to_x, swap_info.to_y - 1] = temp;
+	        }
+
+	        // Reset offsets
+	        _self.grid[swap_info.from_x, swap_info.from_y].offset_x = 0;
+	        _self.grid[swap_info.from_x, swap_info.from_y].offset_y = 0;
+	        _self.grid[swap_info.to_x,   swap_info.to_y].offset_x   = 0;
+	        _self.grid[swap_info.to_x,   swap_info.to_y].offset_y   = 0;
+
+	        _self.swap_in_progress = false;
+	    } else {
+	        // Animate the swap
+	        var distance = gem_size * swap_info.progress;
+
+	        if (swap_info.from_x < swap_info.to_x) {
+	            _self.grid[swap_info.from_x, swap_info.from_y].offset_x =  distance;
+	            _self.grid[swap_info.to_x,     swap_info.to_y].offset_x = -distance;
+	        } else if (swap_info.from_x > swap_info.to_x) {
+	            _self.grid[swap_info.from_x, swap_info.from_y].offset_x = -distance;
+	            _self.grid[swap_info.to_x,     swap_info.to_y].offset_x =  distance;
+	        }
+	        if (swap_info.from_y < swap_info.to_y) {
+	            _self.grid[swap_info.from_x, swap_info.from_y].offset_y =  distance;
+	            _self.grid[swap_info.to_x,     swap_info.to_y].offset_y = -distance;
+	        } else if (swap_info.from_y > swap_info.to_y) {
+	            _self.grid[swap_info.from_x, swap_info.from_y].offset_y = -distance;
+	            _self.grid[swap_info.to_x,   swap_info.to_y].offset_y   =  distance;
+	        }
+	    }
+	}
+}
+
+function create_swap_info()
+{
+	var swap_info = 
+	{
+		from_x: -1, 
+		from_y: -1, 
+		to_x: -1, 
+		to_y: -1,
+	    progress: 0, 
+		speed: 0.1
+	}
+	
+	return swap_info;
+}
 
 // Script Created By DiiAboss AKA Dillon Abotossaway
 ///@function execute_swap
