@@ -11,40 +11,52 @@ enum ENEMY_ATTACK_TYPE {
 function select_enemy_attack(_self) {
     var total_attacks = _self.total_attacks;
     var attacks_until_special = _self.attacks_until_special_attack;
+	
+	var special_attack_array = [ENEMY_ATTACK_TYPE.SLIME, ENEMY_ATTACK_TYPE.FREEZE, ENEMY_ATTACK_TYPE.BASIC];
+	var basic_attack_array   = [ENEMY_ATTACK_TYPE.BASIC];
+	
+	var s_array_max  = array_length(special_attack_array) - 1;
+	var b_array_max  = array_length(basic_attack_array) - 1;
+	
+	if (total_attacks % attacks_until_special == 0)
+	{
+		var rand     = irandom(s_array_max);
+        var atk_type = special_attack_array[rand];
+	}
+	else
+	{
+		var rand     = irandom(b_array_max);
+        var atk_type = basic_attack_array[rand];
+	}
+	
 
-    if (total_attacks % attacks_until_special == 0) {
-        var atk_type = choose(ENEMY_ATTACK_TYPE.SLIME, ENEMY_ATTACK_TYPE.FREEZE, ENEMY_ATTACK_TYPE.BASIC);
+	switch (atk_type)
+	{
+		case (ENEMY_ATTACK_TYPE.BASIC):
+			_self.enemy_attack = enemy_attack_basic(_self, obj_game_control);
+		break;
+			
+		case (ENEMY_ATTACK_TYPE.SPECIAL):
+			_self.enemy_attack = "triangle_down_3x3"; 
+		break;
+				
+		case (ENEMY_ATTACK_TYPE.FREEZE):
+			_self.enemy_attack = "FREEZE";
+			select_attack_targets(_self, "FREEZE"); // ✅ Generate target blocks
+		break;
+			
+		case (ENEMY_ATTACK_TYPE.SLIME):
+			_self.enemy_attack = "SLIME";
+			select_attack_targets(_self, "SLIME"); // ✅ Generate target blocks
+		break;
+	}
 
-        if (obj_game_control.player_level > 10) {
-            atk_type = choose(atk_type, atk_type, ENEMY_ATTACK_TYPE.BASIC);
-        }
+	ds_list_add(global.enemy_attack_queue, _self.enemy_attack);
 
-        if (atk_type == ENEMY_ATTACK_TYPE.SPECIAL) {
-            _self.enemy_attack = "triangle_down_3x3"; 
-        } else if (atk_type == ENEMY_ATTACK_TYPE.FREEZE) {
-            _self.enemy_attack = "FREEZE";
-            select_attack_targets(_self, "FREEZE"); // ✅ Generate target blocks
-        } else if (atk_type == ENEMY_ATTACK_TYPE.SLIME) {
-            _self.enemy_attack = "SLIME";
-            select_attack_targets(_self, "SLIME"); // ✅ Generate target blocks
-        }
-
-    } else {
-        var atk_type = choose(ENEMY_ATTACK_TYPE.BASIC, ENEMY_ATTACK_TYPE.BASIC);
-        
-        if (atk_type == ENEMY_ATTACK_TYPE.BASIC) {
-            _self.enemy_attack = enemy_attack_basic(_self, obj_game_control);
-        } else {
-            _self.enemy_attack = "FREEZE";
-            select_attack_targets(_self, "FREEZE"); // ✅ Generate target blocks
-        }
-    }
-
-    ds_list_add(global.enemy_attack_queue, _self.enemy_attack);
-
-    _self.enemy_attack_ready = true;
-    _self.preview_build_timer = 0;
-    _self.preview_blocks_built = 0;
+	_self.enemy_attack_ready = true;
+	_self.preview_build_timer = 0;
+	_self.preview_blocks_built = 0;
+	
 }
 
 
@@ -104,7 +116,6 @@ function execute_attack_on_targets(_self, attack_type) {
 	    if (attack_type == "SLIME") {
         enemy_attack_slime(_self, obj_game_control);
     }
-
     // ✅ Clear the target list after execution
     ds_list_clear(_self.target_blocks);
 }
@@ -116,19 +127,23 @@ function process_attack_queue(_self) {
         if (_self.queued_attack_timer >= _self.max_queued_attack_timer) {
             var attack_to_execute = ds_list_find_value(global.enemy_attack_queue, 0);
             ds_list_delete(global.enemy_attack_queue, 0);
-
-            if (attack_to_execute == "FREEZE") {
-                _self.pending_attack = "FREEZE"; // ✅ Store attack for delayed execution
-                alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
-            
-			} else if (attack_to_execute == "SLIME") {
-               
-                _self.pending_attack = "SLIME"; // ✅ Store attack for delayed execution
-                alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
-            } else {
-                toss_down_shape(obj_game_control, attack_to_execute, true);
-            }
-
+			
+			switch (attack_to_execute)
+			{
+				case ("FREEZE"):
+					_self.pending_attack = "FREEZE"; // ✅ Store attack for delayed execution
+					alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
+				break;
+				
+				case ("SLIME"):
+					_self.pending_attack = "SLIME"; // ✅ Store attack for delayed execution
+					alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
+				break;
+				
+				default:
+					toss_down_shape(obj_game_control, attack_to_execute, true);
+				break;
+			}
             _self.queued_attack_timer = 0;
 
             if (ds_list_size(global.enemy_attack_queue) == 0) {
@@ -155,7 +170,7 @@ function animate_attack_targets(_self, attack_type) {
 			draw_sprite(spr_enemy_gem_overlay, 0, px, py);
         }
 		
-		        if (attack_type == "SLIME") {
+		if (attack_type == "SLIME") {
             var px = (target_x * obj_game_control.gem_size) + obj_game_control.board_x_offset + 32;
             var py = (target_y * obj_game_control.gem_size) + obj_game_control.global_y_offset + 32;
 			draw_sprite(spr_enemy_gem_overlay, 0, px, py);
