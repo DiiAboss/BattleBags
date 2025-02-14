@@ -54,7 +54,7 @@ function Input() constructor {
 	inputDelay     = 5;
 	
 	// Detect connected gamepad
-	for (var cont = 0; cont < 8; cont++) {
+	for (var cont = 0; cont < 12; cont++) {
 		if (gamepad_is_connected(cont)) {
 			Device = cont;
 			break;
