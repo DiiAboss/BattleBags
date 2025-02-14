@@ -19,9 +19,9 @@ function global_shape_function_init()
 	]);
 
 	ds_map_add(global.shape_templates, "blank_3x3", [
-		[0, 0, 0],
-		[0, 0, 0],
-		[0, 0, 0]
+		[2, -1, 3],
+		[-1, 2, -1],
+		[3, -1, 2]
 	]);
 	
 	ds_map_add(global.shape_templates, "triangle_down_3x3", [
