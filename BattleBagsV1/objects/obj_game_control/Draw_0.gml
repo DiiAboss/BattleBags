@@ -1,7 +1,7 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
-draw_text(room_width * 0.5 - 64, room_height * 0.5 + (12 * k), string(input.Device))
+draw_text(room_width * 0.5 - 64, room_height * 0.5 + (12), string(input.Device))
 
 
 
