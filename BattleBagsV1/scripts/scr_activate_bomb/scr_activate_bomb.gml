@@ -106,7 +106,7 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
                                 color: block.color,
                                 y_offset_global: _self.global_y_offset,
                                 match_size: max(block.mega_width * block.mega_height, 1), // ✅ Store the match size
-                                match_points: total_match_points * 1.5,
+                                match_points: max(block.mega_width * block.mega_height, 1) * 1.5,
                                 bomb_tracker: false, // Flag to mark this pop as bomb‐generated
                                 bomb_level: 0,
                                 img_number: block.img_number,
