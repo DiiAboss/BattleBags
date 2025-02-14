@@ -39,9 +39,7 @@ function update_attack_timer(_self) {
         _self.attack_timer = 0; 
         select_enemy_attack(_self); // ✅ Calls attack selection (can be overridden)
     }
-    _self.attack_timer += global.enemy_timer_game_speed * (
-        obj_game_control.game_speed_default / global.gameSpeed
-    );
+    _self.attack_timer += global.enemy_timer_game_speed;
 }
 
 /// @description Manages the attack queue system

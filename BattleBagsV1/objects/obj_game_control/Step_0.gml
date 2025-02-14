@@ -1,4 +1,104 @@
-//input.Update(self);
+
+var input = obj_game_manager.input;
+input.Update(self, last_position[0], last_position[1]);
+
+if (input.InputType == INPUT.GAMEPAD)
+{
+    control_mode = "legacy";
+}
+
+
+var max_input_delay = 8;
+
+if (inputDelay > 0)
+{
+    inputDelay --;
+}
+else {
+    if (input.Up)
+    {
+        if (last_position[1] > top_playable_row)
+        {
+            last_position[1] -= 1;
+        }
+        inputDelay = max_input_delay;
+    }
+    
+    if (input.Down)
+    {
+        if (last_position[1] < bottom_playable_row)
+        {
+        last_position[1] += 1; 
+        }
+        inputDelay = max_input_delay;
+    }
+    if (input.Left)
+    {
+        if (last_position[0] > 0)
+            {
+                last_position[0] -= 1;
+            }
+            else {
+                last_position[0] = width - 2;
+            }
+        inputDelay = max_input_delay;
+    }
+    
+    if (input.Right)
+    {
+        if (last_position[0] < width - 2)
+            {
+            last_position[0] += 1; 
+            }
+            else {
+                last_position[0] = 0;
+            }
+        inputDelay = max_input_delay;
+    }
+    
+}
+
+
+
+
+//if (input.UpPress)
+//{
+    //if (last_position[1] > top_playable_row)
+    //{
+        //last_position[1] -= 1;
+    //}
+    //
+//}
+//
+//if (input.DownPress)
+//{
+    //if (last_position[1] < bottom_playable_row)
+    //{
+       //last_position[1] += 1; 
+    //}
+    //
+//}
+//if (input.LeftPress)
+//{
+    //if (last_position[0] > 0)
+        //{
+            //last_position[0] -= 1;
+        //}
+        //else {
+            //last_position[0] = width - 2;
+        //}
+//}
+//
+//if (input.RightPress)
+//{
+    //if (last_position[0] < width - 2)
+        //{
+        //last_position[0] += 1; 
+        //}
+        //else {
+            //last_position[0] = 0;
+        //}
+//}
 
 game_over_screen(self, game_over_state);
 
@@ -25,7 +125,7 @@ else
 			after_menu_counter = after_menu_counter_max;
 				global.in_upgrade_menu = false;
 			//✅ Toggle Pause with "P" key
-			if (keyboard_check_pressed(ord("P"))) {
+			if (input.Escape) {
 			    global.paused = !global.paused; // Toggle the pause state
 			}
 		}
@@ -56,19 +156,26 @@ update_time(self, FPS);
 
 update_draw_time(self);
 
-process_gameboard_speed(self);
+process_gameboard_speed(self, input.SpeedUpKey);
 
 //--------------------------------------------------------
 // CONTROLS
 //--------------------------------------------------------
 if (control_mode == "modern") {
-    mouse_dragged(self);
+    block_dragged(self, input.ActionPress, input.ActionKey, input.ActionRelease);
 } else if (control_mode == "legacy") {
-    mouse_legacy_swap(self);
+    mouse_legacy_swap(self, input.ActionPress);
 }
 
-var hover_i = floor((mouse_x - board_x_offset) / gem_size);
-var hover_j = floor((mouse_y - global_y_offset) / gem_size);
+
+hover_x = floor((mouse_x - board_x_offset) / gem_size);
+hover_y = floor((mouse_y - global_y_offset) / gem_size);
+if (input.InputType == INPUT.GAMEPAD)
+{
+    hover_x = last_position[0];
+    hover_y = last_position[1];
+}
+
 
 process_grid_shake(fight_for_your_life);
 
@@ -80,7 +187,7 @@ process_all_mega_blocks(self);
 
 if (!obj_game_manager.console_active)
 {
-    enable_debug_controls(self, hover_i, hover_j, true);	
+    enable_debug_controls(self, hover_x, hover_y, true);	
 }
 
 process_swap(self, swap_info);
@@ -93,6 +200,7 @@ global_y_offset -= shift_speed;
 
 if (global_y_offset <= -gem_size) {
     global_y_offset = 0;
+    last_position[1] -= 1;
     shift_up(self);
 }
 

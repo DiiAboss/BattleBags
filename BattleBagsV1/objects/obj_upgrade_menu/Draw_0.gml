@@ -1,3 +1,5 @@
+var input = obj_game_manager.input;
+
 // 🎨 Draw background box
 draw_set_color(c_black);
 draw_set_alpha(0.95);
@@ -8,6 +10,13 @@ draw_set_halign(fa_center);
 draw_text(room_width / 2, draw_y_start + 80, "Choose an Upgrade");
 
 // ️ Mouse Hover Detection & Selection Logic
+var hover_index = selected;
+var mouse_x_pos = mouse_x;
+var mouse_y_pos = mouse_y;
+
+if (input.InputType == INPUT.KEYBOARD)
+{
+    // ️ Mouse Hover Detection & Selection Logic
 var hover_index = -1;
 var mouse_x_pos = mouse_x;
 var mouse_y_pos = mouse_y;
@@ -18,9 +27,11 @@ for (var i = 0; i < array_length(upgrade_pool); i++) {
 
     if (mouse_x_pos > btn.x - 128 && mouse_x_pos < btn.x + 128 &&
         mouse_y_pos > btn.y - 128 && mouse_y_pos < btn.y + 128) {
-        hover_index = i;
+        selected = i;
     }
 }
+}
+
 
 // ✅ Draw Upgrade Frames with Hover Effect
 for (var i = 0; i < array_length(upgrade_pool); i++) {
@@ -35,7 +46,7 @@ for (var i = 0; i < array_length(upgrade_pool); i++) {
 		    var rotation = 0;
 
 		    //  Apply hover effect
-		    if (i == hover_index) {
+		    if (i == selected) {
 		        scale = 1.1; // Slightly enlarged
 		        rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
 		    }
@@ -61,17 +72,17 @@ for (var i = 0; i < array_length(upgrade_pool); i++) {
 	}
 }
 
-if (hover_index != -1) && (upgrade_pool[hover_index])
+if (selected != -1) && (upgrade_pool[selected])
 {
 	//  Display upgrade descriptions centered **below all upgrades**
 	var desc_y_position = 500 + draw_y_start;
 	draw_set_halign(fa_center);
-	draw_text(global.upgrade_positions[hover_index].x, desc_y_position, upgrade_pool[hover_index].desc);
+	draw_text(global.upgrade_positions[selected].x, desc_y_position, upgrade_pool[selected].desc);
 
 // 🔢 Display **Current Stat Value**
-    var stat_value = get_upgrade_current_stat(upgrade_pool[hover_index].effect);
+    var stat_value = get_upgrade_current_stat(upgrade_pool[selected].effect);
     draw_set_color(c_lime);
-    draw_text(global.upgrade_positions[hover_index].x, desc_y_position + 20, "Current Value: " + string(stat_value));
+    draw_text(global.upgrade_positions[selected].x, desc_y_position + 20, "Current Value: " + string(stat_value));
 }
 
 // ------------------------------------

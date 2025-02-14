@@ -1,5 +1,10 @@
 /// @description Handle returning to the menu.
-if (keyboard_check_pressed(vk_enter) || mouse_check_button_pressed(mb_left)) {
+var input = obj_game_manager.input;
+
+input.Update(self);
+
+
+if (input.ActionPress || input.Enter) {
     room_goto(rm_main_menu);
 }
 

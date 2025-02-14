@@ -9,7 +9,7 @@ draw_y_start = camera_get_view_y(view_get_camera(view_current));
 var x_start = (room_width / 2) - (384 * 1);
 var y_start = draw_y_start + 300;
 
-
+delay = 60;
 
 // ✅ Create a temporary list to store only upgrades BELOW max level
 var available_upgrades = ds_list_create();
@@ -59,6 +59,7 @@ ds_list_destroy(available_upgrades);
 depth = -99;
 numberOfGemTypes = obj_game_control.numberOfGemTypes;
 
+selected = 1;
 
 
 obj_game_control.after_menu_counter = 0;

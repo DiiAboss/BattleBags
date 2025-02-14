@@ -51,7 +51,7 @@ function Input() constructor {
 	Enter          = false;
 
 	Direction      = 0;
-	inputDelay     = 30;
+	inputDelay     = 5;
 	
 	// Detect connected gamepad
 	for (var cont = 0; cont < 8; cont++) {
@@ -61,10 +61,7 @@ function Input() constructor {
 		}
 	}
 
-	static Update = function(_self) {
-		if (inputDelay > 0) {
-			inputDelay -= 1;
-		} else {
+	static Update = function(_self, _x, _y) {
 			if (InputType == INPUT.KEYBOARD) {
 				// Movement Keys
 				Up          = keyboard_check(InputMap.Up)    || keyboard_check(vk_up);
@@ -106,10 +103,10 @@ function Input() constructor {
 				Enter           = keyboard_check_pressed(InputMap.Enter);
 
 				// Mouse Direction
-				Direction       = point_direction(_self.x, _self.y, mouse_x, mouse_y);
+				Direction       = point_direction(_x, _y, mouse_x, mouse_y);
 
 				// Switch to gamepad if button pressed
-				if (Device != -1 && gamepad_button_check(Device, ControllerMap.Enter)) {
+				if (Device != -1 && gamepad_check_input(Device)) {
 					InputType = INPUT.GAMEPAD;
 				}
 			}
@@ -143,21 +140,20 @@ function Input() constructor {
 				CycleSkillDown = gamepad_button_check_pressed(Device, ControllerMap.CycleSkillDown);
 
 				// Back & UI Navigation
-				Back            = gamepad_button_check_pressed(Device, ControllerMap.Back);
+				//Back            = gamepad_button_check_pressed(Device, ControllerMap.Back);
 				Escape          = gamepad_button_check_pressed(Device, ControllerMap.Escape);
 
 				// Gamepad Direction
 				var rhAxis = gamepad_axis_value(Device, gp_axisrh);
 				var rvAxis = gamepad_axis_value(Device, gp_axisrv);
-				Direction  = point_direction(_self.x, _self.y, _self.x + rhAxis, _self.y + rvAxis);
+				Direction  = point_direction(_x, _y, _x + rhAxis, _y + rvAxis);
 
 				// Switch to keyboard if any key is pressed
 				if (keyboard_check_pressed(vk_anykey)) {
 					InputType = INPUT.KEYBOARD;
 				}
-			}
-		}
-	}
+            }
+    }
 }
 
 enum INPUT {
@@ -204,7 +200,9 @@ global.InputType = {
 
 		// Action Buttons
 		ActionKey:    gp_face1,  // A Button
-		AltKey:       gp_face2,  // B Button
+        ActionPress:    gp_face1,  // A Button
+        ActionRelease:  gp_face1,  // A Button
+		AltKey:        gp_face2,  // B Button
 
 		SpeedUpKey:   gp_shoulderl, // Left Trigger (Speed Up)
 
@@ -213,7 +211,19 @@ global.InputType = {
 		CycleSkillDown: gp_shoulderlb, // Left Bumper
 
 		Escape:      gp_start,
-		Enter:       gp_start
+		Enter:       gp_select
 	}
 }
 
+
+function gamepad_check_input(_pad_num) {
+    ///@desc    checks for gamepad input on the passed pad number
+    ///@arg    pad_num    real    pad number to check
+    
+    for ( var i = gp_face1; i <= gp_padr; i++ ) {
+        if ( gamepad_button_check( _pad_num, i ) ) return true;
+    }
+    for ( var i = gp_axislh; i <= gp_axisrv; i++ ) {
+        if abs( gamepad_axis_value( _pad_num, i ) ) return true;
+    }
+}

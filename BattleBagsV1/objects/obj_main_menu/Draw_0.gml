@@ -1,7 +1,5 @@
 /// @description Draw Main Menu.
 
-/// @description Draw Main Menu.
-
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 draw_set_font(fnt_basic);
@@ -18,4 +16,3 @@ for (var i = 0; i < array_length(menu_options); i++) {
         draw_text(menu_x, menu_y, menu_options[i]);
     }
 }
-

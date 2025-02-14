@@ -1,6 +1,8 @@
-function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
+
+
+function block_dragged(_self, action_key_pressed = mouse_check_button_pressed(mb_left), action_key_hold = mouse_check_button(mb_left), release_key = mouse_check_button_released(mb_left), pointer_x = mouse_x, pointer_y = mouse_y) {
 	
-	var input = _self.input;
+	//var input = _self.input;
 	
 	var width = _self.width;
 	var height = _self.height;
@@ -9,8 +11,8 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
 	var global_y_offset = _self.global_y_offset;
 	
 	    // 🔹 Convert mouse coordinates to grid indices
-    var hover_x = floor((pointer_x - board_x_offset) / gem_size);
-    var hover_y = floor((pointer_y - global_y_offset) / gem_size);
+    var hover_x = _self.hover_x;
+    var hover_y = _self.hover_y;
 	
 	// ✅ Store hovered block for **drawing**
 	if (hover_x >= 0 && hover_x < width && hover_y >= 0 && hover_y < height) {
@@ -20,7 +22,7 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
 	}
 	
     // When the left mouse button is pressed, record the starting cell
-    if (mouse_check_button_pressed(mb_left)) {
+    if (action_key_pressed) {
         // Convert mouse coordinates to grid indices
         _self.selected_x = hover_x;
         _self.selected_y = hover_y;
@@ -50,7 +52,7 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
     }
 
         // ✅ Ensure swap only happens for the initially hovered block
-    if (mouse_check_button(mb_left) && !_self.dragged && _self.selected_x != -1 && _self.selected_y != -1) {
+    if (action_key_hold && !_self.dragged && _self.selected_x != -1 && _self.selected_y != -1) {
         var target_x = floor((pointer_x - board_x_offset) / gem_size);
         var target_y = _self.selected_y; // 🔹 Lock Y so swap happens on the same row
 
@@ -62,7 +64,7 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
     }
 
     // When the left mouse button is released
-    if (mouse_check_button_released(mb_left)) {
+    if (release_key) {
         _self.selected_x = -1;
         _self.selected_y = -1;
         _self.dragged = false;
@@ -70,7 +72,7 @@ function mouse_dragged(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
 }
 
 
-function mouse_legacy_swap(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
+function mouse_legacy_swap(_self, action_key_pressed) {
     var width          = _self.width;
     var height         = _self.height;
     var board_x_offset = _self.board_x_offset;
@@ -78,8 +80,8 @@ function mouse_legacy_swap(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
     var global_y_offset = _self.global_y_offset;
 
     // 🔹 Convert mouse coordinates to grid indices
-    var hover_x = floor((pointer_x - board_x_offset) / gem_size);
-    var hover_y = floor((pointer_y - global_y_offset) / gem_size);
+    var hover_x = _self.hover_x;
+    var hover_y = _self.hover_y;
 
     // ✅ Store hovered block for UI feedback
     if (hover_x >= 0 && hover_x < width && hover_y >= 0 && hover_y < height) {
@@ -89,7 +91,7 @@ function mouse_legacy_swap(_self, pointer_x = mouse_x, pointer_y = mouse_y) {
     }
 
     // ✅ When the left mouse button is pressed, attempt to swap
-    if (mouse_check_button_pressed(mb_left)) {
+    if (action_key_pressed) {
         if (hover_x >= 0 && hover_x < width - 1 // Ensure it's not on the right edge
             && hover_y >= 0 && hover_y < height
             //&& _self.grid[hover_x, hover_y].type != BLOCK.NONE // Must be a valid block

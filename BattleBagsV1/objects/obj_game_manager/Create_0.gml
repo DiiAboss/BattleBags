@@ -26,3 +26,4 @@ console_alpha = 0.75;
 
 
 //show_debug_overlay(true);
+input = new Input();  // Controller support

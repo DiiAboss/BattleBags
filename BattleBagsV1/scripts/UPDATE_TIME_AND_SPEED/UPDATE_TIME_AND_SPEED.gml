@@ -20,7 +20,7 @@ if (draw_seconds <10) draw_seconds="0"+string(draw_seconds);
 _self.draw_time = string(draw_minutes) + ":" + string(draw_seconds);
 }
 
-function process_gameboard_speed(_self)
+function process_gameboard_speed(_self, speedUpKey)
 {
 
 	
@@ -32,9 +32,10 @@ function process_gameboard_speed(_self)
 		global.gameSpeed = _self.game_speed_default * _self.game_speed_fight_for_your_life_modifier;
 		global.enemy_timer_game_speed = global.gameSpeed;
 	}
-	else if (keyboard_check(vk_space)) 
+	else if (speedUpKey) 
 	{
 	    global.gameSpeed = _self.game_speed_default + _self.game_speed_increase_modifier;
+        global.enemy_timer_game_speed = global.gameSpeed;
 	} else {
 		    if (_self.combo <= 1) 
 			{

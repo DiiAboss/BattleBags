@@ -40,9 +40,13 @@ total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
 
+
+
 control_mode = "modern";
 
-input = new Input();  // Controller support
+
+
+
 iType = "click_and_drag";
 
 big_block_enabled = true;
@@ -243,7 +247,10 @@ spawn_timer = 60 / global.gameSpeed;
 shift_speed = 0.1 * global.gameSpeed;
 shift_timer = 0;
 
+last_position = [4, height * 0.5];
 
+hover_x = 0;
+hover_y = 0;
 
 
 // ------------------------------------------------------
@@ -261,7 +268,9 @@ game_over_ui_y = 128;
 game_over_ui_width = 400;
 game_over_ui_height = room_height;
 
-game_over_option_selected = -1; // -1 = None, 0 = Restart, 1 = Main Menu
+game_over_option_selected = 0; // -1 = None, 0 = Restart, 1 = Main Menu
 game_over_show_options = false; // Will show after all blocks are popped
 
 game_over_blocks_popped = 0;
+
+inputDelay = 10;
