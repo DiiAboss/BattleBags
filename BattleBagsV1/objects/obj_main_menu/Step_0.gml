@@ -17,18 +17,31 @@ for (var i = 0; i < array_length(menu_options); i++) {
         last_hovered_option = i; // Store the last hovered item
     }
 }
+if (input_delay > 0)
+    {
+        input_delay--;
+    }
+    
+    if (input.Up)
+    {
+        if (input_delay <= 0)
+        {
+            selected_option = (selected_option - 1 + array_length(menu_options)) mod array_length(menu_options);
+            last_hovered_option = -1; // Reset hover when using keys
+            input_delay = max_input_delay;
+        }
+    }
+    
+    if (input.Down)
+    {
+        if (input_delay <= 0)
+        {
+            selected_option = (selected_option + 1) mod array_length(menu_options);
+            last_hovered_option = -1;
+            input_delay = max_input_delay;
+        }
+    }
 
-// ✅ Handle keyboard input
-if (input.UpPress) {
-    selected_option = (selected_option - 1 + array_length(menu_options)) mod array_length(menu_options);
-    last_hovered_option = -1; // Reset hover when using keys
-    input.inputDelay = 30;
-}
-
-if (input.DownPress) {
-    selected_option = (selected_option + 1) mod array_length(menu_options);
-    last_hovered_option = -1;
-}
 
 // ✅ Handle menu selection (keyboard OR mouse click)
 if (input.ActionPress || input.Enter) {

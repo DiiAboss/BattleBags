@@ -1,3 +1,8 @@
+if (input_delay > 0)
+{
+    input_delay --;
+}
+
 /// @description
 // Toggle Console On/Off
 if (keyboard_check_pressed(vk_f1)) { 
@@ -26,4 +31,18 @@ if (console_active) {
             }
         }
     }
+}
+
+var gp_num = gamepad_get_device_count();
+for (var i = 0; i < gp_num; i++;)
+{
+    if (gamepad_is_connected(i))
+    {
+        if gamepad_button_check(i, gp_start)
+        {
+            input.Device = i;
+        }
+    }
+    
+    input.inputType = INPUT.KEYBOARD;
 }

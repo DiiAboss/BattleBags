@@ -1,7 +1,7 @@
 
 function game_over_screen(_self, game_over_state)
 {
-  
+    var game_manager = obj_game_manager;
     var input = obj_game_manager.input;
     if (game_over_state) {
         _self.game_over_timer++;
@@ -64,14 +64,19 @@ function game_over_screen(_self, game_over_state)
             
             if (input.InputType == INPUT.GAMEPAD)
             {
-                if (input.UpPress || input.DownPress)
+                if (input.Up || input.Down)
                 {
-                    if _self.game_over_option_selected == 1
+                    if (game_manager.input_delay <= 0)
                     {
-                        _self.game_over_option_selected = 0;
-                    }
-                    else {
-                        _self.game_over_option_selected = 1;
+                       if _self.game_over_option_selected == 1
+                       {
+                           _self.game_over_option_selected = 0;
+                       }
+                       else {
+                           _self.game_over_option_selected = 1;
+                       }
+                        
+                        game_manager.input_delay = 10;
                     }
                 }
             }

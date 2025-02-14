@@ -63,3 +63,6 @@ selected = 1;
 
 
 obj_game_control.after_menu_counter = 0;
+
+input_delay = 0;
+max_input_delay = 10;

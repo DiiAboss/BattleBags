@@ -6,26 +6,38 @@ if (delay > 0)
 else {
     var input = obj_game_manager.input;
     
-    
-    if (input.LeftPress)
+    if (input_delay > 0)
     {
-        if selected <= 0
+        input_delay--;
+    }
+    
+    if (input.Left)
+    {
+        if (input_delay <= 0)
         {
-            selected = array_size - 1;
-        }
-        else {
-            selected --;
+            if selected <= 0
+            {
+                selected = array_size - 1;
+            }
+            else {
+                selected --;
+            }
+            input_delay = max_input_delay;
         }
     }
     
-    if (input.RightPress)
+    if (input.Right)
     {
-        if selected >= array_size - 1
+        if (input_delay <= 0)
         {
-            selected = 0;
-        }
-        else {
-            selected ++;
+           if selected >= array_size - 1
+           {
+               selected = 0;
+           }
+           else {
+               selected ++;
+           }
+            input_delay = max_input_delay;
         }
     }
     
