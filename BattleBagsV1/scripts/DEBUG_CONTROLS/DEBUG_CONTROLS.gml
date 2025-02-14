@@ -20,9 +20,13 @@ function enable_debug_controls(_self, hover_x, hover_y, debug_active = true)
 		var bow_obj = instance_create_depth(board_x_offset + hover_x * _self.gem_size, (hover_y * _self.gem_size) + _self.global_y_offset + 32, depth-99, obj_bow);
 		
 		bow_obj.final_pos = final_pos;
-		
-	    
 	}
+    
+    if (keyboard_check_pressed(ord("T")))
+    {
+        destroy_rows_from_bottom(self, 1);
+    }
+    
 	
 	if (keyboard_check_pressed(vk_backspace))
 	{

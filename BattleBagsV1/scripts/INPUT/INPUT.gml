@@ -141,7 +141,7 @@ function Input() constructor {
 				SpeedUpKey      = gamepad_button_check(Device, ControllerMap.SpeedUpKey);
 
 				// Skill Cycling (Bumpers)
-				CycleSkillUp   = gamepad_button_check_pressed(Device, ControllerMap.CycleSkillUp);
+				CycleSkillUp   = gamepad_button_check(Device, ControllerMap.CycleSkillUp);
 				CycleSkillDown = gamepad_button_check_pressed(Device, ControllerMap.CycleSkillDown);
 
 				// Back & UI Navigation
@@ -209,10 +209,10 @@ global.InputType = {
         ActionRelease:  gp_face1,  // A Button
 		AltKey:        gp_face2,  // B Button
 
-		SpeedUpKey:   gp_shoulderl, // Left Trigger (Speed Up)
+		SpeedUpKey:   gp_shoulderrb, // Left Trigger (Speed Up)
 
 		// Skill Cycling (Bumpers)
-		CycleSkillUp:   gp_shoulderrb, // Right Bumper
+		CycleSkillUp:   gp_shoulderr, // Right Bumper
 		CycleSkillDown: gp_shoulderlb, // Left Bumper
 
 		Escape:      gp_start,

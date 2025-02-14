@@ -81,6 +81,7 @@
   "resources":[
     {"id":{"name":"f_b_font","path":"fonts/f_b_font/f_b_font.yy",},},
     {"id":{"name":"fnt_basic","path":"fonts/fnt_basic/fnt_basic.yy",},},
+    {"id":{"name":"new_obk","path":"objects/new_obk/new_obk.yy",},},
     {"id":{"name":"obj_bomb","path":"objects/obj_bomb/obj_bomb.yy",},},
     {"id":{"name":"obj_bow","path":"objects/obj_bow/obj_bow.yy",},},
     {"id":{"name":"obj_client","path":"objects/obj_client/obj_client.yy",},},
@@ -156,6 +157,7 @@
     {"id":{"name":"scr_darken_bottom_row","path":"scripts/scr_darken_bottom_row/scr_darken_bottom_row.yy",},},
     {"id":{"name":"scr_destroy_block_in_direction","path":"scripts/scr_destroy_block_in_direction/scr_destroy_block_in_direction.yy",},},
     {"id":{"name":"scr_destroy_block","path":"scripts/scr_destroy_block/scr_destroy_block.yy",},},
+    {"id":{"name":"scr_destroy_rows_from_bottom","path":"scripts/scr_destroy_rows_from_bottom/scr_destroy_rows_from_bottom.yy",},},
     {"id":{"name":"scr_diagonal_matches_process","path":"scripts/scr_diagonal_matches_process/scr_diagonal_matches_process.yy",},},
     {"id":{"name":"scr_draw_line_DDA_ext","path":"scripts/scr_draw_line_DDA_ext/scr_draw_line_DDA_ext.yy",},},
     {"id":{"name":"scr_draw_player_health_bar","path":"scripts/scr_draw_player_health_bar/scr_draw_player_health_bar.yy",},},
@@ -201,6 +203,7 @@
     {"id":{"name":"snd_swap_test_1","path":"sounds/snd_swap_test_1/snd_swap_test_1.yy",},},
     {"id":{"name":"sound_regular_music_test_3","path":"sounds/sound_regular_music_test_3/sound_regular_music_test_3.yy",},},
     {"id":{"name":"Sound7","path":"sounds/Sound7/Sound7.yy",},},
+    {"id":{"name":"bg_enemy_test","path":"sprites/bg_enemy_test/bg_enemy_test.yy",},},
     {"id":{"name":"GM_Fire_spr_Fire","path":"sprites/GM_Fire_spr_Fire/GM_Fire_spr_Fire.yy",},},
     {"id":{"name":"spr_arrow","path":"sprites/spr_arrow/spr_arrow.yy",},},
     {"id":{"name":"spr_bee_enemy","path":"sprites/spr_bee_enemy/spr_bee_enemy.yy",},},

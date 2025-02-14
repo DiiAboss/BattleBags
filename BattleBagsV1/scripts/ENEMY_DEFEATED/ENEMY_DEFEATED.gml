@@ -6,6 +6,6 @@ function enemy_defeated(_self, game_control_object) {
     game_control_object.target_experience_points += _self.exp_reward;
 
     // ✅ Destroy enemy
-	instance_create_depth(x, y, depth, obj_enemy_basic_parent);
+	//instance_create_depth(x, y, depth, obj_enemy_basic_parent);
     instance_destroy();
 }

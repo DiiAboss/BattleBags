@@ -275,3 +275,11 @@ game_over_blocks_popped = 0;
 
 inputDelay = 10;
 devices = [];
+
+
+enemy_control = instance_create_depth(x, y, depth, obj_enemy_control);
+is_targeting_enemy = true;
+enemy_target = -1;
+
+combo_points = 0;
+max_combo_points = 10;

@@ -29,3 +29,8 @@ console_alpha = 0.75;
 input = new Input();  // Controller support
 
 input_delay = 0;
+
+
+
+
+total_gold = 0;

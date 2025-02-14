@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_destroy_rows_from_bottom",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_destroy_rows_from_bottom",
+  "parent":{
+    "name":"SKILLS",
+    "path":"folders/Scripts/MAIN/SKILLS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

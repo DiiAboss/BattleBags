@@ -56,6 +56,15 @@ var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount)
 var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
 
 var draw_y_start = camera_get_view_y(view_get_camera(view_current));
+    
+    
+    
+    if (is_targeting_enemy)
+    {
+        draw_set_alpha(0.75);
+        draw_rectangle_color(0, 0, 800, room_height, c_black, c_black, c_black, c_black, false);
+        draw_set_alpha(1);
+    }
 
 
 for (var i = 0; i < width; i++) {
@@ -215,7 +224,10 @@ for (var i = 0; i < width; i++) {
 }
 
 
-
+if (enemy_target)
+    {
+    draw_text(enemy_target.x, enemy_target.y+64, string("VVVVVVVVVVVV"))
+    }
 
 
 
@@ -422,45 +434,47 @@ draw_spawn_rates(self);
 draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, spr_hearts_old, gem_size);
 
 
-
+if (enemy_target != -1)
+    {
+        with (enemy_target)
+        { 
+            var scale = 1.1; // Slightly enlarged
+            var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
+            draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
+        }
+    }
 
 
 // ----------------------
 //  🏆 DRAW TOTAL POINTS (Top Right Corner)
 // ----------------------
 
-// Set text properties
-draw_set_font(f_b_font);
-draw_set_halign(fa_right);
-draw_set_color(c_white);
+//// Set text properties
+//draw_set_font(f_b_font);
+//draw_set_halign(fa_right);
+//draw_set_color(c_white);
+//
+//// Define position (top-right of the screen)
+//var points_x = (room_width * 0.5) + 128;
+//var points_y = draw_y_start + 20;
+//
+//// Draw background box (optional for visibility)
+//var box_width = 150;
+//var box_height = 40;
+//draw_set_color(c_black);
+//draw_rectangle(points_x - box_width, points_y - 10, points_x, points_y + box_height, false);
+//
+//// Draw the total points
+//draw_set_color(c_white);
+//draw_text(points_x - 10, points_y + 10, "Score: " + string(total_points));
+//
+//// Reset alignment
+//draw_set_halign(fa_left);
+//draw_set_font(fnt_basic);
 
-// Define position (top-right of the screen)
-var points_x = (room_width * 0.5) + 128;
-var points_y = draw_y_start + 20;
-
-// Draw background box (optional for visibility)
-var box_width = 150;
-var box_height = 40;
-draw_set_color(c_black);
-draw_rectangle(points_x - box_width, points_y - 10, points_x, points_y + box_height, false);
-
-// Draw the total points
-draw_set_color(c_white);
-draw_text(points_x - 10, points_y + 10, "Score: " + string(total_points));
-
-// Reset alignment
-draw_set_halign(fa_left);
-draw_set_font(fnt_basic);
 
 
 
-draw_attack_preview(
-    board_x_offset + (width * gem_size) + 16, // X position
-    draw_y_start + 64,                        // Y position
-    256,                                      // Preview size
-    32,                                       // Grid size
-    4                                         // Grid spacing
-);
 
 if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_exists(obj_upgrade_menu) {
 

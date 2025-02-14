@@ -58,3 +58,7 @@ preview_blocks_built = 0;
 attack_to_execute = -1;
 pending_attack  = -1;
 target_blocks = ds_list_create();
+
+
+targetted = false;
+my_sprite = spr_test_dummy;

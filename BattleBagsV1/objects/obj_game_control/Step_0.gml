@@ -5,7 +5,72 @@ input.Update(self, last_position[0], last_position[1]);
 if (input.InputType == INPUT.GAMEPAD)
 {
     control_mode = "legacy";
+    is_targeting_enemy = input.CycleSkillUp;
 }
+else 
+{
+    control_mode = "modern";
+    is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width);    
+}
+
+
+
+if (is_targeting_enemy)
+{
+    hover_x = -1;
+    hover_y = -1;
+    
+    var total_enemies = enemy_control.amount_of_enemies;
+    var enemy_found = false;
+    
+    if (input.InputType == INPUT.KEYBOARD)
+    {
+        for (var _i = 0; _i < total_enemies; _i ++)
+        {
+            if (mouse_x > enemy_control.enemy_array[_i].x - 32  && mouse_x < enemy_control.enemy_array[_i].x + 32)
+                && (mouse_y > enemy_control.enemy_array[_i].y - 32 && mouse_y < enemy_control.enemy_array[_i].y + 32)
+            {
+                enemy_target = enemy_control.enemy_array[_i];
+                enemy_found = true;
+            }
+        }
+        
+        if (enemy_found == false)
+        {
+            enemy_target = -1;
+        }
+    }
+    
+    if (input.InputType == INPUT.GAMEPAD)
+    {
+        if (instance_exists(enemy_target))
+        {
+            enemy_target = enemy_control.enemy_array[0];   
+        }
+        else 
+        {
+            enemy_target = -1; 
+        }
+    }
+    
+    
+    
+    
+    if (enemy_target != -1)
+    {
+        if (input.ActionPress)
+        {
+            enemy_target.hp -= 1;
+        }
+    }
+}
+else 
+{
+    enemy_target = -1;    
+}
+
+
+
 
 
 var max_input_delay = 8;
@@ -61,44 +126,8 @@ else {
 
 
 
-//if (input.UpPress)
-//{
-    //if (last_position[1] > top_playable_row)
-    //{
-        //last_position[1] -= 1;
-    //}
-    //
-//}
-//
-//if (input.DownPress)
-//{
-    //if (last_position[1] < bottom_playable_row)
-    //{
-       //last_position[1] += 1; 
-    //}
-    //
-//}
-//if (input.LeftPress)
-//{
-    //if (last_position[0] > 0)
-        //{
-            //last_position[0] -= 1;
-        //}
-        //else {
-            //last_position[0] = width - 2;
-        //}
-//}
-//
-//if (input.RightPress)
-//{
-    //if (last_position[0] < width - 2)
-        //{
-        //last_position[0] += 1; 
-        //}
-        //else {
-            //last_position[0] = 0;
-        //}
-//}
+
+
 
 game_over_screen(self, game_over_state);
 

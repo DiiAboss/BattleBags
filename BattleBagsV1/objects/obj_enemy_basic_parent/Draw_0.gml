@@ -2,6 +2,7 @@
 
 if !(obj_game_control.game_over_state)
 {
+
 	draw_self();
 
 /// ✅ Draw Damage Indicator
@@ -16,6 +17,8 @@ draw_text(x - 64, y - 260, "Total Attacks: " + string(total_attacks));
 draw_text(x - 64, y - 280, "Attacks Until Special: " + string(total_attacks % attacks_until_special_attack));
 draw_text(x - 64, y - 300, "Attack Timer Increase: " + string(global.enemy_timer_game_speed * (global.gameSpeed / obj_game_control.game_speed_default)));
 
+    var health_percentage = (hp / max_hp);
+    draw_rectangle(x - 196, y - 196, x - 196 + (392 * health_percentage), y - 164, false);
 
 /// ✅ Draw Attack Preview Above Enemy
 var preview_x = x - (8 * 4); // Center preview above enemy
@@ -42,4 +45,6 @@ if (is_array(enemy_attack_preview)) {
  animate_attack_targets(self, "FREEZE"); // ✅ Show animation first
  animate_attack_targets(self, "SLIME"); // ✅ Show animation first
 }
+
+
 

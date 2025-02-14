@@ -6,22 +6,16 @@ if (delay > 0)
 else {
     var input = obj_game_manager.input;
     
-    if (input_delay > 0)
-    {
-        input_delay--;
-    }
+    if (input_delay > 0) { input_delay--; }
     
     if (input.Left)
     {
         if (input_delay <= 0)
         {
-            if selected <= 0
-            {
-                selected = array_size - 1;
-            }
-            else {
-                selected --;
-            }
+            if (selected <= 0) { selected = array_size - 1; }
+            else selected --;
+                
+            
             input_delay = max_input_delay;
         }
     }
@@ -81,6 +75,3 @@ else {
         instance_destroy();
     }
 }
-
-
-
