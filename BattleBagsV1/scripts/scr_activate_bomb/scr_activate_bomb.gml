@@ -74,6 +74,60 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
 			_self.grid[cx, cy].shake_timer = max_shake_timer * 4; // What the hell is the 4 here for?
             var block = _self.grid[cx, cy];
 
+            // ✅ If it's a BIG BLOCK, transform it into separate blocks
+            if (block.is_big) {
+                
+                var group_id = block.group_id;
+                var dx = cx - global.lastSwapX;
+                var dy = cy - global.lastSwapY;
+                var dist = sqrt(dx * dx + dy * dy);
+                
+                for (var _i = 0; _i < self.width; _i++) {
+                    for (var _j = 0; _j <= bottom_row; _j++) {
+                        var other_block = grid[_i, _j];
+
+                        if (other_block.group_id == group_id) {
+                            // ✅ Convert each big block part into a small block of the same type
+                            _self.grid[_i, _j] = create_block(block.type);						
+                        
+                            // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
+                            var pop_info = {
+                                x: _i,
+                                y: _j,
+                                gem_type: block.type,
+                                timer: 0,
+                                start_delay: dist * 5, // Wave effect
+                                scale: 1.0,
+                                popping: true,
+                                powerup: block.powerup,
+                                dir: block.dir,
+                                offset_x: block.offset_x,
+                                offset_y: block.offset_y,
+                                color: block.color,
+                                y_offset_global: _self.global_y_offset,
+                                match_size: max(block.mega_width * block.mega_height, 1), // ✅ Store the match size
+                                match_points: total_match_points * 1.5,
+                                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
+                                bomb_level: 0,
+                                img_number: block.img_number,
+                            };
+                        
+                            _self.grid[_i, _j].popping   = true;  // Start popping process
+                            _self.grid[_i, _j].pop_timer = dist * 5;
+                            var _pitch = clamp(0.75 + (0.2 * _self.combo), 0.5, 5);
+                            if !(_self.game_over_state)
+                            {
+                                audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
+                            }
+                            
+                            
+                            ds_list_add(global.pop_list, pop_info);
+                        }
+                    }
+                }
+            }
+            else
+            
             if (block.type == BLOCK.BLACK) {
                 ds_list_add(black_blocks_to_transform, [cx, cy]); // ✅ Store black blocks for later transformation
             } else {
