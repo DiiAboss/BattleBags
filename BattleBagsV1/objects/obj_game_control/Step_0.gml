@@ -193,6 +193,22 @@ if (!obj_game_manager.console_active)
 process_swap(self, swap_info);
 
 
+var gp_num = gamepad_get_device_count();
+for (var i = 0; i < gp_num; i++;)
+{
+    if (gamepad_is_connected(i))
+    {
+        if gamepad_button_check(i, gp_start)
+        {
+            input.Device = i;
+        }
+    }
+    else
+    {
+        draw_text(room_width * 0.5 - 64, room_height * 0.5 + (i *12), "-")
+    }
+}
+
 // ------------------------------------------------------
 // SMOOTH UPWARD MOVEMENT + SHIFT
 // ------------------------------------------------------

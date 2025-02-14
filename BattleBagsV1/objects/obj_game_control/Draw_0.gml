@@ -1,27 +1,10 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
-//input.draw_device_num();
+draw_text(room_width * 0.5 - 64, room_height * 0.5 + (12 * k), string(input.Device))
 
-if (array_length(devices) - 1 >= 0)
-{
-    for (var k = 0; k < array_length(devices) - 1; k++)
-    {
-        draw_text(room_width * 0.5 - 64, room_height * 0.5 + (12 * k), string(devices[k]))
-    }
-}
-var gp_num = gamepad_get_device_count();
-for (var i = 0; i < gp_num; i++;)
-{
-    if (gamepad_is_connected(i))
-    {
-        draw_text(room_width * 0.5 - 64, room_height * 0.5 + (i *12), string(i))
-    }
-    else
-    {
-        draw_text(room_width * 0.5 - 64, room_height * 0.5 + (i *12), "-")
-    }
-}
+
+
 
 
 
