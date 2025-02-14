@@ -3,8 +3,6 @@ var input = obj_game_manager.input;
 
 input.Update(self, x, y);
 
-
-
 var mouse_x_pos = device_mouse_x(0);
 var mouse_y_pos = device_mouse_y(0);
 
@@ -50,5 +48,3 @@ if (input.ActionPress || input.Enter) {
         }
     }
 }
-
-

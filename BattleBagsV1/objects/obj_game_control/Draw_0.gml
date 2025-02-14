@@ -1,4 +1,9 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
+input = obj_game_manager.input;
+
+input.draw_device_num();
+
+
 if (game_over_state) { 
     // ✅ Draw Left Panel
     draw_set_alpha(0.85);
@@ -487,5 +492,5 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
 	 draw_set_font(fnt_basic); // ✅ Use the specified font
     draw_set_halign(fa_left);
 }
-
+    
 }

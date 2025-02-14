@@ -60,6 +60,11 @@ function Input() constructor {
 			break;
 		}
 	}
+    
+    static draw_device_num = function()
+    {
+        draw_text(room_width / 2, room_height / 2, string(Device));
+    }
 
 	static Update = function(_self, _x, _y) {
 			if (InputType == INPUT.KEYBOARD) {
@@ -103,7 +108,7 @@ function Input() constructor {
 				Enter           = keyboard_check_pressed(InputMap.Enter);
 
 				// Mouse Direction
-				Direction       = point_direction(_x, _y, mouse_x, mouse_y);
+				//Direction       = point_direction(_x, _y, mouse_x, mouse_y);
 
 				// Switch to gamepad if button pressed
 				if (Device != -1 && gamepad_check_input(Device)) {
@@ -146,7 +151,7 @@ function Input() constructor {
 				// Gamepad Direction
 				var rhAxis = gamepad_axis_value(Device, gp_axisrh);
 				var rvAxis = gamepad_axis_value(Device, gp_axisrv);
-				Direction  = point_direction(_x, _y, _x + rhAxis, _y + rvAxis);
+				//Direction  = point_direction(_x, _y, _x + rhAxis, _y + rvAxis);
 
 				// Switch to keyboard if any key is pressed
 				if (keyboard_check_pressed(vk_anykey)) {
