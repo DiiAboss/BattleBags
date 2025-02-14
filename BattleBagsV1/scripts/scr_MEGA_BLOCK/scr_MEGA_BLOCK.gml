@@ -190,6 +190,8 @@ function process_mega_blocks(_self, _x, _y) {
     if (gem.type == BLOCK.MEGA) {
         var parent_x = gem.big_parent[0];
         var parent_y = gem.big_parent[1];
+        if (parent_x == -1) || (parent_y == -1) gem = create_block(BLOCK.NONE);
+        
         var parent_block = _self.grid[parent_x, parent_y];
 
         var big_block_width = parent_block.mega_width;

@@ -274,3 +274,4 @@ game_over_show_options = false; // Will show after all blocks are popped
 game_over_blocks_popped = 0;
 
 inputDelay = 10;
+devices = [];
