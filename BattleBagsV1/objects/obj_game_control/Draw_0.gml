@@ -59,12 +59,7 @@ var draw_y_start = camera_get_view_y(view_get_camera(view_current));
     
     
     
-    if (is_targeting_enemy)
-    {
-        draw_set_alpha(0.75);
-        draw_rectangle_color(0, 0, 800, room_height, c_black, c_black, c_black, c_black, false);
-        draw_set_alpha(1);
-    }
+
 
 
 for (var i = 0; i < width; i++) {
@@ -222,12 +217,6 @@ for (var i = 0; i < width; i++) {
         }
     }
 }
-
-
-if (enemy_target)
-    {
-    draw_text(enemy_target.x, enemy_target.y+64, string("VVVVVVVVVVVV"))
-    }
 
 
 
@@ -433,17 +422,24 @@ draw_spawn_rates(self);
 
 draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, spr_hearts_old, gem_size);
 
-
-if (enemy_target != -1)
+    if (is_targeting_enemy)
     {
-        with (enemy_target)
-        { 
-            var scale = 1.1; // Slightly enlarged
-            var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
-            draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
-        }
+        draw_set_alpha(0.95);
+        draw_rectangle_color(0, 0, 800, room_height, c_black, c_black, c_black, c_black, false);
+        draw_set_alpha(1);
+        
+        draw_rectangle_color(850, 300, room_width - 82, room_height - 44, c_white, c_white, c_white, c_white, true);
     }
 
+    if (enemy_target != -1)
+        {
+            with (enemy_target)
+            { 
+                var scale = 1.1; // Slightly enlarged
+                var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
+                draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
+            }
+        }
 
 // ----------------------
 //  🏆 DRAW TOTAL POINTS (Top Right Corner)
