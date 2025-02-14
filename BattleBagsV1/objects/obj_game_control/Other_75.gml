@@ -12,5 +12,5 @@ if (_is_discovered) {
     array_push(devices, _gamepad_id);
 } else {
     show_debug_message("GAMEPAD {0} LOST", _gamepad_id);
-    array_delete_item(devices, _gamepad_id);
+    array_delete(devices, _gamepad_id, 0);
 }

@@ -7,7 +7,7 @@ if (array_length(devices) - 1 >= 0)
 {
     for (var k = 0; k < array_length(devices) - 1; k++)
     {
-        draw_text(room_width * 0.5 - 64, room_height * 0.5 + (12 * i), string(devices[k]))
+        draw_text(room_width * 0.5 - 64, room_height * 0.5 + (12 * k), string(devices[k]))
     }
 }
 
