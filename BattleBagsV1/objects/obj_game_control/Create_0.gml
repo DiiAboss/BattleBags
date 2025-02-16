@@ -8,10 +8,6 @@ FPS = 60;
 songs = [Sound7, sound_regular_music_test_3];
 current_song = 0;
 
-
-
-
-
 selected_piece = [-1, -1];
 hovered_block = [-1, -1];
 
@@ -33,31 +29,26 @@ skills = [0,0,0,0];
 
 current_skill = 0;
 
-
-
 total_blocks_destroyed = 0;
 total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
 
-
-
 control_mode = "modern";
-
-
-
 
 iType = "click_and_drag";
 
 big_block_enabled = true;
 
+spawn_rows   = 6; // Number of initial rows to spawn
+width	     = 8;
+height	     = 24;
+
+board_width  = 8;
+board_height = 24;
 
 
-spawn_rows = 6; // Number of initial rows to spawn
-width	   = 8;
 
-
-height			    = 24;
 top_playable_row    = 4;
 bottom_playable_row = 20;
 
@@ -156,8 +147,8 @@ number_of_rows_spawned = 0;
 // ------------------------------------------------------
 // Global Variables & Game State
 // ------------------------------------------------------
-global.combo_x = -1;
-global.combo_y = -1;
+combo_x = -1;
+combo_y = -1;
 global.paused = false;
 
 
@@ -281,5 +272,11 @@ enemy_control = instance_create_depth(x, y, depth, obj_enemy_control);
 is_targeting_enemy = true;
 enemy_target = -1;
 
+
+
 combo_points = 0;
 max_combo_points = 10;
+
+
+block_colors_destroyed = array_create(numberOfGemTypes, -1); //to show how much b
+

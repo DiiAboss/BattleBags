@@ -56,3 +56,35 @@ function initialize_game_board(_self, width = 8, height = 24, spawn_row = 6)
         }
     }
 }
+
+
+function create_grid_array(width = 8, height = 24)
+{
+    var grid = array_create(width);
+    
+    for (var i = 0; i < width; i++) {
+        grid[i] = array_create(height);
+        for (var j = 0; j < height; j++) {
+            grid[i][j] = create_block(BLOCK.NONE); // Initialize all cells as empty
+        }
+    }
+    
+    return grid;
+}
+
+
+function spawn_random_blocks_in_array(_array, spawn_rows_from_bottom)
+{
+    var width = array_length(_array);
+    var height = array_length(_array[0]); // ✅ Fix height calculation
+    
+    for (var i = 0; i < width; i++) {
+        for (var j = height - 1; j >= 12; j--) { // ✅ Fix index bounds
+            _array[i][j] = create_block(BLOCK.RANDOM);
+        }
+    }
+    
+    return _array;
+}
+
+

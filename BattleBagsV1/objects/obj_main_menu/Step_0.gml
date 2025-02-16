@@ -61,3 +61,8 @@ if (input.ActionPress || input.Enter) {
         }
     }
 }
+
+if (keyboard_check_pressed(vk_alt))
+{
+    room_goto(rm_local_multiplayer_lobby);
+}

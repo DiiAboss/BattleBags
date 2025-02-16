@@ -30,7 +30,22 @@ input = new Input();  // Controller support
 
 input_delay = 0;
 
-
-
-
 total_gold = 0;
+
+game_mode = -1;
+
+enum PLAYER_CONTROLLER
+{
+    MOUSE = 99,
+    NONE  = -1
+}
+
+// LOCAL MULTIPLAYER
+max_players = 2;  // Set the number of players
+
+
+player = array_create(max_players, PLAYER_CONTROLLER.NONE);
+player[0] = PLAYER_CONTROLLER.MOUSE;
+
+player_controls = [INPUT.KEYBOARD, INPUT.NONE];
+devices = array_create(12, -1);

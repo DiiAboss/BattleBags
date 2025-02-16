@@ -12,5 +12,6 @@ function record_highest_combo(_self, combo)
 	if (combo > _self.highest_max_combo)
 	{
 		_self.highest_max_combo = combo;
+        obj_game_manager.player_stats.highest_combo = combo;
 	}	
 }

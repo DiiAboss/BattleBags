@@ -20,11 +20,12 @@ function find_and_destroy_matches(_self) {
 	global.black_blocks_to_transform = ds_list_create(); // ✅ Track black blocks to transform
 	
 	check_2x2_match(self);
+    
+    
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
         for (var yy = 0; yy <= bottom_row; yy++) {
             marked_for_removal[xx, yy] = false;
-			
 			
 			
 			if (_self.grid[xx, yy].shake_timer > 0)
@@ -58,8 +59,8 @@ function find_and_destroy_matches(_self) {
                             marked_for_removal[xx, j] = true;
 
                             if (!first_found) {
-                                global.combo_x = xx;
-                                global.combo_y = j;
+                                combo_x = xx;
+                                combo_y = j;
                                 first_found = true;
                             }
 							 // ✅ Check for adjacent black blocks
@@ -79,8 +80,8 @@ function find_and_destroy_matches(_self) {
                     marked_for_removal[xx, j] = true;
 
                     if (!first_found) {
-                        global.combo_x = xx;
-                        global.combo_y = j;
+                        combo_x = xx;
+                        combo_y = j;
                         first_found = true;
                     }
 					 // ✅ Check for adjacent black blocks
@@ -111,8 +112,8 @@ function find_and_destroy_matches(_self) {
                             marked_for_removal[i, yy] = true;
 
                             if (!first_found) {
-                                global.combo_x = i;
-                                global.combo_y = yy;
+                                combo_x = i;
+                                combo_y = yy;
                                 first_found = true;
                             }
 							 // ✅ Check for adjacent black blocks
@@ -131,8 +132,8 @@ function find_and_destroy_matches(_self) {
                     marked_for_removal[i, yy] = true;
 
                     if (!first_found) {
-                        global.combo_x = i;
-                        global.combo_y = yy;
+                        combo_x = i;
+                        combo_y = yy;
                         first_found = true;
                     }
 					 // ✅ Check for adjacent black blocks

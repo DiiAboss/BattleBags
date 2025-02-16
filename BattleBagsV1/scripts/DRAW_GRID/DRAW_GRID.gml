@@ -129,8 +129,8 @@ function draw_combo_count() {
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
 
-    var px = (global.combo_x * gem_size) + board_x_offset + (gem_size / 2);
-    var py = (global.combo_y * gem_size) + global_y_offset + (gem_size / 2);
+    var px = (combo_x * gem_size) + board_x_offset + (gem_size / 2);
+    var py = (combo_y * gem_size) + global_y_offset + (gem_size / 2);
 
     draw_text_color(px, py, string(combo) + "x!", c_yellow, c_white, c_white, c_white, 1);
 

@@ -1,4 +1,3 @@
-/// @description
 /// @description Basic Enemy Parent - Governs basic enemy behavior.
 /// This should be inherited by standard enemies.
 
@@ -62,3 +61,5 @@ target_blocks = ds_list_create();
 
 targetted = false;
 my_sprite = spr_test_dummy;
+
+depth = 1;

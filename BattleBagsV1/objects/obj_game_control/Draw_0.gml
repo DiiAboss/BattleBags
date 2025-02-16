@@ -60,8 +60,6 @@ var draw_y_start = camera_get_view_y(view_get_camera(view_current));
     
     
 
-
-
 for (var i = 0; i < width; i++) {
     var max_shake = 2; // Max shake intensity when blocks are above row 1
     var shake_intensity = 0; // Default no shake
@@ -179,7 +177,6 @@ for (var i = 0; i < width; i++) {
 				}
 			}
             
-
 	            // 🔥 **Draw special overlays**
 	            if (gem.powerup != -1) {
 	                draw_sprite(gem.powerup.sprite, 0, draw_x_with_global_shake, draw_y_with_global_shake);
@@ -199,21 +196,7 @@ for (var i = 0; i < width; i++) {
 				     var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset;
 					draw_text(_draw_x, _draw_y, string(gem.mega_width));
 				}
-    
-			//    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
-			//        draw_text(draw_x, draw_y, "PARENT");
-			//		draw_text(draw_x+16, draw_y+16, string(gem.big_parent[1]) + "/" + string(height));
-			//        // 🔥 **Draw a box around the 2x2 block**
-			//        draw_rectangle(draw_x - 32, draw_y - 32, draw_x + gem_size * 2 - 32, draw_y + gem_size * 2 - 32, true);
-			//    }
-			//	else
-			//	{
 
-			//		draw_text(draw_x, draw_y, "CHILD"); // 🔥 Draw "CHILD" for the other parts
-    
-			//	}
-			//}
-			
         }
     }
 }
@@ -238,7 +221,11 @@ if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
 		{
 			scale = 1;
 		}
-		
+        
+        if (is_targeting_enemy)
+        {
+            draw_text(hovered_block[0], hovered_block[1], string(combo_points));
+        }
 		
 		if (control_mode == "legacy") {
 				if (hover_i + 1 < width)
@@ -271,11 +258,7 @@ if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
 			
 			if (control_mode == "modern") {
 			    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-			//} else if (control_mode == "legacy") {
-			//	draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
-			//    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
 			}
-			//draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, 1.1, 1.1, 0, c_white, 1);
             draw_set_color(c_white);
             draw_set_alpha(1.0);
 
@@ -368,8 +351,8 @@ if (combo > 1) { // Only show if at least 2 matches have happened
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
     
-	var px = (global.combo_x * gem_size) + board_x_offset + (gem_size / 2);
-	var py = (global.combo_y * gem_size) + global_y_offset + (gem_size / 2);
+	var px = (combo_x * gem_size) + board_x_offset + (gem_size / 2);
+	var py = (combo_y * gem_size) + global_y_offset + (gem_size / 2);
 			
 			
 	draw_text_color(px+2 + irandom_range(-1, 1), py+2 + irandom_range(-1, 1), string(combo) + "x!", c_black, c_black, c_black, c_black, 1);
@@ -379,6 +362,9 @@ if (combo > 1) { // Only show if at least 2 matches have happened
 	draw_set_font(fnt_basic);
 	draw_set_halign(fa_left);
 }
+    
+    
+
 
 // Optional: Draw combo count
 draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
@@ -397,6 +383,7 @@ draw_rectangle_color(board_x_offset * 0.5, y_start,            board_x_offset * 
 draw_rectangle_color(board_x_offset * 0.5, y_end, board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
 
 
+    
 var thickness = 5; // Thickness of the outline
 
 // Calculate grid dimensions
@@ -438,39 +425,17 @@ draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_
                 var scale = 1.1; // Slightly enlarged
                 var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
                 draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
+                
+                draw_sprite_ext(spr_crosshair, 0, x, y, scale, scale, rotation, c_red, 1);
             }
         }
-
-// ----------------------
-//  🏆 DRAW TOTAL POINTS (Top Right Corner)
-// ----------------------
-
-//// Set text properties
-//draw_set_font(f_b_font);
-//draw_set_halign(fa_right);
-//draw_set_color(c_white);
-//
-//// Define position (top-right of the screen)
-//var points_x = (room_width * 0.5) + 128;
-//var points_y = draw_y_start + 20;
-//
-//// Draw background box (optional for visibility)
-//var box_width = 150;
-//var box_height = 40;
-//draw_set_color(c_black);
-//draw_rectangle(points_x - box_width, points_y - 10, points_x, points_y + box_height, false);
-//
-//// Draw the total points
-//draw_set_color(c_white);
-//draw_text(points_x - 10, points_y + 10, "Score: " + string(total_points));
-//
-//// Reset alignment
-//draw_set_halign(fa_left);
-//draw_set_font(fnt_basic);
-
-
-
-
+    else {
+        if input.InputType == INPUT.KEYBOARD
+        {
+            draw_sprite(spr_crosshair, 0, mouse_x, mouse_y);
+        }
+    }
+    
 
 if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_exists(obj_upgrade_menu) {
 
@@ -488,7 +453,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
     
     if (after_menu_counter < after_menu_counter_max) {
         // ✅ Calculate remaining countdown time
-        var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / room_speed);
+        var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / FPS);
         
         draw_set_font(f_b_font); // ✅ Use the specified font
 		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4,(room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);

@@ -109,11 +109,11 @@ function Input() constructor {
 
 				// Mouse Direction
 				//Direction       = point_direction(_x, _y, mouse_x, mouse_y);
-
-				// Switch to gamepad if button pressed
-				if (Device != -1 && gamepad_check_input(Device)) {
-					InputType = INPUT.GAMEPAD;
-				}
+//
+				//// Switch to gamepad if button pressed
+				//if (Device != -1 && gamepad_check_input(Device)) {
+					//InputType = INPUT.GAMEPAD;
+				//}
 			}
 
 			if (InputType == INPUT.GAMEPAD) {
@@ -153,10 +153,10 @@ function Input() constructor {
 				var rvAxis = gamepad_axis_value(Device, gp_axisrv);
 				//Direction  = point_direction(_x, _y, _x + rhAxis, _y + rvAxis);
 
-				// Switch to keyboard if any key is pressed
-				if (keyboard_check_pressed(vk_anykey)) {
-					InputType = INPUT.KEYBOARD;
-				}
+				//// Switch to keyboard if any key is pressed
+				//if (keyboard_check_pressed(vk_anykey)) {
+					//InputType = INPUT.KEYBOARD;
+				//}
             }
     }
 }

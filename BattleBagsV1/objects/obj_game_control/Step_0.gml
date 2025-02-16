@@ -10,9 +10,8 @@ if (input.InputType == INPUT.GAMEPAD)
 else 
 {
     control_mode = "modern";
-    is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width);    
+    is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 128;    
 }
-
 
 
 if (is_targeting_enemy)
@@ -269,6 +268,11 @@ if (all_pops_finished()) {
 	if find_and_destroy_matches(self) {
 		combo_timer = 0;
 		combo += 1;
+        
+        if (combo_points < max_combo_points)
+        {
+            combo_points ++;
+        }
 	}	
 }
 
