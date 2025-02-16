@@ -7,3 +7,4 @@ if (room == rm_local_multiplayer_game)
         player_grid[i] = spawn_random_blocks_in_array(player_grid[i], 6);
     }
 }
+
