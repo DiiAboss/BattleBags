@@ -125,3 +125,24 @@ if (room == rm_local_multiplayer_lobby)
         }
     }
 }
+
+
+if (room == rm_local_multiplayer_game)
+{
+    
+    
+    for (var i = 0; i < max_players; i++)
+    {
+        global_y_offsets[i] -= shift_speeds[i];
+        
+    if (global_y_offsets[i] <= -64) {
+        global_y_offsets[i] = 0;
+        //last_position[1] -= 1;
+        shift_up_mp(player_grid[i]);
+    }
+        
+    }
+    
+    
+    
+}

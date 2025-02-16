@@ -11,9 +11,10 @@ rect_height = 50;
 max_players = 4;
 
 // Create the player input array
-player_input = array_create(max_players, undefined);
-player_grid  = array_create(max_players, undefined);
-
+player_input     = array_create(max_players, undefined);
+player_grid      = array_create(max_players, undefined);
+global_y_offsets = array_create(max_players, undefined);
+shift_speeds     = array_create(max_players, undefined);
 // 
 top_playable_row = 4;
 bottom_playable_row = 20;
@@ -22,7 +23,8 @@ bottom_playable_row = 20;
 for (var i = 0; i < max_players; i++) {
     player_input[i] = new Input();
     player_input[i].InputType = INPUT.NONE;
-    
+    global_y_offsets[i] = 0;
+    shift_speeds[i] = 1;
     // Create the gird for each player.
     player_grid[i] = create_grid_array();
 }
@@ -40,3 +42,6 @@ dInput = false;
 xInput = true;
 
 random_seed = irandom(999999);
+
+
+shift_speed = 1;
