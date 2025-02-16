@@ -7,6 +7,11 @@ for (var p = 1; p < max_players; p++) {
     player_input[p].Update(self, x, y);
 }
 
+for (var i = 0; i < ds_list_size(global.player_list); i++) {
+    var player = ds_list_find_value(global.player_list, i);
+    player.input.Update(self, x, y);
+}
+
 
 
 //----------------------------------------------------------
@@ -131,18 +136,31 @@ if (room == rm_local_multiplayer_game)
 {
     
     
-    for (var i = 0; i < max_players; i++)
-    {
-        global_y_offsets[i] -= shift_speeds[i];
+    //for (var i = 0; i < max_players; i++)
+    //{
+        //global_y_offsets[i] -= shift_speeds[i];
+        //
+    //if (global_y_offsets[i] <= -64) {
+        //global_y_offsets[i] = 0;
+        ////last_position[1] -= 1;
+        //shift_up_mp(player_grid[i]);
+    //}
         
-    if (global_y_offsets[i] <= -64) {
-        global_y_offsets[i] = 0;
-        //last_position[1] -= 1;
-        shift_up_mp(player_grid[i]);
-    }
+    //}
+    
+    for (var i = 0; i < ds_list_size(global.player_list); i++) {
+        var player = ds_list_find_value(global.player_list, i);
+        player.global_y_offset -= 3;
         
+        
+        if (player.global_y_offset <= -64)
+        {
+            random_set_seed(random_seed);
+            shift_up_mp(player.grid);
+            player.global_y_offset = 0;
+        }
     }
-    
-    
-    
+    random_seed ++;
 }
+
+

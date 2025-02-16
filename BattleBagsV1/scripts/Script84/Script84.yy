@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Script84",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Script84",
+  "parent":{
+    "name":"MULTIPLAYER",
+    "path":"folders/Scripts/MULTIPLAYER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

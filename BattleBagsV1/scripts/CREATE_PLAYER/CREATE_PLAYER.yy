@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"CREATE_PLAYER",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"CREATE_PLAYER",
+  "parent":{
+    "name":"MULTIPLAYER",
+    "path":"folders/Scripts/MULTIPLAYER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

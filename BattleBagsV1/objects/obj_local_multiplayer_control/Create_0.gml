@@ -20,6 +20,7 @@ top_playable_row = 4;
 bottom_playable_row = 20;
 
 
+
 for (var i = 0; i < max_players; i++) {
     player_input[i] = new Input();
     player_input[i].InputType = INPUT.NONE;
@@ -45,3 +46,16 @@ random_seed = irandom(999999);
 
 
 shift_speed = 1;
+
+max_players = 4; // 🚀 Support up to 35 players
+global.player_list = ds_list_create();
+
+for (var i = 0; i < max_players; i++) {
+    ds_list_add(global.player_list, create_player(i));
+}
+
+
+for (var i = 0; i < ds_list_size(global.player_list); i++) {
+    var player = ds_list_find_value(global.player_list, i);
+    spawn_random_blocks_in_array(player.grid, player.start_row);
+}

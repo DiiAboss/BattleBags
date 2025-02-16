@@ -209,7 +209,7 @@ function shift_up_mp(grid) {
     
         // 3️⃣ Spawn a new random row at the **very bottom of the grid**
     for (var i = 0; i < width; i++) {
-        // ✅ Ensure **only spawn new blocks in the last row**
+        // ✅ Ensure **only spawn new blocks in the last row*
         grid[i, height - 1] = create_block(BLOCK.RANDOM);
     }
         //// 2️⃣ Shift all popping gems in `global.pop_list`

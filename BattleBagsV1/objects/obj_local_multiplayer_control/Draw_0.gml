@@ -89,34 +89,12 @@ if (room == rm_local_multiplayer_lobby)
 
 if (room == rm_local_multiplayer_game)
 {
-    
-    draw_set_color(c_white);
-    draw_set_alpha(1);
-    
-    var board_x_offset = 128;
-    var gem_size = 48;
-    var global_y_offset = 0;
-    var offset = 32;
-    var darken_alpha = 1;
-    
-    for (var p = 0; p < max_players; p++)
-    {
-        board_x_offset = 96 + (p * (9 * gem_size));
+    for (var i = 0; i < ds_list_size(global.player_list); i++) {
+        var player = ds_list_find_value(global.player_list, i);
         
-        // 🔹 Draw player grid properly
-        for (var i = 0; i < 8; i++) {
-            for (var j = 0; j < bottom_playable_row; j++) {
-                if (!is_undefined(player_grid[p][i, j]) && player_grid[p][i, j].type != BLOCK.NONE) {
-                    var gem = player_grid[p][i, j];
-                    gem.x_scale = 0.75;
-                    gem.y_scale = 0.75;
-                    var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-                    var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset - 256;
-                    
-                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
-                }
-            }
-        }  
+        if (player.alive) {
+            draw_player_grid(self, player);
+        }
     }
 }
 
