@@ -42,10 +42,11 @@ mouse_assigned = false;
 dInput = false;
 xInput = true;
 
-random_seed = irandom(999999);
+random_seed = irandom(999999) * -1;
 
 
-shift_speed = 1;
+
+shift_speed = 0.25;
 
 max_players = 4; // 🚀 Support up to 35 players
 global.player_list = ds_list_create();
@@ -57,5 +58,9 @@ for (var i = 0; i < max_players; i++) {
 
 for (var i = 0; i < ds_list_size(global.player_list); i++) {
     var player = ds_list_find_value(global.player_list, i);
+    random_set_seed(random_seed);
     spawn_random_blocks_in_array(player.grid, player.start_row);
+    player.pop_list = ds_list_create();
 }
+
+width = 8;

@@ -135,6 +135,7 @@
     {"id":{"name":"ENEMY","path":"scripts/ENEMY/ENEMY.yy",},},
     {"id":{"name":"EXPERIENCE_AND_LEVEL","path":"scripts/EXPERIENCE_AND_LEVEL/EXPERIENCE_AND_LEVEL.yy",},},
     {"id":{"name":"FIND_AND_DESTROY_MATCHES","path":"scripts/FIND_AND_DESTROY_MATCHES/FIND_AND_DESTROY_MATCHES.yy",},},
+    {"id":{"name":"FIND_AND_DESTROY_MP","path":"scripts/FIND_AND_DESTROY_MP/FIND_AND_DESTROY_MP.yy",},},
     {"id":{"name":"GLOBAL_SHAPE_TEMPLATES","path":"scripts/GLOBAL_SHAPE_TEMPLATES/GLOBAL_SHAPE_TEMPLATES.yy",},},
     {"id":{"name":"GRID_SHAKE","path":"scripts/GRID_SHAKE/GRID_SHAKE.yy",},},
     {"id":{"name":"INIT_BOARD","path":"scripts/INIT_BOARD/INIT_BOARD.yy",},},

@@ -9,6 +9,10 @@ function create_player(_id)
         shift_speed: 1,                        // Shift speed
         score: 0,                              // Player score
         alive: true,                           // Is the player still active?
-        input_type: INPUT.NONE                 // Default input type
+        input_type: INPUT.NONE,                // Default input type
+        pop_list: undefined,
+        combo: 0,
+        board_x_offset: 0,
+        bottom_playable_row: 20,
     };
 }

@@ -135,22 +135,9 @@ if (room == rm_local_multiplayer_lobby)
 if (room == rm_local_multiplayer_game)
 {
     
-    
-    //for (var i = 0; i < max_players; i++)
-    //{
-        //global_y_offsets[i] -= shift_speeds[i];
-        //
-    //if (global_y_offsets[i] <= -64) {
-        //global_y_offsets[i] = 0;
-        ////last_position[1] -= 1;
-        //shift_up_mp(player_grid[i]);
-    //}
-        
-    //}
-    
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
-        player.global_y_offset -= 3;
+        player.global_y_offset -= 1;
         
         
         if (player.global_y_offset <= -64)
@@ -159,7 +146,69 @@ if (room == rm_local_multiplayer_game)
             shift_up_mp(player.grid);
             player.global_y_offset = 0;
         }
+        
+        
+        
+        // ✅ Only find new matches if no pops are pending
+        if (ds_list_size(player.pop_list) == 0) {
+            find_and_destroy_matches_mp(self, player);
+        }
+        
+        
     }
+    
+    for (var i = 0; i < ds_list_size(global.player_list); i++) {
+        var player = ds_list_find_value(global.player_list, i);
+        for (var _i = 0; _i < ds_list_size(player.pop_list); _i++) {
+            var pop_data = ds_list_find_value(player.pop_list, _i);
+                
+            // Wait for start_delay
+            if (pop_data.timer < pop_data.start_delay) {
+                pop_data.timer++;
+        
+                var _x = pop_data.x;
+                var _y = pop_data.y;
+            } else {
+                // Grow effect
+                pop_data.scale += 0.05;
+                
+                    
+                    
+                // Once scale >= 1.1, pop is done
+                if (pop_data.scale >= 1.1) {
+                    var _x = pop_data.x;
+                    var _y = pop_data.y;
+        
+                    // ✅ Store Gem Object Before Destroying
+                    if (player.grid[_x, _y] != -1)
+                    {
+                        
+                        var gem = player.grid[_x, _y];
+                    }
+                    else
+                    {
+                        break;
+                    }
+        
+                        destroy_block(player, _x, _y);
+                            
+                            
+                        var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);
+                        var _gain = clamp(0.5 + (0.1 * player.combo), 0.5, 0.75);
+                        audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
+                    
+                    // Remove from pop_list
+                    ds_list_delete(player.pop_list, _i);
+                    _i--; 
+                    continue;
+                }
+            }
+            // Write back updated pop_data
+            ds_list_replace(player.pop_list, _i, pop_data);
+        }
+        
+    }
+    
     random_seed ++;
 }
 
