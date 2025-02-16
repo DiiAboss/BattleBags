@@ -19,7 +19,6 @@
     {"name":"Rooms","order":10,"path":"folders/Rooms.yy",},
     {"name":"Scripts","order":5,"path":"folders/Scripts.yy",},
     {"name":"DRAW","order":24,"path":"folders/Scripts/DRAW.yy",},
-    {"name":"MULTIPLAYER","order":25,"path":"folders/Scripts/MULTIPLAYER.yy",},
     {"name":"BOARD","order":13,"path":"folders/Scripts/MAIN/BOARD.yy",},
     {"name":"BLOCKS_AND_POPS","order":8,"path":"folders/Scripts/MAIN/BOARD/BLOCKS_AND_POPS.yy",},
     {"name":"BLOCKS","order":7,"path":"folders/Scripts/MAIN/BOARD/BLOCKS_AND_POPS/BLOCKS.yy",},
@@ -41,6 +40,7 @@
     {"name":"SPAWN_GEMS","order":2,"path":"folders/Scripts/MAIN/SPAWN_GEMS.yy",},
     {"name":"UPGRADES","order":3,"path":"folders/Scripts/MAIN/UPGRADES.yy",},
     {"name":"MAP_CONTROLLER","order":16,"path":"folders/Scripts/MAP_CONTROLLER.yy",},
+    {"name":"MULTIPLAYER","order":25,"path":"folders/Scripts/MULTIPLAYER.yy",},
     {"name":"MUSIC_AND_SOUNDS","order":23,"path":"folders/Scripts/MUSIC_AND_SOUNDS.yy",},
     {"name":"ONLINE_STUFF","order":22,"path":"folders/Scripts/ONLINE_STUFF.yy",},
     {"name":"TIME","order":6,"path":"folders/Scripts/TIME.yy",},
@@ -60,6 +60,7 @@
   ],
   "ResourceOrderSettings":[
     {"name":"fnt_basic","order":1,"path":"fonts/fnt_basic/fnt_basic.yy",},
+    {"name":"fnt_textFont","order":2,"path":"fonts/fnt_textFont/fnt_textFont.yy",},
     {"name":"new_obk","order":6,"path":"objects/new_obk/new_obk.yy",},
     {"name":"obj_bomb","order":1,"path":"objects/obj_bomb/obj_bomb.yy",},
     {"name":"obj_bow","order":3,"path":"objects/obj_bow/obj_bow.yy",},

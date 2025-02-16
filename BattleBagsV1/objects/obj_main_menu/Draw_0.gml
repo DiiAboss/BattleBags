@@ -2,7 +2,7 @@
 
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
-draw_set_font(fnt_basic);
+draw_set_font(fnt_textFont);
 draw_set_color(c_white);
 
 for (var i = 0; i < array_length(menu_options); i++) {
@@ -10,7 +10,7 @@ for (var i = 0; i < array_length(menu_options); i++) {
 
     if (i == selected_option) {
         draw_set_color(c_aqua);
-        draw_text(menu_x - 5, menu_y, "> " + menu_options[i] + " <");
+        draw_text(menu_x - 5, menu_y, "- " + menu_options[i] + " -");
     } else {
         draw_set_color(c_white);
         draw_text(menu_x, menu_y, menu_options[i]);
