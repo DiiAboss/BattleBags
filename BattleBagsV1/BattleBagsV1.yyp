@@ -82,6 +82,7 @@
   "resources":[
     {"id":{"name":"f_b_font","path":"fonts/f_b_font/f_b_font.yy",},},
     {"id":{"name":"fnt_basic","path":"fonts/fnt_basic/fnt_basic.yy",},},
+    {"id":{"name":"fnt_heading1","path":"fonts/fnt_heading1/fnt_heading1.yy",},},
     {"id":{"name":"fnt_textFont","path":"fonts/fnt_textFont/fnt_textFont.yy",},},
     {"id":{"name":"new_obk","path":"objects/new_obk/new_obk.yy",},},
     {"id":{"name":"obj_bomb","path":"objects/obj_bomb/obj_bomb.yy",},},

@@ -60,6 +60,7 @@
   ],
   "ResourceOrderSettings":[
     {"name":"fnt_basic","order":1,"path":"fonts/fnt_basic/fnt_basic.yy",},
+    {"name":"fnt_heading1","order":3,"path":"fonts/fnt_heading1/fnt_heading1.yy",},
     {"name":"fnt_textFont","order":2,"path":"fonts/fnt_textFont/fnt_textFont.yy",},
     {"name":"new_obk","order":6,"path":"objects/new_obk/new_obk.yy",},
     {"name":"obj_bomb","order":1,"path":"objects/obj_bomb/obj_bomb.yy",},

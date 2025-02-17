@@ -16,3 +16,7 @@ for (var i = 0; i < array_length(menu_options); i++) {
         draw_text(menu_x, menu_y, menu_options[i]);
     }
 }
+
+draw_set_font(fnt_heading1);
+draw_set_color(c_red);
+draw_text(room_width /2, 100, "GAME TITLE");
