@@ -167,7 +167,7 @@ if (room == rm_local_multiplayer_game)
     //------------------------------------------------------------
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
-        for (var _i = 0; _i < ds_list_size(player.pop_list); _i++) {
+        for (var _i = ds_list_size(player.pop_list) - 1; _i >= 0; _i--) { 
             var pop_data = ds_list_find_value(player.pop_list, _i);
                 
             // Wait for start_delay
@@ -207,7 +207,6 @@ if (room == rm_local_multiplayer_game)
                     
                     // Remove from pop_list
                     ds_list_delete(player.pop_list, _i);
-                    _i--; 
                     continue;
                 }
             }
