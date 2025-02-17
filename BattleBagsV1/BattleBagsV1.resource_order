@@ -184,6 +184,7 @@
     {"name":"spr_orange_gem","order":6,"path":"sprites/spr_orange_gem/spr_orange_gem.yy",},
     {"name":"spr_Oshki","order":16,"path":"sprites/spr_Oshki/spr_Oshki.yy",},
     {"name":"spr_pink_gem","order":2,"path":"sprites/spr_pink_gem/spr_pink_gem.yy",},
+    {"name":"spr_placehold1","order":11,"path":"sprites/spr_placehold1/spr_placehold1.yy",},
     {"name":"spr_powerup_2x_multi","order":2,"path":"sprites/spr_powerup_2x_multi/spr_powerup_2x_multi.yy",},
     {"name":"spr_powerup_bomb","order":1,"path":"sprites/spr_powerup_bomb/spr_powerup_bomb.yy",},
     {"name":"spr_powerup_destroy_to_down","order":9,"path":"sprites/spr_powerup_destroy_to_down/spr_powerup_destroy_to_down.yy",},
