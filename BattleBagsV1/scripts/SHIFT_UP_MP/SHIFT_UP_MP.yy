@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SHIFT_UP_MP",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SHIFT_UP_MP",
+  "parent":{
+    "name":"MULTIPLAYER",
+    "path":"folders/Scripts/MULTIPLAYER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

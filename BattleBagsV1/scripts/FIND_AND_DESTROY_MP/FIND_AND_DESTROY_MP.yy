@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"FIND_AND_DESTROY_MP",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"FIND_AND_DESTROY_MP",
+  "parent":{
+    "name":"MULTIPLAYER",
+    "path":"folders/Scripts/MULTIPLAYER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
