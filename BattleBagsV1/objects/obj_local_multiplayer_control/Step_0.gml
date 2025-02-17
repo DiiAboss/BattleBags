@@ -137,14 +137,19 @@ if (room == rm_local_multiplayer_game)
     
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
-        player.global_y_offset -= 1;
         
+        var next_y_pos = player.global_y_offset - player.shift_speed;
         
-        if (player.global_y_offset <= -64)
+        if ((next_y_pos) <= -gem_size)
         {
-            random_set_seed(random_seed);
-            shift_up_mp(player.grid);
-            player.global_y_offset = 0;
+            var remainder = next_y_pos - -(gem_size);
+            random_set_seed(player.random_seed); // THIS ENSURE ALL PLAYERS GRIDS ARE ON THE SAME SEED
+            shift_up_mp(player); // Shift the board up one position
+            player.global_y_offset = remainder; // set the new offset to 0, to start the push up animation.
+            player.random_seed ++; // THIS ENSURE ALL PLAYERS GRIDS ARE ON THE SAME SEED
+        }
+        else {
+            player.global_y_offset -= player.shift_speed;
         }
         
         
@@ -154,9 +159,12 @@ if (room == rm_local_multiplayer_game)
             find_and_destroy_matches_mp(self, player);
         }
         
-        
+        drop_blocks_mp(self, player);
     }
     
+    //------------------------------------------------------------
+    // DESTROY THE BLOCKS IN THE POP QUEUE
+    //------------------------------------------------------------
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
         for (var _i = 0; _i < ds_list_size(player.pop_list); _i++) {
@@ -206,10 +214,8 @@ if (room == rm_local_multiplayer_game)
             // Write back updated pop_data
             ds_list_replace(player.pop_list, _i, pop_data);
         }
-        
+  
     }
-    
-    random_seed ++;
 }
 
 

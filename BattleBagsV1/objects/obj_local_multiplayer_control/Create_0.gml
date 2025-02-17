@@ -61,6 +61,12 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
     random_set_seed(random_seed);
     spawn_random_blocks_in_array(player.grid, player.start_row);
     player.pop_list = ds_list_create();
+    player.shift_speed = 0.5 + (0.1 * i);
+    player.random_seed = random_seed;
 }
 
 width = 8;
+height = 24;
+
+gem_size = 48;
+show_debug_overlay(true);

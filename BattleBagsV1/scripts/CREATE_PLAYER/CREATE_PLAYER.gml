@@ -14,5 +14,6 @@ function create_player(_id)
         combo: 0,
         board_x_offset: 0,
         bottom_playable_row: 20,
+        random_seed: 0,
     };
 }
