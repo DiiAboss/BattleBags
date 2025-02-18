@@ -15,7 +15,7 @@ process_console(self, console_active);
 #endregion
 
 
-if room != rm_local_multiplayer_lobby
+if room == rm_main_menu
 {
     var gp_num = gamepad_get_device_count();
     for (var i = 0; i < gp_num; i++;)
@@ -33,10 +33,3 @@ if room != rm_local_multiplayer_lobby
 
 
 
-if (room == rm_local_multiplayer_lobby)
-{
-    if !(instance_exists(obj_local_multiplayer_control))
-    {
-        instance_create_depth(depth-1, x, y, obj_local_multiplayer_control);
-    }
-}

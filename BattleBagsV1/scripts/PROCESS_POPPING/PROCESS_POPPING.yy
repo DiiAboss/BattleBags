@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"PROCESS_POPPING",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"PROCESS_POPPING",
+  "parent":{
+    "name":"MULTIPLAYER",
+    "path":"folders/Scripts/MULTIPLAYER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

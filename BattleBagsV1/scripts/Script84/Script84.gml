@@ -7,7 +7,7 @@ function draw_player_grid(_self, player)
     
     var board_x_offset = 0;
     var gem_size = 48;
-    var global_y_offset = 0;
+    var global_y_offset = player.global_y_offset;
     var offset = 32;
     var darken_alpha = 1;
     

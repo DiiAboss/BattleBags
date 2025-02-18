@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"DROP_BLOCKS_MP",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DROP_BLOCKS_MP",
+  "parent":{
+    "name":"MULTIPLAYER",
+    "path":"folders/Scripts/MULTIPLAYER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

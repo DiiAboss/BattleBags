@@ -95,6 +95,12 @@ if (room == rm_local_multiplayer_game)
         if (player.alive) {
             draw_player_grid(self, player);
         }
+        
+        
+        
+        
+        
+        
     }
 }
 
