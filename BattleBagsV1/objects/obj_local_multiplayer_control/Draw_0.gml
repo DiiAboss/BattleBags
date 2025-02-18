@@ -98,9 +98,61 @@ if (room == rm_local_multiplayer_game)
         
         
         
+        if (player.hovered_block[0] >= 0 && player.hovered_block[1] >= 0) {
+            var hover_i = player.hovered_block[0];
+            var hover_j = player.hovered_block[1];
         
-        
-        
+            if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
+                var hover_gem = player.grid[hover_i, hover_j];
+                var rect_x1 = player.board_x_offset + (hover_i * gem_size);
+                var rect_y1 = (hover_j * gem_size) + player.global_y_offset;
+                var rect_x2 = rect_x1 + gem_size;
+                var rect_y2 = rect_y1 + gem_size;
+                var scale = 1.1 * (gem_size / 64);
+                var offset_x = 32;
+                var offset_y = 16;
+                
+                var offset = 16;
+                if (player.swap_in_progress)
+                {
+                    scale = 1 * (gem_size / 64);
+                }
+
+                
+                if (player.input.InputType == INPUT.GAMEPAD) {
+                        if (hover_i + 1 < width)
+                        {
+                            var hover_gem2 = player.grid[hover_i + 1, hover_j];
+                            
+                            
+                            draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                            
+                            if (hover_gem2.type != BLOCK.NONE)
+                            {
+                                draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + offset_x, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                                draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + offset_x, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                            }
+                        }
+                        
+                        draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + offset_x, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                }
+                
+                if (hover_gem.type != BLOCK.NONE) {
+                    var rect_x1 = player.board_x_offset + (hover_i * gem_size);
+                    var rect_y1 = (hover_j * gem_size) + player.global_y_offset;
+                    var rect_x2 = rect_x1 + gem_size;
+                    var rect_y2 = rect_y1 + gem_size;
+
+                    // ✅ Draw Normally but with Transparency
+                    draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                    draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                    
+                    if (player.input.InputType == INPUT.KEYBOARD) {
+                        draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                    }
+                }
+            }
+        }
     }
 }
 
