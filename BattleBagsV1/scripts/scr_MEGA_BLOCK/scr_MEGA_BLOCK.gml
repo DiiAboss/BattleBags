@@ -52,7 +52,7 @@ function spawn_mega_block(_self, _x, _y, _shape_name) {
                 mega_gem.is_enemy_block = true;
                 mega_gem.mega_width = shape_width;
                 mega_gem.mega_height = shape_height; // ✅ Store dimensions
-
+                mega_gem.powerup = create_powerup(POWERUP.NONE); // ✅ Store dimensions
                 _self.grid[_x + i, _y + j] = mega_gem;
             }
         }

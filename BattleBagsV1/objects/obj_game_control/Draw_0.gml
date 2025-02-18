@@ -126,7 +126,26 @@ for (var i = 0; i < width; i++) {
 			        if (i == parent_x && j == parent_y) {
 			            var _width = self.grid[parent_x, parent_y].mega_width;
 			            var _height = self.grid[parent_x, parent_y].mega_height;
-
+                        
+                        var draw_x_min = draw_x - (gem_size * 0.5);
+                        var draw_y_min = draw_y - (gem_size * 0.5);
+                        var draw_x_max = draw_x_min + (_width * gem_size);
+                        var draw_y_max = draw_y_min + (_height * gem_size);
+                        
+                        //  Draw the Mega Block Piece with Correct Rotation
+                        //draw_sprite_ext(sprite_for_block(BLOCK.MEGA), 0, draw_x + gem_size / 2, draw_y + gem_size / 2, 1, 1, rotation, c_white, 1);
+                        draw_set_color(c_black);
+                        draw_rectangle(draw_x_min, draw_y_min, draw_x_max, draw_y_max, false);
+                        draw_set_color(c_red);
+                        draw_rectangle_color(draw_x_min, draw_y_min, draw_x_max, draw_y_max, c_red, c_red, c_red, c_red, true);
+                        draw_rectangle_color(draw_x_min + 4, draw_y_min + 4, draw_x_max - 4, draw_y_max - 4, c_red, c_red, c_red, c_red, true);
+                        draw_roundrect_color(draw_x_min, draw_y_min, draw_x_max, draw_y_max, c_red, c_red, true);
+                        draw_set_color(c_white);
+                        
+                        var spr_draw_x = draw_x_min + (draw_x_max - draw_x_min) * 0.5;
+                        var spr_draw_y = draw_y_min + (draw_y_max - draw_y_min) * 0.5;
+                        draw_sprite(spr_mega_enemy_overlay, 0, spr_draw_x, spr_draw_y);
+                        
 			            // ✅ Iterate over the whole Mega Block
 			            for (var bx = 0; bx < _width; bx++) {
 			                for (var by = 0; by < _height; by++) {
@@ -134,16 +153,9 @@ for (var i = 0; i < width; i++) {
 			                    var block_y = parent_y + by;
 								
 								if (grid[block_x, block_y].type == BLOCK.NONE) continue; //
-								
-			                    var draw_x = board_x_offset + (block_x * gem_size);
-			                    var draw_y = global_y_offset + (block_y * gem_size);
-
 			                    //  Determine correct sprite variation
 			                    var _sprite_index = 0;
 			                    var rotation = 0;
-								
-								 //  Draw the Mega Block Piece with Correct Rotation
-			                    draw_sprite_ext(sprite_for_block(BLOCK.MEGA), 0, draw_x + gem_size / 2, draw_y + gem_size / 2, 1, 1, rotation, c_white, 1);
 			                }
 			            }
 			        }
@@ -243,7 +255,7 @@ if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
 				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
 		}
 		
-        if (hover_gem.type != BLOCK.NONE) {
+        if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
             var rect_x1 = board_x_offset + (hover_i * gem_size);
             var rect_y1 = (hover_j * gem_size) + global_y_offset;
             var rect_x2 = rect_x1 + gem_size;

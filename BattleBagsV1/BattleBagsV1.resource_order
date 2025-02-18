@@ -187,6 +187,7 @@
     {"name":"spr_legacy_controller","order":9,"path":"sprites/spr_legacy_controller/spr_legacy_controller.yy",},
     {"name":"spr_light_pink_gem","order":17,"path":"sprites/spr_light_pink_gem/spr_light_pink_gem.yy",},
     {"name":"spr_lightblue_gem","order":1,"path":"sprites/spr_lightblue_gem/spr_lightblue_gem.yy",},
+    {"name":"spr_mega_enemy_overlay","order":9,"path":"sprites/spr_mega_enemy_overlay/spr_mega_enemy_overlay.yy",},
     {"name":"spr_mega_gem","order":9,"path":"sprites/spr_mega_gem/spr_mega_gem.yy",},
     {"name":"spr_none","order":1,"path":"sprites/spr_none/spr_none.yy",},
     {"name":"spr_orange_gem","order":6,"path":"sprites/spr_orange_gem/spr_orange_gem.yy",},
@@ -217,5 +218,6 @@
     {"name":"spr_wild_gem","order":7,"path":"sprites/spr_wild_gem/spr_wild_gem.yy",},
     {"name":"spr_yellow_gem","order":5,"path":"sprites/spr_yellow_gem/spr_yellow_gem.yy",},
     {"name":"Sprite59","order":10,"path":"sprites/Sprite59/Sprite59.yy",},
+    {"name":"Sprite70","order":13,"path":"sprites/Sprite70/Sprite70.yy",},
   ],
 }

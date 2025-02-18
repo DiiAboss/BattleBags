@@ -1,8 +1,8 @@
 /// @description Basic Enemy Parent - Governs basic enemy behavior.
 /// This should be inherited by standard enemies.
 
-
-
+draw_enable_swf_aa(true);
+draw_set_swf_aa_level(1);
 
 /// ✅ Attack Queue Timers
 queued_attack_timer = 0;
