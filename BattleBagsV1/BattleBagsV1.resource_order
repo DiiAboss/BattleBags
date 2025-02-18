@@ -176,6 +176,7 @@
     {"name":"spr_enemy_golem_light_1","order":4,"path":"sprites/spr_enemy_golem_light_1/spr_enemy_golem_light_1.yy",},
     {"name":"spr_enemy_rat","order":2,"path":"sprites/spr_enemy_rat/spr_enemy_rat.yy",},
     {"name":"spr_exp_powerup_2","order":17,"path":"sprites/spr_exp_powerup_2/spr_exp_powerup_2.yy",},
+    {"name":"spr_gameOver","order":18,"path":"sprites/spr_gameOver/spr_gameOver.yy",},
     {"name":"spr_gem_hovered_border","order":15,"path":"sprites/spr_gem_hovered_border/spr_gem_hovered_border.yy",},
     {"name":"spr_gem_test_2","order":12,"path":"sprites/spr_gem_test_2/spr_gem_test_2.yy",},
     {"name":"spr_goo_cover","order":1,"path":"sprites/spr_goo_cover/spr_goo_cover.yy",},

@@ -7,7 +7,7 @@ draw_set_color(c_white);
 
 font_enable_effects(fnt_textFont,true, {
     outlineEnable: true,
-    outlineDistance: 32,
+    outlineDistance: 3,
     outlineColour: c_white,
     outlineAlpha: 0.5}
 );

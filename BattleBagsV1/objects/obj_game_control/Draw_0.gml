@@ -21,7 +21,7 @@ if (game_over_state) {
         var _x = pop_data.x;
         var _y = pop_data.y;
 
-        draw_sprite(spr_Oshki, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
+        draw_sprite(spr_gameOver, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
 		draw_sprite(spr_enemy_gem_overlay, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
     }
 
@@ -33,7 +33,7 @@ if (game_over_state) {
         var menu_y = game_over_ui_y + 420;
         var button_width = 300;
         var button_height = 50;
-		draw_set_font(fnt_basic);
+		draw_set_font(fnt_textFont);
         // ✅ Highlight button on hover
         if (game_over_option_selected == 0) draw_set_color(c_gray);
         else draw_set_color(c_white);
@@ -459,6 +459,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
 		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4,(room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);
         draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2),room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
     } else {
+        draw_set_font(fnt_textFont)
         draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
     }
 	 draw_set_font(fnt_basic); // ✅ Use the specified font
