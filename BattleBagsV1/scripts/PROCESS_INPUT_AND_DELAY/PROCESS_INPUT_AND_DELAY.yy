@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"PROCESS_INPUT_AND_DELAY",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"PROCESS_INPUT_AND_DELAY",
+  "parent":{
+    "name":"PLAYER_CONTROLS",
+    "path":"folders/Scripts/MAIN/PLAYER_CONTROLS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

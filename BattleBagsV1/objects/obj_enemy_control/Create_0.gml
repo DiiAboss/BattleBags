@@ -22,3 +22,17 @@ instance_create_depth(enemy_spawn_pos_x, enemy_spawn_pos_y, depth, obj_enemy_bas
 ];
 
 amount_of_enemies = array_length(enemy_array);
+
+
+
+attack_preview_box_x = 1000;
+attack_preview_box_y = 500;
+
+attack_preview_box_width = 400;
+attack_preview_box_height = 300;
+
+attack_preview_active = true;
+attack_preview_alpha = 0;
+enemy_is_attacking = false;
+preview_camera = camera_create_view(attack_preview_box_x, attack_preview_box_y, attack_preview_box_width, attack_preview_box_height);
+

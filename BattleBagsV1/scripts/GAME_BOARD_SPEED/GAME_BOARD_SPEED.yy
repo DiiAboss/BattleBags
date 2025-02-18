@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"GAME_BOARD_SPEED",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GAME_BOARD_SPEED",
+  "parent":{
+    "name":"MAIN",
+    "path":"folders/Scripts/MAIN.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

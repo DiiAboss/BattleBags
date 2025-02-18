@@ -14,8 +14,6 @@ if (game_over_state)
     return;
 }
 
-
-
 //------------------------------------------------
 // Leveling and Upgrades
 //------------------------------------------------
@@ -90,57 +88,9 @@ else
     is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 128;    
 }
 
+process_inputs_and_delay(self, input);
 
 
-
-var max_input_delay = 8;
-
-if (inputDelay > 0)
-{
-    inputDelay --;
-}
-else {
-    if (input.Up)
-    {
-        if (last_position[1] > top_playable_row)
-        {
-            last_position[1] -= 1;
-        }
-        inputDelay = max_input_delay;
-    }
-    
-    if (input.Down)
-    {
-        if (last_position[1] < bottom_playable_row)
-        {
-        last_position[1] += 1; 
-        }
-        inputDelay = max_input_delay;
-    }
-    if (input.Left)
-    {
-        if (last_position[0] > 0)
-            {
-                last_position[0] -= 1;
-            }
-            else {
-                last_position[0] = width - 2;
-            }
-        inputDelay = max_input_delay;
-    }
-    
-    if (input.Right)
-    {
-        if (last_position[0] < width - 2)
-            {
-            last_position[0] += 1; 
-            }
-            else {
-                last_position[0] = 0;
-            }
-        inputDelay = max_input_delay;
-    }
-}
 
 process_targetting_enemy(self, input, enemy_control, is_targeting_enemy);
 
@@ -191,15 +141,16 @@ if (global_y_offset <= -gem_size) {
     shift_up(self);
 }
 
+
 darken_bottom_row(self);
 
-// 5️⃣ Update the topmost row tracking
+// Update the topmost row tracking
 update_topmost_row(self);
 
 
 var reset = true;
 
-if (global.topmost_row <= top_playable_row) {
+if (global.topmost_row < top_playable_row) {
     check_game_over(self);
 	reset = false;
 }
@@ -317,7 +268,6 @@ for (var i = 0; i < ds_list_size(global.pop_list); i++) {
 }
 
 
-
 process_combo_timer_and_record_max(self);
 
 update_freeze_timer(self);
@@ -325,32 +275,8 @@ update_freeze_timer(self);
 find_all_puzzle_matches(self);	
 
 
-function process_fight_for_your_life(_self, danger_row)
-{
-    var in_danger = false;
-    var width     = _self.board_width;
-    var grid      = _self.grid;
-    var gem_size  = _self.gem_size;
-    var global_y_offset = _self.global_y_offset;
-    var combo     = self.combo;
-    
-    for (var i = 0; i < width; i++) {
-        for (var _y = 0; _y < danger_row; _y++)
-        {
-            if (grid[i, _y].type != BLOCK.NONE && !grid[i, _y].falling && grid[i, _y].fall_delay < grid[i, _y].max_fall_delay && !grid[i, _y].is_enemy_block) { 
-            
-                if (combo >= 0)
-                {
-                    in_danger = true;
-                }
-            }
-        }
-    }
-    
-    return (in_danger);
-}
-
 fight_for_your_life = process_fight_for_your_life(self, top_playable_row + 1);
+
 
 
 if (fight_for_your_life)

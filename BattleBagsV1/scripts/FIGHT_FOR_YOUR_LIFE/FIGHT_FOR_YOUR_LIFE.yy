@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"FIGHT_FOR_YOUR_LIFE",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"FIGHT_FOR_YOUR_LIFE",
+  "parent":{
+    "name":"MAIN",
+    "path":"folders/Scripts/MAIN.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
