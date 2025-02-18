@@ -1,4 +1,60 @@
 /// @description Handles enemy damage when hit by player attacks
+
+function create_enemy(start_x, start_y)
+{
+    var max_health = 100;
+    var level = 1;
+    
+    var enemy_struct =
+    {
+        hp: max_health,
+        max_hp: max_health,
+        basic_attacks: undefined,
+        special_attacks: undefined
+    }
+    
+    return instance_create_depth(start_x, start_y, -1, obj_enemy_basic_parent, enemy_struct);
+}
+
+
+function init_enemy(enemy_control, start_x, start_y)
+{
+    var enemy = -1;
+    
+    enemy = create_enemy(start_x, start_y);
+    enemy.basic_attacks = ds_list_create();
+    enemy.special_attacks = ds_list_create();
+    
+    return enemy;
+}
+
+
+
+
+function assign_attack_to_enemy(enemy, attack, special = false)
+{
+    if (special == false)
+    {
+        ds_list_add(enemy.basic_attacks, attack);
+    }
+    else {
+        ds_list_add(enemy.special_attacks, attack)
+    }
+    
+}
+
+function destroy_enemy(enemy)
+{
+    with (enemy)
+    {
+        ds_list_destroy(basic_attacks);
+        ds_list_destroy(special_attacks);
+        instance_destroy();        
+    }
+}
+
+
+
 function handle_damage(_self) {
     if (place_meeting(_self.x, _self.y, obj_player_attack)) {
         var incoming = instance_nearest(_self.x, _self.y, obj_player_attack);

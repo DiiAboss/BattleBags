@@ -1,6 +1,9 @@
 /// @description Basic Enemy Parent - Governs basic enemy behavior.
 /// This should be inherited by standard enemies.
 
+
+
+
 /// ✅ Attack Queue Timers
 queued_attack_timer = 0;
 max_queued_attack_timer = 300;

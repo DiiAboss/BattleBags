@@ -52,6 +52,7 @@ function Input() constructor {
 
 	Direction      = 0;
 	inputDelay     = 5;
+    maxInputDelay  = 8;
 	
 	// Detect connected gamepad
 	for (var cont = 0; cont < 12; cont++) {
