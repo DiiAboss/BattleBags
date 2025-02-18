@@ -84,7 +84,6 @@ function game_over_screen(_self, game_over_state)
             
             
             if (input.ActionPress) {
-                audio_stop_sound(_self.songs[current_song]);
                 if _self.game_over_option_selected == 0
                 {
                     room_restart();

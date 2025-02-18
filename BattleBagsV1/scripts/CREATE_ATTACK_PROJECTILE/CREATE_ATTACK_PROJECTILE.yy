@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"CREATE_ATTACK_PROJECTILE",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"CREATE_ATTACK_PROJECTILE",
+  "parent":{
+    "name":"PLAYER_CONTROLS",
+    "path":"folders/Scripts/MAIN/PLAYER_CONTROLS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

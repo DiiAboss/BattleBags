@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"TARGET_ENEMY",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"TARGET_ENEMY",
+  "parent":{
+    "name":"PLAYER_CONTROLS",
+    "path":"folders/Scripts/MAIN/PLAYER_CONTROLS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

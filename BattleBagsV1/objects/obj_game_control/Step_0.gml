@@ -2,6 +2,83 @@
 var input = obj_game_manager.input;
 input.Update(self, last_position[0], last_position[1]);
 
+
+
+game_over_screen(self, game_over_state);
+
+if (game_over_state)
+{
+    audio_stop_sound(songs[current_song]);
+    audio_stop_sound(global.music_fight);
+    audio_stop_sound(global.music_regular);
+    return;
+}
+
+
+
+//------------------------------------------------
+// Leveling and Upgrades
+//------------------------------------------------
+if (instance_exists(obj_upgrade_menu))
+{
+	global.in_upgrade_menu = true;
+	var exp_inc = 1;
+}
+else
+{
+    var exp_inc = 0.0025;
+	if (target_level <= 0)
+	{
+		if (after_menu_counter < after_menu_counter_max)
+		{
+			after_menu_counter += 1;
+		}
+		else
+		{
+			after_menu_counter = after_menu_counter_max;
+				global.in_upgrade_menu = false;
+			//✅ Toggle Pause with "P" key
+			if (input.Escape) {
+			    global.paused = !global.paused; // Toggle the pause state
+			}
+		}
+	}
+	else
+	{
+
+		check_and_apply_upgrades(self);
+
+	}
+}
+
+process_experience_points(self, target_experience_points, exp_inc);
+
+
+
+
+
+
+
+// ✅ Stop everything except the pause check
+if (global.paused) || global.in_upgrade_menu {
+	return;
+}
+
+// ------------------------------------------------------
+// TIMERS AND SPEEDS
+// ------------------------------------------------------
+spawn_timer = 60 / global.gameSpeed;
+shift_speed = 0.1 * global.gameSpeed;
+
+update_time(self, FPS);
+
+update_draw_time(self);
+
+process_gameboard_speed(self, input.SpeedUpKey);
+
+//--------------------------------------------------------
+// CONTROLS
+//--------------------------------------------------------
 if (input.InputType == INPUT.GAMEPAD)
 {
     control_mode = "legacy";
@@ -12,62 +89,6 @@ else
     control_mode = "modern";
     is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 128;    
 }
-
-
-if (is_targeting_enemy)
-{
-    hover_x = -1;
-    hover_y = -1;
-    
-    var total_enemies = enemy_control.amount_of_enemies;
-    var enemy_found = false;
-    
-    if (input.InputType == INPUT.KEYBOARD)
-    {
-        for (var _i = 0; _i < total_enemies; _i ++)
-        {
-            if (mouse_x > enemy_control.enemy_array[_i].x - 32  && mouse_x < enemy_control.enemy_array[_i].x + 32)
-                && (mouse_y > enemy_control.enemy_array[_i].y - 32 && mouse_y < enemy_control.enemy_array[_i].y + 32)
-            {
-                enemy_target = enemy_control.enemy_array[_i];
-                enemy_found = true;
-            }
-        }
-        
-        if (enemy_found == false)
-        {
-            enemy_target = -1;
-        }
-    }
-    
-    if (input.InputType == INPUT.GAMEPAD)
-    {
-        if (instance_exists(enemy_target))
-        {
-            enemy_target = enemy_control.enemy_array[0];   
-        }
-        else 
-        {
-            enemy_target = -1; 
-        }
-    }
-    
-    
-    
-    
-    if (enemy_target != -1)
-    {
-        if (input.ActionPress)
-        {
-            enemy_target.hp -= 1;
-        }
-    }
-}
-else 
-{
-    enemy_target = -1;    
-}
-
 
 
 
@@ -119,76 +140,14 @@ else {
             }
         inputDelay = max_input_delay;
     }
-    
 }
 
+process_targetting_enemy(self, input, enemy_control, is_targeting_enemy);
 
 
 
 
 
-
-game_over_screen(self, game_over_state);
-
-if (game_over_state) return;
-
-
-var exp_inc = 0.0025;
-
-if (instance_exists(obj_upgrade_menu))
-{
-	global.in_upgrade_menu = true;
-	exp_inc = 1;
-}
-else
-{
-	if (target_level <= 0)
-	{
-		if (after_menu_counter < after_menu_counter_max)
-		{
-			after_menu_counter += 1;
-		}
-		else
-		{
-			after_menu_counter = after_menu_counter_max;
-				global.in_upgrade_menu = false;
-			//✅ Toggle Pause with "P" key
-			if (input.Escape) {
-			    global.paused = !global.paused; // Toggle the pause state
-			}
-		}
-	}
-	else
-	{
-
-		check_and_apply_upgrades(self);
-
-	}
-}
-
-
-process_experience_points(self, target_experience_points, exp_inc);
-
-// ✅ Stop everything except the pause check
-if (global.paused) || global.in_upgrade_menu {
-	return;
-}
-
-// ------------------------------------------------------
-// TIMERS AND SPEEDS
-// ------------------------------------------------------
-spawn_timer = 60 / global.gameSpeed;
-shift_speed = 0.1 * global.gameSpeed;
-
-update_time(self, FPS);
-
-update_draw_time(self);
-
-process_gameboard_speed(self, input.SpeedUpKey);
-
-//--------------------------------------------------------
-// CONTROLS
-//--------------------------------------------------------
 if (control_mode == "modern") {
     block_dragged(self, input.ActionPress, input.ActionKey, input.ActionRelease);
 } else if (control_mode == "legacy") {
@@ -313,39 +272,33 @@ for (var i = 0; i < ds_list_size(global.pop_list); i++) {
             var py = (_y * gem_size) + offset + global_y_offset;// + gem_y_offsets[_x, _y];
 
             // ✅ Store Gem Object Before Destroying
-			if (self.grid[_x, _y] != -1)
-			{
-				   
-				var gem = self.grid[_x, _y];
-			}
-			else
-			{
-				return;
-			}
+			if (self.grid[_x, _y] == -1) return;
+			
+            
+            var gem = self.grid[_x, _y];
+    
+            if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2;
 
-				if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2
+            //Loop Through Multipliers
+            process_powerup(self, _x, _y, gem, total_multiplier_next);
+                
+            total_blocks_destroyed++;
+            
+            // **Destroy the block**
+            destroy_block(self, _x, _y);
+                
+            // **Create visual effect**
+            effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
-	            //Loop Through Multipliers
-	            process_powerup(self, _x, _y, gem, total_multiplier_next);
-					
-				total_blocks_destroyed++;
-				// **Destroy the block**
-				destroy_block(self, _x, _y);
-					
-				// **Create visual effect**
-	            effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
+            var damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next;
+            
+            create_attack_projectile(px, py, pop_data.color, damage)
 
-	            // ✅ Create Attack Object with Score
-	            var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
-	            attack.color = pop_data.color;
-				
-	            attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
-
-	            // ✅ Add accumulated match points to total_points
-	            total_points += attack.damage;
-					
-				var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
-				var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
+            // ✅ Add accumulated match points to total_points
+            total_points += damage;
+                
+            var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
+            var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
 					
             if !(game_over_state)
             {
@@ -371,28 +324,33 @@ update_freeze_timer(self);
 
 find_all_puzzle_matches(self);	
 
-for (var i = 0; i < width; i++) {
-    for (var _y = 0; _y <= top_playable_row; _y++)
-    {
-        if (grid[i, _y].type != BLOCK.NONE && !grid[i, _y].falling && !grid[i, _y].is_enemy_block) { 
-            var block_y = (1 * gem_size) + global_y_offset; // Actual Y position
-            var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
-        
-            if (progress > 0 && combo > 0)
-            {
-                fight_for_your_life = true;
-            }
-            else
-            {
-                fight_for_your_life = false;
-            }
-        } 
-        else 
+
+function process_fight_for_your_life(_self, danger_row)
+{
+    var in_danger = false;
+    var width     = _self.board_width;
+    var grid      = _self.grid;
+    var gem_size  = _self.gem_size;
+    var global_y_offset = _self.global_y_offset;
+    var combo     = self.combo;
+    
+    for (var i = 0; i < width; i++) {
+        for (var _y = 0; _y < danger_row; _y++)
         {
-            fight_for_your_life = false;	
+            if (grid[i, _y].type != BLOCK.NONE && !grid[i, _y].falling && grid[i, _y].fall_delay < grid[i, _y].max_fall_delay && !grid[i, _y].is_enemy_block) { 
+            
+                if (combo >= 0)
+                {
+                    in_danger = true;
+                }
+            }
         }
     }
+    
+    return (in_danger);
 }
+
+fight_for_your_life = process_fight_for_your_life(self, top_playable_row + 1);
 
 
 if (fight_for_your_life)
@@ -407,7 +365,3 @@ else
 // Apply volume settings
 apply_volume_settings();
 process_play_next_song(songs[current_song]);
-
-// -----------------------------------------------------------------------
-// FUNCTIONS
-// -----------------------------------------------------------------------
