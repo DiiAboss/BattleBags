@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SWAPS",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SWAPS",
+  "parent":{
+    "name":"MULTIPLAYER",
+    "path":"folders/Scripts/MULTIPLAYER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

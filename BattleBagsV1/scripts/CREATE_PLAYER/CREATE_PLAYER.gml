@@ -15,5 +15,15 @@ function create_player(_id)
         board_x_offset: 0,
         bottom_playable_row: 20,
         random_seed: 0,
+        hovered_block: [-1, -1],
+        pointer_x: -1,
+        pointer_y: -1,
+        selected_x: -1,
+        selected_y: -1,
+        input_delay: 0,
+        swap_in_progress: false,
+        swap_info: undefined,
+        swap_queue: undefined,
     };
 }
+

@@ -467,3 +467,4 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
 }
     
 }
+

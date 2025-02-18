@@ -29,6 +29,7 @@ if (room == rm_local_multiplayer_lobby)
             // ✅ Assign Player 1 (Keyboard/Mouse)
             if (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left)) {
                 player_input[0].InputType = INPUT.KEYBOARD;
+                player.input.InputType = INPUT.KEYBOARD;
                 player_assigning = 1;
                 delay = max_delay;
                 mouse_assigned = true;
@@ -40,6 +41,8 @@ if (room == rm_local_multiplayer_lobby)
                 if (gamepad_is_connected(i) && gamepad_button_check(i, gp_start)) {
                     player_input[0].Device = i;
                     player_input[0].InputType = INPUT.GAMEPAD;
+                    player.input.InputType = INPUT.GAMEPAD
+                    player.input.Device = i;
                     player_assigning = 1;
                     delay = max_delay;
                     return;
@@ -68,6 +71,8 @@ if (room == rm_local_multiplayer_lobby)
                         if (!already_used) {
                             player_input[assigned_player].Device = i;
                             player_input[assigned_player].InputType = INPUT.GAMEPAD;
+                            player.input.InputType = INPUT.GAMEPAD;
+                            player.input.Device = i;
                             player_assigning++;
                             delay = max_delay;
                             return;
@@ -80,6 +85,7 @@ if (room == rm_local_multiplayer_lobby)
             if (player_input[0].InputType == INPUT.GAMEPAD) {
                 if !(mouse_assigned) && (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left))  {
                     player_input[assigned_player].InputType = INPUT.KEYBOARD;
+                    player.input.InputType = INPUT.KEYBOARD;
                     player_assigning++;
                     delay = max_delay;
                     mouse_assigned = true;
@@ -102,6 +108,8 @@ if (room == rm_local_multiplayer_lobby)
                         if (!already_used) {
                             player_input[assigned_player].Device = i;
                             player_input[assigned_player].InputType = INPUT.GAMEPAD;
+                            player.input.InputType = INPUT.GAMEPAD;
+                            player.input.Device = i;
                             player_assigning++;
                             delay = max_delay;
                             return;
@@ -145,6 +153,7 @@ if (room == rm_local_multiplayer_game)
             var remainder = next_y_pos - -(gem_size);
             random_set_seed(player.random_seed); // THIS ENSURE ALL PLAYERS GRIDS ARE ON THE SAME SEED
             shift_up_mp(player); // Shift the board up one position
+            player.hovered_block[1]-=1;
             player.global_y_offset = remainder; // set the new offset to 0, to start the push up animation.
             player.random_seed ++; // THIS ENSURE ALL PLAYERS GRIDS ARE ON THE SAME SEED
         }
@@ -162,12 +171,84 @@ if (room == rm_local_multiplayer_game)
         drop_blocks_mp(self, player);
     }
     
+    
+    
+    
+    
+        for (var i = 0; i < ds_list_size(global.player_list); i++) {
+        var player = ds_list_find_value(global.player_list, i);
+        
+        if (player.input_type == INPUT.KEYBOARD)
+        {
+            player.pointer_x = mouse_x;
+            player.pointer_y = mouse_y;
+            
+            block_dragged_mp(self, player);
+        }
+        else {
+            var max_input_delay = 8;
+            block_legacy_swap(self, player);
+            
+            if (player.input_delay > 0)
+            {
+                player.input_delay --;
+                continue;
+            }
+            else {
+                if (player.input.Up)
+                {
+                    if (player.hovered_block[1] > top_playable_row)
+                    {
+                        player.hovered_block[1] -= 1;
+                    }
+                    player.input_delay = max_input_delay;
+                }
+                
+                if (player.input.Down)
+                {
+                    if (player.hovered_block[1] < bottom_playable_row)
+                    {
+                    player.hovered_block[1] += 1; 
+                    }
+                    player.input_delay = max_input_delay;
+                }
+                if (player.input.Left)
+                {
+                    if (player.hovered_block[0] > 0)
+                        {
+                            player.hovered_block[0] -= 1;
+                        }
+                        else {
+                            player.hovered_block[0] = width - 2;
+                        }
+                    player.input_delay = max_input_delay;
+                }
+                
+                if (player.input.Right)
+                {
+                    if (player.hovered_block[0] < width - 2)
+                        {
+                        player.hovered_block[0] += 1; 
+                        }
+                        else {
+                            player.hovered_block[0] = 0;
+                        }
+                    player.input_delay = max_input_delay;
+                }
+            }
+        }
+    }
+    
     //------------------------------------------------------------
     // DESTROY THE BLOCKS IN THE POP QUEUE
     //------------------------------------------------------------
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
+       
+        process_swap_mp(player);
+        
         for (var _i = 0; _i < ds_list_size(player.pop_list); _i++) {
+
             var pop_data = ds_list_find_value(player.pop_list, _i);
                 
             // Wait for start_delay
@@ -207,15 +288,11 @@ if (room == rm_local_multiplayer_game)
                     
                     // Remove from pop_list
                     ds_list_delete(player.pop_list, _i);
-                    _i--; 
                     continue;
                 }
             }
             // Write back updated pop_data
             ds_list_replace(player.pop_list, _i, pop_data);
         }
-  
     }
 }
-
-
