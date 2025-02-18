@@ -419,16 +419,16 @@ draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_
     }
 
     if (enemy_target != -1)
-        {
-            with (enemy_target)
-            { 
-                var scale = 1.1; // Slightly enlarged
-                var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
-                draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
-                
-                draw_sprite_ext(spr_crosshair, 0, x, y, scale, scale, rotation, c_red, 1);
-            }
+    {
+        with (enemy_target)
+        { 
+            var scale = 1.1; // Slightly enlarged
+            var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
+            draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
+            
+            draw_sprite_ext(spr_crosshair, 0, x, y, scale, scale, rotation, c_red, 1);
         }
+    }
     else {
         if input.InputType == INPUT.KEYBOARD
         {

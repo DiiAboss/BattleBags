@@ -1,3 +1,4 @@
+/// @description
 if (attack_preview_active || attack_preview_alpha > 0) {
     draw_set_alpha(attack_preview_alpha);
     draw_set_color(c_black);
@@ -23,4 +24,3 @@ if (attack_preview_active || attack_preview_alpha > 0) {
 
     draw_set_alpha(1); // Reset alpha
 }
-

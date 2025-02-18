@@ -24,8 +24,7 @@ function start_swap_mp(mp_control, player, ax, ay, bx, by) {
             execute_swap_mp(mp_control, player, ax, ay, bx, by);
         }
         
-        
-                // Script Created By DiiAboss AKA Dillon Abotossaway
+
         ///@function execute_swap
         ///
         ///@description Executes a swap between two gems, handling special cases like shifting and frozen blocks.

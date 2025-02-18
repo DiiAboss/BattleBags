@@ -4,8 +4,6 @@
 enemy_name = "";
 enemy_description = "";
 
-
-
 enemies_defeated = 0;
 base_exp_earned = 0;
 exp_mod         = 0;
@@ -35,4 +33,5 @@ attack_preview_active = true;
 attack_preview_alpha = 0;
 enemy_is_attacking = false;
 preview_camera = camera_create_view(attack_preview_box_x, attack_preview_box_y, attack_preview_box_width, attack_preview_box_height);
+
 

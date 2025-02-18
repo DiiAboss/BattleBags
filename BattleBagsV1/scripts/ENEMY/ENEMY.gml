@@ -7,10 +7,14 @@ function create_enemy(start_x, start_y)
     
     var enemy_struct =
     {
+        enemy_name: "",
+        enemy_description: "",
         hp: max_health,
         max_hp: max_health,
         basic_attacks: undefined,
-        special_attacks: undefined
+        special_attacks: undefined,
+        my_sprite: spr_test_dummy,
+        my_img: 0,
     }
     
     return instance_create_depth(start_x, start_y, -1, obj_enemy_basic_parent, enemy_struct);
@@ -29,8 +33,6 @@ function init_enemy(enemy_control, start_x, start_y)
 }
 
 
-
-
 function assign_attack_to_enemy(enemy, attack, special = false)
 {
     if (special == false)
@@ -40,7 +42,6 @@ function assign_attack_to_enemy(enemy, attack, special = false)
     else {
         ds_list_add(enemy.special_attacks, attack)
     }
-    
 }
 
 function destroy_enemy(enemy)
