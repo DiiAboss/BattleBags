@@ -32,6 +32,11 @@ function enable_debug_controls(_self, hover_x, hover_y, debug_active = true)
 	{
 		trigger_final_game_over(self);
 	}
+    
+    if (keyboard_check_pressed(vk_insert))
+    {
+        victory_state = true;
+    }
 
 	// 🌟 Vertical Destruction
 	if (keyboard_check_pressed(ord("I"))) { 

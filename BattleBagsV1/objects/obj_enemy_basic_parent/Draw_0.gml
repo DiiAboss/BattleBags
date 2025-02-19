@@ -2,12 +2,28 @@
 
 if !(obj_game_control.game_over_state)
 {
-
 	draw_sprite(my_sprite, 0, x, y);
-    
-    
-    
 }
+
+var hp_bar_width = 256;
+var hp_bar_height = 16;
+var draw_hp_x = x - (hp_bar_width * 0.5);
+var draw_hp_y = y + 96;
+var hp_percent = (hp / max_hp);
+
+draw_rectangle_color(draw_hp_x, draw_hp_y, draw_hp_x + hp_bar_width, draw_hp_y + hp_bar_height, c_red, c_red, c_red, c_red, false);
+draw_rectangle_color(draw_hp_x, draw_hp_y, draw_hp_x + (hp_bar_width * hp_percent), draw_hp_y + hp_bar_height, c_green, c_green, c_green, c_green, false);
+
+for (var s = 0; s < shield_amount; s++)
+{
+    var shield_size = hp_bar_width / max_shield_amount;
+    var draw_shield_x = draw_hp_x + (shield_size * s)
+    var draw_shield_x2 = draw_shield_x + shield_size; 
+    draw_rectangle_color(draw_shield_x, draw_hp_y, draw_shield_x2, draw_hp_y + hp_bar_height, c_white, c_blue, c_blue, c_white, false);
+    draw_rectangle_color(draw_shield_x, draw_hp_y, draw_shield_x2, draw_hp_y + hp_bar_height, c_blue, c_blue, c_blue, c_blue, true);
+}
+
+
 ///// ✅ Draw Damage Indicator
 //if (damage_timer > 0) {
     //draw_text(x - 64, y - 244, string(total_damage));

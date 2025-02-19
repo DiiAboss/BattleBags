@@ -1,6 +1,8 @@
 /// @desc Initialize Server
-server_socket = network_create_socket(network_socket_udp);
+/// 
 server_port = 6500;
+server_socket = network_create_server(network_socket_udp, server_port, 4);
+
 server_lobby_code = generate_lobby_code(); // Generates a unique lobby code
 
 // ✅ Initialize global data

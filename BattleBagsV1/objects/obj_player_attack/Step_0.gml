@@ -18,3 +18,9 @@ if (obj_game_control.game_over_state)
 {
 	instance_destroy();
 }
+
+if (destroy_flag)
+{
+    effect_create_depth(depth, ef_firework, x, y, 1, color);
+    instance_destroy();
+}

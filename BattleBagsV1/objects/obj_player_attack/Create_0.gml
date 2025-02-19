@@ -21,3 +21,7 @@ else
 {
 	instance_destroy();
 }
+
+destroy_flag = false;
+
+

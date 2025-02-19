@@ -1,24 +1,28 @@
 
+//------------------------------------------
+// INPUT MANAGER (GAME_MANAGER CONTROLLED)
+//------------------------------------------
 var input = obj_game_manager.input;
 input.Update(self, last_position[0], last_position[1]);
 
 
-//game_set_speed(60, gamespeed_fps);
+//------------------------------------------
+// GAME OVER STATE
+//------------------------------------------
 game_over_screen(self, game_over_state);
 
 if (game_over_state)
 {
+    // This is very crude and will be updated with all audio functions later on.
     audio_stop_sound(songs[current_song]);
     audio_stop_sound(global.music_fight);
     audio_stop_sound(global.music_regular);
     return;
 }
 
-if (keyboard_check_pressed(vk_insert))
-{
-    victory_state = true;
-}
-
+//-----------------------------------------
+// VICTORY STATE
+//-----------------------------------------
 if (victory_state)
 {
     if (combo <= 0)
@@ -45,42 +49,13 @@ if (victory_state)
 //------------------------------------------------
 // Leveling and Upgrades
 //------------------------------------------------
-if (instance_exists(obj_upgrade_menu))
-{
-	global.in_upgrade_menu = true;
-	var exp_inc = 1;
-}
-else
-{
-    var exp_inc = 0.0025;
-	if (target_level <= 0)
-	{
-		if (after_menu_counter < after_menu_counter_max)
-		{
-			after_menu_counter += 1;
-		}
-		else
-		{
-			after_menu_counter = after_menu_counter_max;
-				global.in_upgrade_menu = false;
-			//✅ Toggle Pause with "P" key
-			if (input.Escape) {
-			    global.paused = !global.paused; // Toggle the pause state
-			}
-		}
-	}
-	else
-	{
+in_menu = instance_exists(obj_upgrade_menu);
 
-		check_and_apply_upgrades(self);
+process_upgrades(self, in_menu, input);
 
-	}
-}
-
-process_experience_points(self, target_experience_points, exp_inc);
-
-
-// ✅ Stop everything except the pause check
+//------------------------------------------------------
+// PAUSE THE GAME
+//------------------------------------------------------
 if (global.paused) || global.in_upgrade_menu {
 	return;
 }
