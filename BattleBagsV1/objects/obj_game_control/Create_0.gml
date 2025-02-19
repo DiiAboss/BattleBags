@@ -144,6 +144,8 @@ after_menu_counter = after_menu_counter_max;
 
 number_of_rows_spawned = 0;
 
+victory_number_of_rows = 30;
+
 // ------------------------------------------------------
 // Global Variables & Game State
 // ------------------------------------------------------
@@ -284,3 +286,5 @@ victory_state = false;
 victory_alpha = 0;
 victory_max_countdown = 120;
 victory_countdown = victory_max_countdown;
+
+draw_victory_row = board_height;

@@ -1,4 +1,12 @@
 /// @description Create Upgrade Menu
+
+upgrade_init_timer_max = 30;
+upgrade_init_timer = upgrade_init_timer_max; // Time for the animation
+menu_center_x = mouse_x;  // Starting point for animation
+menu_center_y = mouse_y; // Center of the screen
+menu_start_y = room_height + 100; // Start below screen for pop-up effect
+progress = 1.0 - (upgrade_init_timer / upgrade_init_timer_max);
+
 array_size = min(3, ds_list_size(global.upgrade_pool )); // ✅ Ensure we don't pick more than available
 upgrade_pool = array_create(array_size);
 
@@ -8,6 +16,9 @@ draw_y_start = camera_get_view_y(view_get_camera(view_current));
 
 var x_start = (room_width / 2) - (384 * 1);
 var y_start = draw_y_start + 300;
+
+
+
 
 delay = 60;
 

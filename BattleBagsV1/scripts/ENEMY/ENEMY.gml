@@ -20,7 +20,7 @@ function create_enemy(start_x, start_y)
         max_attack_timer: 0,
         exp_drop: 0,
         gold_drop: 0,
-        is_boss: false
+        is_boss: false,
     }
     
     return instance_create_depth(start_x, start_y, -1, obj_enemy_basic_parent, enemy_struct);

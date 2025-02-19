@@ -66,6 +66,7 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
         draw_set_color(c_white);
         draw_text(game_over_ui_x + game_over_ui_width / 2, game_over_ui_y + 600, "VICTORY");
         draw_set_alpha(1);
+        draw_set_font(fnt_basic);  
     }
     
 }
@@ -81,7 +82,13 @@ var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount)
 
 var draw_y_start = camera_get_view_y(view_get_camera(view_current));
     
-    
+    if (number_of_rows_spawned >= victory_number_of_rows)
+    {
+        if !any_blocks_above(self, board_height - (number_of_rows_spawned - victory_number_of_rows))
+        {
+            victory_state = true;
+        } 
+    }
     
 
 for (var i = 0; i < width; i++) {
@@ -122,7 +129,9 @@ for (var i = 0; i < width; i++) {
     // 🔹 Now loop through grid to draw blocks
     for (var j = top_playable_row; j <= bottom_playable_row; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
+        
 
+        
 		gem.x_scale = gem.falling ? 0.90 : 1;
 		gem.y_scale = gem.falling ? 1.1 : 1;
         
@@ -509,6 +518,17 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
 	 draw_set_font(fnt_basic); // ✅ Use the specified font
     draw_set_halign(fa_left);
 }
+    
+    if (number_of_rows_spawned >= victory_number_of_rows)
+    {
+        var draw_victory_row_y = board_height - (number_of_rows_spawned - victory_number_of_rows);
+        for (var _v = 0; _v < board_width; _v++)
+        {
+            draw_x = board_x_offset + (_v * gem_size) + offset;
+            var draw_y = (draw_victory_row_y * gem_size) + global_y_offset + offset;
+            draw_sprite(spr_checker, 0, draw_x, draw_y);
+        }
+    }
     
 }
 

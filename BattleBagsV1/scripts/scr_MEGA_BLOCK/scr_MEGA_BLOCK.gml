@@ -14,7 +14,7 @@ function create_mega_block(_width, _height) {
 		shake_timer: 0,    // New property for shaking effect
 		color: c_white,
 		fall_delay: 0,
-		max_fall_delay: 10, 
+		max_fall_delay: 2, 
 		freeze_timer: 0,   // 🔥 New: Countdown to thaw
         frozen: false,      // 🔥 New: Flag for frozen state
 		damage: 1,
