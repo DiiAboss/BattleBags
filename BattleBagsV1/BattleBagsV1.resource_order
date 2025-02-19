@@ -61,6 +61,8 @@
   ],
   "ResourceOrderSettings":[
     {"name":"fnt_basic","order":1,"path":"fonts/fnt_basic/fnt_basic.yy",},
+    {"name":"fnt_heading1","order":3,"path":"fonts/fnt_heading1/fnt_heading1.yy",},
+    {"name":"fnt_textFont","order":2,"path":"fonts/fnt_textFont/fnt_textFont.yy",},
     {"name":"new_obk","order":6,"path":"objects/new_obk/new_obk.yy",},
     {"name":"obj_bomb","order":1,"path":"objects/obj_bomb/obj_bomb.yy",},
     {"name":"obj_bow","order":3,"path":"objects/obj_bow/obj_bow.yy",},
@@ -207,6 +209,7 @@
     {"name":"spr_orange_gem","order":6,"path":"sprites/spr_orange_gem/spr_orange_gem.yy",},
     {"name":"spr_Oshki","order":16,"path":"sprites/spr_Oshki/spr_Oshki.yy",},
     {"name":"spr_pink_gem","order":2,"path":"sprites/spr_pink_gem/spr_pink_gem.yy",},
+    {"name":"spr_placehold1","order":11,"path":"sprites/spr_placehold1/spr_placehold1.yy",},
     {"name":"spr_powerup_2x_multi","order":2,"path":"sprites/spr_powerup_2x_multi/spr_powerup_2x_multi.yy",},
     {"name":"spr_powerup_bomb","order":1,"path":"sprites/spr_powerup_bomb/spr_powerup_bomb.yy",},
     {"name":"spr_powerup_destroy_to_down","order":9,"path":"sprites/spr_powerup_destroy_to_down/spr_powerup_destroy_to_down.yy",},

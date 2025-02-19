@@ -415,7 +415,7 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 
 // Draw the combo number if a combo is active
 if (combo > 1) { // Only show if at least 2 matches have happened
-	draw_set_font(f_b_font);
+	draw_set_font(fnt_heading1);
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_middle);
     
@@ -523,10 +523,11 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
         // ✅ Calculate remaining countdown time
         var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / FPS);
         
-        draw_set_font(f_b_font); // ✅ Use the specified font
+        draw_set_font(fnt_heading1); // ✅ Use the specified font
 		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4,(room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);
         draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2),room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
     } else {
+        draw_set_font(fnt_textFont)
         draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
     }
 	 draw_set_font(fnt_basic); // ✅ Use the specified font
