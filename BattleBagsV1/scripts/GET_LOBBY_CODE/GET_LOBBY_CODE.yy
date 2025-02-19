@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"Script84",
+  "%Name":"GET_LOBBY_CODE",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Script84",
+  "name":"GET_LOBBY_CODE",
   "parent":{
     "name":"MULTIPLAYER",
     "path":"folders/Scripts/MULTIPLAYER.yy",

@@ -7,14 +7,20 @@ function create_enemy(start_x, start_y)
     
     var enemy_struct =
     {
-        enemy_name: "",
-        enemy_description: "",
-        hp: max_health,
+        enemy_name:         "TEST_DUMMY_000",
+        enemy_description:  "Used in testing, has all attacks equipped by default",
+        level: level,
+        hp:     max_health,
         max_hp: max_health,
-        basic_attacks: undefined,
+        basic_attacks:   undefined,
         special_attacks: undefined,
-        my_sprite: spr_test_dummy,
-        my_img: 0,
+        my_sprite:       spr_test_dummy,
+        my_img:       0,
+        attack_timer: 0,
+        max_attack_timer: 0,
+        exp_drop: 0,
+        gold_drop: 0,
+        is_boss: false
     }
     
     return instance_create_depth(start_x, start_y, -1, obj_enemy_basic_parent, enemy_struct);

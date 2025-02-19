@@ -51,16 +51,21 @@ if (input.ActionPress || input.Enter) {
                 room_goto(rm_gameRoom);
                 break;
 
-            case 1: // Stats Screen
+            case 1: // Multiplayer Mode
+                room_goto(rm_multiplayer_selection);
+                break;
+
+            case 2: // Stats Screen
                 room_goto(rm_stats);
                 break;
 
-            case 2: // Quit Game
+            case 3: // Quit Game
                 game_end();
                 break;
         }
     }
 }
+
 
 if (keyboard_check_pressed(vk_alt))
 {
