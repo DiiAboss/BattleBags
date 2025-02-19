@@ -99,12 +99,21 @@ for (var i = 0; i < width; i++) {
     for (var j = top_playable_row; j <= bottom_playable_row; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
 
-		gem.x_scale = gem.falling ? 0.95 : 1;
-		gem.y_scale = gem.falling ? 1.05 : 1;
-		
+		gem.x_scale = gem.falling ? 0.90 : 1;
+		gem.y_scale = gem.falling ? 1.1 : 1;
+        
+        if gem.falling 
+        {
+            var percent =  clamp(gem.fall_delay / gem.max_fall_delay, 0, 1);
+            gem.draw_y = 64 * percent;
+        }
+        else {
+            gem.draw_y = 0;
+        }
+        
         if (gem.type != BLOCK.NONE) {
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-            var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset;
+            var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
 
             //  Apply shaking effect
             if (shake_intensity > 0) && (i <= top_playable_row){
@@ -113,7 +122,7 @@ for (var i = 0; i < width; i++) {
             }
 			
 			var draw_x_with_global_shake = draw_x + shake_x;
-			var draw_y_with_global_shake = draw_y + shake_x;
+			var draw_y_with_global_shake = draw_y + shake_y;
             // **Draw the gem sprite**
 			
 			if (gem.is_big) {
@@ -173,7 +182,7 @@ for (var i = 0; i < width; i++) {
 				if (j >= bottom_playable_row)
 				{
 				        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-				        var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset;
+				        var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
 					
 						if (j == bottom_playable_row)
 						{		
@@ -205,7 +214,7 @@ for (var i = 0; i < width; i++) {
 			
 				if (gem.is_big) {
 					var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-				     var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset;
+				     var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
 					draw_text(_draw_x, _draw_y, string(gem.mega_width));
 				}
 
@@ -302,7 +311,7 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 
     // Base coords
     var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
-    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset;
+    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset + gem.draw_y;
 	
     // Because you want the gem to expand around its true center,
     // apply an extra center calculation using half the gem size.
@@ -347,7 +356,7 @@ for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
 		{
 			    // Base coords
 		    var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
-		    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset;
+		    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset + gem.draw_y;
 			
 			var img_number = sprite_get_number(spr_bomb_overlay_wick);
 			var progress = img_number - (img_number * (grid[pop_data.x, pop_data.y].shake_timer / max_shake_timer));

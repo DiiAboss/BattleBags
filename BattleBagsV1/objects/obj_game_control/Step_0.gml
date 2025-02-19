@@ -52,11 +52,6 @@ else
 process_experience_points(self, target_experience_points, exp_inc);
 
 
-
-
-
-
-
 // ✅ Stop everything except the pause check
 if (global.paused) || global.in_upgrade_menu {
 	return;
@@ -85,7 +80,7 @@ if (input.InputType == INPUT.GAMEPAD)
 else 
 {
     control_mode = "modern";
-    is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 128;    
+    is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 256;    
 }
 
 process_inputs_and_delay(self, input);
@@ -133,6 +128,8 @@ process_swap(self, swap_info);
 // ------------------------------------------------------
 // SMOOTH UPWARD MOVEMENT + SHIFT
 // ------------------------------------------------------
+
+
 global_y_offset -= shift_speed;
 
 if (global_y_offset <= -gem_size) {
@@ -163,8 +160,8 @@ if (reset)
 if (!swap_in_progress && all_blocks_landed(self)) {
     for (var i = 0; i < width; i++) {
         for (var j = 0; j < height; j++) {
-            grid[i, j].offset_x = 0;
-            grid[i, j].offset_y = 0;
+            //grid[i, j].offset_x = 0;
+            //grid[i, j].offset_y = 0;
         }
     }
 }
@@ -220,7 +217,7 @@ for (var i = 0; i < ds_list_size(global.pop_list); i++) {
             var _x = pop_data.x;
             var _y = pop_data.y;
             var px = (_x * gem_size) + board_x_offset + offset;
-            var py = (_y * gem_size) + offset + global_y_offset;// + gem_y_offsets[_x, _y];
+            var py = (_y * gem_size) + offset + global_y_offset;
 
             // ✅ Store Gem Object Before Destroying
 			if (self.grid[_x, _y] == -1) return;

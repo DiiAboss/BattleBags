@@ -17,6 +17,8 @@ function drop_blocks(_self, fall_speed = 2) {
                     gem.falling = false;
                     continue;
                 }
+                
+
 				
                 // 🔹 **Slime Block Falling**
                 if (gem.slime_hp > 0) { 
