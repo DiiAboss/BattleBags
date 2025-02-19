@@ -1,11 +1,20 @@
-/// @desc Enter a Lobby Code & Connect
-if (keyboard_check_pressed(vk_enter)) {
-    lobby_code = get_string("Enter Lobby Code:", ""); // User input
-    
-    var buffer = buffer_create(256, buffer_fixed, 1);
-    buffer_write(buffer, buffer_string, "join " + lobby_code);
-    
-    // Send request to **lobby server** (acts as a simple lookup server)
-    network_send_udp(client_socket, "127.0.0.1", 6500, buffer, buffer_tell(buffer));
-    buffer_delete(buffer);
+/// @desc Connect to Server
+network_set_config(network_config_connect_timeout, 1000);
+//network_set_config(network_config_use_non_blocking_socket, 1);
+
+client_socket = network_create_socket(network_socket_udp);
+server_ip = "127.0.0.1";
+server_port = 7676;
+
+// ✅ Connect to the server
+var connection = network_connect(client_socket, server_ip, server_port);
+
+if (connection >= 0) {
+    show_message("Client connected to server!");
+} else {
+    show_message("Failed to connect to server!");
+    instance_destroy();
 }
+
+message = "";
+my_player_id = irandom_range(1, 255);

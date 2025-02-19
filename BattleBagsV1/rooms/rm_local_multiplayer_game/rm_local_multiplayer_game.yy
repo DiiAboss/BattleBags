@@ -13,8 +13,8 @@
   ],
   "name":"rm_local_multiplayer_game",
   "parent":{
-    "name":"Rooms",
-    "path":"folders/Rooms.yy",
+    "name":"MENU",
+    "path":"folders/Rooms/MENU.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

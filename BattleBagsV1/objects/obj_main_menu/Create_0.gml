@@ -1,5 +1,6 @@
 /// @description Initialize menu options.
-menu_options = ["START GAME", "STATS", "QUIT"];
+
+menu_options = ["Start Game", "Multiplayer", "Stats", "Quit"];
 selected_option = 0;
 last_hovered_option = -1; // -1 means no hover yet
 menu_spacing = 72; // Spacing between menu items

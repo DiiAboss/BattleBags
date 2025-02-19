@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_process_upgrade",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_process_upgrade",
+  "parent":{
+    "name":"UPGRADES",
+    "path":"folders/Scripts/MAIN/UPGRADES.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

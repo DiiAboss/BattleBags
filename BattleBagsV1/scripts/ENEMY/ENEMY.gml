@@ -7,10 +7,25 @@ function create_enemy(start_x, start_y)
     
     var enemy_struct =
     {
-        hp: max_health,
+        enemy_name:         "TEST_DUMMY_000",
+        enemy_description:  "Used in testing, has all attacks equipped by default",
+        level: level,
+        hp:     max_health,
         max_hp: max_health,
-        basic_attacks: undefined,
-        special_attacks: undefined
+        basic_attacks:   undefined,
+        special_attacks: undefined,
+        my_sprite:       spr_test_dummy,
+        my_img:       0,
+        attack_timer: 0,
+        max_attack_timer: 0,
+        exp_drop: 0,
+        gold_drop: 0,
+        is_boss: false,
+        click_shield: 0,
+        click_shield_spawn: 0,
+        click_shield_max_spawn: 10,
+        my_color: c_white,
+        targetted: false,
     }
     
     return instance_create_depth(start_x, start_y, -1, obj_enemy_basic_parent, enemy_struct);
@@ -29,8 +44,6 @@ function init_enemy(enemy_control, start_x, start_y)
 }
 
 
-
-
 function assign_attack_to_enemy(enemy, attack, special = false)
 {
     if (special == false)
@@ -40,7 +53,6 @@ function assign_attack_to_enemy(enemy, attack, special = false)
     else {
         ds_list_add(enemy.special_attacks, attack)
     }
-    
 }
 
 function destroy_enemy(enemy)
@@ -53,16 +65,48 @@ function destroy_enemy(enemy)
     }
 }
 
+function enemy_apply_damage(enemy)
+{
+    if (place_meeting(enemy.x, enemy.y, obj_player_attack))
+    {
+        var incoming = instance_place(enemy.x, enemy.y, obj_player_attack);
+        var incoming_damage = incoming.damage;
+        
+        
+        if (enemy.shield_amount > 0)
+        {
+            enemy.shield_amount -= 1;
+        }
+        else {
+            enemy.hp -= incoming_damage;
+            enemy.damage_timer = enemy.max_damage_timer;
+            enemy.total_damage += incoming_damage;
+            enemy.damage_alpha = 1;
+        }
+        
+        with (incoming) instance_destroy();
+    }
+}
+
+
+
+
 
 
 function handle_damage(_self) {
     if (place_meeting(_self.x, _self.y, obj_player_attack)) {
         var incoming = instance_nearest(_self.x, _self.y, obj_player_attack);
 
-        _self.hp -= incoming.damage;
-        _self.damage_timer = _self.max_damage_timer;
-        _self.total_damage += incoming.damage;
-        _self.damage_alpha = 1;
+        if (_self.shield_amount > 0)
+        {
+            shield_amount --;
+        }
+        else {
+            _self.hp -= incoming.damage;
+            _self.damage_timer = _self.max_damage_timer;
+            _self.total_damage += incoming.damage;
+            _self.damage_alpha = 1;
+        }
 
         with (incoming) instance_destroy();
     }

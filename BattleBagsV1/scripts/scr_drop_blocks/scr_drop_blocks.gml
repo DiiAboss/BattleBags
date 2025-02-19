@@ -17,6 +17,8 @@ function drop_blocks(_self, fall_speed = 2) {
                     gem.falling = false;
                     continue;
                 }
+                
+
 				
                 // 🔹 **Slime Block Falling**
                 if (gem.slime_hp > 0) { 
@@ -109,6 +111,7 @@ function drop_blocks(_self, fall_speed = 2) {
                                     _self.grid[block_x, block_y].falling = false;
 									_self.grid[block_x, block_y].fall_delay = 0;
 									_self.grid[block_x, block_y].is_enemy_block = false;
+                                    
 									has_fallen = true;
                                 }
                             }
@@ -120,19 +123,29 @@ function drop_blocks(_self, fall_speed = 2) {
                     // ✅ Apply **fall delay**
                     if (gem.fall_delay < gem.max_fall_delay) {
                         gem.fall_delay++;
+                        gem.falling = true;
                         continue; //  Wait until delay finishes
                     }
 
                     _self.grid[i, j + 1] = gem;
                     _self.grid[i, j] = create_block(BLOCK.NONE);
+                    gem.dist_without_touching += 1;
                     gem.fall_delay = 0;
                     has_fallen = true;
+                    if (gem.dist_without_touching) > 16
+                    {
+                    
+                        var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+                        var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
+                        effect_create_above(ef_smokeup, draw_x, draw_y, 1, c_red);
+                    }
                 }
 				else
 				{
 					gem.fall_delay = below.fall_delay;
 					gem.falling = below.falling;
 					gem.is_enemy_block = false;
+                    gem.dist_without_touching = 0;
 				}
             }
         }

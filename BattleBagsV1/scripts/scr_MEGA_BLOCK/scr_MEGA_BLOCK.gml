@@ -14,7 +14,7 @@ function create_mega_block(_width, _height) {
 		shake_timer: 0,    // New property for shaking effect
 		color: c_white,
 		fall_delay: 0,
-		max_fall_delay: 10, 
+		max_fall_delay: 2, 
 		freeze_timer: 0,   // 🔥 New: Countdown to thaw
         frozen: false,      // 🔥 New: Flag for frozen state
 		damage: 1,
@@ -52,7 +52,7 @@ function spawn_mega_block(_self, _x, _y, _shape_name) {
                 mega_gem.is_enemy_block = true;
                 mega_gem.mega_width = shape_width;
                 mega_gem.mega_height = shape_height; // ✅ Store dimensions
-
+                mega_gem.powerup = create_powerup(POWERUP.NONE); // ✅ Store dimensions
                 _self.grid[_x + i, _y + j] = mega_gem;
             }
         }

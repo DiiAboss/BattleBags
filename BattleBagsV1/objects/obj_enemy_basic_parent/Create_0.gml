@@ -2,8 +2,6 @@
 /// This should be inherited by standard enemies.
 
 
-
-
 /// ✅ Attack Queue Timers
 queued_attack_timer = 0;
 max_queued_attack_timer = 300;
@@ -64,5 +62,9 @@ target_blocks = ds_list_create();
 
 targetted = false;
 my_sprite = spr_test_dummy;
+
+shield_amount = 10;
+max_shield_amount = 10;
+
 
 depth = 1;

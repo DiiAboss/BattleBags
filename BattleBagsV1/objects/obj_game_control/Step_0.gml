@@ -1,63 +1,61 @@
 
+//------------------------------------------
+// INPUT MANAGER (GAME_MANAGER CONTROLLED)
+//------------------------------------------
 var input = obj_game_manager.input;
 input.Update(self, last_position[0], last_position[1]);
 
 
-
+//------------------------------------------
+// GAME OVER STATE
+//------------------------------------------
 game_over_screen(self, game_over_state);
 
 if (game_over_state)
 {
+    // This is very crude and will be updated with all audio functions later on.
     audio_stop_sound(songs[current_song]);
     audio_stop_sound(global.music_fight);
     audio_stop_sound(global.music_regular);
     return;
 }
 
+//-----------------------------------------
+// VICTORY STATE
+//-----------------------------------------
+if (victory_state)
+{
+    if (combo <= 0)
+    {
+        if (victory_countdown > 0)
+        {
+            victory_alpha = 1 - victory_countdown / victory_max_countdown;
+            victory_countdown --;
+            return;
+        }
+        else {
+            victory_countdown = 0;
+            
+            
+            
+            if (input.ActionPress)
+            {
+                room_restart();
+            }
+        }
+    }
+}
+
 //------------------------------------------------
 // Leveling and Upgrades
 //------------------------------------------------
-if (instance_exists(obj_upgrade_menu))
-{
-	global.in_upgrade_menu = true;
-	var exp_inc = 1;
-}
-else
-{
-    var exp_inc = 0.0025;
-	if (target_level <= 0)
-	{
-		if (after_menu_counter < after_menu_counter_max)
-		{
-			after_menu_counter += 1;
-		}
-		else
-		{
-			after_menu_counter = after_menu_counter_max;
-				global.in_upgrade_menu = false;
-			//✅ Toggle Pause with "P" key
-			if (input.Escape) {
-			    global.paused = !global.paused; // Toggle the pause state
-			}
-		}
-	}
-	else
-	{
+in_menu = instance_exists(obj_upgrade_menu);
 
-		check_and_apply_upgrades(self);
+process_upgrades(self, in_menu, input);
 
-	}
-}
-
-process_experience_points(self, target_experience_points, exp_inc);
-
-
-
-
-
-
-
-// ✅ Stop everything except the pause check
+//------------------------------------------------------
+// PAUSE THE GAME
+//------------------------------------------------------
 if (global.paused) || global.in_upgrade_menu {
 	return;
 }
@@ -85,7 +83,7 @@ if (input.InputType == INPUT.GAMEPAD)
 else 
 {
     control_mode = "modern";
-    is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 128;    
+    is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 256;    
 }
 
 process_inputs_and_delay(self, input);
@@ -133,12 +131,15 @@ process_swap(self, swap_info);
 // ------------------------------------------------------
 // SMOOTH UPWARD MOVEMENT + SHIFT
 // ------------------------------------------------------
+
+
 global_y_offset -= shift_speed;
 
 if (global_y_offset <= -gem_size) {
     global_y_offset = 0;
-    last_position[1] -= 1;
+    
     shift_up(self);
+    last_position[1] -= 1;
 }
 
 
@@ -163,15 +164,15 @@ if (reset)
 if (!swap_in_progress && all_blocks_landed(self)) {
     for (var i = 0; i < width; i++) {
         for (var j = 0; j < height; j++) {
-            grid[i, j].offset_x = 0;
-            grid[i, j].offset_y = 0;
+            //grid[i, j].offset_x = 0;
+            //grid[i, j].offset_y = 0;
         }
     }
 }
 
 
 // Have to find a way to drop blocks while locking in matches
-if (all_pops_finished()) {
+if (all_pops_finished() && !victory_state) {
     
 	drop_blocks(self);
 	// ✅ If a new match is found, **increase** combo instead of resetting
@@ -220,7 +221,7 @@ for (var i = 0; i < ds_list_size(global.pop_list); i++) {
             var _x = pop_data.x;
             var _y = pop_data.y;
             var px = (_x * gem_size) + board_x_offset + offset;
-            var py = (_y * gem_size) + offset + global_y_offset;// + gem_y_offsets[_x, _y];
+            var py = (_y * gem_size) + offset + global_y_offset;
 
             // ✅ Store Gem Object Before Destroying
 			if (self.grid[_x, _y] == -1) return;

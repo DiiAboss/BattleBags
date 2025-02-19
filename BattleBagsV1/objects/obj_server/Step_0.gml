@@ -1,26 +1,34 @@
-/// @desc Handle Lobby Code Requests
-var _id = network_receive(server_socket);
-if (_id > 0) {
-    var client_ip = async_load[? "ip"];
-    var client_port = async_load[? "port"];
-    var data = buffer_read(async_load[? "buffer"], buffer_string);
-    
-    var parts = string_split(data, " ");
-    var command = parts[0];
-    
-    if (command == "join") {
-        var code = parts[1];
-        
-        if (ds_map_exists(global.lobbies, code)) {
-            var found_port = ds_map_find_value(global.lobbies, code);
-            
-            // ✅ Send back server info
-            var response = buffer_create(256, buffer_fixed, 1);
-            buffer_write(response, buffer_string, string(found_port));
-            network_send_udp(server_socket, client_ip, client_port, response, buffer_tell(response));
-            buffer_delete(response);
-            
-            
-        }
+/// @desc Server Step Logic
+
+// 🔥 Press ENTER to start the game and notify all clients
+if (keyboard_check_pressed(vk_enter)) {
+    show_message("Starting Game...");
+
+    // ✅ Notify all players to switch rooms
+    for (var i = 0; i < ds_list_size(global.connected_clients); i++) {
+        var sock = ds_list_find_value(global.connected_clients, i);
+
+        var buffer = buffer_create(256, buffer_grow, 1);
+        buffer_seek(buffer, buffer_seek_start, 0);
+        buffer_write(buffer, buffer_u16, 3); // CMD: Start Game
+        network_send_packet(sock, buffer, buffer_tell(buffer));
+        buffer_delete(buffer);
     }
+
+    // ✅ Move server to the game room
+    room_goto(rm_online_game);
+}
+
+// 🔥 Press SPACE to broadcast a message to all clients
+if (keyboard_check_pressed(vk_space)) {
+    var buffer = buffer_create(256, buffer_grow, 1);
+    buffer_seek(buffer, buffer_seek_start, 0);
+    buffer_write(buffer, buffer_u16, 0);    // CMD: Message
+    buffer_write(buffer, buffer_string, "Hello from the server!");
+
+    for (var i = 0; i < ds_list_size(global.connected_clients); ++i) {
+        var sock = ds_list_find_value(global.connected_clients, i);
+        network_send_packet(sock, buffer, buffer_tell(buffer));
+    }
+    buffer_delete(buffer);
 }

@@ -297,3 +297,40 @@ function get_upgrade_sprite(effect) {
     }
 }
 
+
+function process_upgrades(control, menu_obj_exists, input)
+{
+    var target_level = control.target_level;
+    var exp_inc = 1;
+    
+    if (menu_obj_exists)
+    {
+        global.in_upgrade_menu = true;
+        return;
+    }
+    else {
+        exp_inc = 0.0025;
+    }
+    
+    if (target_level <= 0)
+    {
+        if (control.after_menu_counter < control.after_menu_counter_max)
+        {
+            control.after_menu_counter++;
+            return;
+        }
+        
+        control.after_menu_counter = control.after_menu_counter_max;
+        global.in_upgrade_menu = false;
+        
+        //✅ Toggle Pause with "P" key
+        if (input.Escape) {
+            global.paused = !global.paused; // Toggle the pause state
+        }
+    }
+    else {
+        check_and_apply_upgrades(control);
+    }
+    
+    process_experience_points(control, control.target_experience_points, exp_inc);
+}

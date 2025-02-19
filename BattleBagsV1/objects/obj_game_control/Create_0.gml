@@ -144,6 +144,10 @@ after_menu_counter = after_menu_counter_max;
 
 number_of_rows_spawned = 0;
 
+
+// RAVEN CLEARS IN ABOUT 7-8 mins avg
+victory_number_of_rows = 48;
+
 // ------------------------------------------------------
 // Global Variables & Game State
 // ------------------------------------------------------
@@ -274,9 +278,29 @@ enemy_target = -1;
 
 
 
+//------------------------------------------
+// COMBO POINTS SYSTEM
+//------------------------------------------
 combo_points = 0;
-max_combo_points = 10;
+max_combo_points = 100;
+
+cp_per_match_3    = 1;
+cp_per_match_4    = 3;
+cp_per_match_5    = 6;
+cp_per_match_plus = 3;
+cp_per_big_block  = 3;
+cp_per_combo      = 1;
+
+meteor_block = -1;
+
+
 
 
 block_colors_destroyed = array_create(numberOfGemTypes, -1); //to show how much b
 
+victory_state = false;
+victory_alpha = 0;
+victory_max_countdown = 120;
+victory_countdown = victory_max_countdown;
+
+draw_victory_row = board_height;

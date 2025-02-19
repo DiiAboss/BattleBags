@@ -1,6 +1,17 @@
 function generate_lobby_code() {
-    var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var numbers = "0123456789";
+    var letters = array_create(26); // Create an array with space for 26 letters
+    
+    // Fill the array with individual letters
+    for (var i = 0; i < 26; i++) {
+        letters[i] = chr(65 + i); // 65 is ASCII for 'A'
+    }
+    
+    // Create an array for numbers
+    var numbers = array_create(10);
+    
+    for (var i = 0; i < 10; i++) {
+        numbers[i] = string(i); // Convert numbers to strings
+    }
     
     var code = "";
     for (var i = 0; i < 3; i++) {

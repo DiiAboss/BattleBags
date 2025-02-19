@@ -12,21 +12,21 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"39152828-4069-4652-8972-070797526480","name":"39152828-4069-4652-8972-070797526480","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"3203bbe7-5fa8-41e3-b4a7-00a74da62bc5","name":"3203bbe7-5fa8-41e3-b4a7-00a74da62bc5","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":64,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"4e45086a-6313-46e6-8ed5-6472275b2ca6","blendMode":0,"displayName":"default","isLocked":false,"name":"4e45086a-6313-46e6-8ed5-6472275b2ca6","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"ca5ad7a8-7542-4e24-81d6-d41b34f79ee2","blendMode":0,"displayName":"default","isLocked":false,"name":"ca5ad7a8-7542-4e24-81d6-d41b34f79ee2","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_gameOver",
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"gems",
-    "path":"folders/Sprites/gems.yy",
+    "name":"enemy_attack",
+    "path":"folders/Sprites/enemy_attack.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -69,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"39152828-4069-4652-8972-070797526480","path":"sprites/spr_gameOver/spr_gameOver.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"89806a8a-c7fd-4acd-96b5-0a57a630b573","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"3203bbe7-5fa8-41e3-b4a7-00a74da62bc5","path":"sprites/spr_gameOver/spr_gameOver.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"c49a3ea2-7a94-4317-974b-2a3e62175b01","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

@@ -73,6 +73,9 @@ function create_powerup(_powerup = -1, _chance = 25) {
 	var _bomb_tracker = false;
 	switch (_powerup)
 	{
+        case POWERUP.NONE:
+            _sprite = spr_none;
+            break;
 		case POWERUP.SWORD:
 			_sprite = spr_powerup_1;
 		break;

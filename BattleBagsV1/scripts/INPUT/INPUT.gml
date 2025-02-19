@@ -54,6 +54,8 @@ function Input() constructor {
 	inputDelay     = 5;
     maxInputDelay  = 8;
 	
+    hover_x = 0;
+    hover_y = 0;
 	// Detect connected gamepad
 	for (var cont = 0; cont < 12; cont++) {
 		if (gamepad_is_connected(cont)) {
