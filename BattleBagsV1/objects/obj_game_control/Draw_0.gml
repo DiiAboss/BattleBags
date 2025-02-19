@@ -131,9 +131,20 @@ for (var i = 0; i < width; i++) {
         var gem = grid[i, j]; // Retrieve the gem object
         
 
-        
-		gem.x_scale = gem.falling ? 0.90 : 1;
-		gem.y_scale = gem.falling ? 1.1 : 1;
+        if (gem.dist_without_touching) < 8
+        {
+            gem.x_scale = gem.falling ? 0.90 : 1;
+            gem.y_scale = gem.falling ? 1.1 : 1; 
+        }
+        else {
+            gem.x_scale = 0.75;
+            gem.y_scale = 1.25;
+            gem.fall_delay += 0.25; 
+            var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+            var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
+            effect_create_depth(depth + 1, ef_smokeup, draw_x, draw_y, 1, c_red);
+        }
+
         
         if gem.falling 
         {
@@ -216,7 +227,7 @@ for (var i = 0; i < width; i++) {
 				{
 				        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
 				        var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
-					
+					       
 						if (j == bottom_playable_row)
 						{		
 							//draw_set_alpha(darken_alpha);
@@ -230,10 +241,13 @@ for (var i = 0; i < width; i++) {
 					draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
 				}
 			}
+                
+                
             
 	            // 🔥 **Draw special overlays**
 	            if (gem.powerup != -1) {
 	                draw_sprite(gem.powerup.sprite, 0, draw_x_with_global_shake, draw_y_with_global_shake);
+                    draw_text(draw_x, draw_y, string(gem.dist_without_touching));
 	            }
 	            if (gem.frozen) {
 	                draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);

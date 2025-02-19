@@ -162,8 +162,9 @@ global_y_offset -= shift_speed;
 
 if (global_y_offset <= -gem_size) {
     global_y_offset = 0;
-    last_position[1] -= 1;
+    
     shift_up(self);
+    last_position[1] -= 1;
 }
 
 
