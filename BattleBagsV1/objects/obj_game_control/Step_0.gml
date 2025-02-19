@@ -3,7 +3,7 @@ var input = obj_game_manager.input;
 input.Update(self, last_position[0], last_position[1]);
 
 
-
+//game_set_speed(60, gamespeed_fps);
 game_over_screen(self, game_over_state);
 
 if (game_over_state)
@@ -12,6 +12,34 @@ if (game_over_state)
     audio_stop_sound(global.music_fight);
     audio_stop_sound(global.music_regular);
     return;
+}
+
+if (keyboard_check_pressed(vk_insert))
+{
+    victory_state = true;
+}
+
+if (victory_state)
+{
+    if (combo <= 0)
+    {
+        if (victory_countdown > 0)
+        {
+            victory_alpha = 1 - victory_countdown / victory_max_countdown;
+            victory_countdown --;
+            return;
+        }
+        else {
+            victory_countdown = 0;
+            
+            
+            
+            if (input.ActionPress)
+            {
+                room_restart();
+            }
+        }
+    }
 }
 
 //------------------------------------------------
@@ -168,7 +196,7 @@ if (!swap_in_progress && all_blocks_landed(self)) {
 
 
 // Have to find a way to drop blocks while locking in matches
-if (all_pops_finished()) {
+if (all_pops_finished() && !victory_state) {
     
 	drop_blocks(self);
 	// ✅ If a new match is found, **increase** combo instead of resetting

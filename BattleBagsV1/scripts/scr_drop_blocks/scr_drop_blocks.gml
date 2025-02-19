@@ -122,6 +122,7 @@ function drop_blocks(_self, fall_speed = 2) {
                     // ✅ Apply **fall delay**
                     if (gem.fall_delay < gem.max_fall_delay) {
                         gem.fall_delay++;
+                        gem.falling = true;
                         continue; //  Wait until delay finishes
                     }
 

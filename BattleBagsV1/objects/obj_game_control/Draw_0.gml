@@ -1,51 +1,75 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
-if (game_over_state) { 
-    // ✅ Draw Left Panel
-    draw_set_alpha(0.85);
-    draw_set_color(c_black);
-    draw_rectangle(game_over_ui_x, game_over_ui_y, game_over_ui_x + game_over_ui_width, game_over_ui_y + game_over_ui_height, false);
-    draw_set_alpha(1);
-
-    // ✅ Draw "You Lose" Title
-    draw_set_font(f_b_font);
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    draw_set_color(c_white);
-    draw_text(game_over_ui_x + game_over_ui_width / 2, game_over_ui_y + 600, "YOU LOSE");
-
-    // ✅ Draw Popping Blocks
-    for (var i = 0; i < ds_list_size(game_over_popping); i++) {
-        var pop_data = ds_list_find_value(game_over_popping, i);
-        var _x = pop_data.x;
-        var _y = pop_data.y;
-
-        draw_sprite(spr_Oshki, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
-		draw_sprite(spr_enemy_gem_overlay, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
+if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) { 
+    
+    if (game_over_state)
+    {
+        // ✅ Draw Left Panel
+        draw_set_alpha(0.85);
+        draw_set_color(c_black);
+        draw_rectangle(game_over_ui_x, game_over_ui_y, game_over_ui_x + game_over_ui_width, game_over_ui_y + game_over_ui_height, false);
+        draw_set_alpha(1);
+    
+        // ✅ Draw "You Lose" Title
+        draw_set_font(f_b_font);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_white);
+        draw_text(game_over_ui_x + game_over_ui_width / 2, game_over_ui_y + 600, "YOU LOSE");
+    
+        // ✅ Draw Popping Blocks
+        for (var i = 0; i < ds_list_size(game_over_popping); i++) {
+            var pop_data = ds_list_find_value(game_over_popping, i);
+            var _x = pop_data.x;
+            var _y = pop_data.y;
+    
+            draw_sprite(spr_Oshki, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
+            draw_sprite(spr_enemy_gem_overlay, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
+        }
+    
+        // ✅ Draw Options After Blocks Have Popped
+        if (game_over_show_options) {
+            var restart_x = game_over_ui_x + 50;
+            var restart_y = game_over_ui_y + 350;
+            var menu_x = game_over_ui_x + 50;
+            var menu_y = game_over_ui_y + 420;
+            var button_width = 300;
+            var button_height = 50;
+            draw_set_font(fnt_basic);
+            // ✅ Highlight button on hover
+            if (game_over_option_selected == 0) draw_set_color(c_gray);
+            else draw_set_color(c_white);
+            //draw_rectangle(restart_x, restart_y, restart_x + button_width, restart_y + button_height, false);
+            draw_text(restart_x + button_width / 2, restart_y + button_height / 2, "Restart");
+    
+            if (game_over_option_selected == 1) draw_set_color(c_gray);
+            else draw_set_color(c_white);
+            //draw_rectangle(menu_x, menu_y, menu_x + button_width, menu_y + button_height, false);
+            draw_text(menu_x + button_width / 2, menu_y + button_height / 2, "Main Menu");
+        }
     }
-
-    // ✅ Draw Options After Blocks Have Popped
-    if (game_over_show_options) {
-        var restart_x = game_over_ui_x + 50;
-        var restart_y = game_over_ui_y + 350;
-        var menu_x = game_over_ui_x + 50;
-        var menu_y = game_over_ui_y + 420;
-        var button_width = 300;
-        var button_height = 50;
-		draw_set_font(fnt_basic);
-        // ✅ Highlight button on hover
-        if (game_over_option_selected == 0) draw_set_color(c_gray);
-        else draw_set_color(c_white);
-        //draw_rectangle(restart_x, restart_y, restart_x + button_width, restart_y + button_height, false);
-        draw_text(restart_x + button_width / 2, restart_y + button_height / 2, "Restart");
-
-        if (game_over_option_selected == 1) draw_set_color(c_gray);
-        else draw_set_color(c_white);
-        //draw_rectangle(menu_x, menu_y, menu_x + button_width, menu_y + button_height, false);
-        draw_text(menu_x + button_width / 2, menu_y + button_height / 2, "Main Menu");
+    
+    
+    if (victory_state)
+    {
+        // ✅ Draw Left Panel
+        draw_set_alpha(victory_alpha);
+        draw_set_color(c_black);
+        draw_rectangle(game_over_ui_x, game_over_ui_y, game_over_ui_x + game_over_ui_width, game_over_ui_y + game_over_ui_height, false);
+        
+    
+        // ✅ Draw "You Lose" Title
+        draw_set_font(f_b_font);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_white);
+        draw_text(game_over_ui_x + game_over_ui_width / 2, game_over_ui_y + 600, "VICTORY");
+        draw_set_alpha(1);
     }
+    
 }
+
 
 else
 {

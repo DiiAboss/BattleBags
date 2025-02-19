@@ -280,3 +280,7 @@ max_combo_points = 10;
 
 block_colors_destroyed = array_create(numberOfGemTypes, -1); //to show how much b
 
+victory_state = false;
+victory_alpha = 0;
+victory_max_countdown = 120;
+victory_countdown = victory_max_countdown;

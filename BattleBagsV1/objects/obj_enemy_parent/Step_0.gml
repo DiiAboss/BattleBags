@@ -1,5 +1,7 @@
 /// @description Enemy Step Event - Handles attacks, health, and previews.
-
+if (obj_game_control.victory_state) {
+    instance_destroy();
+}
 if (global.paused || global.in_upgrade_menu) return;
 
 // ✅ Handle Damage
@@ -131,7 +133,7 @@ if (attack_queue_active) {
 }
 
 // ✅ Check if enemy is dead
-if (hp <= 0) {
+if (hp <= 0){
     enemy_defeated(self, obj_game_control);
 }
 
