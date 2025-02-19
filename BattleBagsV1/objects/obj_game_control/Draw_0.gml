@@ -522,11 +522,14 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
     if (number_of_rows_spawned >= victory_number_of_rows)
     {
         var draw_victory_row_y = board_height - (number_of_rows_spawned - victory_number_of_rows);
+        var scale = sin(degtorad(current_time * 1)) * 1; // Oscillates slightly (-5° to +5°)
         for (var _v = 0; _v < board_width; _v++)
         {
             draw_x = board_x_offset + (_v * gem_size) + offset;
             var draw_y = (draw_victory_row_y * gem_size) + global_y_offset + offset;
-            draw_sprite(spr_checker, 0, draw_x, draw_y);
+            draw_sprite_ext(spr_checker, 0, draw_x, draw_y, 1, 1 - (0.05 * scale), -scale, c_black, 1);
+            draw_sprite_ext(spr_checker, 0, draw_x, draw_y, 1, 1 + (0.025 * scale), scale, c_white, 1);
+            
         }
     }
     

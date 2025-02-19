@@ -144,7 +144,7 @@ after_menu_counter = after_menu_counter_max;
 
 number_of_rows_spawned = 0;
 
-victory_number_of_rows = 30;
+victory_number_of_rows = 32;
 
 // ------------------------------------------------------
 // Global Variables & Game State
