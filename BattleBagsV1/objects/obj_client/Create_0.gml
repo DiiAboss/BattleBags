@@ -19,4 +19,6 @@ buffer_write(buffer, buffer_string, "join " + global.lobby_code);
 network_send_udp(client_socket, server_ip, server_port, buffer, buffer_tell(buffer));
 buffer_delete(buffer);
 
+my_player_id = generate_lobby_code();
+
 
