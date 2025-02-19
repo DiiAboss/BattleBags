@@ -144,7 +144,9 @@ after_menu_counter = after_menu_counter_max;
 
 number_of_rows_spawned = 0;
 
-victory_number_of_rows = 32;
+
+// RAVEN CLEARS IN ABOUT 7-8 mins avg
+victory_number_of_rows = 48;
 
 // ------------------------------------------------------
 // Global Variables & Game State

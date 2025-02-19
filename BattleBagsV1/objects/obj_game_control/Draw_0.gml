@@ -247,7 +247,7 @@ for (var i = 0; i < width; i++) {
 	            // 🔥 **Draw special overlays**
 	            if (gem.powerup != -1) {
 	                draw_sprite(gem.powerup.sprite, 0, draw_x_with_global_shake, draw_y_with_global_shake);
-                    draw_text(draw_x, draw_y, string(gem.dist_without_touching));
+                    //draw_text(draw_x, draw_y, string(gem.dist_without_touching));
 	            }
 	            if (gem.frozen) {
 	                draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
@@ -262,7 +262,7 @@ for (var i = 0; i < width; i++) {
 				if (gem.is_big) {
 					var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
 				     var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
-					draw_text(_draw_x, _draw_y, string(gem.mega_width));
+					//draw_text(_draw_x, _draw_y, string(gem.mega_width));
 				}
 
         }
