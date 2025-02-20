@@ -5,19 +5,25 @@ function draw_player_grid(mp_control, player)
     draw_set_color(c_white);
     draw_set_alpha(1);
     
+    if (max_players < 3)
+    {
+        mp_control.gem_size = 64;
+    }
+    
     var board_x_offset = 0;
     var gem_size = mp_control.gem_size;
     var global_y_offset = player.global_y_offset;
     var offset = 32;
     var darken_alpha = 1;
+    var draw_x_start = room_width / (max_players + 1) - (width * 0.5);
     
     
     var player_grid = player.grid;
-    board_x_offset = 96 + (player.id * (9 * gem_size));
+    board_x_offset = 96 + ((draw_x_start) * player._id) + (player._id * (9 * gem_size));
     
     player.board_x_offset = board_x_offset;
     
-    draw_text(board_x_offset, 100, string(player.input.InputType));
+    draw_text(board_x_offset, 100, string(player.board_x_offset));
     
     // 🔹 Draw player grid properly
     for (var i = 0; i < 8; i++) {

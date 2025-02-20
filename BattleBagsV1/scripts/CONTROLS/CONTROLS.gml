@@ -7,8 +7,8 @@ function block_dragged_mp(mp_control, player) {
         var global_y_offset = player.global_y_offset;
         
         // 🔹 Convert pointer position to player's grid coordinates
-        var hover_x = floor((input.pointer_x - board_x_offset) / gem_size);
-        var hover_y = floor((input.pointer_y - global_y_offset) / gem_size);
+        var hover_x = floor((player.pointer_x - board_x_offset) / gem_size);
+        var hover_y = floor((player.pointer_y - global_y_offset) / gem_size);
         
         // ✅ Ensure hover is within player’s grid
         if (hover_x >= 0 && hover_x < width && hover_y >= 0 && hover_y < height) {
@@ -46,20 +46,20 @@ function block_dragged_mp(mp_control, player) {
         }
     
         // ✅ Swap logic when dragging
-        if (input.ActionHold && !player.dragged && player.selected_x != -1) {
-            var target_x = floor((input.pointer_x - board_x_offset) / gem_size);
+        if (input.ActionKey && !player.dragged && player.selected_x != -1) {
+            var target_x = floor((player.pointer_x - board_x_offset) / gem_size);
             var target_y = player.selected_y; // Lock Y so swap happens in the same row
     
             // ✅ Ensure swap stays within player's board
             if (target_x >= 0 && target_x < width && target_x != player.selected_x) {
-                start_swap(player, player.selected_x, player.selected_y, target_x, player.selected_y);
+                start_swap_mp(mp_control, player, player.selected_x, player.selected_y, target_x, player.selected_y);
                 player.selected_x = target_x;
                 player.dragged = true;
             }
         }
     
         // ✅ Reset selection when the action key is released
-        if (input.release_key) {
+        if (input.ActionRelease) {
             player.selected_x = -1;
             player.selected_y = -1;
             player.dragged = false;

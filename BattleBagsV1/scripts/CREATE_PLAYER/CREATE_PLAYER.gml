@@ -1,7 +1,7 @@
 function create_player(_id)
 {
     return {
-        id: _id,                              // Player ID
+        _id: _id,                              // Player ID
         input: new Input(),                   // Player input
         grid: create_grid_array(),            // Player grid
         global_y_offset: 0,                   // Y Offset
@@ -24,6 +24,8 @@ function create_player(_id)
         swap_in_progress: false,
         swap_info: undefined,
         swap_queue: undefined,
+        width: 8,
+        height: 24,
     };
 }
 

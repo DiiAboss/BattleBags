@@ -37,22 +37,23 @@ if (room == rm_local_multiplayer_lobby)
         else 
         {
             draw_rectangle(col_x, col_y, col_x + col_width, screen_height, false);
-            draw_set_color(c_white);
+            draw_set_color(c_grey);
             draw_rectangle(col_x, col_y, col_x + col_width, screen_height, true);
             
         }
     
         // ✅ Display player number
         draw_text(col_x + col_x_text_offset, col_y + 20, "Player " + string(i + 1));
-    
+            var player = ds_list_find_value(global.player_list, i);
+        
         // ✅ Check if player is assigned a control method
-        if (player_input[i].InputType == INPUT.KEYBOARD) {
+        if (player.input.InputType == INPUT.KEYBOARD) {
             draw_set_color(c_white);
             draw_text(col_x + col_x_text_offset, col_y + 50, "Input: MOUSE & KEYBOARD");
         } 
-        else if (player_input[i].InputType == INPUT.GAMEPAD) {
+        else if (player.input.InputType == INPUT.GAMEPAD) {
             draw_set_color(c_blue);
-            draw_text(col_x + col_x_text_offset, col_y + 50, "Input: GAMEPAD " + string(player_input[i].Device));
+            draw_text(col_x + col_x_text_offset, col_y + 50, "Input: GAMEPAD " + string(player.input.Device));
         } 
         else {
             // ✅ Display "Press Start" for unassigned players
@@ -109,10 +110,10 @@ if (room == rm_local_multiplayer_game)
                 var rect_x2 = rect_x1 + gem_size;
                 var rect_y2 = rect_y1 + gem_size;
                 var scale = 1.1 * (gem_size / 64);
-                var offset_x = 32;
-                var offset_y = 16;
+                var offset_x = 48 * (gem_size / 64);
+                var offset_y = 24 * (gem_size / 64);
                 
-                var offset = 16;
+                var offset = 32 * (gem_size / 64);
                 if (player.swap_in_progress)
                 {
                     scale = 1 * (gem_size / 64);
@@ -129,12 +130,12 @@ if (room == rm_local_multiplayer_game)
                             
                             if (hover_gem2.type != BLOCK.NONE)
                             {
-                                draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + offset_x, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                                draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
                                 draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + offset_x, rect_y2 - offset, scale, scale, 0, c_white, 1);
                             }
                         }
                         
-                        draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + offset_x, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                        draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
                 }
                 
                 if (hover_gem.type != BLOCK.NONE) {

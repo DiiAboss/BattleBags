@@ -20,80 +20,87 @@ if (room == rm_local_multiplayer_lobby)
     } else {
         var gp_num = gamepad_get_device_count();
         var player = ds_list_find_value(global.player_list, player_assigning);
-        
-        //if (xInput) gp_num = 12;
-        //-----------------------------------------------------------------
-        //  PLAYER ONE
-        //-----------------------------------------------------------------
-        if (player_assigning <= 0) {
-            // ✅ Assign Player 1 (Keyboard/Mouse)
-            if (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left)) {
-                player.input.InputType = INPUT.KEYBOARD;
-                player.input.Device = -player.id;
-                player_assigning = 1;
-                delay = max_delay;
-                mouse_assigned = true;
-                return;
-            }
     
-            // ✅ Assign Player 1 (Gamepad)
-            for (var i = 0; i < gp_num; i++) {
-                if (gamepad_is_connected(i) && gamepad_button_check(i, gp_start)) {
-                    player.input.InputType = INPUT.GAMEPAD
+        // ✅ Assign Keyboard (only once)
+        if (!mouse_assigned && (keyboard_check_pressed(vk_space) || mouse_check_button_pressed(mb_left))) {
+            player.input.InputType = INPUT.KEYBOARD;
+            player.input.Device = -player._id;
+            player_assigning++;
+            delay = max_delay;
+            mouse_assigned = true;
+            return;
+        }
+    
+        // ✅ Assign Gamepads
+        for (var i = 0; i < gp_num; i++) {
+            if (gamepad_is_connected(i) && gamepad_button_check_pressed(i, gp_start)) {
+                // Ensure gamepad isn't already taken
+                var taken = false;
+                for (var t = 0; t < array_length(gamepad_taken_list); t++) {
+                    if (gamepad_taken_list[t] == i) {
+                        taken = true;
+                        break;
+                    }
+                }
+    
+                if (!taken) {
+                    player.input.InputType = INPUT.GAMEPAD;
                     player.input.Device = i;
-                    player_assigning = 1;
-                    array_push(gamepad_taken_list, i);
+    
+                    // Store device in gamepad_taken_list
+                    for (var t = 0; t < array_length(gamepad_taken_list); t++) {
+                        if (gamepad_taken_list[t] == -1) {
+                            gamepad_taken_list[t] = i;
+                            gamepad_taken_list[t + 4] = i + 4;
+                            break;
+                        }
+                    }
+    
+                    player_assigning++;
                     delay = max_delay;
                     return;
                 }
             }
         }
     
-        //-----------------------------------------------------------------
-        // OTHER PLAYERS
-        //-----------------------------------------------------------------
-        if (player_assigning >= 1 && player_assigning < max_players) {
-            for (var j = 0; j < player_assigning; j++) { 
-                var _player = ds_list_find_value(global.player_list, j);
-                
-                if (mouse_assigned) {
-                    var taken = false;
-                    for (var i = 0; i < gp_num; i++) {
-                        for (var _x = 0; _x < array_length(gamepad_taken_list) - 1; _x++)
-                        {
-                            if (i != gamepad_taken_list[_x])
-                            {
-                               if (gamepad_is_connected(i) && gamepad_button_check(i, gp_start)) {
-                                player.input.InputType = INPUT.GAMEPAD;
-                                player.input.Device = i;
-                                player_assigning++;
-                                delay = max_delay;
-                            }
-                        }
+        // ✅ Reset assignment if a gamepad disconnects
+        for (var p = 0; p < max_players; p++) {
+            var _player = ds_list_find_value(global.player_list, p);
+            if (_player.input.InputType == INPUT.GAMEPAD && !gamepad_is_connected(_player.input.Device)) {
+                player_assigning = p; // Reset to reassign this player
+    
+                // Remove from gamepad_taken_list
+                for (var t = 0; t < array_length(gamepad_taken_list); t++) {
+                    if (gamepad_taken_list[t] == _player.input.Device) {
+                        gamepad_taken_list[t + 4] = -1;
+                        gamepad_taken_list[t] = -1;
+                        break;
                     }
                 }
+    
+                _player.input.InputType = INPUT.NONE;
+                _player.input.Device = -1;
+            }
+        }
+    
+        // ✅ Proceed to Game
+        if (player_assigning >= 1) {
+            var player_one = ds_list_find_value(global.player_list, 0);
+            if (player_one.input.SpeedUpKey) {
+                for (var p = ds_list_size(global.player_list) - 1; p > 1; p--)
+                {
+                   player = ds_list_find_value(global.player_list, p);
+                    if (player.input.InputType == INPUT.NONE)
+                    {
+                        ds_list_delete(global.player_list, p);
+                    }
+                }
+                
+                max_players = ds_list_size(global.player_list);
+                room_goto(rm_local_multiplayer_game);
             }
         }
     }
-    
-    // ✅ Reset assignment if a gamepad disconnects
-    for (var p = 0; p < max_players; p++) {
-        var _player = ds_list_find_value(global.player_list, p);
-        if (_player.input.InputType == INPUT.GAMEPAD && !gamepad_is_connected(_player.input.Device)) {
-            player_assigning = p;
-        }
-    }
-    
-    if (player_assigning > 1)
-    {
-        var player = ds_list_find_value(global.player_list, 0);
-        if (player.input.SpeedUpKey)
-        {
-            room_goto(rm_local_multiplayer_game);
-        }
-        
-    }
-}
 }
 
 if (room == rm_local_multiplayer_game)
@@ -133,8 +140,7 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
 
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
     var player = ds_list_find_value(global.player_list, i);
-    
-    if (player.input_type == INPUT.KEYBOARD)
+    if (player.input.InputType == INPUT.KEYBOARD)
     {
         player.pointer_x = mouse_x;
         player.pointer_y = mouse_y;
