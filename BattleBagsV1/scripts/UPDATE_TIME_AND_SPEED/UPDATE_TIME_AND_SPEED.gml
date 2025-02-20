@@ -1,8 +1,8 @@
-function update_time(_self, FPS = 60)
+function update_time(_self, fps = _FPS)
 {
 
 	_self.total_time += 1;
-	var t_i_s = (_self.total_time / FPS);
+	var t_i_s = (_self.total_time / fps);
 	_self.time_in_seconds = floor(t_i_s);
 	_self.time_in_minutes = floor(_self.time_in_seconds / 60);
 	if (t_i_s % 30 == 0)

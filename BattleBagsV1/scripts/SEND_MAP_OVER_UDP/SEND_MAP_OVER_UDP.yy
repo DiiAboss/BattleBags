@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"Script96",
+  "%Name":"SEND_MAP_OVER_UDP",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Script96",
+  "name":"SEND_MAP_OVER_UDP",
   "parent":{
     "name":"ONLINE",
     "path":"folders/Scripts/ONLINE_STUFF/ONLINE.yy",

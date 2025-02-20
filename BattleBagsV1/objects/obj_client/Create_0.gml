@@ -1,7 +1,7 @@
 /// @desc Connect to Server
 client_socket = network_create_socket(network_socket_udp);
 server_ip = "127.0.0.1";
-server_port = 8080;
+server_port = 7676;
 
 // ✅ Connect to the server
 var connection = network_connect_raw(client_socket, server_ip, server_port);
@@ -17,6 +17,19 @@ message = "";
 my_player_id = irandom_range(1, 255);
 
 
+received_hosts = false;
+try_to_get_hosts = true;
+
+
+hosts_list = ds_list_create();
 
 
 
+selected_option = 0;
+last_hovered_option = -1; // -1 means no hover yet
+menu_spacing = 72; // Spacing between menu items
+menu_x = room_width / 2;
+menu_y_start = room_height / 2 - (menu_spacing * (ds_list_size(hosts_list) / 2));
+
+input_delay = 0;
+max_input_delay = 10;

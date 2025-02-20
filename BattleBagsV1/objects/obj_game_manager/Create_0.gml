@@ -48,6 +48,7 @@ enum DATA_TYPE
     POSITION,
     KEY_PRESS,
     DEBUG,
+    GET_HOSTS,
 }
 
 // LOCAL MULTIPLAYER

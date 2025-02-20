@@ -1,0 +1,1 @@
+#macro _FPS 60

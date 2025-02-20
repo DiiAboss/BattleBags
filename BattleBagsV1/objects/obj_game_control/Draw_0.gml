@@ -521,7 +521,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
     
     if (after_menu_counter < after_menu_counter_max) {
         // ✅ Calculate remaining countdown time
-        var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / FPS);
+        var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / _FPS);
         
         draw_set_font(fnt_heading1); // ✅ Use the specified font
 		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4,(room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);

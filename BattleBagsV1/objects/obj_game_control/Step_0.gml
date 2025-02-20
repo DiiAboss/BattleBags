@@ -66,7 +66,7 @@ if (global.paused) || global.in_upgrade_menu {
 spawn_timer = 60 / global.gameSpeed;
 shift_speed = 0.1 * global.gameSpeed;
 
-update_time(self, FPS);
+update_time(self, _FPS);
 
 update_draw_time(self);
 

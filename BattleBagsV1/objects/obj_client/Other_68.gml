@@ -20,7 +20,21 @@ if (async_load[? "size"] > 0)
     {
         case DATA_TYPE.DEBUG:
             show_debug_message("data received");
-            break;
+        break;
+        
+        case DATA_TYPE.CREATE_HOST:
+            show_debug_message("data received");
+        break;
+        
+         case DATA_TYPE.GET_HOSTS:
+            
+            show_debug_message("getting hosts");
+            var hosts = ds_map_find_value(json_resp, "hosts");
+            show_debug_message(hosts);
+            hosts_list = hosts;
+            received_hosts = true;
+        
+        break;       
         
         default:
             break;

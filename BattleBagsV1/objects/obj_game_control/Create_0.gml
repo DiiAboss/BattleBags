@@ -3,7 +3,6 @@ image_speed = 0.1;
 
 randomize();
 
-FPS = 60;
 
 songs = [Sound7, sound_regular_music_test_3];
 current_song = 0;
@@ -104,7 +103,7 @@ fight_for_your_life = false;
 
 timer_block_slow_down = 0;
 
-lose_life_max_timer = FPS * global.modifier * 3;
+lose_life_max_timer = _FPS * global.modifier * 3;
 lose_life_timer     = 0;
 
 blocks_in_danger = false;
@@ -129,7 +128,7 @@ matches_this_round = 0;
 total_matches = 0;
 
 total_time = 0;
-time_in_seconds = total_time * FPS;
+time_in_seconds = total_time * _FPS;
 
 
 time_in_minutes = floor(time_in_seconds / 60);
@@ -138,7 +137,7 @@ draw_time = string(time_in_minutes) + ":" + string(floor(time_in_seconds % 60));
 
 diagonal_matches = false;
 
-after_menu_counter_max = 2 * FPS;
+after_menu_counter_max = 2 * _FPS;
 after_menu_counter = after_menu_counter_max;
 
 
