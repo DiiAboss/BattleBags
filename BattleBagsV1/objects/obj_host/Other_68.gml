@@ -11,7 +11,7 @@ if (async_load[? "size"] > 0)
     var response = buffer_read(buff, buffer_string);
     show_debug_message(response);
     
-    resp_json = json_decode(response);
+    var resp_json = json_decode(response);
     
     var _x = ds_map_find_value(resp_json, "x");
     var _y = ds_map_find_value(resp_json, "y");
