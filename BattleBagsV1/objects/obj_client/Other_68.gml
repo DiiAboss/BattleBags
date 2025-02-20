@@ -1,6 +1,6 @@
 ///// @desc Client Async Network Event
 
-show_debug_message(json_encode(async_load));
+//show_debug_message(json_encode(async_load));
 
 // Recieving Data
 if (async_load[? "size"] > 0)
@@ -42,6 +42,7 @@ if (async_load[? "size"] > 0)
             host_number   = ds_map_find_value(json_resp, "host_number");
             show_debug_message("PLAYER NUMBER: " + string(player_number) + " JOINED " + string(host_number));
             joined = true;
+            connected = true;
         break; 
         
         case DATA_TYPE.LEAVE_HOST:
@@ -75,23 +76,34 @@ if (async_load[? "size"] > 0)
         case DATA_TYPE.GET_PLAYER_STATS:
         
         var player_stats = ds_map_find_value(json_resp, "player_stats");
-                            
+        var up = false;
+        var left = false;
+        var down = false;
+        var right = false;
+        var action_key = false;  
         var pn = ds_map_find_value(json_resp, "player_number");
         if  (pn == player_number)
         {
-            var left = ds_map_find_value(player_stats, "up_key");
-            var right = ds_map_find_value(player_stats, "left_key");
-            var down = ds_map_find_value(player_stats, "down_key");
-            var up = ds_map_find_value(player_stats, "right_key");
-            var action_key = ds_map_find_value(player_stats, "action_key");
+            up = ds_map_find_value(player_stats, "up_key");
+            left = ds_map_find_value(player_stats, "left_key");
+            down = ds_map_find_value(player_stats, "down_key");
+            right = ds_map_find_value(player_stats, "right_key");
+            action_key = ds_map_find_value(player_stats, "action_key");
             x = ds_map_find_value(player_stats, "x");
             y = ds_map_find_value(player_stats, "y");
             
             online_input.Update(up, left, down, right, action_key, -1, -1);
-            //show_debug_message("PLAYER_STATS: " + string(player_stats));
-            
         }
-                            
+        else {
+            player_controlled = true;
+        }
+        
+        show_debug_message("LEFT: " + string(left));
+        show_debug_message("UP: " + string(up));
+        show_debug_message("DOWN: " + string(down));
+        show_debug_message("RIGHT: " + string(right));
+        show_debug_message("x: " + string(x));
+        show_debug_message("y: " + string(y));
         break;   
         
         case DATA_TYPE.GET_NEW_PLAYERS:

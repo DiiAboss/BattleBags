@@ -126,7 +126,7 @@ function send_player_stats(data, rinfo)
 function get_player_stats(data, rinfo)
 {
     data.player_stats = hosts[data.host_number][data.player_number];
-    //console.log(String(data.player_stats));
+    console.log(String(data.player_stats));
     server.send(JSON.stringify(data), rinfo.port, rinfo.address);
 }
 
@@ -184,7 +184,7 @@ function join_host(data, rinfo)
 }
 
 function leave_host(data, rinfo) {
-    console.log("< LEAVE HOST");
+    console.log(String(data.player_number) + "< LEAVE HOST " + String(data.host_number) );
     
     // Validate host number exists
     if (data.host_number >= hosts.length || !hosts[data.host_number]) {

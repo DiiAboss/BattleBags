@@ -1,5 +1,5 @@
 /// @desc Client Step Logic
-try_to_leave_host(self, host_number); // try_to_leave
+
 
 connected = joined;
 if !(connected)
@@ -71,12 +71,12 @@ if !(connected)
     }
 }
 // ✅ Handle menu selection (keyboard OR mouse click)
-if (input.Escape) {
+if (keyboard_check_pressed(vk_escape)) {
         try_to_leave = true;
 }
+try_to_leave_host(self, host_number); // try_to_leave
 
-
-if (!player_controlled)
+if (player_controlled)
 {
     input = obj_game_manager.input;
     set_stats_online(self, input);
@@ -91,8 +91,8 @@ else {
 
 function set_stats_online(player, input)
 {
-    _x = player.x;
-    _y = player.y;
+    _x = mouse_x;
+    _y = mouse_y;
     
     
     var data = ds_map_create();
@@ -106,15 +106,11 @@ function set_stats_online(player, input)
     ds_map_add(data, "host_number",    player.host_number);
     ds_map_add(data, "player_number",  player.player_number);
     
-    send_map_over_UDP(player, data, DATA_TYPE.SEND_PLAYER_STATS, 800);
+    send_map_over_UDP(player, data, DATA_TYPE.SEND_PLAYER_STATS, 1000);
 }
 
 function get_stats_online(player, input)
 {
-    var _x = player.x;
-    var _y = player.y;
-    
-    
     var data = ds_map_create();
     ds_map_add(data, "host_number",    player.host_number);
     ds_map_add(data, "player_number",  player.player_number);
