@@ -11,19 +11,15 @@ server.on("message", function(msg, rinfo)
     console.log("X: " + String(data.x));
     console.log("Y: " + String(data.y));
     console.log("ID: " + String(data.id));
+    console.log("SPR: " + String(data.spr));
     
 
 });
 
 server2.on("message", function(msg, rinfo)
 {
-    
-    data = JSON.parse(msg);
-
     server2.send(JSON.stringify(data), rinfo.port, rinfo.address);
-
-
 });
 
 server.bind(7676);
-server.bind(7677);
+server2.bind(7677);
