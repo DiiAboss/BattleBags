@@ -1,2 +1,2 @@
 /// @description
-ds_map_destroy(data);
+//ds_map_destroy(data);

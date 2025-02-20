@@ -40,6 +40,16 @@ enum PLAYER_CONTROLLER
     NONE  = -1
 }
 
+enum DATA_TYPE
+{
+    CREATE_HOST,
+    JOIN_HOST,
+    STOP_HOST,
+    POSITION,
+    KEY_PRESS,
+    DEBUG,
+}
+
 // LOCAL MULTIPLAYER
 max_players = 2;  // Set the number of players
 

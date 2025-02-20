@@ -20,6 +20,7 @@
     {"name":"MENU","order":11,"path":"folders/Rooms/MENU.yy",},
     {"name":"Scripts","order":5,"path":"folders/Scripts.yy",},
     {"name":"DRAW","order":24,"path":"folders/Scripts/DRAW.yy",},
+    {"name":"ONLINE","order":1,"path":"folders/Scripts/ONLINE_STUFF/ONLINE.yy",},
     {"name":"BOARD","order":13,"path":"folders/Scripts/MAIN/BOARD.yy",},
     {"name":"BLOCKS_AND_POPS","order":8,"path":"folders/Scripts/MAIN/BOARD/BLOCKS_AND_POPS.yy",},
     {"name":"BLOCKS","order":7,"path":"folders/Scripts/MAIN/BOARD/BLOCKS_AND_POPS/BLOCKS.yy",},
