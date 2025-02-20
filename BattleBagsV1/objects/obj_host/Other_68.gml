@@ -44,7 +44,9 @@ if (async_load[? "size"] > 0)
         
         if (res == "stopped")
         {
-            is_host_stopped = true;        
+            is_host_stopped = true;
+            room_goto(rm_multiplayer_selection);
+            instance_destroy();       
         }
             
         break;

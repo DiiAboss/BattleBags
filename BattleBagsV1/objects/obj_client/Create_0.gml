@@ -33,3 +33,12 @@ menu_y_start = room_height / 2 - (menu_spacing * (ds_list_size(hosts_list) / 2))
 
 input_delay = 0;
 max_input_delay = 10;
+
+host_number = 0;
+player_number = 0;
+
+try_to_join = false;
+joined = false;
+
+try_to_leave = false;
+left = false;

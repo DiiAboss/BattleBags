@@ -9,18 +9,21 @@ var hosts = [];
 
 const DATA_TYPE =
 {
-    CREATE_HOST : 0,
-    JOIN_HOST   : 1,
-    STOP_HOST   : 2,
-    POSITION    : 3,
-    KEY_PRESS   : 4,
-    DEBUG       : 5,
-    GET_HOSTS   : 6,
+    CREATE_HOST  : 0,
+    JOIN_HOST    : 1,
+    STOP_HOST    : 2,
+    POSITION     : 3,
+    KEY_PRESS    : 4,
+    DEBUG        : 5,
+    GET_HOSTS    : 6,
+    LEAVE_HOST   : 7,
+    PLAYER_STATS : 8,
 }
 
-function player(x, y) {
+function player(player_number, x, y) {
     this.x = x;
     this.y = y;
+    this.player_number = this.player_number;
 }
 
 
@@ -43,6 +46,15 @@ server.on("message", function(msg, rinfo)
         break;
         case DATA_TYPE.GET_HOSTS:
             get_hosts(data, rinfo);
+        break;
+        case DATA_TYPE.JOIN_HOST:
+            join_host(data, rinfo);
+        break;
+        case DATA_TYPE.LEAVE_HOST:
+            leave_host(data, rinfo);
+        break;
+        case DATA_TYPE.PLAYER_STATS:
+            join_host(data, rinfo);
         break;
         default:
         break;
@@ -76,7 +88,7 @@ function set_player_debug(data, rinfo)
 function create_host(data, rinfo)
 {
     var host_number = hosts.length;
-    hosts.push([new player(0, 0)]);
+    hosts.push([new player(0, 0, 0)]);
 
     data.host_number   = host_number;
     data.player_number = 0;
@@ -102,5 +114,30 @@ function get_hosts(data, rinfo)
     console.log("< GET HOSTS");
     data.hosts = hosts;
     server.send(JSON.stringify(data), rinfo.port, rinfo.address);
+    //server2.send(JSON.stringify(data), rinfo.port, rinfo.address);
+}
+
+function join_host(data, rinfo)
+{
+    console.log("< JOIN HOST");
+    var number_of_players = hosts[data.host_number].length;
+    hosts[data.host_number].push(new player(number_of_players, 0, 0));
+    data.player_number = number_of_players;
+    data.host_number;
+    server.send(JSON.stringify(data), rinfo.port, rinfo.address);
+    console.table(hosts);
+    //server2.send(JSON.stringify(data), rinfo.port, rinfo.address);
+}
+
+function leave_host(data, rinfo)
+{
+    console.log("< LEAVE HOST");
+    var _hosts = hosts[data.host_number];
+    console.log("hosts[data.host_number]" + String(_hosts));
+    var player_to_disconnect = data.player_number;
+    console.log("player_to_disconnect" + String(player_to_disconnect));
+    hosts[data.host_number].splice(player_to_disconnect, 1);
+    server.send(JSON.stringify(data), rinfo.port, rinfo.address);
+    console.table(hosts);
     //server2.send(JSON.stringify(data), rinfo.port, rinfo.address);
 }

@@ -18,7 +18,7 @@ my_player_id = irandom_range(1, 255);
 
 client_buffer = buffer_create(100, buffer_fixed, 100);
 
-data = ds_map_create();
+//data = ds_map_create();
 
 host_number = 0;
 player_number = 0;

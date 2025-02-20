@@ -33,8 +33,30 @@ if (async_load[? "size"] > 0)
             show_debug_message(hosts);
             hosts_list = hosts;
             received_hosts = true;
+            
         
-        break;       
+        break;
+        
+        case DATA_TYPE.JOIN_HOST:
+                    
+            show_debug_message("joining host");
+            player_number = ds_map_find_value(json_resp, "player_number");
+            host_number   = ds_map_find_value(json_resp, "host_number");
+            show_debug_message("PLAYER NUMBER: " + string(player_number) + "JOINED " + string(host_number));
+            joined = true;
+        break; 
+        
+        case DATA_TYPE.LEAVE_HOST:
+                            
+            show_debug_message("leaving host");
+            player_number = ds_map_find_value(json_resp, "player_number");
+            host_number   = 0;
+            show_debug_message("PLAYER NUMBER: " + string(player_number) + "LEFT " + string(host_number));
+            
+            room_goto(rm_multiplayer_selection);
+            instance_destroy();
+                            
+        break;     
         
         default:
             break;

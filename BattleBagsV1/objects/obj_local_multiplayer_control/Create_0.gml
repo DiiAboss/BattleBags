@@ -74,3 +74,5 @@ height = 24;
 
 gem_size = 48;
 show_debug_overlay(true);
+
+gamepad_taken_list = [];

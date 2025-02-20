@@ -1,10 +1,6 @@
 /// @desc Client Step Logic
 var input = obj_game_manager.input;
 input.Update(self, x, y);
-x = mouse_x;
-y = mouse_y;
-
-
 
 
 
@@ -19,21 +15,30 @@ if (!received_hosts && try_to_get_hosts)
     
 }
 
-
-
-// 🔥 Send player input
-if (input.ActionPress) {
-
-    var data = ds_map_create();
-    // The Data To Send To Server
-    ds_map_add(data, "x", mouse_x);
-    ds_map_add(data, "y", mouse_y);
-    ds_map_add(data, "id", id);
-    ds_map_add(data, "spr", sprite_index);
+if (try_to_join && !joined)
+{
+    try_to_join = false;
+    alarm[1] = _FPS * 2;
     
-    send_map_over_UDP(self, data, DATA_TYPE.DEBUG);
+    var data = ds_map_create();
+    ds_map_add(data, "host_number", host_number);
+    ds_map_add(data, "player_number", noone);
+    send_map_over_UDP(self, data, DATA_TYPE.JOIN_HOST);
 
 }
+
+if (try_to_leave && !left)
+{
+    try_to_leave = false;
+    alarm[2] = _FPS * 2;
+    
+    var data = ds_map_create();
+    ds_map_add(data, "host_number", host_number);
+    ds_map_add(data, "player_number", player_number);
+    send_map_over_UDP(self, data, DATA_TYPE.LEAVE_HOST);
+
+}
+
 
 if (received_hosts)
 {
@@ -83,9 +88,13 @@ if (received_hosts)
     if (input.ActionPress || input.Enter) {
         if (last_hovered_option == -1 || last_hovered_option == selected_option) {
             //CONNECT TO THE SELECTED HOST! SO CLOSE!!
+            host_number = selected_option;
+            try_to_join = true;
         }
     }
-    
 }
 
-
+// ✅ Handle menu selection (keyboard OR mouse click)
+    if (input.Escape) {
+            try_to_leave = true;
+    }

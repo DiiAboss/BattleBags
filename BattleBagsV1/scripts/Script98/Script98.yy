@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Script98",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Script98",
+  "parent":{
+    "name":"ONLINE",
+    "path":"folders/Scripts/ONLINE_STUFF/ONLINE.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
