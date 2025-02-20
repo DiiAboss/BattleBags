@@ -96,6 +96,7 @@
     {"id":{"name":"obj_experience_point","path":"objects/obj_experience_point/obj_experience_point.yy",},},
     {"id":{"name":"obj_game_control","path":"objects/obj_game_control/obj_game_control.yy",},},
     {"id":{"name":"obj_game_manager","path":"objects/obj_game_manager/obj_game_manager.yy",},},
+    {"id":{"name":"obj_host","path":"objects/obj_host/obj_host.yy",},},
     {"id":{"name":"obj_local_multiplayer_control","path":"objects/obj_local_multiplayer_control/obj_local_multiplayer_control.yy",},},
     {"id":{"name":"obj_main_menu","path":"objects/obj_main_menu/obj_main_menu.yy",},},
     {"id":{"name":"obj_map_controller","path":"objects/obj_map_controller/obj_map_controller.yy",},},

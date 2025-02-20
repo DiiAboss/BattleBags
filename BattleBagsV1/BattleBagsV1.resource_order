@@ -70,6 +70,7 @@
     {"name":"obj_enemy_parent","order":1,"path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},
     {"name":"obj_experience_point","order":2,"path":"objects/obj_experience_point/obj_experience_point.yy",},
     {"name":"obj_game_control","order":5,"path":"objects/obj_game_control/obj_game_control.yy",},
+    {"name":"obj_host","order":2,"path":"objects/obj_host/obj_host.yy",},
     {"name":"obj_local_multiplayer_control","order":7,"path":"objects/obj_local_multiplayer_control/obj_local_multiplayer_control.yy",},
     {"name":"obj_main_menu","order":1,"path":"objects/obj_main_menu/obj_main_menu.yy",},
     {"name":"obj_map_controller","order":2,"path":"objects/obj_map_controller/obj_map_controller.yy",},

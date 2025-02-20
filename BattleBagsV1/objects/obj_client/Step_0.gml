@@ -1,15 +1,21 @@
 /// @desc Client Step Logic
 var input = obj_game_manager.input;
+input.Update(self, x, y);
+
+ds_map_add(data, "x", mouse_x);
+ds_map_add(data, "y", mouse_y);
+ds_map_add(data, "id", id);
+ds_map_add(data, "spr", sprite_index);
+
+var data_json = json_encode(data);
+ds_map_clear(data);
 
 // 🔥 Send player input
-if (input.ActionKey) {
-    var buffer = buffer_create(256, buffer_grow, 1);
-    buffer_seek(buffer, buffer_seek_start, 0);
-    buffer_write(buffer, buffer_u16, 1); // CMD: Input
-    buffer_write(buffer, buffer_u8, my_player_id);
-    buffer_write(buffer, buffer_u8, input.ActionKey);
-    network_send_packet(client_socket, buffer, buffer_tell(buffer));
-    buffer_delete(buffer);
+if (input.ActionPress) {
+    buffer_seek(client_buffer, buffer_seek_start, 0);
+    buffer_write(client_buffer, buffer_text, data_json);
+    network_send_udp_raw(client_socket, server_ip, server_port, client_buffer, buffer_tell(client_buffer));
+    return;
 }
 
 

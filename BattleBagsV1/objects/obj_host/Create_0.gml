@@ -1,10 +1,6 @@
-/// @desc Connect to Server
-//network_set_config(network_config_connect_timeout, 1000);
-//network_set_config(network_config_use_non_blocking_socket, 1);
-
 client_socket = network_create_socket(network_socket_udp);
 server_ip = "127.0.0.1";
-server_port = 7676;
+server_port = 7677;
 
 // ✅ Connect to the server
 var connection = network_connect_raw(client_socket, server_ip, server_port);
