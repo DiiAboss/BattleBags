@@ -23,7 +23,15 @@ if (received_hosts)
             draw_set_color($29c8f0);
             draw_text(menu_x, menu_y, string(i) + ":" + string(host));
         }
-        
     } 
 }
 
+if (connect_new_players)
+{
+    connect_new_players = false;
+    alarm[3] = _FPS * 3;
+    var data = ds_map_create();
+    ds_map_add(data, "host_number", host_number)
+    ds_map_add(data, "players", noone)
+    send_map_over_UDP(self, data, DATA_TYPE.GET_NEW_PLAYERS, 200);
+}

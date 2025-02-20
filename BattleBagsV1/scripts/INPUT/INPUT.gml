@@ -4,7 +4,8 @@ enum BUTTON_TYPE {
 	NONE,
 	MOUSE,
 	KEYBOARD,
-	GAMEPAD
+	GAMEPAD,
+    ONLINE
 }
 
 function Input() constructor {
@@ -167,7 +168,8 @@ function Input() constructor {
 enum INPUT {
 	NONE,
 	KEYBOARD,
-	GAMEPAD
+	GAMEPAD,
+    ONLINE
 }
 
 global.InputType = {

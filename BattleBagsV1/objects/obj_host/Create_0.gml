@@ -28,3 +28,5 @@ should_host_stop = false;
 
 host_started = false;
 game_started = false;
+
+connect_new_players = true;

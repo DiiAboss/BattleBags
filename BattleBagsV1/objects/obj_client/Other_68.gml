@@ -10,7 +10,7 @@ if (async_load[? "size"] > 0)
     // Show response string from server
     var msg = buffer_read(buff, buffer_string);
 
-    show_debug_message("< " + msg);
+    //show_debug_message("< " + msg);
     
     var json_resp = json_decode(msg);
     
@@ -40,14 +40,14 @@ if (async_load[? "size"] > 0)
             show_debug_message("joining host");
             player_number = ds_map_find_value(json_resp, "player_number");
             host_number   = ds_map_find_value(json_resp, "host_number");
-            show_debug_message("PLAYER NUMBER: " + string(player_number) + "JOINED " + string(host_number));
+            show_debug_message("PLAYER NUMBER: " + string(player_number) + " JOINED " + string(host_number));
             joined = true;
         break; 
         
         case DATA_TYPE.LEAVE_HOST:
                             
             show_debug_message("leaving host");
-            show_debug_message("PLAYER NUMBER: " + string(player_number) + "LEFT " + string(host_number));
+            show_debug_message("PLAYER NUMBER: " + string(player_number) + " LEFT " + string(host_number));
             host_number = -1;
             room_goto(rm_multiplayer_selection);
             instance_destroy();
@@ -66,14 +66,41 @@ if (async_load[? "size"] > 0)
                             
         break;     
       
-        case DATA_TYPE.PLAYER_STATS:
+        case DATA_TYPE.SEND_PLAYER_STATS:
                             
-            //show_debug_message("leaving host");
-            //game_started  = ds_map_find_value(json_resp, "game_started");
-            //host_number   = ds_map_find_value(json_resp, "host_number");
-            //show_debug_message("GAME STARTED AT: " + string(host_number));
+
                             
-        break;        
+        break; 
+        
+        case DATA_TYPE.GET_PLAYER_STATS:
+        
+        var player_stats = ds_map_find_value(json_resp, "player_stats");
+                            
+        var pn = ds_map_find_value(json_resp, "player_number");
+        if  (pn == player_number)
+        {
+            var left = ds_map_find_value(player_stats, "up_key");
+            var right = ds_map_find_value(player_stats, "left_key");
+            var down = ds_map_find_value(player_stats, "down_key");
+            var up = ds_map_find_value(player_stats, "right_key");
+            var action_key = ds_map_find_value(player_stats, "action_key");
+            x = ds_map_find_value(player_stats, "x");
+            y = ds_map_find_value(player_stats, "y");
+            
+            online_input.Update(up, left, down, right, action_key, -1, -1);
+            //show_debug_message("PLAYER_STATS: " + string(player_stats));
+            
+        }
+                            
+        break;   
+        
+        case DATA_TYPE.GET_NEW_PLAYERS:
+                
+            var players = ds_map_find_value(json_resp, "players");
+                                
+            show_debug_message("PLAYERS: " + string(players));
+                                
+            break;     
   
         default: 
             

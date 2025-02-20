@@ -17,9 +17,11 @@ const DATA_TYPE =
     DEBUG        : 5,
     GET_HOSTS    : 6,
     LEAVE_HOST   : 7,
-    PLAYER_STATS : 8,
+    SEND_PLAYER_STATS : 8,
     START_GAME   : 9,
     SWAP_POSITION: 10,
+    GET_PLAYER_STATS : 11,
+    GET_NEW_PLAYERS   : 12,
 }
 
 function player(player_number, x, y, action_key, left_key, right_key, up_key, down_key) {
@@ -28,7 +30,7 @@ function player(player_number, x, y, action_key, left_key, right_key, up_key, do
     this.y = y;
     this.score = 0;
     this.isAlive = true;
-    this.lastUpdate = Date.now();
+    //this.lastUpdate = Date.now();
     this.action_key = action_key;
     this.left_key = left_key; 
     this.right_key = right_key;
@@ -38,11 +40,25 @@ function player(player_number, x, y, action_key, left_key, right_key, up_key, do
 
 
 
-server.on("message", function(msg, rinfo)
-{
+server.on("message", function(msg, rinfo) {
     data_arrived = true;
-    console.log("< " + String(msg));
-    data = JSON.parse(msg);
+    //console.log("< " + String(msg));
+    
+    try {
+        // Check if message is empty
+        if (!msg || msg.length === 0) {
+            //console.log("Received empty message");
+            return;
+        }
+
+        // Try to parse the JSON
+        data = JSON.parse(msg);
+        
+        // Validate that data and type exist
+        if (!data || typeof data.type === 'undefined') {
+            console.log("Invalid message format");
+            return;
+        }
     
     switch(data.type)
     {
@@ -64,24 +80,61 @@ server.on("message", function(msg, rinfo)
         case DATA_TYPE.LEAVE_HOST:
             leave_host(data, rinfo);
         break;
-        case DATA_TYPE.PLAYER_STATS:
-            player_stats(data, rinfo);
+
+        case DATA_TYPE.SEND_PLAYER_STATS:
+            send_player_stats(data, rinfo);
+        break;
+        case DATA_TYPE.GET_PLAYER_STATS:
+            get_player_stats(data, rinfo);
         break;
         case DATA_TYPE.START_GAME:
             start_game(data, rinfo);
+        break;
+        case DATA_TYPE.GET_NEW_PLAYERS:
+            get_players(data, rinfo);
         break;
 
         default:
         break;
     }
     
-
+} catch (error) {
+    console.log("Error processing message:", error);
+    // Optionally send error back to client
+    const errorResponse = {
+        error: "Invalid message format",
+        details: error.message
+    };
+    server.send(JSON.stringify(errorResponse), rinfo.port, rinfo.address);
+}
 });
 
 server.bind(7676);
 
-function player_stats(data, rinfo)
+function send_player_stats(data, rinfo)
 {
+    hosts[data.host_number][data.player_number].x = data.x;
+    hosts[data.host_number][data.player_number].y = data.y;
+    hosts[data.host_number][data.player_number].action_key = data.action_key;
+    hosts[data.host_number][data.player_number].left_key = data.left_key;
+    hosts[data.host_number][data.player_number].up_key = data.up_key;
+    hosts[data.host_number][data.player_number].down_key = data.down_key;
+    hosts[data.host_number][data.player_number].right_key = data.right_key;
+    //server.send(JSON.stringify(data), rinfo.port, rinfo.address);
+}
+
+function get_player_stats(data, rinfo)
+{
+    data.player_stats = hosts[data.host_number][data.player_number];
+    //console.log(String(data.player_stats));
+    server.send(JSON.stringify(data), rinfo.port, rinfo.address);
+}
+
+function get_players(data, rinfo)
+{
+    console.log("GETTING PLAYERS");
+    data.players = hosts[data.host_number];
+   
     server.send(JSON.stringify(data), rinfo.port, rinfo.address);
 }
 

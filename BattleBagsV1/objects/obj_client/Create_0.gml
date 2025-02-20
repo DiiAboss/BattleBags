@@ -19,7 +19,7 @@ message = "";
 my_player_id = irandom_range(1, 255);
 
 
-player_controlled = true;
+player_controlled = false;
 
 
 hosts_list = ds_list_create();
@@ -48,3 +48,9 @@ try_to_leave = false;
 left = false;
 
 game_started = false;
+
+input = noone;
+online_input = new Online_Input();
+
+connected = false;
+connect_new_players = true;
