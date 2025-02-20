@@ -17,8 +17,8 @@ if (async_load[? "size"] > 0)
     var _y = ds_map_find_value(resp_json, "y");
     var _spr = ds_map_find_value(resp_json, "spr");
     
-    show_message("X: " + string(_x));
-    show_message("Y: " + string(_y));
-    show_message("SPR: " + string(_spr));
+    show_debug_message("X: " + string(_x));
+    show_debug_message("Y: " + string(_y));
+    show_debug_message("SPR: " + string(_spr));
     //_id = ds_map_find_value(resp_json, "id");
 }
