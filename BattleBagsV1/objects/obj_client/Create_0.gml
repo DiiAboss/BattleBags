@@ -17,8 +17,7 @@ message = "";
 my_player_id = irandom_range(1, 255);
 
 
-received_hosts = false;
-try_to_get_hosts = true;
+
 
 
 hosts_list = ds_list_create();
@@ -37,8 +36,13 @@ max_input_delay = 10;
 host_number = 0;
 player_number = 0;
 
+received_hosts = false;
+try_to_get_hosts = true;
+
 try_to_join = false;
 joined = false;
 
 try_to_leave = false;
 left = false;
+
+game_started = false;

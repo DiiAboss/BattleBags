@@ -55,6 +55,11 @@ if (async_load[? "size"] > 0)
             show_debug_message("data received");
         break;
         
+        case DATA_TYPE.START_GAME:
+            show_debug_message("STARTING GAME");
+            room_goto(rm_online_game);
+        break;
+        
         default:
             break;
     }

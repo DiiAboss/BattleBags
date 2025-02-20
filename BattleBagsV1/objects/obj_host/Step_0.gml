@@ -4,15 +4,34 @@ input.Update(self, x, y);
 
 if (input.Enter)
 {
-    show_debug_message("Host Started Game");
-    var data = ds_map_create();
+    if (!host_started)
+    {
+        show_debug_message("Host Created Lobby");
+        var data = ds_map_create();
+        
+        ds_map_add(data, "host_number", noone);
+        ds_map_add(data, "player_number", noone);
+        
+        
+        send_map_over_UDP(self, data, DATA_TYPE.CREATE_HOST);
+        //host_started = true;
+    }
     
-    ds_map_add(data, "host_number", noone);
-    ds_map_add(data, "player_number", noone);
-    
-    
-    send_map_over_UDP(self, data, DATA_TYPE.CREATE_HOST);
-}
+    }
+
+if (input.Back) {
+        show_debug_message("Host Started Game");
+        var data = ds_map_create();
+        
+        ds_map_add(data, "host_number", host_number);
+        ds_map_add(data, "game_started", game_started);
+        
+        
+        send_map_over_UDP(self, data, DATA_TYPE.CREATE_HOST);    
+    }
+
+
+
 
 if (input.Escape)
 {

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"TRY_AND_RECEIVE_HOSTS",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"TRY_AND_RECEIVE_HOSTS",
+  "parent":{
+    "name":"ONLINE_STUFF",
+    "path":"folders/Scripts/ONLINE_STUFF.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

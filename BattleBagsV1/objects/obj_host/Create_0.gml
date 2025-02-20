@@ -24,3 +24,6 @@ host_number = 0;
 player_number = 0;
 is_host_stopped = false;
 should_host_stop = false;
+
+host_started = false;
+game_started = false;

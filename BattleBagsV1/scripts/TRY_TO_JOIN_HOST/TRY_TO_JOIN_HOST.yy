@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"TRY_TO_JOIN_HOST",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"TRY_TO_JOIN_HOST",
+  "parent":{
+    "name":"ONLINE_STUFF",
+    "path":"folders/Scripts/ONLINE_STUFF.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
