@@ -47,8 +47,6 @@ if (async_load[? "size"] > 0)
         case DATA_TYPE.LEAVE_HOST:
                             
             show_debug_message("leaving host");
-            //player_number = ds_map_find_value(json_resp, "player_number");
-            //host_number   = //ds_map_find_value(json_resp, "host_number");
             show_debug_message("PLAYER NUMBER: " + string(player_number) + "LEFT " + string(host_number));
             host_number = -1;
             room_goto(rm_multiplayer_selection);
@@ -67,7 +65,16 @@ if (async_load[? "size"] > 0)
           room_goto(rm_online_game);
                             
         break;     
-        
+      
+        case DATA_TYPE.PLAYER_STATS:
+                            
+            //show_debug_message("leaving host");
+            //game_started  = ds_map_find_value(json_resp, "game_started");
+            //host_number   = ds_map_find_value(json_resp, "host_number");
+            //show_debug_message("GAME STARTED AT: " + string(host_number));
+                            
+        break;        
+  
         default: 
             
         break;

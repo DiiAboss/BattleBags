@@ -26,6 +26,7 @@ function create_player(_id)
         swap_queue: undefined,
         width: 8,
         height: 24,
+        online_player: false,
     };
 }
 

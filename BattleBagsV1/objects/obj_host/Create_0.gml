@@ -2,6 +2,7 @@ client_socket = network_create_socket(network_socket_udp);
 server_ip = "127.0.0.1";
 server_port = 7676;
 
+
 // ✅ Connect to the server
 var connection = network_connect_raw(client_socket, server_ip, server_port);
 

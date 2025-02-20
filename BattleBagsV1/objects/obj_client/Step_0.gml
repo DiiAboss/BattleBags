@@ -72,3 +72,31 @@ if (received_hosts)
 if (input.Escape) {
         try_to_leave = true;
 }
+
+
+if !(player_controlled)
+{
+    
+}
+send_positions_to_host(self, input);
+
+
+function send_positions_to_host(player, input)
+{
+    _x = player.x;
+    _y = player.y;
+    
+    
+    var data = ds_map_create();
+    ds_map_add(data, "x", x);
+    ds_map_add(data, "y", y);
+    ds_map_add(data, "action_key",  input.ActionPress);
+    ds_map_add(data, "left_key",    input.Left);
+    ds_map_add(data, "up_key",     input.Up);
+    ds_map_add(data, "down_key",   input.Down);
+    ds_map_add(data, "right_key",   input.Right);
+    ds_map_add(data, "host_number",    host_number);
+    ds_map_add(data, "player_number",  player_number);
+    
+    send_map_over_UDP(self, data, DATA_TYPE.PLAYER_STATS);
+}

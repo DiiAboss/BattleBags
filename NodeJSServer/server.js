@@ -22,13 +22,18 @@ const DATA_TYPE =
     SWAP_POSITION: 10,
 }
 
-function player(player_number, x, y) {
+function player(player_number, x, y, action_key, left_key, right_key, up_key, down_key) {
     this.player_number = player_number;
     this.x = x;
     this.y = y;
     this.score = 0;
     this.isAlive = true;
     this.lastUpdate = Date.now();
+    this.action_key = action_key;
+    this.left_key = left_key; 
+    this.right_key = right_key;
+    this.up_key = up_key; 
+    this.down_key = down_key;
 }
 
 
@@ -60,11 +65,12 @@ server.on("message", function(msg, rinfo)
             leave_host(data, rinfo);
         break;
         case DATA_TYPE.PLAYER_STATS:
-            join_host(data, rinfo);
+            player_stats(data, rinfo);
         break;
         case DATA_TYPE.START_GAME:
             start_game(data, rinfo);
         break;
+
         default:
         break;
     }
@@ -74,6 +80,10 @@ server.on("message", function(msg, rinfo)
 
 server.bind(7676);
 
+function player_stats(data, rinfo)
+{
+    server.send(JSON.stringify(data), rinfo.port, rinfo.address);
+}
 
 function set_player_debug(data, rinfo)
 {
@@ -83,7 +93,7 @@ function set_player_debug(data, rinfo)
 function create_host(data, rinfo)
 {
     host_number = hosts.length;
-    hosts.push([new player(0, 0, 0)]);
+    hosts.push([new player(0, 0, 0, 0, 0, 0, 0, 0)]);
 
     data.host_number   = host_number;
     data.player_number = 0;
@@ -113,7 +123,7 @@ function join_host(data, rinfo)
 {
     console.log("< JOIN HOST");
     var number_of_players = hosts[data.host_number].length;
-    hosts[data.host_number].push(new player(number_of_players, 0, 0));
+    hosts[data.host_number].push(new player(number_of_players, 0, 0, 0, 0, 0, 0, 0));
     data.player_number = number_of_players;
     //data.host_number =   host_number;
     server.send(JSON.stringify(data), rinfo.port, rinfo.address);
