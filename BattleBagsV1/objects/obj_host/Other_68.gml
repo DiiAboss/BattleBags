@@ -23,16 +23,31 @@ if (async_load[? "size"] > 0)
         break;
         
         case DATA_TYPE.CREATE_HOST:
-                    
-           show_debug_message("< " + msg);
-           var host_number   = ds_map_find_value(json_resp, "host_number");
-           var player_number = ds_map_find_value(json_resp, "player_number");
-           show_debug_message("HOST_NUMBER: " + string(host_number) + "|  PLAYER_NUMBER: " + string(player_number));
-           self.host_number = host_number;
-           self.player_number = player_number;
-            room_goto(rm_online_game);
+            show_debug_message("< " + msg);
+            var host_number = ds_map_find_value(json_resp, "host_number");
+            var player_number = ds_map_find_value(json_resp, "player_number");
+            var is_host = ds_map_find_value(json_resp, "is_host");
         
+            show_debug_message("HOST_NUMBER: " + string(host_number) + " | PLAYER_NUMBER: " + string(player_number));
+            self.host_number = host_number;
+            self.player_number = player_number;
+            self.my_client = instance_create_layer(100, 100, "Instances", obj_client); // Replace with your player spawn code
+            
+            // ✅ Spawn player if this client is the host
+            if (is_host) {
+                show_debug_message("Spawning player as host...");
+                with (my_client) {
+                    self.my_player_id = player_number; // Assign player number
+                    self.host_number = host_number;
+                    self.player_number = player_number;
+                    self.connected = true;
+                    self.joined = true;
+                }
+            }
         
+            room_goto(rm_online_lobby);
+        
+            
         break;
         
         case DATA_TYPE.STOP_HOST:
@@ -45,6 +60,11 @@ if (async_load[? "size"] > 0)
         if (res == "stopped")
         {
             is_host_stopped = true;
+            with my_client
+            {
+                instance_destroy();
+            }
+            
             room_goto(rm_multiplayer_selection);
             instance_destroy();       
         }

@@ -21,7 +21,7 @@ client_buffer = buffer_create(100, buffer_fixed, 100);
 
 //data = ds_map_create();
 
-host_number = 0;
+host_number = 1;
 player_number = 0;
 is_host_stopped = false;
 should_host_stop = false;
@@ -30,3 +30,6 @@ host_started = false;
 game_started = false;
 
 connect_new_players = true;
+
+my_client = noone;
+

@@ -92,18 +92,22 @@ if (async_load[? "size"] > 0)
             x = ds_map_find_value(player_stats, "x");
             y = ds_map_find_value(player_stats, "y");
             
+            show_debug_message("LEFT: " + string(left));
+            show_debug_message("UP: " + string(up));
+            show_debug_message("DOWN: " + string(down));
+            show_debug_message("RIGHT: " + string(right));
+            show_debug_message("x: " + string(x));
+            show_debug_message("y: " + string(y));
+            
             online_input.Update(up, left, down, right, action_key, -1, -1);
+            input = online_input;
+            player_controlled = false;
         }
         else {
             player_controlled = true;
         }
         
-        show_debug_message("LEFT: " + string(left));
-        show_debug_message("UP: " + string(up));
-        show_debug_message("DOWN: " + string(down));
-        show_debug_message("RIGHT: " + string(right));
-        show_debug_message("x: " + string(x));
-        show_debug_message("y: " + string(y));
+
         break;   
         
         case DATA_TYPE.GET_NEW_PLAYERS:

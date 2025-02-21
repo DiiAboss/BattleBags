@@ -5,7 +5,7 @@ var server = dgram.createSocket("udp4");
 var data;
 var data_arrived = false;
 var hosts = [];
-var host_number = 0;
+var host_number = 1;
 
 const DATA_TYPE =
 {
@@ -113,6 +113,7 @@ server.bind(7676);
 
 function send_player_stats(data, rinfo)
 {
+    console.log("STATS RECIEVED");
     hosts[data.host_number][data.player_number].x = data.x;
     hosts[data.host_number][data.player_number].y = data.y;
     hosts[data.host_number][data.player_number].action_key = data.action_key;
@@ -125,15 +126,16 @@ function send_player_stats(data, rinfo)
 
 function get_player_stats(data, rinfo)
 {
+    console.log("STATS SENT");
     data.player_stats = hosts[data.host_number][data.player_number];
-    console.log(String(data.player_stats));
+    console.log(String(JSON.stringify(data.player_stats)));
     server.send(JSON.stringify(data), rinfo.port, rinfo.address);
 }
 
 function get_players(data, rinfo)
 {
     console.log("GETTING PLAYERS");
-    data.players = hosts[data.host_number];
+    data.players = hosts[data.host_number].length;
    
     server.send(JSON.stringify(data), rinfo.port, rinfo.address);
 }
@@ -145,11 +147,15 @@ function set_player_debug(data, rinfo)
 
 function create_host(data, rinfo)
 {
+    console.log("CREATING HOST");
     host_number = hosts.length;
-    hosts.push([new player(0, 0, 0, 0, 0, 0, 0, 0)]);
+    var pn = 0;
+
+    hosts.push([new player(pn, 0, 0, 0, 0, 0, 0, 0)]);
 
     data.host_number   = host_number;
-    data.player_number = 0;
+    data.player_number = pn;
+    data.is_host = true;
 
     server.send(JSON.stringify(data), rinfo.port, rinfo.address);
     
@@ -228,23 +234,20 @@ function leave_host(data, rinfo) {
     
 function start_game(data, rinfo) {
     console.log("< STARTING GAME");
-    
-    // Get the current host
+
     var current_host = hosts[data.host_number];
-    
-    // Check if there are enough players (at least 2)
-    if (current_host.length < 2) {
-        console.log("Not enough players to start game");
+
+    if (current_host.length < 1) {
+        console.log("No players in the host to start the game");
         return;
     }
 
-    // Set game started flag in data
     data.game_started = true;
-    
-    // Send start game message back to all clients
+
+    // ✅ Notify all players, including host
     server.send(JSON.stringify(data), rinfo.port, rinfo.address);
-    
     console.log("Game started for host:", data.host_number);
     console.table(hosts);
 }
+
 

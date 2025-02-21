@@ -33,3 +33,39 @@ if room == rm_main_menu
 
 
 
+if (room == rm_create_lobby)
+{
+    if !(instance_exists(obj_host))
+    {
+        instance_create_depth(x, y, depth, obj_host);
+    }
+}
+
+if (room == rm_join_lobby)
+{
+    if !(instance_exists(obj_client))
+    {
+        instance_create_depth(x, y, depth, obj_client)
+    }
+}
+
+if (room == rm_online_multiplayer_menu)
+{
+    if (instance_exists(obj_client))
+    {
+        with (obj_client)
+        {
+            instance_destroy();
+        }
+    }
+    
+    if (instance_exists(obj_host))
+    {
+        with (obj_host)
+        {
+            instance_destroy();
+        }
+    }
+}
+
+
