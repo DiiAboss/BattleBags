@@ -10,8 +10,8 @@
   "name":"obj_online_menu",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"ONLINE",
+    "path":"folders/Objects/ONLINE.yy",
   },
   "parentObjectId":null,
   "persistent":false,

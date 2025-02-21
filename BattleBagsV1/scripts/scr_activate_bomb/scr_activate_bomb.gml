@@ -150,6 +150,6 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
     }
 
     // ✅ Transform Black Blocks AFTER pop effects finish
-    update_black_blocks(_self, black_blocks_to_transform);
+    //update_black_blocks(_self, black_blocks_to_transform);
     ds_list_destroy(black_blocks_to_transform);
 }

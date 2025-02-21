@@ -93,6 +93,9 @@ function enemy_apply_damage(enemy)
 
 
 
+
+
+
 function handle_damage(_self) {
     if (place_meeting(_self.x, _self.y, obj_player_attack)) {
         var incoming = instance_nearest(_self.x, _self.y, obj_player_attack);
@@ -112,12 +115,16 @@ function handle_damage(_self) {
     }
 }
 
+
+
 /// @description Adjusts enemy attack power based on game speed
 function adjust_attack_power(_self) {
     _self.attack_power = _self.default_attack_power + round(
         obj_game_control.game_speed_default - obj_game_control.game_speed_start
     );
 }
+
+
 
 /// @description Handles the damage fading effect
 function update_damage_fade(_self) {
@@ -137,7 +144,7 @@ function update_attack_timer(_self) {
     if (_self.attack_timer >= _self.max_attack_timer) {
         _self.total_attacks += 1;
         _self.attack_timer = 0; 
-        select_enemy_attack(_self); // ✅ Calls attack selection (can be overridden)
+        //select_enemy_attack(_self); // ✅ Calls attack selection (can be overridden)
     }
     _self.attack_timer += global.enemy_timer_game_speed;
 }

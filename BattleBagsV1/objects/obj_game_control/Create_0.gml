@@ -1,11 +1,8 @@
-
 image_speed = 0.1;
 
 randomize();
 
 
-songs = [Sound7, sound_regular_music_test_3];
-current_song = 0;
 
 selected_piece = [-1, -1];
 hovered_block = [-1, -1];
@@ -46,8 +43,6 @@ height	     = 24;
 board_width  = 8;
 board_height = 24;
 
-
-
 top_playable_row    = 4;
 bottom_playable_row = 20;
 
@@ -55,7 +50,8 @@ self.match_list = ds_list_create(); // Stores matches before popping
 // ------------------------------------------------------
 // MUSIC
 // ------------------------------------------------------
-
+songs = [Sound7, sound_regular_music_test_3];
+current_song = 0;
 // Store current playing music IDs
 global.music_regular = -1;
 global.music_fight = -1;
@@ -291,8 +287,6 @@ cp_per_big_block  = 3;
 cp_per_combo      = 1;
 
 meteor_block = -1;
-
-
 
 
 block_colors_destroyed = array_create(numberOfGemTypes, -1); //to show how much b

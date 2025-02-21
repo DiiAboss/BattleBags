@@ -350,6 +350,7 @@ function process_all_mega_blocks(_self)
         for (var _y = 0; _y < bottom_playable_row; _y++)
         {
             process_mega_blocks(_self, _x, _y);
+            pop_adjacent_black_blocks(_self, _x, _y);
         }
     }
     

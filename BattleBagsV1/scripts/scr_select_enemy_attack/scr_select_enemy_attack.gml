@@ -131,7 +131,7 @@ function process_attack_queue(_self) {
     if (ds_list_size(global.enemy_attack_queue) > 0) {
         if (_self.queued_attack_timer >= _self.max_queued_attack_timer) {
             var attack_to_execute = ds_list_find_value(global.enemy_attack_queue, 0);
-            ds_list_delete(global.enemy_attack_queue, 0);
+            
 			
 			switch (attack_to_execute)
 			{
@@ -153,8 +153,11 @@ function process_attack_queue(_self) {
 					toss_down_shape(obj_game_control, attack_to_execute, true);
 				break;
 			}
+            
+            ds_list_delete(global.enemy_attack_queue, 0);
             _self.queued_attack_timer = 0;
-
+            select_enemy_attack(_self); // ✅ Calls attack selection (can be overridden)
+            
             if (ds_list_size(global.enemy_attack_queue) == 0) {
                 _self.attack_queue_active = false;
                 _self.enemy_attack_ready = false;

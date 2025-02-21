@@ -17,8 +17,8 @@
   ],
   "name":"rm_multiplayer_selection",
   "parent":{
-    "name":"MENU",
-    "path":"folders/Rooms/MENU.yy",
+    "name":"MULTIPLAYER",
+    "path":"folders/Rooms/MULTIPLAYER.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

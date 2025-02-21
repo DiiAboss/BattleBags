@@ -17,8 +17,8 @@
   ],
   "name":"rm_map_room_test",
   "parent":{
-    "name":"Rooms",
-    "path":"folders/Rooms.yy",
+    "name":"MAP",
+    "path":"folders/Rooms/MAP.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

@@ -13,8 +13,8 @@
   ],
   "name":"rm_local_multiplayer_lobby",
   "parent":{
-    "name":"MENU",
-    "path":"folders/Rooms/MENU.yy",
+    "name":"MULTIPLAYER",
+    "path":"folders/Rooms/MULTIPLAYER.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

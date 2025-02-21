@@ -251,7 +251,7 @@ function find_and_destroy_matches(_self) {
 	
 	
 	// ✅ Transform black blocks **after matches are removed**
-    update_black_blocks(self, black_blocks_to_transform);
+    //update_black_blocks(self, black_blocks_to_transform);
 	
 
     ds_list_destroy(black_blocks_to_transform);

@@ -4,7 +4,7 @@
 
 /// ✅ Attack Queue Timers
 queued_attack_timer = 0;
-max_queued_attack_timer = 300;
+max_queued_attack_timer = 180;
 
 /// ✅ Enemy Stats
 hp = 100;
@@ -21,7 +21,7 @@ attack_queue_active = true;
 attack_timer_increment_mod = 1;
 total_attacks = 1;
 attack_timer = 0;
-max_attack_timer = 180;
+max_attack_timer = 1;
 default_attack_power = 1;
 
 attacks_until_special_attack = 3;
@@ -50,7 +50,7 @@ enemy_attack_preview = array_create(5);
 for (var i = 0; i < 5; i++) {
     enemy_attack_preview[i] = array_create(grid_width, BLOCK.NONE);
 }
-
+select_enemy_attack(self); // ✅ Calls attack selection (can be overridden)
 /// ✅ Preview Timers
 preview_build_timer = 0;
 preview_blocks_built = 0;

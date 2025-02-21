@@ -75,6 +75,7 @@ process_gameboard_speed(self, input.SpeedUpKey);
 //--------------------------------------------------------
 // CONTROLS
 //--------------------------------------------------------
+
 if (input.InputType == INPUT.GAMEPAD)
 {
     control_mode = "legacy";
@@ -88,12 +89,8 @@ else
 
 process_inputs_and_delay(self, input);
 
-
-
+// Enemy Targetting System
 process_targetting_enemy(self, input, enemy_control, is_targeting_enemy);
-
-
-
 
 
 if (control_mode == "modern") {
@@ -111,7 +108,9 @@ if (input.InputType == INPUT.GAMEPAD)
     hover_y = last_position[1];
 }
 
-
+//----------------------------------------------------------
+// GRID SHAKE and GEM SHAKE
+//-----------------------------------------------------------
 process_grid_shake(fight_for_your_life);
 
 gem_shake(self);
@@ -160,15 +159,15 @@ if (reset)
 {
 	lose_life_timer = 0;
 }
-
-if (!swap_in_progress && all_blocks_landed(self)) {
-    for (var i = 0; i < width; i++) {
-        for (var j = 0; j < height; j++) {
-            //grid[i, j].offset_x = 0;
-            //grid[i, j].offset_y = 0;
-        }
-    }
-}
+//
+//if (!swap_in_progress && all_blocks_landed(self)) {
+    //for (var i = 0; i < width; i++) {
+        //for (var j = 0; j < height; j++) {
+            ////grid[i, j].offset_x = 0;
+            ////grid[i, j].offset_y = 0;
+        //}
+    //}
+//}
 
 
 // Have to find a way to drop blocks while locking in matches

@@ -12,8 +12,8 @@
   "name":"obj_local_multiplayer_control",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"MULTIPLAYER",
+    "path":"folders/Objects/MULTIPLAYER.yy",
   },
   "parentObjectId":null,
   "persistent":true,

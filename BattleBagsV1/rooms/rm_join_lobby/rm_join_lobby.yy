@@ -13,8 +13,8 @@
   ],
   "name":"rm_join_lobby",
   "parent":{
-    "name":"MENU",
-    "path":"folders/Rooms/MENU.yy",
+    "name":"MULTIPLAYER",
+    "path":"folders/Rooms/MULTIPLAYER.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

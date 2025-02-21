@@ -24,6 +24,9 @@ for (var s = 0; s < shield_amount; s++)
 }
 
 
+draw_text(x, y - 100, "ATTACK_QUEUE" + string(attack_timer));
+draw_text(x, y - 140, "QUEUED_ATTACK_QUEUE" + string(queued_attack_timer));
+
 ///// ✅ Draw Damage Indicator
 //if (damage_timer > 0) {
     //draw_text(x - 64, y - 244, string(total_damage));
@@ -39,31 +42,31 @@ for (var s = 0; s < shield_amount; s++)
     //var health_percentage = (hp / max_hp);
     //draw_rectangle(x - 196, y - 196, x - 196 + (392 * health_percentage), y - 164, false);
 //
-///// ✅ Draw Attack Preview Above Enemy
-//var preview_x = x - (8 * 4); // Center preview above enemy
-//var preview_y = y - (32 * 4); // Space above enemy
-//
-//if (is_array(enemy_attack_preview)) {
-    //var rows = array_length(enemy_attack_preview);
-//
-    //for (var row = 0; row < rows; row++) {
-        //if (is_array(enemy_attack_preview[row])) {
-            //var cols = array_length(enemy_attack_preview[row]);
-//
-            //for (var col = 0; col < cols; col++) {
-                //var block_type = enemy_attack_preview[row][col];
-//
-                //if (block_type != BLOCK.NONE) {
-                    //draw_sprite(spr_enemy_attack_preview, block_type, preview_x + (col * 8), preview_y + (row * 8));
-                //}
-            //}
-        //}
-    //}
-//}
-//
- //animate_attack_targets(self, "FREEZE"); // ✅ Show animation first
- //animate_attack_targets(self, "SLIME"); // ✅ Show animation first
-//}
+/// ✅ Draw Attack Preview Above Enemy
+var preview_x = x - (8 * 4); // Center preview above enemy
+var preview_y = y - (32 * 4); // Space above enemy
+
+if (is_array(enemy_attack_preview)) {
+    var rows = array_length(enemy_attack_preview);
+
+    for (var row = 0; row < rows; row++) {
+        if (is_array(enemy_attack_preview[row])) {
+            var cols = array_length(enemy_attack_preview[row]);
+
+            for (var col = 0; col < cols; col++) {
+                var block_type = enemy_attack_preview[row][col];
+
+                if (block_type != BLOCK.NONE) {
+                    draw_sprite(spr_enemy_attack_preview, block_type, preview_x + (col * 8), preview_y + (row * 8));
+                }
+            }
+        }
+    }
+}
+
+ animate_attack_targets(self, "FREEZE"); // ✅ Show animation first
+ animate_attack_targets(self, "SLIME"); // ✅ Show animation first
+
 
 
 
