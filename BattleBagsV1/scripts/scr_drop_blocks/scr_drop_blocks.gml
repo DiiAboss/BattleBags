@@ -135,8 +135,8 @@ function drop_blocks(_self, fall_speed = 2) {
                     if (gem.dist_without_touching) > 16
                     {
                     
-                        var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-                        var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
+                        var draw_x = _self.board_x_offset + (i * _self.gem_size) + _self.offset + gem.offset_x;
+                        var draw_y = (j * _self.gem_size) + _self.global_y_offset + gem.offset_y + _self.offset + gem.draw_y;
                         effect_create_above(ef_smokeup, draw_x, draw_y, 1, c_red);
                     }
                 }
