@@ -12,7 +12,7 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
         draw_set_alpha(1);
     
         // ✅ Draw "You Lose" Title
-        draw_set_font(f_b_font);
+        draw_set_font(fnt_heading1);
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         draw_set_color(c_white);
@@ -24,7 +24,7 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
             var _x = pop_data.x;
             var _y = pop_data.y;
     
-            draw_sprite(spr_Oshki, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
+            draw_sprite(spr_gameOver, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
             draw_sprite(spr_enemy_gem_overlay, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
         }
     
@@ -36,7 +36,7 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
             var menu_y = game_over_ui_y + 420;
             var button_width = 300;
             var button_height = 50;
-            draw_set_font(fnt_basic);
+            draw_set_font(fnt_textFont);
             // ✅ Highlight button on hover
             if (game_over_option_selected == 0) draw_set_color(c_gray);
             else draw_set_color(c_white);
@@ -475,7 +475,7 @@ draw_rectangle(board_x_offset - thickness, view_diff + grid_height,
 draw_spawn_rates(self);
 
 
-draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, spr_hearts_old, gem_size);
+draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, spr_health_new, gem_size);
 
     if (is_targeting_enemy)
     {
