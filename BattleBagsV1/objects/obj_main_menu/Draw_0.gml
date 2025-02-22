@@ -25,3 +25,5 @@ for (var i = 0; i < array_length(menu_options); i++) {
 }
 
 draw_sprite(spr_gameTitle, -1, room_width/2, 150);
+
+//testing
