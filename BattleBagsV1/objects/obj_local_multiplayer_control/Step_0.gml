@@ -141,7 +141,7 @@ if (room == rm_local_multiplayer_game)
 
 
 
-
+    //test
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
        var player = ds_list_find_value(global.player_list, i);
        if (player.input.InputType == INPUT.KEYBOARD)
