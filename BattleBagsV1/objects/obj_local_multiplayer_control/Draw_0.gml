@@ -45,7 +45,7 @@ if (room == rm_local_multiplayer_lobby)
         // ✅ Display player number
         draw_text(col_x + col_x_text_offset, col_y + 20, "Player " + string(i + 1));
             var player = ds_list_find_value(global.player_list, i);
-        
+            
         // ✅ Check if player is assigned a control method
         if (player.input.InputType == INPUT.KEYBOARD) {
             draw_set_color(c_white);
@@ -102,6 +102,7 @@ if (room == rm_local_multiplayer_game)
         if (player.hovered_block[0] >= 0 && player.hovered_block[1] >= 0) {
             var hover_i = player.hovered_block[0];
             var hover_j = player.hovered_block[1];
+            show_hovered_block_stats(player, hover_i, hover_j);
         
             if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
                 var hover_gem = player.grid[hover_i, hover_j];

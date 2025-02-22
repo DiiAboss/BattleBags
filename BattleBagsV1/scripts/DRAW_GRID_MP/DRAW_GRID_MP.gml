@@ -32,8 +32,19 @@ function draw_player_grid(mp_control, player)
                 var gem = player_grid[i, j];
                 gem.x_scale = gem_size / 64;
                 gem.y_scale = gem_size / 64;
+                
+                if gem.falling 
+                {
+                    var percent =  clamp(gem.fall_delay / gem.max_fall_delay, 0, 1);
+                    gem.draw_y = 64 * percent;
+                }
+                else {
+                    gem.draw_y = 0;
+                }
+                
+                
                 var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-                var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset;
+                var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
                 
                 draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
                 draw_sprite_ext(gem.powerup.sprite, 0, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
@@ -42,4 +53,20 @@ function draw_player_grid(mp_control, player)
         }
     }  
     
+}
+
+
+
+function show_hovered_block_stats(player, block_x, block_y)
+{
+    
+    var block = player.grid[block_x, block_y];
+    // ✅ OPTIONAL: Show gem info in the corner
+    draw_text(player.board_x_offset + 10, player.draw_y_start + 10,
+        "Hovering: (" + string(block_x) + ", " + string(block_y) +
+        ")\n | Type: " + string(block.type) + 
+        "\n | Powerup: " + string(block.powerup) +
+        "\n | falling: " + string(block.falling) +
+        "\n | popping:  " + string(block.popping)
+    );
 }

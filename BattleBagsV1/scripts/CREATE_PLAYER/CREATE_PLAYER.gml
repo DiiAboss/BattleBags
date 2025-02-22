@@ -27,6 +27,9 @@ function create_player(_id)
         width: 8,
         height: 24,
         online_player: false,
+        last_swap_x: -1,
+        last_swap_y: -1,
+        draw_y_start: 256,
     };
 }
 

@@ -15,7 +15,7 @@ function find_and_destroy_matches_mp(mp_control, player) {
 
     if (ds_list_size(player.pop_list) > 0)
     {
-        return false;
+        //return false;
     }
     //check_2x2_match(self);
     
@@ -29,6 +29,8 @@ function find_and_destroy_matches_mp(mp_control, player) {
             if (player.grid[xx, yy].shake_timer > 0)
             {
                 player.grid[xx, yy].popping = true;
+                player.grid[xx, yy].falling = false;
+                player.grid[xx, yy].fall_delay = 0;
             }
             else
             {
@@ -119,12 +121,13 @@ function find_and_destroy_matches_mp(mp_control, player) {
             if (marked_for_removal[i, j]) {
                 found_any = true;
                 //player.grid[i, j].shake_timer = player.max_shake_timer; // Start shaking effect
-
+                
                 var gem = player.grid[i, j];
-//
-                //var dx = i - global.lastSwapX;
-                //var dy = j - global.lastSwapY;
-                var dist = 5;
+                
+                var dx = i - player.last_swap_x;
+                var dy = j - player.last_swap_y;
+                var dist = sqrt(dx * dx + dy * dy);
+                var _start_delay = 5;
             
 
                 // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
@@ -133,7 +136,7 @@ function find_and_destroy_matches_mp(mp_control, player) {
                     y: j,
                     gem_type: gem.type,
                     timer: 0,
-                    start_delay: dist, // Wave effect
+                    start_delay: dist * _start_delay, // Wave effect
                     scale: 1.0,
                     popping: true,
                     powerup: gem.powerup,
@@ -150,6 +153,7 @@ function find_and_destroy_matches_mp(mp_control, player) {
                 };
 
                 player.grid[i, j].popping   = true;
+                player.grid[i, j].shake_timer   = _start_delay;
                 player.grid[i, j].pop_timer = dist;
                 var _pitch = clamp(1 + (0.2 * player.combo), 0.5, 5);
 
@@ -160,4 +164,133 @@ function find_and_destroy_matches_mp(mp_control, player) {
     }
    
     return found_any;
+}
+
+
+function all_pops_finished_mp(mp_control, player) 
+{
+    var pops_finished = false;
+    var gem_size = mp_control.gem_size;
+    var board_x_offset = player.board_x_offset;
+    var offset = mp_control.offset;
+    var global_y_offset = player.global_y_offset;
+    var _depth = 10;
+    
+    if (ds_list_size(player.pop_list) == 0) return true; 
+    
+    for (var i = 0; i < ds_list_size(player.pop_list); i++) {
+        var pop_data = ds_list_find_value(player.pop_list, i);
+        var _x = pop_data.x;
+        var _y = pop_data.y;
+        var px = (_x * gem_size) + board_x_offset + offset;
+        var py = (_y * gem_size) + offset + global_y_offset + player.grid[_x, _y].draw_y;
+        
+        // Wait for start_delay
+        if (pop_data.timer < pop_data.start_delay) {
+            pop_data.timer++;
+            //combo_timer = 0;
+
+            var _color = c_white;
+            if (variable_struct_exists(pop_data, "color"))
+            {
+                _color = pop_data.color;
+            }
+            
+            effect_create_depth(_depth + 1, ef_smoke, px, py - 4, 2, _color);
+            
+        } else {
+            // Grow effect
+            pop_data.scale += 0.05;
+            
+            // Once scale >= 1.1, pop is done
+            if (pop_data.scale < 1.1) return;
+
+            
+            if (player.grid[_x, _y] == BLOCK.NONE) return;
+            
+            // ✅ Store Gem Object Before Destroying
+            var gem = player.grid[_x, _y];
+
+            //if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2
+
+            //Loop Through Multipliers
+            //process_powerup(self, _x, _y, gem, total_multiplier_next);
+            
+            //total_blocks_destroyed++;
+            // **Destroy the block**
+            
+        
+            destroy_block(player, _x, _y);
+            
+            // **Create visual effect**
+            effect_create_depth(_depth, ef_firework, px, py - 4, 0.5, pop_data.color);
+
+            // ✅ Create Attack Object with Score
+            //var attack = instance_create_depth(px, py, _depth - 1, obj_player_attack);
+            //attack.color = pop_data.color;
+        
+            //attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
+
+            // ✅ Add accumulated match points to total_points
+            //total_points += attack.damage;
+            
+            if (player.grid[_x, _y - 1].type != BLOCK.NONE)
+            {
+                player.grid[_x, _y - 1].falling = true;
+                player.grid[_x, _y - 1].fall_delay = 1;
+            }
+        
+        
+            var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);
+            var _gain = clamp(0.5 + (0.1 * player.combo), 0.5, 0.75);
+            
+            
+            audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
+            // Remove from pop_list
+            ds_list_delete(player.pop_list, i);
+            i--; 
+            continue;
+            
+        }
+        //total_multiplier_next = 1;
+        // Write back updated pop_data
+        ds_list_replace(player.pop_list, i, pop_data);
+        
+        
+        if (pop_data.scale < 1.1) pops_finished = false; 
+    }
+}
+
+
+function process_popping_mp(player) {
+    for (var i = 0; i < ds_list_size(player.pop_list); i++) {
+        var pop_data = ds_list_find_value(player.pop_list, i);
+
+        // ✅ Wait for start_delay
+        if (pop_data.timer < pop_data.start_delay) {
+            pop_data.timer++;
+        } else {
+            pop_data.scale += 0.05;
+
+            if (pop_data.scale >= 1.1) {
+                var _x = pop_data.x;
+                var _y = pop_data.y;
+
+                //if (player.grid[_x, _y] != -1) {
+                    destroy_block(player, _x, _y);
+                //}
+
+                var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);
+                var _gain = clamp(0.5 + (0.1 * player.combo), 0.5, 0.75);
+                audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
+
+                // ✅ Remove from pop_list
+                ds_list_delete(player.pop_list, i);
+                //i--; // Adjust index after deletion
+                continue;
+            }
+        }
+        
+        ds_list_replace(player.pop_list, i, pop_data);
+    }
 }

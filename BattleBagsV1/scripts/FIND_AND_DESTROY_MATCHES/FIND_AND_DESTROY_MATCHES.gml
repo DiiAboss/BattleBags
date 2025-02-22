@@ -214,7 +214,7 @@ function find_and_destroy_matches(_self) {
 	                    }
 	                }
 	            }
-
+                
 	            // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
 	            var pop_info = {
 	                x: i,

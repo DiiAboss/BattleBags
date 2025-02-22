@@ -106,155 +106,117 @@ if (room == rm_local_multiplayer_lobby)
 if (room == rm_local_multiplayer_game)
 {
 
-for (var i = 0; i < ds_list_size(global.player_list); i++) {
-    var player = ds_list_find_value(global.player_list, i);
-    
-    var next_y_pos = player.global_y_offset - player.shift_speed;
-    
-    if ((next_y_pos) <= -gem_size)
-    {
-        var remainder = next_y_pos - -(gem_size);
-        random_set_seed(player.random_seed); // THIS ENSURE ALL PLAYERS GRIDS ARE ON THE SAME SEED
-        shift_up_mp(player); // Shift the board up one position
-        player.hovered_block[1]-=1;
-        player.global_y_offset = remainder; // set the new offset to 0, to start the push up animation.
-        player.random_seed ++; // THIS ENSURE ALL PLAYERS GRIDS ARE ON THE SAME SEED
-    }
-    else {
-        player.global_y_offset -= player.shift_speed;
-    }
-    
-    
-    
-    // ✅ Only find new matches if no pops are pending
-    if (ds_list_size(player.pop_list) == 0) {
+    for (var i = 0; i < ds_list_size(global.player_list); i++) {
+        var player = ds_list_find_value(global.player_list, i);
+        
+        var next_y_pos = player.global_y_offset - player.shift_speed;
+        
+        if ((next_y_pos) <= -gem_size)
+        {
+            var remainder = next_y_pos - -(gem_size);
+            random_set_seed(player.random_seed); // THIS ENSURE ALL PLAYERS GRIDS ARE ON THE SAME SEED
+            shift_up_mp(player); // Shift the board up one position
+            player.hovered_block[1] -= 1;
+            player.global_y_offset = remainder; // set the new offset to 0, to start the push up animation.
+            player.random_seed ++; // THIS ENSURE ALL PLAYERS GRIDS ARE ON THE SAME SEED
+        }
+        else {
+            player.global_y_offset -= player.shift_speed;
+        }
+        
+        process_swap_mp(player);
+        
         find_and_destroy_matches_mp(self, player);
+        
+
+        
+        drop_blocks_mp(self, player);
+        
+        // ✅ Only find new matches if no pops are pending
+        if (ds_list_size(player.pop_list) > 0) {
+            all_pops_finished_mp(self, player);
+        }
     }
-    
-    drop_blocks_mp(self, player);
-}
 
 
 
 
 
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
-    var player = ds_list_find_value(global.player_list, i);
-    if (player.input.InputType == INPUT.KEYBOARD)
-    {
-        player.pointer_x = mouse_x;
-        player.pointer_y = mouse_y;
-        
-        block_dragged_mp(self, player);
-    }
-    else {
-        var max_input_delay = 8;
-        block_legacy_swap(self, player);
-        
-        if (player.input_delay > 0)
-        {
-            player.input_delay --;
-            continue;
-        }
-        else {
-            if (player.input.Up)
-            {
-                if (player.hovered_block[1] > top_playable_row)
-                {
-                    player.hovered_block[1] -= 1;
-                }
-                player.input_delay = max_input_delay;
-            }
-            
-            if (player.input.Down)
-            {
-                if (player.hovered_block[1] < bottom_playable_row)
-                {
-                player.hovered_block[1] += 1; 
-                }
-                player.input_delay = max_input_delay;
-            }
-            if (player.input.Left)
-            {
-                if (player.hovered_block[0] > 0)
-                    {
-                        player.hovered_block[0] -= 1;
-                    }
-                    else {
-                        player.hovered_block[0] = width - 2;
-                    }
-                player.input_delay = max_input_delay;
-            }
-            
-            if (player.input.Right)
-            {
-                if (player.hovered_block[0] < width - 2)
-                    {
-                    player.hovered_block[0] += 1; 
-                    }
-                    else {
-                        player.hovered_block[0] = 0;
-                    }
-                player.input_delay = max_input_delay;
-            }
-        }
-    }
-}
+       var player = ds_list_find_value(global.player_list, i);
+       if (player.input.InputType == INPUT.KEYBOARD)
+       {
+           player.pointer_x = mouse_x;
+           player.pointer_y = mouse_y;
+           
+           block_dragged_mp(self, player);
+       }
+       else {
+           var max_input_delay = 8;
+           block_legacy_swap(self, player);
+           
+           if (player.input_delay > 0)
+           {
+               player.input_delay --;
+               continue;
+           }
+           else {
+               
+               if (player.input.Up)
+               {
+                   if (player.hovered_block[1] > top_playable_row)
+                   {
+                       player.hovered_block[1] -= 1;
+                   }
+                   player.input_delay = max_input_delay;
+               }
+               
+               if (player.input.Down)
+               {
+                   if (player.hovered_block[1] < bottom_playable_row)
+                   {
+                   player.hovered_block[1] += 1; 
+                   }
+                   player.input_delay = max_input_delay;
+               }
+               
+               if (player.input.Left)
+               {
+                   if (player.hovered_block[0] > 0)
+                       {
+                           player.hovered_block[0] -= 1;
+                       }
+                       else {
+                           player.hovered_block[0] = width - 2;
+                       }
+                   player.input_delay = max_input_delay;
+               }
+               
+               if (player.input.Right)
+               {
+                   if (player.hovered_block[0] < width - 2)
+                   {
+                   player.hovered_block[0] += 1; 
+                   }
+                   else {
+                       player.hovered_block[0] = 0;
+                   }
+                   player.input_delay = max_input_delay;
+               }
+           }
+       }
+   }
     
     //------------------------------------------------------------
     // DESTROY THE BLOCKS IN THE POP QUEUE
     //------------------------------------------------------------
-    for (var i = 0; i < ds_list_size(global.player_list); i++) {
-        var player = ds_list_find_value(global.player_list, i);
-       
-        process_swap_mp(player);
-        
-        for (var _i = 0; _i < ds_list_size(player.pop_list); _i++) {
-
-            var pop_data = ds_list_find_value(player.pop_list, _i);
-                
-            // Wait for start_delay
-            if (pop_data.timer < pop_data.start_delay) {
-                pop_data.timer++;
-        
-                var _x = pop_data.x;
-                var _y = pop_data.y;
-            } else {
-                // Grow effect
-                pop_data.scale += 0.05;
-                
-                    
-                    
-                // Once scale >= 1.1, pop is done
-                if (pop_data.scale >= 1.1) {
-                    var _x = pop_data.x;
-                    var _y = pop_data.y;
-        
-                    // ✅ Store Gem Object Before Destroying
-                    if (player.grid[_x, _y] != -1)
-                    {
-                        
-                        var gem = player.grid[_x, _y];
-                    }
-                    else
-                    {
-                        break;
-                    }
-        
-                        destroy_block(player, _x, _y);
-                            
-                            
-                        var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);
-                        var _gain = clamp(0.5 + (0.1 * player.combo), 0.5, 0.75);
-                        audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
-                    
-                    // Remove from pop_list
-                    ds_list_delete(player.pop_list, _i);
-                    continue;
-                }
-            }
-            // Write back updated pop_data
-            ds_list_replace(player.pop_list, _i, pop_data);
-        }
-    }
+    //for (var i = 0; i < ds_list_size(global.player_list); i++) {
+        //var player = ds_list_find_value(global.player_list, i);
+       //
+        //if (player.hovered_block != BLOCK.NONE)
+        //{
+            //
+        //}
+    //}
 }
+

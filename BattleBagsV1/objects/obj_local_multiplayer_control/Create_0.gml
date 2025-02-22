@@ -50,6 +50,7 @@ width = 8;
 height = 24;
 
 gem_size = 48;
+offset = gem_size * 0.5;
 show_debug_overlay(true);
 
 gamepad_taken_list = array_create(12, -1);

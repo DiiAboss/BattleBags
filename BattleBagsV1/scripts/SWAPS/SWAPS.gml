@@ -73,8 +73,8 @@ function start_swap_mp(mp_control, player, ax, ay, bx, by) {
             }
             
         
-            // ✅ Prevent swapping if one of the gems is being destroyed
-            if (is_being_destroyed_mp(player, ax, ay) || is_being_destroyed_mp(player, bx, by)) return;
+            //// ✅ Prevent swapping if one of the gems is being destroyed
+            //if (is_being_destroyed_mp(player, ax, ay) || is_being_destroyed_mp(player, bx, by)) return;
         
             // ✅ Prevent swapping frozen blocks
             if (player.grid[ax, ay].frozen || player.grid[bx, by].frozen) return;
@@ -145,6 +145,8 @@ function start_swap_mp(mp_control, player, ax, ay, bx, by) {
                     // ✅ Ensure the swap happens at the correct row based on whether we just shifted
                     if (player.global_y_offset != 0) {
                         var temp = player.grid[player.swap_info.from_x, player.swap_info.from_y];
+                        player.last_swap_x = player.swap_info.from_x;
+                        player.last_swap_y = player.swap_info.from_y;
                         player.grid[player.swap_info.from_x, player.swap_info.from_y] = player.grid[player.swap_info.to_x, player.swap_info.to_y];
                         player.grid[player.swap_info.to_x, player.swap_info.to_y] = temp;
                     } else {
