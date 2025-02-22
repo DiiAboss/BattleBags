@@ -30,6 +30,8 @@ function create_player(_id)
         last_swap_x: -1,
         last_swap_y: -1,
         draw_y_start: 256,
+        darken_alpha: 1,
+        gem_size: 64,
     };
 }
 

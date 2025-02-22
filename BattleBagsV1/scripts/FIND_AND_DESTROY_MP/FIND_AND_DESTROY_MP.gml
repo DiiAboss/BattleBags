@@ -4,7 +4,7 @@
 ///
 ///@param {id} mp_control - The game object managing the board.
 ///@return {bool} - Returns `true` if any matches were found.
-function find_and_destroy_matches_mp(mp_control, player) {
+function find_matches_and_add_to_pop_list(mp_control, player) {
     
     var width				 = mp_control.width;
     var bottom_row		     = mp_control.bottom_playable_row;
@@ -136,7 +136,7 @@ function find_and_destroy_matches_mp(mp_control, player) {
                     y: j,
                     gem_type: gem.type,
                     timer: 0,
-                    start_delay: dist * _start_delay, // Wave effect
+                    start_delay: _start_delay * dist, // Wave effect
                     scale: 1.0,
                     popping: true,
                     powerup: gem.powerup,
@@ -153,7 +153,7 @@ function find_and_destroy_matches_mp(mp_control, player) {
                 };
 
                 player.grid[i, j].popping   = true;
-                player.grid[i, j].shake_timer   = _start_delay;
+                player.grid[i, j].shake_timer   = _start_delay * dist;
                 player.grid[i, j].pop_timer = dist;
                 var _pitch = clamp(1 + (0.2 * player.combo), 0.5, 5);
 
@@ -167,7 +167,7 @@ function find_and_destroy_matches_mp(mp_control, player) {
 }
 
 
-function all_pops_finished_mp(mp_control, player) 
+function pop_blocks_in_pop_queue(mp_control, player) 
 {
     var pops_finished = false;
     var gem_size = mp_control.gem_size;
@@ -176,26 +176,22 @@ function all_pops_finished_mp(mp_control, player)
     var global_y_offset = player.global_y_offset;
     var _depth = 10;
     
-    if (ds_list_size(player.pop_list) == 0) return true; 
+    if (ds_list_size(player.pop_list) == 0) return; 
     
     for (var i = 0; i < ds_list_size(player.pop_list); i++) {
         var pop_data = ds_list_find_value(player.pop_list, i);
         var _x = pop_data.x;
         var _y = pop_data.y;
         var px = (_x * gem_size) + board_x_offset + offset;
-        var py = (_y * gem_size) + offset + global_y_offset + player.grid[_x, _y].draw_y;
+        var py = (_y * gem_size) + offset + global_y_offset + player.grid[_x, _y].draw_y + player.grid[_x, _y].offset_y;
         
         // Wait for start_delay
         if (pop_data.timer < pop_data.start_delay) {
             pop_data.timer++;
-            //combo_timer = 0;
+            player.combo_timer = 0;
 
-            var _color = c_white;
-            if (variable_struct_exists(pop_data, "color"))
-            {
-                _color = pop_data.color;
-            }
-            
+            // Create Smoke effect behind blocks
+            var _color = variable_struct_exists(pop_data, "color") ? pop_data.color : c_white;
             effect_create_depth(_depth + 1, ef_smoke, px, py - 4, 2, _color);
             
         } else {
@@ -205,7 +201,6 @@ function all_pops_finished_mp(mp_control, player)
             // Once scale >= 1.1, pop is done
             if (pop_data.scale < 1.1) return;
 
-            
             if (player.grid[_x, _y] == BLOCK.NONE) return;
             
             // ✅ Store Gem Object Before Destroying
@@ -219,7 +214,9 @@ function all_pops_finished_mp(mp_control, player)
             //total_blocks_destroyed++;
             // **Destroy the block**
             
-        
+            player.grid[_x, _y].shake_timer = 0;
+            player.grid[_x, _y].popping = false;
+            player.grid[_x, _y].pop_timer = false;
             destroy_block(player, _x, _y);
             
             // **Create visual effect**
@@ -238,6 +235,7 @@ function all_pops_finished_mp(mp_control, player)
             {
                 player.grid[_x, _y - 1].falling = true;
                 player.grid[_x, _y - 1].fall_delay = 1;
+                player.grid[_x, _y - 1].popping = false;
             }
         
         
@@ -286,7 +284,7 @@ function process_popping_mp(player) {
 
                 // ✅ Remove from pop_list
                 ds_list_delete(player.pop_list, i);
-                //i--; // Adjust index after deletion
+                i--; // Adjust index after deletion
                 continue;
             }
         }

@@ -109,6 +109,14 @@ if (room == rm_local_multiplayer_game)
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
         
+        // Drop the blocks
+        drop_blocks_mp(self, player);
+        
+                // Destroy the blocks in the pop queue
+        if (ds_list_size(player.pop_list) > 0) {
+            pop_blocks_in_pop_queue(self, player);
+        }
+        
         var next_y_pos = player.global_y_offset - player.shift_speed;
         
         if ((next_y_pos) <= -gem_size)
@@ -123,21 +131,13 @@ if (room == rm_local_multiplayer_game)
         else {
             player.global_y_offset -= player.shift_speed;
         }
-        
+        darken_bottom_row(player);
+        // Swap the blocks
         process_swap_mp(player);
         
-        find_and_destroy_matches_mp(self, player);
-        
-
-        
-        drop_blocks_mp(self, player);
-        
-        // ✅ Only find new matches if no pops are pending
-        if (ds_list_size(player.pop_list) > 0) {
-            all_pops_finished_mp(self, player);
-        }
+        // Find any matches on the board and add them to the pop queue
+        find_matches_and_add_to_pop_list(self, player);
     }
-
 
 
 
@@ -206,17 +206,5 @@ if (room == rm_local_multiplayer_game)
            }
        }
    }
-    
-    //------------------------------------------------------------
-    // DESTROY THE BLOCKS IN THE POP QUEUE
-    //------------------------------------------------------------
-    //for (var i = 0; i < ds_list_size(global.player_list); i++) {
-        //var player = ds_list_find_value(global.player_list, i);
-       //
-        //if (player.hovered_block != BLOCK.NONE)
-        //{
-            //
-        //}
-    //}
 }
 

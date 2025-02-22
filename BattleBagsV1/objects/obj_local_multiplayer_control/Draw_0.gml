@@ -1,5 +1,4 @@
 /// @description
-/// 
 
 if (room == rm_local_multiplayer_lobby)
 {
@@ -139,14 +138,24 @@ if (room == rm_local_multiplayer_game)
                         draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
                 }
                 
-                if (hover_gem.type != BLOCK.NONE) {
+                if (hover_gem.type != BLOCK.NONE && hover_gem.falling == false) {
                     var rect_x1 = player.board_x_offset + (hover_i * gem_size);
                     var rect_y1 = (hover_j * gem_size) + player.global_y_offset;
                     var rect_x2 = rect_x1 + gem_size;
                     var rect_y2 = rect_y1 + gem_size;
 
                     // ✅ Draw Normally but with Transparency
-                    draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                    draw_sprite_ext(
+                    sprite_for_block(hover_gem.type), 
+                    hover_gem.img_number, 
+                    rect_x2 - offset, 
+                    rect_y2 - offset, 
+                    scale, 
+                    scale, 
+                    0, 
+                    c_white, 
+                    1);
+                    
                     draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
                     
                     if (player.input.InputType == INPUT.KEYBOARD) {

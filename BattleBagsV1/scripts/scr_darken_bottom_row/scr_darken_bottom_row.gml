@@ -4,7 +4,7 @@ function darken_bottom_row(_self)
 {
 	var dAlpha = _self.darken_alpha;
 	var gOffset = abs(_self.global_y_offset);
-	var maxOffset = 64;
+	var maxOffset = _self.gem_size;
 	
 	var darken_percent = gOffset/maxOffset;
 	

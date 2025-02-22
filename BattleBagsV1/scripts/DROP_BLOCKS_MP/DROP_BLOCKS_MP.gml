@@ -20,6 +20,7 @@ function drop_blocks_mp(mp_control, player, fall_speed = 2) {
                     // ✅ Apply **fall delay**
                     if (gem.fall_delay < gem.max_fall_delay) {
                         gem.fall_delay++;
+                        gem.falling = true;
                     }
                     else {
                         process_falling_slime_block(gem);

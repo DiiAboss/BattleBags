@@ -14,7 +14,7 @@ function draw_player_grid(mp_control, player)
     var gem_size = mp_control.gem_size;
     var global_y_offset = player.global_y_offset;
     var offset = 32;
-    var darken_alpha = 1;
+    var darken_alpha = player.darken_alpha;
     var draw_x_start = room_width / (max_players + 1) - (width * 0.5);
     
     
@@ -27,7 +27,7 @@ function draw_player_grid(mp_control, player)
     
     // 🔹 Draw player grid properly
     for (var i = 0; i < 8; i++) {
-        for (var j = 0; j < bottom_playable_row; j++) {
+        for (var j = 0; j <= bottom_playable_row; j++) {
             if (!is_undefined(player_grid[i, j]) && player_grid[i, j].type != BLOCK.NONE) {
                 var gem = player_grid[i, j];
                 gem.x_scale = gem_size / 64;
@@ -37,17 +37,32 @@ function draw_player_grid(mp_control, player)
                 {
                     var percent =  clamp(gem.fall_delay / gem.max_fall_delay, 0, 1);
                     gem.draw_y = 64 * percent;
+                    gem.offset_x = 0;
                 }
                 else {
                     gem.draw_y = 0;
                 }
-                
+
                 
                 var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
                 var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
+                var alpha = 1;
                 
-                draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
-                draw_sprite_ext(gem.powerup.sprite, 0, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
+                if (j == bottom_playable_row) alpha = darken_alpha;
+
+                draw_sprite_ext(
+                    sprite_for_block(gem.type), 
+                    gem.img_number, 
+                    draw_x, 
+                    draw_y, 
+                    gem.x_scale, 
+                    gem.y_scale, 
+                    0, 
+                    c_white, 
+                    alpha);
+                
+                
+                draw_sprite_ext(gem.powerup.sprite, 0, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, alpha);
                 
             }
         }

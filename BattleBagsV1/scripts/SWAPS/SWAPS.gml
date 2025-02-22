@@ -86,6 +86,12 @@ function start_swap_mp(mp_control, player, ax, ay, bx, by) {
         
             // 🔹 Handle row shifting logic
             if (player.global_y_offset == 0) {
+                // Reset offsets
+                //player.grid[player.swap_info.from_x, player.swap_info.from_y].offset_x = 0;
+                //player.grid[player.swap_info.from_x, player.swap_info.from_y].offset_y = 0;
+                //player.grid[player.swap_info.to_x,   player.swap_info.to_y].offset_x   = 0;
+                //player.grid[player.swap_info.to_x,   player.swap_info.to_y].offset_y   = 0;
+                
                 player.swap_info.from_x = ax;
                 player.swap_info.from_y = ay - 1;  // ✅ Adjusting swap to account for shifting
                 player.swap_info.to_x   = bx;

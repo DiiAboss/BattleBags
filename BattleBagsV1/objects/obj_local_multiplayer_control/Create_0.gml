@@ -27,7 +27,7 @@ random_seed = irandom(999999) * -1;
 shift_speed = 0.25;
 
 global.player_list = ds_list_create();
-
+gem_size = 48;
 
 for (var i = 0; i < max_players; i++) {
     ds_list_add(global.player_list, create_player(i));
@@ -44,12 +44,13 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
     player.random_seed = random_seed;
     player.hovered_block = [4, 12];
     player.input.InputType = INPUT.NONE;
+    player.gem_size = gem_size;
 }
 
 width = 8;
 height = 24;
 
-gem_size = 48;
+
 offset = gem_size * 0.5;
 show_debug_overlay(true);
 
