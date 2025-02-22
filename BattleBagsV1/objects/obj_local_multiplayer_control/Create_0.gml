@@ -32,6 +32,7 @@ gem_size = 48;
 for (var i = 0; i < max_players; i++) {
     ds_list_add(global.player_list, create_player(i));
 }
+//Test
 
 for (var i = 0; i < ds_list_size(global.player_list); i++) {
     var player = ds_list_find_value(global.player_list, i);
