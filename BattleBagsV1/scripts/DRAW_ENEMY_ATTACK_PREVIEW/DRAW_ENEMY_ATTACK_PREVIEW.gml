@@ -17,12 +17,15 @@ function draw_attack_preview(_x, _y, _preview_size, _grid_size, _grid_spacing) {
     if (queue_size > 0) {
         var next_attack = ds_list_find_value(global.enemy_attack_queue, 0);
         var enemy = instance_find(obj_enemy_basic_parent, 0);
+        if (enemy == noone) return;
+        
         var attack_progress = enemy.queued_attack_timer / enemy.max_queued_attack_timer;
         var bar_height = _preview_size * attack_progress;
         draw_set_alpha(0.5);
         draw_rectangle(_x, attack_offset_y, _x + _preview_size, attack_offset_y + bar_height, false);
         draw_set_alpha(1);
-    
+        
+        
 
 
             
@@ -34,7 +37,6 @@ function draw_attack_preview(_x, _y, _preview_size, _grid_size, _grid_spacing) {
                 case "FREEZE":
                     draw_sprite(spr_ice_cover, 0, _x + (_preview_size * 0.5), attack_offset_y +  + (_preview_size * 0.5));
                 
-                    var enemy = instance_find(obj_enemy_basic_parent, 0);
                 
                    for (var i = 0; i < ds_list_size(enemy.target_blocks); i++) {
                     var target = ds_list_find_value(enemy.target_blocks, i);
@@ -49,7 +51,6 @@ function draw_attack_preview(_x, _y, _preview_size, _grid_size, _grid_spacing) {
                     break;
                 case "SLIME":
                     draw_sprite(spr_goo_cover, 0, _x + (_preview_size * 0.5), attack_offset_y +  + (_preview_size * 0.5));
-                    var enemy = instance_find(obj_enemy_basic_parent, 0);
                                 
                     for (var i = 0; i < ds_list_size(enemy.target_blocks); i++) {
                         var target = ds_list_find_value(enemy.target_blocks, i);

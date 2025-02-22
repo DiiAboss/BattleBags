@@ -38,15 +38,15 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
             var button_height = 50;
             draw_set_font(fnt_textFont);
             // ✅ Highlight button on hover
-            if (game_over_option_selected == 0) draw_set_color(c_gray);
-            else draw_set_color(c_white);
+            if (game_over_option_selected == 0) draw_set_color(c_white);
+            else draw_set_color(c_grey);
             //draw_rectangle(restart_x, restart_y, restart_x + button_width, restart_y + button_height, false);
-            draw_text(restart_x + button_width / 2, restart_y + button_height / 2, "Restart");
-    
-            if (game_over_option_selected == 1) draw_set_color(c_gray);
-            else draw_set_color(c_white);
+            draw_text(restart_x + button_width / 2, restart_y + button_height / 2, "RESTART");
+                
+            if (game_over_option_selected == 1) draw_set_color(c_white);
+            else draw_set_color(c_grey);
             //draw_rectangle(menu_x, menu_y, menu_x + button_width, menu_y + button_height, false);
-            draw_text(menu_x + button_width / 2, menu_y + button_height / 2, "Main Menu");
+            draw_text(menu_x + button_width / 2, menu_y + button_height / 2, "MAIN MENU");
         }
     }
     
