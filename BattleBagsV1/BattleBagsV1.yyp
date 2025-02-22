@@ -279,6 +279,7 @@
     {"id":{"name":"spr_gem_test_2","path":"sprites/spr_gem_test_2/spr_gem_test_2.yy",},},
     {"id":{"name":"spr_goo_cover","path":"sprites/spr_goo_cover/spr_goo_cover.yy",},},
     {"id":{"name":"spr_green_gem","path":"sprites/spr_green_gem/spr_green_gem.yy",},},
+    {"id":{"name":"spr_health_new","path":"sprites/spr_health_new/spr_health_new.yy",},},
     {"id":{"name":"spr_hearts_old","path":"sprites/spr_hearts_old/spr_hearts_old.yy",},},
     {"id":{"name":"spr_hearts","path":"sprites/spr_hearts/spr_hearts.yy",},},
     {"id":{"name":"spr_ice_cover","path":"sprites/spr_ice_cover/spr_ice_cover.yy",},},

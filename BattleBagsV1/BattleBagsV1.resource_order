@@ -209,6 +209,7 @@
     {"name":"spr_gem_hovered_border","order":15,"path":"sprites/spr_gem_hovered_border/spr_gem_hovered_border.yy",},
     {"name":"spr_gem_test_2","order":12,"path":"sprites/spr_gem_test_2/spr_gem_test_2.yy",},
     {"name":"spr_goo_cover","order":1,"path":"sprites/spr_goo_cover/spr_goo_cover.yy",},
+    {"name":"spr_health_new","order":15,"path":"sprites/spr_health_new/spr_health_new.yy",},
     {"name":"spr_hearts_old","order":7,"path":"sprites/spr_hearts_old/spr_hearts_old.yy",},
     {"name":"spr_hearts","order":11,"path":"sprites/spr_hearts/spr_hearts.yy",},
     {"name":"spr_legacy_controller","order":9,"path":"sprites/spr_legacy_controller/spr_legacy_controller.yy",},

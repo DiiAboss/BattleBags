@@ -475,7 +475,7 @@ draw_rectangle(board_x_offset - thickness, view_diff + grid_height,
 draw_spawn_rates(self);
 
 
-draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, spr_hearts_old, gem_size);
+draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, spr_health_new, gem_size);
 
     if (is_targeting_enemy)
     {
