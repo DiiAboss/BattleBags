@@ -36,7 +36,7 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
             var menu_y = game_over_ui_y + 420;
             var button_width = 300;
             var button_height = 50;
-            draw_set_font(fnt_basic);
+            draw_set_font(fnt_textFont);
             // ✅ Highlight button on hover
             if (game_over_option_selected == 0) draw_set_color(c_gray);
             else draw_set_color(c_white);
