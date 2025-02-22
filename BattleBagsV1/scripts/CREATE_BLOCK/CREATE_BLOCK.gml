@@ -72,7 +72,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		bomb_level: _bomb_level,
 		is_big: false,
 		big_parent: [-1, -1],
-		img_number: -1,
+		img_number: 0,
 		x_scale: 1,
 		y_scale: 1,
 		mega_width: -1,

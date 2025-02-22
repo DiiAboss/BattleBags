@@ -2,7 +2,7 @@ image_speed = 0.1;
 
 randomize();
 
-
+image_alpha = 0.75;
 
 selected_piece = [-1, -1];
 hovered_block = [-1, -1];
@@ -297,3 +297,13 @@ victory_max_countdown = 120;
 victory_countdown = victory_max_countdown;
 
 draw_victory_row = board_height;
+
+
+surBase = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
+surPass = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
+
+uOuterIntensity = 1.41;
+uInnerIntensity = 0;
+uInnerLengthMultiplier = 15;
+
+

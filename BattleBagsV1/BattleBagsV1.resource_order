@@ -177,7 +177,8 @@
     {"name":"TRY_TO_JOIN_HOST","order":3,"path":"scripts/TRY_TO_JOIN_HOST/TRY_TO_JOIN_HOST.yy",},
     {"name":"TRY_TO_LEAVE_HOST","order":4,"path":"scripts/TRY_TO_LEAVE_HOST/TRY_TO_LEAVE_HOST.yy",},
     {"name":"WEIGHTED_RANDOM_BLOCK","order":2,"path":"scripts/WEIGHTED_RANDOM_BLOCK/WEIGHTED_RANDOM_BLOCK.yy",},
-    {"name":"sq_victory","order":16,"path":"sequences/sq_victory/sq_victory.yy",},
+    {"name":"Sequence2","order":1,"path":"sequences/Sequence2/Sequence2.yy",},
+    {"name":"shd_blur_vertical","order":1,"path":"shaders/shd_blur_vertical/shd_blur_vertical.yy",},
     {"name":"music_fast_music_test","order":1,"path":"sounds/music_fast_music_test/music_fast_music_test.yy",},
     {"name":"snd_pre_bubble_pop_test","order":2,"path":"sounds/snd_pre_bubble_pop_test/snd_pre_bubble_pop_test.yy",},
     {"name":"snd_swap_test_1","order":1,"path":"sounds/snd_swap_test_1/snd_swap_test_1.yy",},
@@ -250,5 +251,6 @@
     {"name":"spr_yellow_gem","order":5,"path":"sprites/spr_yellow_gem/spr_yellow_gem.yy",},
     {"name":"Sprite59","order":10,"path":"sprites/Sprite59/Sprite59.yy",},
     {"name":"Sprite70","order":13,"path":"sprites/Sprite70/Sprite70.yy",},
+    {"name":"Sprite77","order":17,"path":"sprites/Sprite77/Sprite77.yy",},
   ],
 }

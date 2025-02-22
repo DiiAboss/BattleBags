@@ -1,6 +1,16 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
+//// Horizontal pass
+
+
+
+
+
+
+
+
+
 if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) { 
     
     if (game_over_state)
@@ -90,6 +100,54 @@ var draw_y_start = camera_get_view_y(view_get_camera(view_current));
         } 
     }
     
+       surface_set_target(surBase);
+draw_clear(c_black);
+
+
+
+    
+    for (var i = 0; i < width; i++)
+    {
+        // 🔹 Now loop through grid to draw blocks
+            for (var j = top_playable_row; j <= bottom_playable_row; j++) {
+                var gem = grid[i, j]; // Retrieve the gem object
+                if (gem.type != BLOCK.NONE) {
+                    var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+                    var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
+                    draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
+                }
+            }
+    }
+
+    
+    
+    surface_reset_target();
+                        
+    // Make it glow horizontally
+    surface_set_target(surPass);
+    draw_clear_alpha(c_black, 0);
+    
+    shader_set(shd_blur_horizontal);
+    shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+    shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
+    
+    gpu_set_blendenable(false); //necessary!
+    draw_surface(surBase, 0, 0);
+    gpu_set_blendenable(true);
+    
+    shader_reset();
+    surface_reset_target();
+    
+    //// Vertical pass + final adjustments, add on top
+    gpu_set_blendmode(bm_add);
+    
+    shader_set(shd_blur_vertical);
+    shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+    shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
+    draw_surface(surPass, 0, 0);
+    shader_reset();
+    gpu_set_blendmode(bm_normal); 
+
 
 for (var i = 0; i < width; i++) {
     var max_shake = 2; // Max shake intensity when blocks are above row 1
@@ -217,12 +275,15 @@ for (var i = 0; i < width; i++) {
 				{
 				    // Only draw if this is the top-left (actual) parent
 				    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
-				        draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
+				        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 					}
 					 
 			    }
 			} 
 			else {
+                
+                
+                
 				if (j >= bottom_playable_row)
 				{
 				        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
@@ -232,13 +293,15 @@ for (var i = 0; i < width; i++) {
 						{		
 							//draw_set_alpha(darken_alpha);
 					        // ✅ Draw Normally but with Transparency
-					        draw_sprite_ext(sprite_for_block(gem.type), 0, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
+					        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
 						}
 
 				}
 				else
 				{
-					draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
+
+                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
+           
 				}
 			}
                 
@@ -264,15 +327,19 @@ for (var i = 0; i < width; i++) {
 				     var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
 					//draw_text(_draw_x, _draw_y, string(gem.mega_width));
 				}
+            
+            
+
 
         }
     }
 }
 
-
-
-
-
+    
+    
+    
+    
+    
 if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
     var hover_i = hovered_block[0];
     var hover_j = hovered_block[1];
@@ -474,9 +541,17 @@ draw_rectangle(board_x_offset - thickness, view_diff + grid_height,
 
 draw_spawn_rates(self);
 
+    
+    //-=-----------------------------------
+    // DRAW HEARTS
+    //--------------------------------------
+var heart_sprite = spr_health_new;
+draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, heart_sprite, gem_size);
 
-draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, spr_health_new, gem_size);
-
+    
+    
+    
+    
     if (is_targeting_enemy)
     {
         draw_set_alpha(0.95);
