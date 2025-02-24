@@ -114,6 +114,8 @@
     {"name":"DIAGONAL_MATCHING","order":8,"path":"scripts/DIAGONAL_MATCHING/DIAGONAL_MATCHING.yy",},
     {"name":"DRAW_ENEMY_ATTACK_PREVIEW","order":1,"path":"scripts/DRAW_ENEMY_ATTACK_PREVIEW/DRAW_ENEMY_ATTACK_PREVIEW.yy",},
     {"name":"DRAW_GRID_MP","order":1,"path":"scripts/DRAW_GRID_MP/DRAW_GRID_MP.yy",},
+    {"name":"DRAW_NEON","order":3,"path":"scripts/DRAW_NEON/DRAW_NEON.yy",},
+    {"name":"DRAW_SPRITE_OUTLINE","order":2,"path":"scripts/DRAW_SPRITE_OUTLINE/DRAW_SPRITE_OUTLINE.yy",},
     {"name":"DROP_BLOCKS_MP","order":4,"path":"scripts/DROP_BLOCKS_MP/DROP_BLOCKS_MP.yy",},
     {"name":"ENEMY_ATTACK","order":4,"path":"scripts/ENEMY_ATTACK/ENEMY_ATTACK.yy",},
     {"name":"ENEMY_DEFEATED","order":6,"path":"scripts/ENEMY_DEFEATED/ENEMY_DEFEATED.yy",},

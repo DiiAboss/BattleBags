@@ -1,6 +1,6 @@
-//uOuterIntensity = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .1);
-//uInnerIntensity = max(0, uInnerIntensity + (keyboard_check(ord("S")) - keyboard_check(ord("A"))) * .1);
-//uInnerLengthMultiplier = max(0, uInnerLengthMultiplier + (keyboard_check(ord("C")) - keyboard_check(ord("X"))) * .1);
+uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .1);
+uInnerIntensity        = max(0, uInnerIntensity + (keyboard_check(ord("S")) - keyboard_check(ord("A"))) * .1);
+uInnerLengthMultiplier = max(0, uInnerLengthMultiplier + (keyboard_check(ord("C")) - keyboard_check(ord("X"))) * .1);
 
 //------------------------------------------
 // INPUT MANAGER (GAME_MANAGER CONTROLLED)
@@ -124,7 +124,7 @@ process_all_mega_blocks(self);
 
 if (!obj_game_manager.console_active)
 {
-    enable_debug_controls(self, hover_x, hover_y, false);	
+    enable_debug_controls(self, hover_x, hover_y, true);	
 }
 
 process_swap(self, swap_info);

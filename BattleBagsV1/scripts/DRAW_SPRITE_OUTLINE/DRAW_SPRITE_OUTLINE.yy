@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"DRAW_SPRITE_OUTLINE",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DRAW_SPRITE_OUTLINE",
+  "parent":{
+    "name":"DRAW",
+    "path":"folders/Scripts/DRAW.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

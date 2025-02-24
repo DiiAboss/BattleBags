@@ -302,8 +302,14 @@ draw_victory_row = board_height;
 surBase = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 surPass = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 
-uOuterIntensity = 1.41;
-uInnerIntensity = 0;
-uInnerLengthMultiplier = 15;
+uOuterIntensity = 1.1;
+uInnerIntensity = 2.125;
+uInnerLengthMultiplier = 12;
 
+//Shader uniforms
+u_vector = shader_get_uniform(shd_blur_horizontal, "u_vector");
+u_texel = shader_get_uniform(shd_blur_horizontal, "u_texel");
+
+//Draw application surface with shader
+//application_surface_draw_enable(false);
 

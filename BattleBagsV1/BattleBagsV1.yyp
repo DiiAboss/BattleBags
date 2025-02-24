@@ -154,6 +154,8 @@
     {"id":{"name":"DRAW_ENEMY_ATTACK_PREVIEW","path":"scripts/DRAW_ENEMY_ATTACK_PREVIEW/DRAW_ENEMY_ATTACK_PREVIEW.yy",},},
     {"id":{"name":"DRAW_GRID_MP","path":"scripts/DRAW_GRID_MP/DRAW_GRID_MP.yy",},},
     {"id":{"name":"DRAW_GRID","path":"scripts/DRAW_GRID/DRAW_GRID.yy",},},
+    {"id":{"name":"DRAW_NEON","path":"scripts/DRAW_NEON/DRAW_NEON.yy",},},
+    {"id":{"name":"DRAW_SPRITE_OUTLINE","path":"scripts/DRAW_SPRITE_OUTLINE/DRAW_SPRITE_OUTLINE.yy",},},
     {"id":{"name":"DROP_BLOCKS_MP","path":"scripts/DROP_BLOCKS_MP/DROP_BLOCKS_MP.yy",},},
     {"id":{"name":"ENEMY_ATTACK","path":"scripts/ENEMY_ATTACK/ENEMY_ATTACK.yy",},},
     {"id":{"name":"ENEMY_DEFEATED","path":"scripts/ENEMY_DEFEATED/ENEMY_DEFEATED.yy",},},
