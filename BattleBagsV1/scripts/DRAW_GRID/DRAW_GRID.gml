@@ -125,7 +125,7 @@ function draw_ui_elements() {
 function draw_combo_count() {
     if (combo <= 1) return; // Only show if at least 2 matches happened
 
-    draw_set_font(f_b_font);
+    draw_set_font(fnt_heading1);
     draw_set_halign(fa_center);
     draw_set_valign(fa_middle);
 
