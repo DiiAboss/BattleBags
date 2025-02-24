@@ -14,11 +14,11 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
         draw_set_alpha(1);
     
         // ✅ Draw "You Lose" Title
-        //draw_set_font(fnt_heading1);
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
-        draw_set_color(c_white);
-        draw_text(game_over_ui_x + game_over_ui_width / 2, game_over_ui_y + 600, "YOU LOSE");
+        var you_lose_x = game_over_ui_x + game_over_ui_width / 2;
+        var you_lose_y = game_over_ui_y + 600;
+        var you_lose_str = "YOU LOSE";
+        
+        draw_text_heading_font(you_lose_x, you_lose_y, you_lose_str);
     
         // ✅ Draw Popping Blocks
         for (var i = 0; i < ds_list_size(game_over_popping); i++) {
@@ -38,37 +38,48 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
             var menu_y = game_over_ui_y + 420;
             var button_width = 300;
             var button_height = 50;
-            draw_set_font(fnt_textFont);
+
+            
             // ✅ Highlight button on hover
             if (game_over_option_selected == 0) draw_set_color(c_white);
             else draw_set_color(c_grey);
+                
             //draw_rectangle(restart_x, restart_y, restart_x + button_width, restart_y + button_height, false);
-            draw_text(restart_x + button_width / 2, restart_y + button_height / 2, "RESTART");
+            var rest_x = restart_x + button_width / 2;
+            var rest_y = restart_y + button_height / 2;
+            var restart_str = "RESTART";
+            
+            draw_text_text_font(rest_x, rest_y, restart_str);
                 
             if (game_over_option_selected == 1) draw_set_color(c_white);
             else draw_set_color(c_grey);
+                
+            var mmenu_x = menu_x + button_width / 2;
+            var mmenu_y = menu_y + button_height / 2;
+            var mmenu_str = "MAIN MENU";
+            
             //draw_rectangle(menu_x, menu_y, menu_x + button_width, menu_y + button_height, false);
-            draw_text(menu_x + button_width / 2, menu_y + button_height / 2, "MAIN MENU");
+            draw_text_text_font(mmenu_x, mmenu_y, mmenu_str);
         }
     }
     
-    
+    draw_set_color(c_white);
     if (victory_state)
     {
         // ✅ Draw Left Panel
         draw_set_alpha(victory_alpha);
         draw_set_color(c_black);
         draw_rectangle(game_over_ui_x, game_over_ui_y, game_over_ui_x + game_over_ui_width, game_over_ui_y + game_over_ui_height, false);
-        
-    
-        // ✅ Draw "You Lose" Title
-        draw_set_font(fnt_heading1);
-        draw_set_halign(fa_center);
-        draw_set_valign(fa_middle);
         draw_set_color(c_white);
-        draw_text(game_over_ui_x + game_over_ui_width / 2, game_over_ui_y + 600, "VICTORY");
-        draw_set_alpha(1);
-        //draw_set_font(fnt_basic);  
+        
+        var game_over_text_x = game_over_ui_x + game_over_ui_width / 2;
+        var game_over_text_y = game_over_ui_y + 600;
+        var victory_string = "VICTORY";
+        
+        // ✅ Draw "You Lose" Title
+        draw_text_heading_font(game_over_text_x, game_over_text_y, victory_string);
+        
+ 
     }
     
 }
@@ -416,9 +427,7 @@ for (var i = 0; i < width; i++) {
                 draw_set_color(c_yellow);
                 draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
                 
-    			
-                //draw_sprite_outline(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32);
-                // ✅ Draw Normally but with Transparency
+    			// ✅ Draw Normally but with Transparency
     			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
     			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
     			
@@ -449,7 +458,7 @@ for (var i = 0; i < width; i++) {
 
 
    // ----------------------------------------------------------------------
-   // 3) DRAW POPPING GEMS (from global.pop_list)
+   // DRAW POPPING GEMS (from global.pop_list)
    // ----------------------------------------------------------------------
    for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
        var pop_data = ds_list_find_value(global.pop_list, idx);
@@ -494,6 +503,9 @@ for (var i = 0; i < width; i++) {
    	
    }
 
+    //------------------------------------------------------------
+    // DFAW BOMB OVERLAY ON POP
+    //------------------------------------------------------------
     for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
         var pop_data = ds_list_find_value(global.pop_list, idx);
     	
@@ -511,53 +523,50 @@ for (var i = 0; i < width; i++) {
     		}	
     }
 
-    // Draw the combo number if a combo is active
+    //---------------------------------------------------------
+    // DRAW COMBO COUNTER
+    //---------------------------------------------------------
     if (combo > 1) { // Only show if combo is at 2 or higher
-    	draw_set_font(fnt_heading1);
-    	draw_set_halign(fa_center);
-    	draw_set_valign(fa_middle);
-        
     	var px = (combo_x * gem_size) + board_x_offset + (gem_size / 2);
     	var py = (combo_y * gem_size) + global_y_offset + (gem_size / 2);
         var background_text_offset = 2;
         
-    	draw_text_color(
-        px + background_text_offset + irandom_range(-1, 1), 
-        py + background_text_offset + irandom_range(-1, 1), 
-        string(combo) + "x!", 
-        c_black, c_black, c_black, c_black, 1);
-    	
-        draw_text_color(
-        px + irandom_range(-1, 1), 
-        py + irandom_range(-1, 1), 
-        string(combo) + "x!", 
-        c_yellow, c_yellow, c_white, c_white, 1);
-
-    			
-    	//draw_set_font(fnt_basic);
-    	draw_set_halign(fa_left);
-    }
+        var px_bg = px + background_text_offset + irandom_range(-1, 1);
+        var py_bg = py + background_text_offset + irandom_range(-1, 1);
         
+        var px_fg = px + irandom_range(-1, 1);
+        var py_fg = py + irandom_range(-1, 1);
+        
+        var combo_string = string(combo) + "x!";
+        var c_bg = c_black;
+        var c_fg1 = c_yellow;
+        var c_fg2 = c_white;
+        
+        draw_text_heading_font(px_bg, py_bg, combo_string, 1, c_bg, c_bg, c_bg, c_bg);
+        draw_text_heading_font(px_fg, py_fg, combo_string, 1, c_fg1, c_fg1, c_fg2, c_fg2);
+
+    }
     
+    //---------------------------------------------------------
+    // DRAW STATS
+    //---------------------------------------------------------
+    draw_text_stats(self, 10, draw_y_start, true);
 
-
-    // Optional: Draw combo count
-    draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
-    draw_text(10, draw_y_start + 60, "SPEED: " + string(game_speed_default));
-    draw_text(10, draw_y_start + 80, "alpha: " + string(darken_alpha));
-    draw_text(10, draw_y_start + 100, "LEVEL: " + string(level));
-    draw_text(10, draw_y_start + 120, "Combo: " + string(combo));
-    draw_text(10, draw_y_start + 140, "cTimer: " + string(combo_timer));
-
-
+    
+    //---------------------------------------------------------
+    // DRAW EXPERIENCE BAR
+    //---------------------------------------------------------
     var y_start = draw_y_start + 128;
     var y_end   = draw_y_start + camera_get_view_height(view_get_camera(view_current)) - 128; 
     var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
     
     draw_rectangle_color(board_x_offset * 0.5, y_start, board_x_offset * 0.9, y_end,              c_white,   c_white,  c_white,  c_white,  true);
     draw_rectangle_color(board_x_offset * 0.5, y_end,   board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
-
-
+    
+    
+    //---------------------------------------------------------
+    // DRAW BOARDER AROUND THE GRID
+    //---------------------------------------------------------
     // Thickness of the outline
     var thickness = 5; 
     
@@ -580,14 +589,25 @@ for (var i = 0; i < width; i++) {
                     board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, false); // Bottom
     
 
-    draw_spawn_rates(self);
+    //---------------------------------------------------------
+    // DRAW SPAWN RATES
+    //---------------------------------------------------------
+    //draw_spawn_rates(self);
     
         
     //--------------------------------------
     // DRAW HEARTS
     //--------------------------------------
     var heart_sprite = spr_health_new;
-    draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, heart_sprite, gem_size);
+    var hearts_y_pos = draw_y_start + grid_height - 34;
+    draw_player_hearts(self, 
+                        player_health, 
+                        max_player_health, 
+                        board_x_offset, 
+                        hearts_y_pos, 
+                        width, 
+                        heart_sprite, 
+                        gem_size);
     
     
     
@@ -629,26 +649,38 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
     draw_rectangle(0, draw_y_start, room_width, room_height, false);
 	draw_set_color(c_white);
     
-	
-	
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
-    draw_set_alpha(1);
-    
     if (after_menu_counter < after_menu_counter_max) {
         // ✅ Calculate remaining countdown time
         var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / _FPS);
         
-        draw_set_font(fnt_heading1); // ✅ Use the specified font
-		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4, (room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);
-        draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2),      room_height / 2,      string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
-    } else {
-        draw_set_font(fnt_textFont)
-        draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
+        var after_menu_counter_x = (room_width / 2) - (after_menu_counter * 2);
+        var after_menu_counter_y = room_height / 2;
+        var shadow_x = after_menu_counter_x + 4;
+        var shadow_y = after_menu_counter_y + 4;
+        var size = 5;
+        
+        draw_text_heading_font( shadow_x, 
+                                shadow_y, 
+                                string(countdown_value), 
+                                size);
+        
+        draw_text_heading_font(after_menu_counter_x, 
+                                after_menu_counter_y, 
+                                string(countdown_value), 
+                                size,
+                                c_yellow,
+                                c_green,
+                                c_blue,
+                                c_red);
+        
+ } else {
+
+        var pause_x = room_width / 2;
+        var pause_y = room_height / 2;
+        var pause_string = "PAUSED\nPress P to Resume";
+        
+        draw_text_text_font(pause_x, pause_y, pause_string);
     } 
-    
-    draw_set_font(fnt_heading1); // ✅ Use the specified font
-    draw_set_halign(fa_left);
 }
     
     if (number_of_rows_spawned >= victory_number_of_rows)
@@ -659,7 +691,7 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
         
         for (var _v = 0; _v < board_width; _v++)
         {
-            draw_x = board_x_offset + (_v * gem_size) + offset;
+            var draw_x = board_x_offset + (_v * gem_size) + offset;
             var draw_y = (draw_victory_row_y * gem_size) + global_y_offset + offset;
             draw_sprite_ext(spr_checker, 0, draw_x, draw_y, 1, 1 - (0.05 * scale), -scale, c_black, 1);
             draw_sprite_ext(spr_checker, 0, draw_x, draw_y, 1, 1 + (0.025 * scale), scale, c_white, 1);

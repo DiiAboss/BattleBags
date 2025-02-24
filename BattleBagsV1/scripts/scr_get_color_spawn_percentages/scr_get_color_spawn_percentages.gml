@@ -18,7 +18,7 @@ function get_color_spawn_percentages(_self) {
 function draw_spawn_rates(_self) {
     var percentages = get_color_spawn_percentages(_self);
     
-    draw_set_font(fnt_basic); // ✅ Use your custom font
+    //draw_set_font(fnt_basic); // ✅ Use your custom font
     draw_set_color(c_white); // ✅ White text for visibility
 
     var start_x = _self.board_x_offset + (_self.width * gem_size) + 16;  // ✅ Left side of screen

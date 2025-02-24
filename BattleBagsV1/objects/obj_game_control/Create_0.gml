@@ -306,3 +306,15 @@ u_texel = shader_get_uniform(shd_blur_horizontal, "u_texel");
 
 //Draw application surface with shader
 //application_surface_draw_enable(false);
+
+
+//-----------------------------------------------------------
+// FONT CONTROLS
+//-----------------------------------------------------------
+heading_font = fnt_heading1;
+basic_font   = fnt_basic;
+text_font    = fnt_textFont;
+other_font   = f_b_font;
+
+stats_font   = fnt_basic;
+default_font = fnt_basic;

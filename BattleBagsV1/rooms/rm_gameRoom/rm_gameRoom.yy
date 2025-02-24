@@ -48,7 +48,7 @@
         {"name":"g_DotsColours","type":0,"value":"8",},
         {"name":"g_DotsSharpness","type":0,"value":"0.312",},
         {"name":"g_DotsPalette","type":2,"value":"_filter_dots_palette",},
-      ],"resourceType":"GMRBackgroundLayer","resourceVersion":"2.0","spriteId":null,"stretch":false,"userdefinedAnimFPS":false,"userdefinedDepth":false,"visible":true,"vspeed":1.0,"vtiled":false,"x":0,"y":0,},
+      ],"resourceType":"GMRBackgroundLayer","resourceVersion":"2.0","spriteId":null,"stretch":false,"userdefinedAnimFPS":false,"userdefinedDepth":false,"visible":false,"vspeed":1.0,"vtiled":false,"x":0,"y":0,},
   ],
   "name":"rm_gameRoom",
   "parent":{

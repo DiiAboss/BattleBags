@@ -1,13 +1,13 @@
 // Script Created By DiiAboss AKA Dillon Abotossaway
 /// @function draw_player_hearts
 /// @description Draws player hearts, centered dynamically & resizes if needed.
-/// @param {id} _self
+/// @param {any} _self
 /// @param {real} player_health
 /// @param {real} max_player_health
 /// @param {real} _x - Center X position
 /// @param {real} _y - Y position
 /// @param {real} width - Max width allowed for hearts
-/// @param {real} sprite - Sprite of hearts (default: spr_hearts)
+/// @param {sprite} sprite - Sprite of hearts (default: spr_hearts)
 /// @param {real} size - Default heart size (default: 64)
 /// @param {real} health_per_heart - Health per heart (default: 4)
 function draw_player_hearts(_self, player_health, max_player_health, _x, _y, width, sprite = spr_hearts, size = 64, health_per_heart = 4) {
