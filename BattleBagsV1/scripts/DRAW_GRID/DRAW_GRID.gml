@@ -125,17 +125,11 @@ function draw_ui_elements() {
 function draw_combo_count() {
     if (combo <= 1) return; // Only show if at least 2 matches happened
 
-    draw_set_font(fnt_heading1);
-    draw_set_halign(fa_center);
-    draw_set_valign(fa_middle);
 
     var px = (combo_x * gem_size) + board_x_offset + (gem_size / 2);
     var py = (combo_y * gem_size) + global_y_offset + (gem_size / 2);
 
-    draw_text_color(px, py, string(combo) + "x!", c_yellow, c_white, c_white, c_white, 1);
-
-    draw_set_font(fnt_basic);
-    draw_set_halign(fa_left);
+    draw_text_heading_font(px, py, string(combo) + "x!", 1, c_yellow, c_white, c_white, c_white);
 }
 
 /// Function: Draw attack preview box

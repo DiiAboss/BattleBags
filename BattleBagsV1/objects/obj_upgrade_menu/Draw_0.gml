@@ -12,7 +12,6 @@ if (upgrade_init_timer > 0)
     draw_set_alpha(0.95 * progress); // Fade in gradually
     draw_rectangle(0, 0, room_width, room_height, false);
     draw_set_alpha(1);
-    draw_set_font(fnt_basic);  
     // 🆙 Draw Title with Scaling
     draw_set_halign(fa_center);
     draw_text_ext(menu_center_x, menu_y - 120 * stretch_y, "Choose an Upgrade", 1, 400);
