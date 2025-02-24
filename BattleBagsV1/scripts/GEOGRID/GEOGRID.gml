@@ -74,7 +74,7 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
             explode_grid(_hover_x, _hover_y, 128, 16);
         }
         else {
-            push_down_grid(_hover_x, _hover_y, 128, 32);
+            push_down_grid(_hover_x, _hover_y, 128, 16);
         }
         //update all springs between nodes
         count = 0;
@@ -189,8 +189,8 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
         var alp = draw_get_alpha();
         var col = draw_get_color();
         
-        draw_set_color(c_white);
-        draw_set_alpha(0.5);
+        //draw_set_color(c_white);
+        draw_set_alpha(0.25);
         
         count = 0;
         
