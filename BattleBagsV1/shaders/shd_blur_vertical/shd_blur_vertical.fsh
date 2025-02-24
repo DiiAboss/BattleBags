@@ -1,4 +1,4 @@
-#extension GL_OES_standard_derivatives : enable
+//#extension GL_OES_standard_derivatives : enable
 
 #define RADIUS 75.0
 #define PI 3.1415926535897932384626433832795

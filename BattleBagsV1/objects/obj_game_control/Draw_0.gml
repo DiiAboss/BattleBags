@@ -96,50 +96,50 @@ var draw_y_start = camera_get_view_y(view_get_camera(view_current));
     
     
     surface_set_target(surBase);
-                    draw_clear(c_black);
-                    
-                    
-                    for (var i = 0; i < width; i++)
-                    {
-                        // 🔹 Now loop through grid to draw blocks
-                        for (var j = top_playable_row; j <= bottom_playable_row; j++) {
-                            var gem = grid[i, j]; // Retrieve the gem object
-                            if (gem.type != BLOCK.NONE) {
-                                var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-                                var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
-                                //draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
-                                draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
-                            }
-                        }
-                    }
-                    
-                    surface_reset_target();
-                    
-                    // Make it glow horizontally
-                    surface_set_target(surPass);
-                    draw_clear_alpha(c_black, 0);
-                    
-                    shader_set(shd_blur_horizontal);
-                    shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
-                    shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_time"), current_time);
-                    
-                    gpu_set_blendenable(false);
-                    draw_surface(surBase, 0, 0);
-                    gpu_set_blendenable(true);
-                    
-                    shader_reset();
-                    surface_reset_target();
-                    
-                    //// Vertical pass + final adjustments, add on top
-                    gpu_set_blendmode(bm_add);
-                    
-                    shader_set(shd_blur_vertical);
-                    shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
-                    shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
-                    draw_surface(surPass, 0, 0);
-                    shader_reset();
-                    
-                    gpu_set_blendmode(bm_normal);
+    draw_clear(c_black);
+    
+    
+    for (var i = 0; i < width; i++)
+    {
+        // 🔹 Now loop through grid to draw blocks
+        for (var j = top_playable_row; j <= bottom_playable_row; j++) {
+            var gem = grid[i, j]; // Retrieve the gem object
+            if (gem.type != BLOCK.NONE) {
+                var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+                var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
+
+                draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
+            }
+        }
+    }
+    
+    surface_reset_target();
+    
+    // Make it glow horizontally
+    surface_set_target(surPass);
+    draw_clear_alpha(c_black, 0);
+    
+    shader_set(shd_blur_horizontal);
+    shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+    shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_time"), current_time);
+    
+    gpu_set_blendenable(false);
+    draw_surface(surBase, 0, 0);
+    gpu_set_blendenable(true);
+    
+    shader_reset();
+    surface_reset_target();
+    
+    //// Vertical pass + final adjustments, add on top
+    gpu_set_blendmode(bm_add);
+    
+    shader_set(shd_blur_vertical);
+    shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+    shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
+    draw_surface(surPass, 0, 0);
+    shader_reset();
+    
+    gpu_set_blendmode(bm_normal);
     
 
 for (var i = 0; i < width; i++) {
@@ -164,7 +164,9 @@ for (var i = 0; i < width; i++) {
 	    }
 	}
 
-	
+	//-------------------------------------------------------
+    //  SHAKE INTENSITY
+    //-------------------------------------------------------
     // 🔥 **If blocks are above row 1, apply max shake**
     if (danger_row <= top_playable_row) {
         shake_intensity = max_shake;
@@ -172,38 +174,48 @@ for (var i = 0; i < width; i++) {
 	
     // **Otherwise, scale shake based on progress to row 0**
     else if (grid[i, top_playable_row].type != BLOCK.NONE && !grid[i, top_playable_row].falling) {
-        var block_y = (1 * gem_size) + global_y_offset;
-        var progress = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
-        shake_intensity = lerp(0, max_shake, progress);
+        var block_y      = (1 * gem_size) + global_y_offset;
+        var progress     = 1 - clamp(block_y / gem_size, 0, 1); // 0 = row 1, 1 = row 0
+        shake_intensity  = lerp(0, max_shake, progress);
     }
 
     // 🔹 Now loop through grid to draw blocks
     for (var j = top_playable_row; j <= bottom_playable_row; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
         
-
-        if (gem.dist_without_touching) < 8
+        var distance_before_meteor = 8;
+        var before_meteor_x_scale  = 0.9;
+        var before_meteor_y_scale  = 1.1;
+        
+        var after_meteor_x_scale   = 0.75;
+        var after_meteor_y_scale   = 1.25;
+        
+        var meteor_fall_rate_increase = 0.25;
+        
+        
+        if (gem.dist_without_touching < distance_before_meteor)
         {
-            gem.x_scale = gem.falling ? 0.90 : 1;
-            gem.y_scale = gem.falling ? 1.1 : 1; 
+            gem.x_scale = gem.falling ? before_meteor_x_scale : 1;
+            gem.y_scale = gem.falling ? before_meteor_y_scale : 1; 
         }
         else {
-            gem.x_scale = 0.75;
-            gem.y_scale = 1.25;
-            gem.fall_delay += 0.25; 
+            gem.x_scale    = after_meteor_x_scale;
+            gem.y_scale    = after_meteor_y_scale;
+            gem.fall_delay += meteor_fall_rate_increase;
+            
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
             var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
             effect_create_depth(depth + 1, ef_smokeup, draw_x, draw_y, 1, c_red);
         }
 
         
-        if gem.falling 
+        if (gem.falling)
         {
             var percent =  clamp(gem.fall_delay / gem.max_fall_delay, 0, 1);
-            gem.draw_y = 64 * percent;
+            gem.draw_y  = 64 * percent;
         }
         else {
-            gem.draw_y = 0;
+            gem.draw_y  = 0;
         }
         
         if (gem.type != BLOCK.NONE) {
@@ -221,8 +233,8 @@ for (var i = 0; i < width; i++) {
 			
 			if (gem.is_big) {
 				if (gem.type == BLOCK.MEGA)
-				{
-					 var parent_x = gem.big_parent[0];
+				{ 
+                    var parent_x = gem.big_parent[0];
 			        var parent_y = gem.big_parent[1];
 
 			        // ✅ Only process once per **Mega Block Parent**
@@ -237,11 +249,31 @@ for (var i = 0; i < width; i++) {
                         
                         //  Draw the Mega Block Piece with Correct Rotation
                         draw_set_color(c_black);
-                        draw_rectangle(draw_x_min, draw_y_min, draw_x_max, draw_y_max, false);
-                        draw_set_color(c_red);
-                        draw_rectangle_color(draw_x_min, draw_y_min, draw_x_max, draw_y_max, c_red, c_red, c_red, c_red, true);
-                        draw_rectangle_color(draw_x_min + 4, draw_y_min + 4, draw_x_max - 4, draw_y_max - 4, c_red, c_red, c_red, c_red, true);
-                        draw_roundrect_color(draw_x_min, draw_y_min, draw_x_max, draw_y_max, c_red, c_red, true);
+                        draw_rectangle(
+                            draw_x_min, 
+                            draw_y_min, 
+                            draw_x_max, 
+                            draw_y_max, false);
+                        
+                        draw_rectangle_color(
+                            draw_x_min, 
+                            draw_y_min, 
+                            draw_x_max, 
+                            draw_y_max, c_red, c_red, c_red, c_red, true);
+                        
+                        var inside_rect_offset = 4;
+                        draw_rectangle_color(
+                            draw_x_min + inside_rect_offset, 
+                            draw_y_min + inside_rect_offset, 
+                            draw_x_max - inside_rect_offset, 
+                            draw_y_max - inside_rect_offset, c_red, c_red, c_red, c_red, true);
+                        
+                        draw_roundrect_color(
+                            draw_x_min, 
+                            draw_y_min, 
+                            draw_x_max, 
+                            draw_y_max, c_red, c_red, true);
+                        
                         draw_set_color(c_white);
                         
                         var spr_draw_x = draw_x_min + (draw_x_max - draw_x_min) * 0.5;
@@ -254,7 +286,7 @@ for (var i = 0; i < width; i++) {
 			                    var block_x = parent_x + bx;
 			                    var block_y = parent_y + by;
 								
-								if (grid[block_x, block_y].type == BLOCK.NONE) continue; //
+								if (grid[block_x, block_y].type == BLOCK.NONE) continue;
 			                    //  Determine correct sprite variation
 			                    var _sprite_index = 0;
 			                    var rotation = 0;
@@ -289,10 +321,12 @@ for (var i = 0; i < width; i++) {
                     draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
 				}
 			}
-	            // 🔥 **Draw special overlays**
+
+                //--------------------------------------------------------------------------------------
+                //  DRAW SPECIAL OVERLAYS
+                //--------------------------------------------------------------------------------------
 	            if (gem.powerup != -1) {
 	                draw_sprite(gem.powerup.sprite, 0, draw_x_with_global_shake, draw_y_with_global_shake);
-                    //draw_text(draw_x, draw_y, string(gem.dist_without_touching));
 	            }
 	            if (gem.frozen) {
 	                draw_sprite(spr_ice_cover, 0, draw_x_with_global_shake, draw_y_with_global_shake);
@@ -305,234 +339,238 @@ for (var i = 0; i < width; i++) {
 	            }
 			
 				if (gem.is_big) {
-					var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+					 var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
 				     var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
-					//draw_text(_draw_x, _draw_y, string(gem.mega_width));
 				}
-            
-            
-
-
+            }
         }
     }
-}
 
     
     
     
     
     
-if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
-    var hover_i = hovered_block[0];
-    var hover_j = hovered_block[1];
-
-    if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
-        var hover_gem = grid[hover_i, hover_j];
-		var rect_x1 = board_x_offset + (hover_i * gem_size);
-        var rect_y1 = (hover_j * gem_size) + global_y_offset;
-        var rect_x2 = rect_x1 + gem_size;
-        var rect_y2 = rect_y1 + gem_size;
-		var scale = 1.1;
-		
-		if (swap_in_progress)
-		{
-			scale = 1;
-		}
-        
-        if (is_targeting_enemy)
-        {
-            draw_text(hovered_block[0], hovered_block[1], string(combo_points));
-        }
-		
-		if (control_mode == "legacy") {
-				if (hover_i + 1 < width)
-				{
-					var hover_gem2 = grid[hover_i + 1, hover_j];
-					draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-					
-					if (hover_gem2.type != BLOCK.NONE)
-					{
-						draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-						draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-					}
-				}
-				
-				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-		}
-		
-        if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
-            var rect_x1 = board_x_offset + (hover_i * gem_size);
+    if (hovered_block[0] >= 0 && hovered_block[1] >= 0) {
+        var hover_i = hovered_block[0];
+        var hover_j = hovered_block[1];
+    
+        if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
+            var hover_gem = grid[hover_i, hover_j];
+    		var rect_x1 = board_x_offset + (hover_i * gem_size);
             var rect_y1 = (hover_j * gem_size) + global_y_offset;
             var rect_x2 = rect_x1 + gem_size;
             var rect_y2 = rect_y1 + gem_size;
-
-            draw_set_alpha(0.3);
-            draw_set_color(c_yellow);
-            draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
+    		var scale = 1.1;
+    		
+    		if (swap_in_progress)
+    		{
+    			scale = 1;
+    		}
             
-			
-            //draw_sprite_outline(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32);
-            // ✅ Draw Normally but with Transparency
-			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-			
-			if (control_mode == "modern") {
-			    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-			}
-            draw_set_color(c_white);
-            draw_set_alpha(1.0);
-
-            // ✅ OPTIONAL: Show gem info in the corner
-            draw_text(10, draw_y_start + 10,
-                "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-                ") | Type: " + string(hover_gem.type) + 
-                " | Powerup: " + string(hover_gem.powerup)
-            );
+            if (is_targeting_enemy)
+            {
+                draw_text(hovered_block[0], hovered_block[1], string(combo_points));
+            }
+    		
+    		if (control_mode == "legacy") {
+    				if (hover_i + 1 < width)
+    				{
+    					var hover_gem2 = grid[hover_i + 1, hover_j];
+    					draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    					
+    					if (hover_gem2.type != BLOCK.NONE)
+    					{
+    						draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    						draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    					}
+    				}
+    				
+    				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    		}
+    		
+            if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
+                var rect_x1 = board_x_offset + (hover_i * gem_size);
+                var rect_y1 = (hover_j * gem_size) + global_y_offset;
+                var rect_x2 = rect_x1 + gem_size;
+                var rect_y2 = rect_y1 + gem_size;
+    
+                draw_set_alpha(0.3);
+                draw_set_color(c_yellow);
+                draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
+                
+    			
+                //draw_sprite_outline(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32);
+                // ✅ Draw Normally but with Transparency
+    			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    			
+    			if (control_mode == "modern") {
+    			    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    			}
+                draw_set_color(c_white);
+                draw_set_alpha(1.0);
+    
+                // ✅ OPTIONAL: Show gem info in the corner
+                draw_text(10, draw_y_start + 10,
+                    "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
+                    ") | Type: " + string(hover_gem.type) + 
+                    " | Powerup: " + string(hover_gem.powerup)
+                );
+            }
+    		else
+    		{
+    			// ✅ OPTIONAL: Show gem info in the corner
+                draw_text(10, draw_y_start + 10,
+                    "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
+                    ") | Type: " + string(hover_gem.type) + 
+                    " | Powerup: " + string(hover_gem.powerup)
+                );
+    		}
         }
-		else
-		{
-			// ✅ OPTIONAL: Show gem info in the corner
-            draw_text(10, draw_y_start + 10,
-                "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-                ") | Type: " + string(hover_gem.type) + 
-                " | Powerup: " + string(hover_gem.powerup)
-            );
-		}
     }
-}
 
 
-// ----------------------------------------------------------------------
-// 3) DRAW POPPING GEMS (from global.pop_list)
-// ----------------------------------------------------------------------
-for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
-    var pop_data = ds_list_find_value(global.pop_list, idx);
+   // ----------------------------------------------------------------------
+   // 3) DRAW POPPING GEMS (from global.pop_list)
+   // ----------------------------------------------------------------------
+   for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
+       var pop_data = ds_list_find_value(global.pop_list, idx);
+   
+       // Base coords
+       var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
+       var draw_y = (pop_data.y * gem_size) + offset + global_y_offset + gem.draw_y;
+   	
+       // Because you want the gem to expand around its true center,
+       // apply an extra center calculation using half the gem size.
+       var center_offset = 0; 
+       var scaled_offset = center_offset * pop_data.scale;
+   
+       var final_x = draw_x + center_offset - scaled_offset;
+       var final_y = draw_y + center_offset - scaled_offset;
+   	
+   	
+       draw_sprite_ext(
+           sprite_for_block(pop_data.gem_type),
+           pop_data.img_number,
+           final_x + pop_data.offset_x,
+           final_y + pop_data.offset_y,
+           pop_data.scale * 1.2, 
+           pop_data.scale * 1.2,
+           0,
+           c_white,
+           1.0
+   		);
+   	
+   	if (pop_data.powerup != -1) {
+           draw_sprite_ext(pop_data.powerup.sprite,
+   		0,
+   		final_x,
+   		final_y,
+           pop_data.scale, 
+           pop_data.scale,
+           0,
+           c_white,
+           1.0
+   		);
+   	}
+   	
+   }
 
-    // Base coords
-    var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
-    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset + gem.draw_y;
-	
-    // Because you want the gem to expand around its true center,
-    // apply an extra center calculation using half the gem size.
-    var center_offset = 0; 
-    var scaled_offset = center_offset * pop_data.scale;
+    for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
+        var pop_data = ds_list_find_value(global.pop_list, idx);
+    	
+    		if (pop_data.bomb_tracker)
+    		{
+    			    // Base coords
+    		    var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
+    		    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset + gem.draw_y;
+    			
+    			var img_number = sprite_get_number(spr_bomb_overlay_wick);
+    			var progress = img_number - (img_number * (grid[pop_data.x, pop_data.y].shake_timer / max_shake_timer));
+    			
+    			draw_sprite_ext(spr_bomb_overlay_wick, 0, draw_x, draw_y, 1.2, 1.2, 0, c_white, 1);
+    			
+    		}	
+    }
 
-    var final_x = draw_x + center_offset - scaled_offset;
-    var final_y = draw_y + center_offset - scaled_offset;
-	
-	
-    draw_sprite_ext(
-        sprite_for_block(pop_data.gem_type),
-        pop_data.img_number,
-        final_x + pop_data.offset_x,
-        final_y + pop_data.offset_y,
-        pop_data.scale * 1.2, 
-        pop_data.scale * 1.2,
-        0,
-        c_white,
-        1.0
-		);
-	
-	if (pop_data.powerup != -1) {
-        draw_sprite_ext(pop_data.powerup.sprite,
-		0,
-		final_x,
-		final_y,
-        pop_data.scale, 
-        pop_data.scale,
-        0,
-        c_white,
-        1.0
-		);
-	}
-	
-}
+    // Draw the combo number if a combo is active
+    if (combo > 1) { // Only show if combo is at 2 or higher
+    	draw_set_font(fnt_heading1);
+    	draw_set_halign(fa_center);
+    	draw_set_valign(fa_middle);
+        
+    	var px = (combo_x * gem_size) + board_x_offset + (gem_size / 2);
+    	var py = (combo_y * gem_size) + global_y_offset + (gem_size / 2);
+        var background_text_offset = 2;
+        
+    	draw_text_color(
+        px + background_text_offset + irandom_range(-1, 1), 
+        py + background_text_offset + irandom_range(-1, 1), 
+        string(combo) + "x!", 
+        c_black, c_black, c_black, c_black, 1);
+    	
+        draw_text_color(
+        px + irandom_range(-1, 1), 
+        py + irandom_range(-1, 1), 
+        string(combo) + "x!", 
+        c_yellow, c_yellow, c_white, c_white, 1);
 
-for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
-    var pop_data = ds_list_find_value(global.pop_list, idx);
-	
-		if (pop_data.bomb_tracker)
-		{
-			    // Base coords
-		    var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
-		    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset + gem.draw_y;
-			
-			var img_number = sprite_get_number(spr_bomb_overlay_wick);
-			var progress = img_number - (img_number * (grid[pop_data.x, pop_data.y].shake_timer / max_shake_timer));
-			
-			draw_sprite_ext(spr_bomb_overlay_wick, 0, draw_x, draw_y, 1.2, 1.2, 0, c_white, 1);
-			
-		}	
-}
-
-// Draw the combo number if a combo is active
-if (combo > 1) { // Only show if at least 2 matches have happened
-	draw_set_font(fnt_heading1);
-	draw_set_halign(fa_center);
-	draw_set_valign(fa_middle);
+    			
+    	//draw_set_font(fnt_basic);
+    	draw_set_halign(fa_left);
+    }
+        
     
-	var px = (combo_x * gem_size) + board_x_offset + (gem_size / 2);
-	var py = (combo_y * gem_size) + global_y_offset + (gem_size / 2);
-			
-			
-	draw_text_color(px+2 + irandom_range(-1, 1), py+2 + irandom_range(-1, 1), string(combo) + "x!", c_black, c_black, c_black, c_black, 1);
-	draw_text_color(px + irandom_range(-1, 1), py + irandom_range(-1, 1), string(combo) + "x!", c_yellow, c_yellow, c_white, c_white, 1);
-	//draw_text(px, py, string(combo) + "x!");
-			
-	//draw_set_font(fnt_basic);
-	draw_set_halign(fa_left);
-}
+
+
+    // Optional: Draw combo count
+    draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
+    draw_text(10, draw_y_start + 60, "SPEED: " + string(game_speed_default));
+    draw_text(10, draw_y_start + 80, "alpha: " + string(darken_alpha));
+    draw_text(10, draw_y_start + 100, "LEVEL: " + string(level));
+    draw_text(10, draw_y_start + 120, "Combo: " + string(combo));
+    draw_text(10, draw_y_start + 140, "cTimer: " + string(combo_timer));
+
+
+    var y_start = draw_y_start + 128;
+    var y_end   = draw_y_start + camera_get_view_height(view_get_camera(view_current)) - 128; 
+    var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
     
+    draw_rectangle_color(board_x_offset * 0.5, y_start, board_x_offset * 0.9, y_end,              c_white,   c_white,  c_white,  c_white,  true);
+    draw_rectangle_color(board_x_offset * 0.5, y_end,   board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
+
+
+    // Thickness of the outline
+    var thickness = 5; 
     
-
-
-// Optional: Draw combo count
-draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
-draw_text(10, draw_y_start + 60, "SPEED: " + string(game_speed_default));
-draw_text(10, draw_y_start + 80, "alpha: " + string(darken_alpha));
-draw_text(10, draw_y_start + 100, "LEVEL: " + string(level));
-draw_text(10, draw_y_start + 120, "Combo: " + string(combo));
-draw_text(10, draw_y_start + 140, "cTimer: " + string(combo_timer));
-
-
-var y_start = draw_y_start + 128;
-var y_end   = draw_y_start + camera_get_view_height(view_get_camera(view_current)) - 128; 
-var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
-
-draw_rectangle_color(board_x_offset * 0.5, y_start,            board_x_offset * 0.9, y_end, c_white, c_white, c_white, c_white, true);
-draw_rectangle_color(board_x_offset * 0.5, y_end, board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
-
-
+    // Calculate grid dimensions
+    var grid_width = width * gem_size;
+    var grid_height = camera_get_view_height(view_get_camera(view_current));
+    var view_diff = room_height - grid_height;
     
-var thickness = 5; // Thickness of the outline
-
-// Calculate grid dimensions
-
-var grid_width = width * gem_size;
-var grid_height = camera_get_view_height(view_get_camera(view_current));
-var view_diff = room_height - grid_height;
-// Set outline color
-draw_set_color(c_white);
-
-// Draw thick outline around the grid
-draw_rectangle(board_x_offset - thickness, view_diff - thickness, 
-               board_x_offset + grid_width + thickness,view_diff + thickness, false); // Top
-draw_rectangle(board_x_offset - thickness,view_diff - thickness, 
-               board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
-draw_rectangle(board_x_offset + grid_width, view_diff - thickness, 
-               board_x_offset + grid_width + thickness, view_diff + grid_height - thickness, false); // Right
-draw_rectangle(board_x_offset - thickness, view_diff + grid_height, 
-               board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, false); // Bottom
-
-draw_spawn_rates(self);
-
+        // Set outline color
+    draw_set_color(c_white);
     
-    //-=-----------------------------------
+    // Draw thick outline around the grid
+    draw_rectangle(board_x_offset - thickness, view_diff - thickness, 
+                    board_x_offset + grid_width + thickness,view_diff + thickness, false); // Top
+    draw_rectangle(board_x_offset - thickness,view_diff - thickness, 
+                    board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
+    draw_rectangle(board_x_offset + grid_width, view_diff - thickness, 
+                    board_x_offset + grid_width + thickness, view_diff + grid_height - thickness, false); // Right
+    draw_rectangle(board_x_offset - thickness, view_diff + grid_height, 
+                    board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, false); // Bottom
+    
+    draw_spawn_rates(self);
+    
+        
+    //--------------------------------------
     // DRAW HEARTS
     //--------------------------------------
-var heart_sprite = spr_health_new;
-draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, heart_sprite, gem_size);
-
+    var heart_sprite = spr_health_new;
+    draw_player_hearts(self, player_health, max_player_health, board_x_offset, draw_y_start + grid_height - 34, width, heart_sprite, gem_size);
+    
     
     
     
@@ -596,16 +634,18 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
     
     if (number_of_rows_spawned >= victory_number_of_rows)
     {
+        
         var draw_victory_row_y = board_height - (number_of_rows_spawned - victory_number_of_rows);
         var scale = sin(degtorad(current_time * 1)) * 1; // Oscillates slightly (-5° to +5°)
+        
         for (var _v = 0; _v < board_width; _v++)
         {
             draw_x = board_x_offset + (_v * gem_size) + offset;
             var draw_y = (draw_victory_row_y * gem_size) + global_y_offset + offset;
             draw_sprite_ext(spr_checker, 0, draw_x, draw_y, 1, 1 - (0.05 * scale), -scale, c_black, 1);
             draw_sprite_ext(spr_checker, 0, draw_x, draw_y, 1, 1 + (0.025 * scale), scale, c_white, 1);
-            
         }
+        
     }
     
 }
