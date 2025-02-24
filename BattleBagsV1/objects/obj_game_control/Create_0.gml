@@ -152,6 +152,7 @@ global.paused = false;
 
 
 global.grid_shake_amount = 0; // Grid shake intensity
+
 // ------------------------------------------------------
 // Block Types
 // ------------------------------------------------------
@@ -190,7 +191,6 @@ global.swap_queue = {
 // ------------------------------------------------------
 // Board Setup
 // ------------------------------------------------------
-
 board_x_offset = 128;
 
 max_shake_timer = 30;
@@ -217,14 +217,12 @@ global.in_upgrade_menu = false;
 // ------------------------------------------------------
 // Create The Grid
 // ------------------------------------------------------
-
 create_block_spawn_rates(self);
 initialize_game_board(self, width, height, spawn_rows);
 
 // ------------------------------------------------------
 // Gem Selection Variables
 // ------------------------------------------------------
-
 selected_x = -1;
 selected_y = -1;
 dragged = false;
@@ -232,7 +230,6 @@ dragged = false;
 // ------------------------------------------------------
 // Timers & Speeds
 // ------------------------------------------------------
-
 spawn_timer = 60 / global.gameSpeed;
 shift_speed = 0.1 * global.gameSpeed;
 shift_timer = 0;
@@ -242,11 +239,9 @@ last_position = [4, height * 0.5];
 hover_x = 0;
 hover_y = 0;
 
-
 // ------------------------------------------------------
 // Game Over UI
 // ------------------------------------------------------
-
 game_over_state = false;
 game_over_timer = 0;
 game_over_pop_delay = 20; // Starts slow
@@ -270,7 +265,6 @@ devices = [];
 enemy_control = instance_create_depth(x, y, depth, obj_enemy_control);
 is_targeting_enemy = true;
 enemy_target = -1;
-
 
 
 //------------------------------------------
@@ -302,7 +296,7 @@ draw_victory_row = board_height;
 surBase = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 surPass = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 
-uOuterIntensity = 1.1;
+uOuterIntensity = 1.6;
 uInnerIntensity = 2.125;
 uInnerLengthMultiplier = 12;
 
@@ -312,4 +306,3 @@ u_texel = shader_get_uniform(shd_blur_horizontal, "u_texel");
 
 //Draw application surface with shader
 //application_surface_draw_enable(false);
-

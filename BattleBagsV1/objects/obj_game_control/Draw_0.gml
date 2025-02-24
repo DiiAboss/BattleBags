@@ -76,13 +76,13 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
 
 else
 {
-// ----------------------------------
-//  APPLY GRID SHAKE WHEN DAMAGED
-// ----------------------------------
-var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
-var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
-
-var draw_y_start = camera_get_view_y(view_get_camera(view_current));
+   // ----------------------------------
+   //  APPLY GRID SHAKE WHEN DAMAGED
+   // ----------------------------------
+    var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
+    var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
+    
+    var draw_y_start = camera_get_view_y(view_get_camera(view_current));
     
     if (number_of_rows_spawned >= victory_number_of_rows)
     {
@@ -91,55 +91,72 @@ var draw_y_start = camera_get_view_y(view_get_camera(view_current));
             victory_state = true;
         } 
     }
+    
+    
+        // Thickness of the outline
+    var thickness = 5; 
+    
+    // Calculate grid dimensions
+    var grid_width = width * gem_size;
+    var grid_height = camera_get_view_height(view_get_camera(view_current));
+    var view_diff = room_height - grid_height;
 
-    
-    
+    draw_set_alpha(0.4);
+    draw_rectangle_color(board_x_offset, view_diff - thickness, 
+                            board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, c_black, c_black, c_black, c_black, false);
+    draw_set_alpha(1);
     
     surface_set_target(surBase);
-    draw_clear(c_black);
+        draw_clear(c_black);
+        
+        
+        for (var i = 0; i < width; i++)
+        {
+            // 🔹 Now loop through grid to draw blocks
+            for (var j = top_playable_row; j <= bottom_playable_row; j++) {
+                var gem = grid[i, j]; // Retrieve the gem object
+                if (gem.type != BLOCK.NONE) {
+                    var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
+                    var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
     
-    
-    for (var i = 0; i < width; i++)
-    {
-        // 🔹 Now loop through grid to draw blocks
-        for (var j = top_playable_row; j <= bottom_playable_row; j++) {
-            var gem = grid[i, j]; // Retrieve the gem object
-            if (gem.type != BLOCK.NONE) {
-                var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-                var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
-
-                draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, gem.x_scale, gem.y_scale, 0, c_white, 1);
+                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 1, 1, 0, gem.color, 1);
+                }
             }
         }
-    }
+        
+        surface_reset_target();
+        
+        // Make it glow horizontally
+        surface_set_target(surPass);
+        draw_clear_alpha(c_black, 0);
+        
+        shader_set(shd_blur_horizontal);
+        shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+        shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_time"), current_time);
+        
+        gpu_set_blendenable(false);
+        draw_surface(surBase, 0, 0);
+        gpu_set_blendenable(true);
+        
+        shader_reset();
+        surface_reset_target();
+        
+        //// Vertical pass + final adjustments, add on top
+        gpu_set_blendmode(bm_add);
+        
+        shader_set(shd_blur_vertical);
+        shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+        shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
+        draw_surface(surPass, 0, 0);
+        shader_reset();
+        
+        gpu_set_blendmode(bm_normal); 
     
-    surface_reset_target();
-    
-    // Make it glow horizontally
-    surface_set_target(surPass);
-    draw_clear_alpha(c_black, 0);
-    
-    shader_set(shd_blur_horizontal);
-    shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
-    shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_time"), current_time);
-    
-    gpu_set_blendenable(false);
-    draw_surface(surBase, 0, 0);
-    gpu_set_blendenable(true);
-    
-    shader_reset();
-    surface_reset_target();
-    
-    //// Vertical pass + final adjustments, add on top
-    gpu_set_blendmode(bm_add);
-    
-    shader_set(shd_blur_vertical);
-    shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
-    shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
-    draw_surface(surPass, 0, 0);
-    shader_reset();
-    
-    gpu_set_blendmode(bm_normal);
+
+    draw_set_alpha(0.75);
+    draw_rectangle_color(board_x_offset, view_diff - thickness, 
+                            board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, c_black, c_black, c_black, c_black, false);
+    draw_set_alpha(1);
     
 
 for (var i = 0; i < width; i++) {
@@ -554,7 +571,7 @@ for (var i = 0; i < width; i++) {
     
     // Draw thick outline around the grid
     draw_rectangle(board_x_offset - thickness, view_diff - thickness, 
-                    board_x_offset + grid_width + thickness,view_diff + thickness, false); // Top
+                    board_x_offset + grid_width + thickness, view_diff + thickness, false); // Top
     draw_rectangle(board_x_offset - thickness,view_diff - thickness, 
                     board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
     draw_rectangle(board_x_offset + grid_width, view_diff - thickness, 
@@ -562,6 +579,7 @@ for (var i = 0; i < width; i++) {
     draw_rectangle(board_x_offset - thickness, view_diff + grid_height, 
                     board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, false); // Bottom
     
+
     draw_spawn_rates(self);
     
         
@@ -603,7 +621,7 @@ for (var i = 0; i < width; i++) {
     }
     
 
-if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_exists(obj_upgrade_menu) {
+if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instance_exists(obj_upgrade_menu) {
 
 
 	draw_set_color(c_black);
@@ -622,13 +640,14 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
         var countdown_value = ceil((after_menu_counter_max - after_menu_counter) / _FPS);
         
         draw_set_font(fnt_heading1); // ✅ Use the specified font
-		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4,(room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);
-        draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2),room_height / 2, string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
+		draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2) + 4, (room_height / 2) + 4, string(countdown_value), 5, 5, 0, c_white, c_white, c_white, c_white, 1);
+        draw_text_transformed_color((room_width / 2) - (after_menu_counter * 2),      room_height / 2,      string(countdown_value), 5, 5, 0, c_yellow, c_green, c_blue, c_red, 1);
     } else {
         draw_set_font(fnt_textFont)
         draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
-    }
-	 draw_set_font(fnt_heading1); // ✅ Use the specified font
+    } 
+    
+    draw_set_font(fnt_heading1); // ✅ Use the specified font
     draw_set_halign(fa_left);
 }
     
