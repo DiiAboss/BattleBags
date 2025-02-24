@@ -42,9 +42,8 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
             
             // ✅ Highlight button on hover
             if (game_over_option_selected == 0) draw_set_color(c_white);
-            else draw_set_color(c_grey);
+            else draw_set_color(c_grey); 
                 
-            //draw_rectangle(restart_x, restart_y, restart_x + button_width, restart_y + button_height, false);
             var rest_x = restart_x + button_width / 2;
             var rest_y = restart_y + button_height / 2;
             var restart_str = "RESTART";
@@ -135,6 +134,10 @@ else
             }
         }
         
+    
+    //----------------------------------------------------------------
+    // DRAW GLOWING BLOCKS
+    //----------------------------------------------------------------
         surface_reset_target();
         
         // Make it glow horizontally
@@ -170,6 +173,10 @@ else
     draw_set_alpha(1);
     
 
+    
+    //----------------------------------------------------------------
+    // DRAW COLUMN SHAKE
+    //----------------------------------------------------------------
 for (var i = 0; i < width; i++) {
     var max_shake = 2; // Max shake intensity when blocks are above row 1
     var shake_intensity = 0; // Default no shake
