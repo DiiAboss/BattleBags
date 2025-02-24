@@ -18,6 +18,7 @@ function create_pop_info(_self, gem, _x, _y, _startx, _starty, blocks_destroyed,
 			bomb_tracker: false,
 			bomb_level: 1,
 			dir: gem.dir,
-			img_number: gem.img_number,	
+			img_number: gem.img_number,
+                is_big: false,	
 			}
 		}

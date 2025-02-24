@@ -120,6 +120,7 @@ function handle_puzzle_match(_self, _x, _y) {
 	    bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 	    bomb_level: 0,
 		img_number: gem_0.img_number,
+        is_big: false,
 	};
 
 	_self.grid[_x, _y].popping   = true;
@@ -145,6 +146,7 @@ function handle_puzzle_match(_self, _x, _y) {
 	    bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 	    bomb_level: 0,
 		img_number: gem_1.img_number,
+            is_big: false,
 	};
 		_self.grid[_x + 1, _y].popping   = true;	
 	_self.grid[_x + 1, _y].pop_timer = dist * _start_delay;
@@ -169,6 +171,7 @@ function handle_puzzle_match(_self, _x, _y) {
 	    bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 	    bomb_level: 0,
 		img_number: gem_2.img_number,
+            is_big: false,
 	};
 		_self.grid[_x, _y + 1].popping   = true;
 	_self.grid[_x, _y + 1].pop_timer = dist * _start_delay;
@@ -193,6 +196,7 @@ function handle_puzzle_match(_self, _x, _y) {
 	    bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 	    bomb_level: 0,
 		img_number: gem_3.img_number,
+            is_big: false,
 	};
 		_self.grid[_x + 1, _y + 1].popping   = true;	
 	_self.grid[_x + 1, _y + 1].pop_timer = dist * _start_delay;

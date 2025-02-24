@@ -144,34 +144,35 @@ function update_mega_blocks(_self, _list) {
                     // ✅ Transform each piece individually into a new random block
                     _self.grid[block_x, block_y] = create_block(BLOCK.RANDOM);
 
-                    // ✅ Add to pop list (fixed version)
-                    var pop_info = {
-                        x: block_x,
-                        y: block_y,
-                        gem_type: BLOCK.RANDOM,
-                        timer: 0,
-                        start_delay: 5, // 🔥 Give a small delay so we see the effect
-                        scale: 1.0,
-                        popping: true,
-                        powerup: -1,
-                        dir: 0,
-                        offset_x: 0,
-                        offset_y: 0,
-                        color: c_red, // 🔥 Make sure we mark them correctly
-                        y_offset_global: _self.global_y_offset,
-                        match_size: 1,
-                        match_points: 10, // Placeholder, adjust as needed
-                        bomb_tracker: false,
-                        bomb_level: 0,
-                        img_number: -1,
-                    };
-
-                    ds_list_add(global.pop_list, pop_info);
-                    
-                    // 🔥 **Create a pop effect**
-                    var draw_x = (block_x * 64) + _self.board_x_offset + 32;
-                    var draw_y = (block_y * 64) + _self.global_y_offset + 32;
-                    effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
+                    //// ✅ Add to pop list (fixed version)
+                    //var pop_info = {
+                        //x: block_x,
+                        //y: block_y,
+                        //gem_type: BLOCK.RANDOM,
+                        //timer: 0,
+                        //start_delay: 5, // 🔥 Give a small delay so we see the effect
+                        //scale: 1.0,
+                        //popping: true,
+                        //powerup: -1,
+                        //dir: 0,
+                        //offset_x: 0,
+                        //offset_y: 0,
+                        //color: c_red, // 🔥 Make sure we mark them correctly
+                        //y_offset_global: _self.global_y_offset,
+                        //match_size: 1,
+                        //match_points: 10, // Placeholder, adjust as needed
+                        //bomb_tracker: false,
+                        //bomb_level: 0,
+                        //img_number: -1,
+                        //is_big: true,
+                    //};
+//
+                    //ds_list_add(global.pop_list, pop_info);
+                    //
+                    //// 🔥 **Create a pop effect**
+                    //var draw_x = (block_x * 64) + _self.board_x_offset + 32;
+                    //var draw_y = (block_y * 64) + _self.global_y_offset + 32;
+                    //effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
                 }
             }
         }
@@ -233,38 +234,42 @@ function process_mega_blocks(_self, _x, _y) {
 					                for (var by = 0; by < big_block_height; by++) {
 					                    var block_x = parent_x + bx;
 					                    var block_y = parent_y + by;
-
+                                        var _start_delay = 10;
+                                        var dist = 10 * (clamp(point_distance(block_x, block_y, room_width, room_height) / distance_to_point(room_width, room_height), 0, 1));
 					                    // ✅ Transform each piece individually into a new random block
-					                    _self.grid[block_x, block_y] = create_block(BLOCK.RANDOM);
+					                    
+                                        
+					                    // ✅ Add to pop list (fixed version)
+					                    var pop_info = {
+					                        x: block_x,
+					                        y: block_y,
+					                        gem_type: BLOCK.RANDOM,
+					                        timer: 0,
+					                        start_delay: _start_delay, // 🔥 Give a small delay so we see the effect
+					                        scale: 1.0,
+					                        popping: true,
+					                        powerup: -1,
+					                        dir: 0,
+					                        offset_x: 0,
+					                        offset_y: 0,
+					                        color: c_red, // 🔥 Make sure we mark them correctly
+					                        y_offset_global: _self.global_y_offset,
+					                        match_size: 1,
+					                        match_points: 10, // Placeholder, adjust as needed
+					                        bomb_tracker: false,
+					                        bomb_level: 0,
+					                        img_number: -1,
+                                            is_big: true,
+					                    };
 
-					                    //// ✅ Add to pop list (fixed version)
-					                    //var pop_info = {
-					                    //    x: block_x,
-					                    //    y: block_y,
-					                    //    gem_type: BLOCK.RANDOM,
-					                    //    timer: 0,
-					                    //    start_delay: 5, // 🔥 Give a small delay so we see the effect
-					                    //    scale: 1.0,
-					                    //    popping: true,
-					                    //    powerup: -1,
-					                    //    dir: 0,
-					                    //    offset_x: 0,
-					                    //    offset_y: 0,
-					                    //    color: c_red, // 🔥 Make sure we mark them correctly
-					                    //    y_offset_global: _self.global_y_offset,
-					                    //    match_size: 1,
-					                    //    match_points: 10, // Placeholder, adjust as needed
-					                    //    bomb_tracker: false,
-					                    //    bomb_level: 0,
-					                    //    img_number: -1,
-					                    //};
-
-					                    //ds_list_add(global.pop_list, pop_info);
+					                    ds_list_add(global.pop_list, pop_info);
                     
 					                    // 🔥 **Create a pop effect**
+                                        _self.grid[block_x, block_y].popping = true;
+                                        _self.grid[block_x, block_y].pop_timer = dist * _start_delay + _start_delay;
 					                    var draw_x = (block_x * 64) + _self.board_x_offset + 32;
 					                    var draw_y = (block_y * 64) + _self.global_y_offset + 32;
-					                    effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
+					                    //effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
 					                }
 					            }
 							}

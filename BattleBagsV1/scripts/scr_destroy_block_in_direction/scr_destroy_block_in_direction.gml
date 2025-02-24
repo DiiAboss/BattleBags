@@ -67,6 +67,7 @@ function destroy_blocks_in_direction_from_point(_self, start_x, start_y, _dir_x,
                                         bomb_tracker: false, // Flag to mark this pop as bomb‐generated
                                         bomb_level: 0,
                                         img_number: block.img_number,
+                                        is_big: false,
                                     };
                                 
                                     _self.grid[_i, _j].popping   = true;  // Start popping process

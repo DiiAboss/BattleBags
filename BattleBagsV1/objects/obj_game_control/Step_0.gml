@@ -1,10 +1,8 @@
 
 
-
-
-uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .1);
-uInnerIntensity        = max(0, uInnerIntensity + (keyboard_check(ord("S")) - keyboard_check(ord("A"))) * .1);
-uInnerLengthMultiplier = max(0, uInnerLengthMultiplier + (keyboard_check(ord("C")) - keyboard_check(ord("X"))) * .1);
+uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .01);
+uInnerIntensity        = max(0, uInnerIntensity + (keyboard_check(ord("S")) - keyboard_check(ord("A"))) * .01);
+uInnerLengthMultiplier = max(0, uInnerLengthMultiplier + (keyboard_check(ord("C")) - keyboard_check(ord("X"))) * .01);
 
 //------------------------------------------
 // INPUT MANAGER (GAME_MANAGER CONTROLLED)
@@ -122,9 +120,7 @@ process_grid_shake(fight_for_your_life);
 
 gem_shake(self);
 
-
 process_all_mega_blocks(self);
-
 
 if (!obj_game_manager.console_active)
 {
@@ -185,84 +181,84 @@ if (all_pops_finished() && !victory_state) {
 
 
 
-for (var i = 0; i < ds_list_size(global.pop_list); i++) {
-    var pop_data = ds_list_find_value(global.pop_list, i);
-		
-    // Wait for start_delay
-    if (pop_data.timer < pop_data.start_delay) {
-        pop_data.timer++;
-		combo_timer = 0;
-
-		var _x = pop_data.x;
-        var _y = pop_data.y;
-        var px = (_x * gem_size) + board_x_offset + offset;
-        var py = (_y * gem_size) + offset + global_y_offset;
-			
-		var _color = c_white;
-		if (variable_struct_exists(pop_data, "color"))
-		{
-			_color = pop_data.color;
-		}
-			
-		effect_create_depth(depth + 1, ef_smoke, px, py - 4, 2, _color);
-			
-    } else {
-        // Grow effect
-        pop_data.scale += 0.05;
-			
-			
-			
-        // Once scale >= 1.1, pop is done
-        if (pop_data.scale >= 1.1) {
-            var _x = pop_data.x;
-            var _y = pop_data.y;
-            var px = (_x * gem_size) + board_x_offset + offset;
-            var py = (_y * gem_size) + offset + global_y_offset;
-
-            // ✅ Store Gem Object Before Destroying
-			if (self.grid[_x, _y] == -1) return;
-			
-            
-            var gem = self.grid[_x, _y];
-    
-            if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2;
-
-            //Loop Through Multipliers
-            process_powerup(self, _x, _y, gem, total_multiplier_next);
-                
-            total_blocks_destroyed++;
-            
-            // **Destroy the block**
-            destroy_block(self, _x, _y);
-                
-            // **Create visual effect**
-            effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
-
-            var damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next;
-            
-            create_attack_projectile(px, py, pop_data.color, damage)
-
-            // ✅ Add accumulated match points to total_points
-            total_points += damage;
-                
-            var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
-            var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
-					
-            if !(game_over_state)
-            {
-                audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
-            }
-			 
-			// Remove from pop_list
-            ds_list_delete(global.pop_list, i);
-            i--; 
-            continue;
-        }
-    }
-	total_multiplier_next = 1;
-    // Write back updated pop_data
-    ds_list_replace(global.pop_list, i, pop_data);
-}
+//for (var i = 0; i < ds_list_size(global.pop_list); i++) {
+    //var pop_data = ds_list_find_value(global.pop_list, i);
+		//
+    //// Wait for start_delay
+    //if (pop_data.timer < pop_data.start_delay) {
+        //pop_data.timer++;
+		//combo_timer = 0;
+//
+		//var _x = pop_data.x;
+        //var _y = pop_data.y;
+        //var px = (_x * gem_size) + board_x_offset + offset;
+        //var py = (_y * gem_size) + offset + global_y_offset;
+			//
+		//var _color = c_white;
+		//if (variable_struct_exists(pop_data, "color"))
+		//{
+			//_color = pop_data.color;
+		//}
+			//
+		//effect_create_depth(depth + 1, ef_smoke, px, py - 4, 2, _color);
+			//
+    //} else {
+        //// Grow effect
+        //pop_data.scale += 0.05;
+			//
+			//
+			//
+        //// Once scale >= 1.1, pop is done
+        //if (pop_data.scale >= 1.1) {
+            //var _x = pop_data.x;
+            //var _y = pop_data.y;
+            //var px = (_x * gem_size) + board_x_offset + offset;
+            //var py = (_y * gem_size) + offset + global_y_offset;
+//
+            //// ✅ Store Gem Object Before Destroying
+			//if (self.grid[_x, _y] == -1) return;
+			//
+            //
+            //var gem = self.grid[_x, _y];
+    //
+            //if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2;
+//
+            ////Loop Through Multipliers
+            //process_powerup(self, _x, _y, gem, total_multiplier_next);
+                //
+            //total_blocks_destroyed++;
+            //
+            //// **Destroy the block**
+            //destroy_block(self, _x, _y);
+                //
+            //// **Create visual effect**
+            //effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
+//
+            //var damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next;
+            //
+            //create_attack_projectile(px, py, pop_data.color, damage)
+//
+            //// ✅ Add accumulated match points to total_points
+            //total_points += damage;
+                //
+            //var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
+            //var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
+					//
+            //if !(game_over_state)
+            //{
+                //audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
+            //}
+			 //
+			//// Remove from pop_list
+            //ds_list_delete(global.pop_list, i);
+            //i--; 
+            //continue;
+        //}
+    //}
+	//total_multiplier_next = 1;
+    //// Write back updated pop_data
+    //ds_list_replace(global.pop_list, i, pop_data);
+//}
 
 
 process_combo_timer_and_record_max(self);

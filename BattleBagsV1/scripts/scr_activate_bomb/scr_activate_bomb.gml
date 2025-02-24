@@ -19,6 +19,7 @@ function create_bomb_pop_info(_self, cell_x, cell_y, origin_x, origin_y, blocks_
          bomb_tracker: _bomb_tracker,               // Flag to mark this pop as bomb‐generated
          bomb_level: _bomb_level,
 		 img_number: _self.grid[cell_x, cell_y].img_number,
+        is_big: false,
     };
 }
 
@@ -110,6 +111,7 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
                                 bomb_tracker: false, // Flag to mark this pop as bomb‐generated
                                 bomb_level: 0,
                                 img_number: block.img_number,
+                                is_big: false,
                             };
                         
                             _self.grid[_i, _j].popping   = true;  // Start popping process

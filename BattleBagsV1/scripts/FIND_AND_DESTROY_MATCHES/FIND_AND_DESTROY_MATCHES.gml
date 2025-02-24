@@ -198,6 +198,7 @@ function find_and_destroy_matches(_self) {
 					                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 					                bomb_level: 0,
 									img_number: gem.img_number,
+                                    is_big: true,
 					            };
 							
 	                            _self.grid[_x, _y].popping   = true;  // Start popping process
@@ -235,6 +236,7 @@ function find_and_destroy_matches(_self) {
 	                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 	                bomb_level: 0,
 					img_number: gem.img_number,
+                    is_big: false,
 	            };
 
 	            _self.grid[i, j].popping   = true;
