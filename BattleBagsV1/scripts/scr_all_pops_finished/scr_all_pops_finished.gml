@@ -16,7 +16,6 @@ function all_pops_finished()
 	        var _y = pop_data.y;
 	        var px = (_x * gem_size) + board_x_offset + offset;
 	        var py = (_y * gem_size) + offset + global_y_offset;
-			
 			var _color = c_white;
 			if (variable_struct_exists(pop_data, "color"))
 			{
@@ -37,7 +36,7 @@ function all_pops_finished()
 	            var _y = pop_data.y;
 	            var px = (_x * gem_size) + board_x_offset + offset;
 	            var py = (_y * gem_size) + offset + global_y_offset;// + gem_y_offsets[_x, _y];
-
+                    
 	            // ✅ Store Gem Object Before Destroying
 				if (self.grid[_x, _y] != -1) && (pop_data != -1)
 				{
@@ -70,8 +69,7 @@ function all_pops_finished()
                         total_points += attack.damage;
                     }
                 else {
-                    destroy_block(self, _x, _y);
-                    self.grid[_x, _y] = create_block(pop_data.gem_type, POWERUP.NONE);
+                    //destroy_block(self, _x, _y);
                 }
 					
                     // **Create visual effect**
@@ -90,6 +88,7 @@ function all_pops_finished()
 	    }
 		total_multiplier_next = 1;
 	    // Write back updated pop_data
+
 	    ds_list_replace(global.pop_list, i, pop_data);
 		
 		
