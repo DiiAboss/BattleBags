@@ -7,7 +7,7 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
     //Grid behavior depends on the cell size and these parameters
     //Grid can become unstable when they are set improperly
     
-    sz = 64;         //grid cell size in pixels
+    sz = cell_size;         //grid cell size in pixels
     distance = 100;  //how far grid nodes will be affected        (IMPORTANT FOR ALL EFFECTS !!!)
     effect = 0;      //what force effect shoud be used 0-2
     force = 20;      //how strong effect will be                  (IMPORTANT FOR ALL EFFECTS !!!)
@@ -71,11 +71,9 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
         
         if(inp_act)
         {    
-            explode_grid(_hover_x, _hover_y, 128, 16);
+            explode_grid(_hover_x, _hover_y, 64, 8);
         }
-        else {
-            push_down_grid(_hover_x, _hover_y, 128, 16);
-        }
+
         //update all springs between nodes
         count = 0;
         tsize = size * 0.95;
@@ -190,7 +188,7 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
         var col = draw_get_color();
         
         //draw_set_color(c_white);
-        draw_set_alpha(0.25);
+        draw_set_alpha(0.1);
         
         count = 0;
         
@@ -206,7 +204,7 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
             {
             var countp = count+1;   
             dst = point_distance(px, py, nodes[countp, 3], nodes[countp, 4]);
-            draw_set_alpha(0.3 + 0.7 * abs(1-dst/size));
+            draw_set_alpha(0.2 + 0.1 * abs(1-dst/size));
             draw_line(px, py + _self.global_y_offset, nodes[countp, 3], nodes[countp, 4] + _self.global_y_offset);
             
             if(j<nodesy-1)
@@ -228,7 +226,7 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
             {
             var countp = count+nodesx;    
             dst = point_distance(px, py, nodes[countp, 3], nodes[countp, 4]);
-            draw_set_alpha(0.3 + 0.7 * abs(1-dst/size));
+            draw_set_alpha(0.1 + 0.1 * abs(1-dst/size));
             draw_line(px, py, nodes[countp, 3], nodes[countp, 4]);
             
             if(i<nodesx-1)
