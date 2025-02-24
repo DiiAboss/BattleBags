@@ -22,7 +22,7 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
         draw_set_alpha(1);
     
         // ✅ Draw "You Lose" Title
-        draw_set_font(fnt_heading1);
+        //draw_set_font(fnt_heading1);
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         draw_set_color(c_white);
@@ -70,13 +70,13 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
         
     
         // ✅ Draw "You Lose" Title
-        draw_set_font(f_b_font);
+        draw_set_font(fnt_heading1);
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         draw_set_color(c_white);
         draw_text(game_over_ui_x + game_over_ui_width / 2, game_over_ui_y + 600, "VICTORY");
         draw_set_alpha(1);
-        draw_set_font(fnt_basic);  
+        //draw_set_font(fnt_basic);  
     }
     
 }
@@ -494,7 +494,7 @@ if (combo > 1) { // Only show if at least 2 matches have happened
 	draw_text_color(px + irandom_range(-1, 1), py + irandom_range(-1, 1), string(combo) + "x!", c_yellow, c_yellow, c_white, c_white, 1);
 	//draw_text(px, py, string(combo) + "x!");
 			
-	draw_set_font(fnt_basic);
+	//draw_set_font(fnt_basic);
 	draw_set_halign(fa_left);
 }
     
@@ -605,7 +605,7 @@ if (global.paused) || after_menu_counter != after_menu_counter_max && !instance_
         draw_set_font(fnt_textFont)
         draw_text(room_width / 2, room_height / 2, "PAUSED\nPress P to Resume");
     }
-	 draw_set_font(fnt_basic); // ✅ Use the specified font
+	 draw_set_font(fnt_heading1); // ✅ Use the specified font
     draw_set_halign(fa_left);
 }
     
