@@ -124,6 +124,7 @@
     {"name":"ENEMY","order":8,"path":"scripts/ENEMY/ENEMY.yy",},
     {"name":"FIND_AND_DESTROY_MATCHES","order":7,"path":"scripts/FIND_AND_DESTROY_MATCHES/FIND_AND_DESTROY_MATCHES.yy",},
     {"name":"FIND_AND_DESTROY_MP","order":2,"path":"scripts/FIND_AND_DESTROY_MP/FIND_AND_DESTROY_MP.yy",},
+    {"name":"GEOGRID","order":27,"path":"scripts/GEOGRID/GEOGRID.yy",},
     {"name":"GET_LOBBY_CODE","order":8,"path":"scripts/GET_LOBBY_CODE/GET_LOBBY_CODE.yy",},
     {"name":"GLOBAL_SHAPE_TEMPLATES","order":3,"path":"scripts/GLOBAL_SHAPE_TEMPLATES/GLOBAL_SHAPE_TEMPLATES.yy",},
     {"name":"GRID_SHAKE","order":5,"path":"scripts/GRID_SHAKE/GRID_SHAKE.yy",},

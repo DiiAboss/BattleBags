@@ -1,6 +1,18 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
+if (keyboard_check_pressed(vk_tab))
+{
+    if (effect < 3)
+    {
+        effect++;
+    }
+    else {
+        effect = 0;
+    }
+}
+
+
 //// Horizontal pass
 
 if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) { 
@@ -119,7 +131,9 @@ else
     surface_set_target(surBase);
         draw_clear(c_black);
         
-        
+    
+    
+    
         for (var i = 0; i < width; i++)
         {
             // 🔹 Now loop through grid to draw blocks
@@ -166,12 +180,15 @@ else
         
         gpu_set_blendmode(bm_normal); 
     
-
     draw_set_alpha(0.75);
     draw_rectangle_color(board_x_offset, view_diff - thickness, 
                             board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, c_black, c_black, c_black, c_black, false);
     draw_set_alpha(1);
     
+    
+        draw_set_color(c_lime);
+    geogrid.geogrid_draw(self);
+    draw_set_color(c_white);
 
     
     //----------------------------------------------------------------
@@ -707,3 +724,4 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
     }
     
 }
+

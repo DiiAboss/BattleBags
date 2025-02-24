@@ -318,3 +318,8 @@ other_font   = f_b_font;
 
 stats_font   = fnt_basic;
 default_font = fnt_basic;
+
+
+
+var geo_size = board_width * gem_size + 128;
+geogrid = new geowars_grid(board_x_offset, 256, geo_size, room_height, 128);

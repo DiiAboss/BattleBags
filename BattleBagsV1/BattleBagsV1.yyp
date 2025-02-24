@@ -166,6 +166,7 @@
     {"id":{"name":"FIND_AND_DESTROY_MATCHES","path":"scripts/FIND_AND_DESTROY_MATCHES/FIND_AND_DESTROY_MATCHES.yy",},},
     {"id":{"name":"FIND_AND_DESTROY_MP","path":"scripts/FIND_AND_DESTROY_MP/FIND_AND_DESTROY_MP.yy",},},
     {"id":{"name":"FONT_SCRIPTS","path":"scripts/FONT_SCRIPTS/FONT_SCRIPTS.yy",},},
+    {"id":{"name":"GEOGRID","path":"scripts/GEOGRID/GEOGRID.yy",},},
     {"id":{"name":"GET_LOBBY_CODE","path":"scripts/GET_LOBBY_CODE/GET_LOBBY_CODE.yy",},},
     {"id":{"name":"GLOBAL_SHAPE_TEMPLATES","path":"scripts/GLOBAL_SHAPE_TEMPLATES/GLOBAL_SHAPE_TEMPLATES.yy",},},
     {"id":{"name":"GRID_SHAKE","path":"scripts/GRID_SHAKE/GRID_SHAKE.yy",},},
