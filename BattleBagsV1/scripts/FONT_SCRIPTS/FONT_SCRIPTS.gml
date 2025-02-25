@@ -1,4 +1,4 @@
-function draw_gui_neon_shader_stats(_self, _x = 10, _y = 10)
+function draw_gui_neon_shader_stats(_self, _x = room_width/2, _y = room_height/2+100)
 {
     var outer_intensity = _self.uOuterIntensity;
     var inner_intensity = _self.uInnerIntensity;
@@ -8,10 +8,14 @@ function draw_gui_neon_shader_stats(_self, _x = 10, _y = 10)
     
     draw_set_font(stat_font);
     draw_set_color(c_lime);
-    draw_text(_x, _y, "FPS: " + string(fps_real) +
-                    "\nGlow intensity (Q/W): " + string(outer_intensity) +
-                    "\nInner glow intensity (A/S): " + string(inner_intensity) + 
-                    "\nInner glow falloff (X/C): " + string(inner_multiplier));
+    //draw_text(_x, _y, "FPS: " + string(fps_real) +
+                    //"\nGlow intensity (Q/W): " + string(outer_intensity) +
+                    //"\nInner glow intensity (A/S): " + string(inner_intensity) + 
+                    //"\nInner glow falloff (X/C): " + string(inner_multiplier));
+    draw_text_transformed(_x, _y, "FPS: " + string(fps_real) +
+                        "\nGlow intensity (Q/W): " + string(outer_intensity) +
+                        "\nInner glow intensity (A/S): " + string(inner_intensity) + 
+                        "\nInner glow falloff (X/C): " + string(inner_multiplier), 2, 2, 0);
     draw_set_color(c_white);  
     draw_set_font(default_font);
 }
