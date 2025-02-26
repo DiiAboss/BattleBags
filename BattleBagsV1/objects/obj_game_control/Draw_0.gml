@@ -1,16 +1,7 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
-if (keyboard_check_pressed(vk_tab))
-{
-    if (effect < 3)
-    {
-        effect++;
-    }
-    else {
-        effect = 0;
-    }
-}
+
 
 
 //// Horizontal pass
