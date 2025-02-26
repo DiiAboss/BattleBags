@@ -5,6 +5,9 @@ if !(obj_game_control.game_over_state)
 	draw_sprite(my_sprite, 0, x, y);
 }
 
+
+
+
 var hp_bar_width = 256;
 var hp_bar_height = 16;
 var draw_hp_x = x - (hp_bar_width * 0.5);
@@ -27,21 +30,7 @@ for (var s = 0; s < shield_amount; s++)
 draw_text(x, y - 100, "ATTACK_QUEUE" + string(attack_timer));
 draw_text(x, y - 140, "QUEUED_ATTACK_QUEUE" + string(queued_attack_timer));
 
-///// ✅ Draw Damage Indicator
-//if (damage_timer > 0) {
-    //draw_text(x - 64, y - 244, string(total_damage));
-//}
-//
-///// ✅ Draw Enemy Stats
-//draw_text(x - 64, y - 228, string(hp) + " / " + string(max_hp));
-//draw_text(x - 64, y - 196, string(attack_timer) + " / " + string(max_attack_timer));
-//draw_text(x - 64, y - 260, "Total Attacks: " + string(total_attacks));
-//draw_text(x - 64, y - 280, "Attacks Until Special: " + string(total_attacks % attacks_until_special_attack));
-//draw_text(x - 64, y - 300, "Attack Timer Increase: " + string(global.enemy_timer_game_speed * (global.gameSpeed / obj_game_control.game_speed_default)));
-//
-    //var health_percentage = (hp / max_hp);
-    //draw_rectangle(x - 196, y - 196, x - 196 + (392 * health_percentage), y - 164, false);
-//
+
 /// ✅ Draw Attack Preview Above Enemy
 var preview_x = x - (8 * 4); // Center preview above enemy
 var preview_y = y - (32 * 4); // Space above enemy
