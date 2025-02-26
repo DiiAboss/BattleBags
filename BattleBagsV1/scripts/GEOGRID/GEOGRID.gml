@@ -204,7 +204,8 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
             {
             var countp = count+1;   
             dst = point_distance(px, py, nodes[countp, 3], nodes[countp, 4]);
-            draw_set_alpha(0.2 + 0.1 * abs(1-dst/size));
+            //draw_set_alpha(0.2 + 0.1 * abs(1-dst/size));
+                draw_set_alpha(0.25);
             draw_line(px, py + _self.global_y_offset, nodes[countp, 3], nodes[countp, 4] + _self.global_y_offset);
             
             if(j<nodesy-1)
@@ -226,7 +227,8 @@ function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height,
             {
             var countp = count+nodesx;    
             dst = point_distance(px, py, nodes[countp, 3], nodes[countp, 4]);
-            draw_set_alpha(0.1 + 0.1 * abs(1-dst/size));
+            //draw_set_alpha(0.1 + 0.1 * abs(1-dst/size));
+                draw_set_alpha(0.25);
             draw_line(px, py, nodes[countp, 3], nodes[countp, 4]);
             
             if(i<nodesx-1)
