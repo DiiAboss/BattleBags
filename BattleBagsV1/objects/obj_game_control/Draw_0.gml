@@ -401,7 +401,7 @@ for (var i = 0; i < width; i++) {
         if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
             var hover_gem = grid[hover_i, hover_j];
     		var rect_x1 = board_x_offset + (hover_i * gem_size);
-            var rect_y1 = (hover_j * gem_size) + global_y_offset;
+            var rect_y1 = (hover_j * gem_size) + global_y_offset + hover_gem.offset_y;
             var rect_x2 = rect_x1 + gem_size;
             var rect_y2 = rect_y1 + gem_size;
     		var scale = 1.1;
@@ -434,7 +434,7 @@ for (var i = 0; i < width; i++) {
     		
             if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
                 var rect_x1 = board_x_offset + (hover_i * gem_size);
-                var rect_y1 = (hover_j * gem_size) + global_y_offset;
+                var rect_y1 = (hover_j * gem_size) + global_y_offset + hover_gem.offset_y + hover_gem.draw_y;
                 var rect_x2 = rect_x1 + gem_size;
                 var rect_y2 = rect_y1 + gem_size;
     
