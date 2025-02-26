@@ -112,6 +112,7 @@ if (input.InputType == INPUT.GAMEPAD)
     hover_y = last_position[1];
 }
 
+
 //----------------------------------------------------------
 // GRID SHAKE and GEM SHAKE
 //-----------------------------------------------------------
@@ -132,8 +133,6 @@ process_swap(self, swap_info);
 // ------------------------------------------------------
 // SMOOTH UPWARD MOVEMENT + SHIFT
 // ------------------------------------------------------
-
-
 global_y_offset -= shift_speed;
 
 if (global_y_offset <= -gem_size) {
@@ -183,10 +182,9 @@ process_combo_timer_and_record_max(self);
 
 update_freeze_timer(self);
 
-find_all_puzzle_matches(self);	
+find_all_puzzle_matches(self);
 
 fight_for_your_life = process_fight_for_your_life(self, top_playable_row + 1);
-
 
 
 if (fight_for_your_life)

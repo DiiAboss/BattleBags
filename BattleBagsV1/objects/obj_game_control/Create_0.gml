@@ -302,19 +302,23 @@ victory_countdown = victory_max_countdown;
 draw_victory_row = board_height;
 
 
+//--------------------------------------------
+//  SURFACES AND AFTEREFFECTS
+//--------------------------------------------
+
+
 surBase = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 surPass = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 
+// Neon Glow Effects
 uOuterIntensity = 1.6;
 uInnerIntensity = 2.125;
 uInnerLengthMultiplier = 12;
 
-//Shader uniforms
+// Shader uniforms
 u_vector = shader_get_uniform(shd_blur_horizontal, "u_vector");
 u_texel = shader_get_uniform(shd_blur_horizontal, "u_texel");
 
-//Draw application surface with shader
-//application_surface_draw_enable(false);
 
 
 //-----------------------------------------------------------

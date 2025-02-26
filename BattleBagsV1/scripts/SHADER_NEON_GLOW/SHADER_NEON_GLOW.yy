@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SHADER_NEON_GLOW",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SHADER_NEON_GLOW",
+  "parent":{
+    "name":"SHADERS",
+    "path":"folders/Scripts/SHADERS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

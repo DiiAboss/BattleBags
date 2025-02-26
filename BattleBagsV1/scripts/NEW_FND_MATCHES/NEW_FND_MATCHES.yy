@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"NEW_FND_MATCHES",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"NEW_FND_MATCHES",
+  "parent":{
+    "name":"MATCHES",
+    "path":"folders/Scripts/MAIN/BOARD/MATCHES.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
