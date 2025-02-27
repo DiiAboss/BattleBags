@@ -143,36 +143,6 @@ function update_mega_blocks(_self, _list) {
 
                     // ✅ Transform each piece individually into a new random block
                     _self.grid[block_x, block_y] = create_block(BLOCK.RANDOM);
-
-                    //// ✅ Add to pop list (fixed version)
-                    //var pop_info = {
-                        //x: block_x,
-                        //y: block_y,
-                        //gem_type: BLOCK.RANDOM,
-                        //timer: 0,
-                        //start_delay: 5, // 🔥 Give a small delay so we see the effect
-                        //scale: 1.0,
-                        //popping: true,
-                        //powerup: -1,
-                        //dir: 0,
-                        //offset_x: 0,
-                        //offset_y: 0,
-                        //color: c_red, // 🔥 Make sure we mark them correctly
-                        //y_offset_global: _self.global_y_offset,
-                        //match_size: 1,
-                        //match_points: 10, // Placeholder, adjust as needed
-                        //bomb_tracker: false,
-                        //bomb_level: 0,
-                        //img_number: -1,
-                        //is_big: true,
-                    //};
-//
-                    //ds_list_add(global.pop_list, pop_info);
-                    //
-                    //// 🔥 **Create a pop effect**
-                    //var draw_x = (block_x * 64) + _self.board_x_offset + 32;
-                    //var draw_y = (block_y * 64) + _self.global_y_offset + 32;
-                    //effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
                 }
             }
         }
@@ -221,7 +191,6 @@ function process_mega_blocks(_self, _x, _y) {
                         var popping_found = (target_block.popping);
 						
 						
-						
                         var draw_x = (dx * gem_size) + board_x_offset + offset + gem.offset_x;
                         var draw_y = (dy * gem_size) + global_y_offset + offset + gem.offset_y;
 						
@@ -236,8 +205,8 @@ function process_mega_blocks(_self, _x, _y) {
 					                    var block_y = parent_y + by;
                                         var _start_delay = 10;
                                         var dist = 20 * (clamp(point_distance(block_x, block_y, room_width, room_height) / distance_to_point(room_width, room_height), 0, 1));
-					                    // ✅ Transform each piece individually into a new random block
-
+					                    
+                                        // ✅ Transform each piece individually into a new random block
                                         _self.grid[block_x, block_y] = create_block(BLOCK.RANDOM);
                                         
                                         
@@ -260,7 +229,7 @@ function process_mega_blocks(_self, _x, _y) {
 					                        match_points: 10, // Placeholder, adjust as needed
 					                        bomb_tracker: false,
 					                        bomb_level: 0,
-					                        img_number: -1,
+					                        img_number: _self.grid[block_x, block_y].img_number,
                                             is_big: true,
 					                    };
 
@@ -283,6 +252,31 @@ function process_mega_blocks(_self, _x, _y) {
 	}
 }
 
+function create_pop_data()
+{
+    var pop_info = 
+    {
+        x: -1,
+        y: -1,
+        gem_type:       BLOCK.NONE,
+        timer:          0,
+        start_delay:    -1,
+        scale:          1,
+        popping:        false,
+        powerup:        POWERUP.NONE,
+        dir:            0,
+        offset_x:       0,
+        offset_y:       0,
+        color:          c_white,
+        y_offset_global: -1,
+        match_size:     1,
+        match_points:   10, // Placeholder, adjust as needed
+        bomb_tracker:   false,
+        bomb_level:     0,
+        img_number:     -1,
+        is_big:         true, 
+    }
+}
 
 function debug_draw_mega_block_checks(_self, _x, _y) {
     var gem_size = 64; // Grid size

@@ -1,15 +1,19 @@
-image_speed = 0.1;
-
 randomize();
 
+image_speed = 0.1;
 image_alpha = 0.75;
+depth = -1;
 
+//--------------------------------------------------
+// Positioning Cursor
+//--------------------------------------------------
 selected_piece = [-1, -1];
 hovered_block = [-1, -1];
 
-depth = -1;
-//mega_blocks = ds_list_create();
-
+//--------------------------------------------------
+// Player Stats
+//--------------------------------------------------
+global.gold       = 0;
 luck              = 0;
 damage_mod        = 0;
 health_pickup_mod = 0;
@@ -18,22 +22,27 @@ exp_pick_mod      = 0;
 crit_chance_mod   = 0;
 crit_multi_mod    = 0;
 
-global.gold = 0;
-
-// these will be bound to keyboard keys and right clicks
-skills = [0,0,0,0];
-
-current_skill = 0;
 
 total_blocks_destroyed = 0;
 total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
 
-control_mode = "modern";
 
+// these will be bound to keyboard keys and right clicks
+skills = [0,0,0,0];
+current_skill = 0;
+
+//----------------------------------------------------
+// Controls
+//----------------------------------------------------
+control_mode = "modern";
 iType = "click_and_drag";
 
+
+//----------------------------------------------------
+// Board Creation
+//----------------------------------------------------
 big_block_enabled = true;
 
 spawn_rows   = 6; // Number of initial rows to spawn
@@ -46,7 +55,7 @@ board_height = 24;
 top_playable_row    = 4;
 bottom_playable_row = 20;
 
-self.match_list = ds_list_create(); // Stores matches before popping
+//self.match_list = ds_list_create(); // Stores matches before popping
 // ------------------------------------------------------
 // MUSIC
 // ------------------------------------------------------
@@ -293,19 +302,23 @@ victory_countdown = victory_max_countdown;
 draw_victory_row = board_height;
 
 
+//--------------------------------------------
+//  SURFACES AND AFTEREFFECTS
+//--------------------------------------------
+
+
 surBase = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 surPass = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 
+// Neon Glow Effects
 uOuterIntensity = 1.6;
 uInnerIntensity = 2.125;
 uInnerLengthMultiplier = 12;
 
-//Shader uniforms
+// Shader uniforms
 u_vector = shader_get_uniform(shd_blur_horizontal, "u_vector");
 u_texel = shader_get_uniform(shd_blur_horizontal, "u_texel");
 
-//Draw application surface with shader
-//application_surface_draw_enable(false);
 
 
 //-----------------------------------------------------------
