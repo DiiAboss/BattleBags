@@ -9,3 +9,9 @@ menu_y_start = room_height / 2 - (menu_spacing * (array_length(menu_options) / 2
 
 input_delay = 0;
 max_input_delay = 10;
+
+//testing sequence
+var testSeq = sq_title_card;
+var seqTestLayer = "Instances";
+
+layer_sequence_create(seqTestLayer, room_width/2, room_height/2, testSeq);
