@@ -57,5 +57,5 @@ if (is_array(enemy_attack_preview)) {
  animate_attack_targets(self, "SLIME"); // ✅ Show animation first
 
 
-
+instance_create_depth(x, y, depth - 1, obj_conveyor_belt);
 
