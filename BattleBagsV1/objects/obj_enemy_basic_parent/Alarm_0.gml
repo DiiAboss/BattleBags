@@ -8,4 +8,3 @@ if (self.pending_attack == "SLIME") {
     execute_attack_on_targets(self, "SLIME"); // ✅ Now safely executes the attack
     self.pending_attack = ""; // ✅ Reset after execution
 }
-

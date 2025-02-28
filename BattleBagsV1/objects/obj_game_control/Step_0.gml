@@ -112,7 +112,6 @@ if (input.InputType == INPUT.GAMEPAD)
     hover_y = last_position[1];
 }
 
-
 //----------------------------------------------------------
 // GRID SHAKE and GEM SHAKE
 //-----------------------------------------------------------
@@ -176,7 +175,6 @@ if (all_pops_finished() && !victory_state) {
         }
 	}	
 }
-
 
 process_combo_timer_and_record_max(self);
 
