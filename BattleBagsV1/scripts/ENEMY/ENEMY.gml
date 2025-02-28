@@ -166,3 +166,203 @@ function check_if_enemy_defeated(_self) {
         enemy_defeated(_self, obj_game_control);
     }
 }
+
+/// @function initialize_attack_previews
+/// @description Pre-generates visual previews for all attack types
+function initialize_attack_previews() {
+    // Cache the special attack icons
+    ds_map_add(attack_preview_cache, "FREEZE", { 
+        sprite: spr_gameOver, 
+        attack_type: ENEMY_ATTACK_TYPE.FREEZE 
+    });
+    
+    ds_map_add(attack_preview_cache, "SLIME", { 
+        sprite: spr_gameOver, 
+        attack_type: ENEMY_ATTACK_TYPE.SLIME 
+    });
+    
+    ds_map_add(attack_preview_cache, "BLOCK", { 
+        sprite: spr_gameOver, 
+        attack_type: ENEMY_ATTACK_TYPE.BLOCK 
+    });
+    
+    // For shape-based attacks, we'll generate previews from templates
+    var shape_names = ds_map_keys_to_array(global.shape_templates);
+    for (var i = 0; i < array_length(shape_names); i++) {
+        var shape_name = shape_names[i];
+        // Skip special attacks we've already handled
+        if (shape_name != "FREEZE" && shape_name != "SLIME" && shape_name != "BLOCK") {
+            ds_map_add(attack_preview_cache, shape_name, {
+                shape_template: ds_map_find_value(global.shape_templates, shape_name),
+                attack_type: ENEMY_ATTACK_TYPE.BASIC
+            });
+        }
+    }
+}
+
+/// @function sync_with_global_queue
+/// @description Ensures conveyor visually represents the global attack queue
+function sync_with_global_queue() {
+    // If global queue is empty but conveyor isn't, don't do anything
+    if (ds_list_size(global.enemy_attack_queue) == 0 && ds_list_size(conveyor_attacks) > 0) {
+        return;
+    }
+    
+    // Add new attacks from global queue to conveyor
+    var attacks_to_add = min(
+        ds_list_size(global.enemy_attack_queue) - ds_list_size(conveyor_attacks),
+        max_visible_attacks - ds_list_size(conveyor_attacks)
+    );
+    
+    if (attacks_to_add > 0) {
+        for (var i = 0; i < attacks_to_add; i++) {
+            var queue_index = ds_list_size(conveyor_attacks);
+            if (queue_index < ds_list_size(global.enemy_attack_queue)) {
+                var attack_name = global.enemy_attack_queue[| queue_index];
+                add_attack_to_conveyor(attack_name);
+            }
+        }
+    }
+}
+
+/// @function add_attack_to_conveyor
+/// @description Adds a new attack to the conveyor belt
+/// @param {string} attack_name - The name of the attack to add
+function add_attack_to_conveyor(attack_name) {
+    // Create attack data structure
+    var attack_data = {
+        attack_name: attack_name,
+        y_pos: conveyor_start_y,
+        lane: irandom(lane_count - 1),  // Random lane placement
+        preview_data: ds_map_find_value(attack_preview_cache, attack_name)
+    };
+    
+    // Add to conveyor list
+    ds_list_add(conveyor_attacks, attack_data);
+    
+    return attack_data;
+}
+
+/// @function draw_attack_on_conveyor
+/// @description Draws an attack preview at the specified position
+/// @param {real} x_pos - The x position to draw at
+/// @param {real} y_pos - The y position to draw at
+/// @param {struct} attack_data - The attack data structure
+function draw_attack_on_conveyor(x_pos, y_pos, attack_data) {
+    var preview = attack_data.preview_data;
+    
+    // Background for the attack
+    var bg_color;
+    
+    switch (preview.attack_type) {
+        case ENEMY_ATTACK_TYPE.FREEZE:
+            bg_color = c_aqua;
+            draw_sprite(preview.sprite, 0, x_pos, y_pos);
+            break;
+            
+        case ENEMY_ATTACK_TYPE.SLIME:
+            bg_color = c_lime;
+            draw_sprite(preview.sprite, 0, x_pos, y_pos);
+            break;
+            
+        case ENEMY_ATTACK_TYPE.BLOCK:
+            bg_color = c_orange;
+            draw_sprite(preview.sprite, 0, x_pos, y_pos);
+            break;
+            
+        case ENEMY_ATTACK_TYPE.SPECIAL:
+            bg_color = c_purple;
+            draw_shape_preview(x_pos, y_pos, preview.shape_template);
+            break;
+            
+        default: // Basic attacks
+            bg_color = c_gray;
+            draw_shape_preview(x_pos, y_pos, preview.shape_template);
+            break;
+    }
+    
+    // Draw background glow based on attack type
+    draw_set_alpha(0.3);
+    draw_circle_color(x_pos, y_pos, 36, bg_color, c_black, false);
+    draw_set_alpha(1.0);
+}
+
+/// @function draw_shape_preview
+/// @description Draws a shape preview for block-based attacks
+/// @param {real} x_pos - Center X position to draw at
+/// @param {real} y_pos - Center Y position to draw at
+/// @param {array} shape_template - The shape template array
+function draw_shape_preview(x_pos, y_pos, shape_template) {
+    if (!is_array(shape_template)) return;
+    
+    var rows = array_length(shape_template);
+    var cols = (rows > 0) ? array_length(shape_template[0]) : 0;
+    
+    // Size for preview blocks
+    var block_size = 16;
+    
+    // Calculate the total dimensions
+    var total_width = cols * block_size;
+    var total_height = rows * block_size;
+    
+    // Draw each block in the preview
+    for (var row = 0; row < rows; row++) {
+        for (var col = 0; col < cols; col++) {
+            var block_type = shape_template[row][col];
+            if (block_type != BLOCK.NONE) {
+                var draw_x = x_pos - (total_width / 2) + (col * block_size) + (block_size / 2);
+                var draw_y = y_pos - (total_height / 2) + (row * block_size) + (block_size / 2);
+                
+                // Draw block preview
+                draw_sprite(spr_enemy_attack_preview, block_type, draw_x, draw_y);
+            }
+        }
+    }
+}
+
+/// @function trigger_attack_execution
+/// @description Executes an attack when it reaches the activation point
+/// @param {string} attack_name - The name of the attack to execute
+function trigger_attack_execution(attack_name) {
+    // Only execute if it's still in the global queue
+    var queue_pos = ds_list_find_index(global.enemy_attack_queue, attack_name);
+    if (queue_pos != -1) {
+        // Different execution based on attack type
+        switch (attack_name) {
+            case "FREEZE":
+                with (obj_enemy_basic_parent) {
+                    if (pending_attack == "") {
+                        pending_attack = "FREEZE";
+                        select_attack_targets(self, "FREEZE");
+                        alarm[0] = 1;  // Execute immediately
+                    }
+                }
+                break;
+                
+            case "SLIME":
+                with (obj_enemy_basic_parent) {
+                    if (pending_attack == "") {
+                        pending_attack = "SLIME";
+                        select_attack_targets(self, "SLIME");
+                        alarm[0] = 1;  // Execute immediately
+                    }
+                }
+                break;
+                
+            case "BLOCK":
+                spawn_mega_block(obj_game_control, irandom_range(0, 5), 2, "block_1x3");
+                break;
+                
+            default:
+                // For normal shape attacks
+                toss_down_shape(obj_game_control, attack_name, true);
+                break;
+        }
+        
+        // Remove from global queue
+        ds_list_delete(global.enemy_attack_queue, queue_pos);
+        
+        // Create execution effect at the activation line
+        //instance_create_layer(x, conveyor_activation_y, "Effects", obj_attack_effect);
+    }
+}
