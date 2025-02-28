@@ -2,13 +2,13 @@ randomize();
 
 image_speed = 0.1;
 image_alpha = 0.75;
-depth = -1;
+depth       = -1;
 
 //--------------------------------------------------
 // Positioning Cursor
 //--------------------------------------------------
 selected_piece = [-1, -1];
-hovered_block = [-1, -1];
+hovered_block  = [-1, -1];
 
 //--------------------------------------------------
 // Player Stats
@@ -29,7 +29,7 @@ highest_max_combo      = 0;
 total_damage_dealt     = 0;
 
 
-// these will be bound to keyboard keys and right clicks
+// These will be bound to keyboard keys and right clicks
 skills = [0,0,0,0];
 current_skill = 0;
 
@@ -55,7 +55,7 @@ board_height = 24;
 top_playable_row    = 4;
 bottom_playable_row = 20;
 
-//self.match_list = ds_list_create(); // Stores matches before popping
+
 // ------------------------------------------------------
 // MUSIC
 // ------------------------------------------------------
@@ -135,7 +135,6 @@ total_matches = 0;
 total_time = 0;
 time_in_seconds = total_time * _FPS;
 
-
 time_in_minutes = floor(time_in_seconds / 60);
 
 draw_time = string(time_in_minutes) + ":" + string(floor(time_in_seconds % 60));
@@ -167,15 +166,15 @@ global.grid_shake_amount = 0; // Grid shake intensity
 // ------------------------------------------------------
 global_shape_function_init();
 
-combo_timer		 = 0;
-max_combo_timer  = 60; // Half a second of grace
+combo_timer     = 0;
+max_combo_timer = 60; // Half a second of grace
 
 // ✅ Initialize Global Upgrade System
 
-global.upgrades_list     = ds_list_create(); // Stores all upgrades
-global.selected_upgrades = array_create(3, -1); // Stores 3 upgrades per level-up
-global.target_level		 = 0; // Tracks pending level-ups
-global.in_upgrade_menu	 = false; // Tracks if menu is open
+global.upgrades_list     = ds_list_create();     // Stores all upgrades
+global.selected_upgrades = array_create(3, -1);  // Stores 3 upgrades per level-up
+global.target_level		 = 0;                    // Tracks pending level-ups
+global.in_upgrade_menu	 = false;                // Tracks if menu is open
 
 // ✅ Populate the upgrade list
 generate_all_upgrades();
@@ -205,21 +204,20 @@ board_x_offset = 128;
 max_shake_timer = 30;
 
 global.topmost_row = height - 1;
-global.pop_list = ds_list_create();
+global.pop_list    = ds_list_create();
 
 global.lastSwapX = -1;
 global.lastSwapY = -1;
-player_level = 0;
-combo = 0;
+player_level     = 0;
+combo            = 0;
 numberOfGemTypes = 8;
-darken_alpha = 0;
+darken_alpha     = 0;
 
-gem_size = 64;
-offset = gem_size * 0.5;
+gem_size        = 64;
+offset          = gem_size * 0.5;
 global_y_offset = 0;
 
 total_multiplier_next = 1;
-
 
 global.in_upgrade_menu = false;
 
@@ -251,25 +249,24 @@ hover_y = 0;
 // ------------------------------------------------------
 // Game Over UI
 // ------------------------------------------------------
-game_over_state = false;
-game_over_timer = 0;
-game_over_pop_delay = 20; // Starts slow
-game_over_popping = ds_list_create(); // Stores all blocks to pop in order
+game_over_state      = false;
+game_over_timer      = 0;
+game_over_pop_delay  = 20; // Starts slow
+game_over_popping    = ds_list_create(); // Stores all blocks to pop in order
 
 // ✅ Game Over UI
-game_over_ui_x = 128; // Left side panel width
-game_over_ui_y = 128;
-game_over_ui_width = 400;
-game_over_ui_height = room_height;
+game_over_ui_x       = 128; // Left side panel width
+game_over_ui_y       = 128;
+game_over_ui_width   = 400;
+game_over_ui_height  = room_height;
 
 game_over_option_selected = 0; // -1 = None, 0 = Restart, 1 = Main Menu
-game_over_show_options = false; // Will show after all blocks are popped
+game_over_show_options    = false; // Will show after all blocks are popped
 
 game_over_blocks_popped = 0;
 
-inputDelay = 10;
-devices = [];
-
+inputDelay   = 10;
+devices      = [];
 
 enemy_control = instance_create_depth(x, y, depth, obj_enemy_control);
 is_targeting_enemy = true;
@@ -289,36 +286,33 @@ cp_per_match_plus = 3;
 cp_per_big_block  = 3;
 cp_per_combo      = 1;
 
-meteor_block = -1;
-
+meteor_block      = -1;
 
 block_colors_destroyed = array_create(numberOfGemTypes, -1); //to show how much b
 
-victory_state = false;
-victory_alpha = 0;
+victory_state         = false;
+victory_alpha         = 0;
 victory_max_countdown = 120;
-victory_countdown = victory_max_countdown;
+victory_countdown     = victory_max_countdown;
 
-draw_victory_row = board_height;
+draw_victory_row      = board_height;
 
 
 //--------------------------------------------
 //  SURFACES AND AFTEREFFECTS
 //--------------------------------------------
 
-
 surBase = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 surPass = surface_create(surface_get_width(application_surface), surface_get_height(application_surface) + 256);
 
 // Neon Glow Effects
-uOuterIntensity = 1.6;
-uInnerIntensity = 2.125;
+uOuterIntensity        = 1.6;
+uInnerIntensity        = 2.125;
 uInnerLengthMultiplier = 12;
 
 // Shader uniforms
 u_vector = shader_get_uniform(shd_blur_horizontal, "u_vector");
-u_texel = shader_get_uniform(shd_blur_horizontal, "u_texel");
-
+u_texel  = shader_get_uniform(shd_blur_horizontal, "u_texel");
 
 
 //-----------------------------------------------------------

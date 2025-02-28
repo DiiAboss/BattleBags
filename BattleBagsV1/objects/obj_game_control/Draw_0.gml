@@ -2,10 +2,7 @@
 input = obj_game_manager.input;
 
 
-
-
 //// Horizontal pass
-
 if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) { 
     
     if (game_over_state)
@@ -60,7 +57,6 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
             var mmenu_y = menu_y + button_height / 2;
             var mmenu_str = "MAIN MENU";
             
-            //draw_rectangle(menu_x, menu_y, menu_x + button_width, menu_y + button_height, false);
             draw_text_text_font(mmenu_x, mmenu_y, mmenu_str);
         }
     }
@@ -80,8 +76,6 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
         
         // ✅ Draw "You Lose" Title
         draw_text_heading_font(game_over_text_x, game_over_text_y, victory_string);
-        
- 
     }
     
 }
@@ -106,7 +100,7 @@ else
     }
     
     
-        // Thickness of the outline
+    // Thickness of the outline
     var thickness = 5; 
     
     // Calculate grid dimensions
@@ -127,7 +121,7 @@ else
     
         for (var i = 0; i < width; i++)
         {
-            // 🔹 Now loop through grid to draw blocks
+            // Now loop through grid to draw blocks
             for (var j = top_playable_row; j <= bottom_playable_row; j++) {
                 var gem = grid[i, j]; // Retrieve the gem object
                 if (gem.type != BLOCK.NONE) {
@@ -171,20 +165,27 @@ else
         
         gpu_set_blendmode(bm_normal); 
     
-    draw_set_alpha(0.75);
-    draw_rectangle_color(board_x_offset, view_diff - thickness, 
-                            board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, c_black, c_black, c_black, c_black, false);
-    draw_set_alpha(1);
+      draw_set_alpha(0.75);
+      draw_rectangle_color( board_x_offset,
+                            view_diff - thickness,
+                            board_x_offset + grid_width + thickness,
+                            view_diff + grid_height - thickness,
+                            c_black,
+                            c_black,
+                            c_black,
+                            c_black,
+                            false);
+      draw_set_alpha(1);
     
     
         draw_set_color(c_lime);
-    geogrid.geogrid_draw(self);
-    draw_set_color(c_white);
-
+        geogrid.geogrid_draw(self);
+        draw_set_color(c_white);
     
-    //----------------------------------------------------------------
-    // DRAW COLUMN SHAKE
-    //----------------------------------------------------------------
+    
+//----------------------------------------------------------------
+// DRAW COLUMN SHAKE
+//----------------------------------------------------------------
 for (var i = 0; i < width; i++) {
     var max_shake = 2; // Max shake intensity when blocks are above row 1
     var shake_intensity = 0; // Default no shake
@@ -210,7 +211,7 @@ for (var i = 0; i < width; i++) {
 	//-------------------------------------------------------
     //  SHAKE INTENSITY
     //-------------------------------------------------------
-    // 🔥 **If blocks are above row 1, apply max shake**
+    // **If blocks are above row 1, apply max shake**
     if (danger_row <= top_playable_row) {
         shake_intensity = max_shake;
     }
@@ -222,7 +223,7 @@ for (var i = 0; i < width; i++) {
         shake_intensity  = lerp(0, max_shake, progress);
     }
 
-    // 🔹 Now loop through grid to draw blocks
+    //� Now loop through grid to draw blocks
     for (var j = top_playable_row; j <= bottom_playable_row; j++) {
         var gem = grid[i, j]; // Retrieve the gem object
         
@@ -241,16 +242,17 @@ for (var i = 0; i < width; i++) {
             gem.x_scale = gem.falling ? before_meteor_x_scale : 1;
             gem.y_scale = gem.falling ? before_meteor_y_scale : 1; 
         }
-        else {
-            gem.x_scale    = after_meteor_x_scale;
-            gem.y_scale    = after_meteor_y_scale;
+        else 
+        {
+            gem.x_scale    =  after_meteor_x_scale;
+            gem.y_scale    =  after_meteor_y_scale;
             gem.fall_delay += meteor_fall_rate_increase;
             
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
             var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
+            
             effect_create_depth(depth + 1, ef_smokeup, draw_x, draw_y, 1, c_red);
         }
-
         
         if (gem.falling)
         {
@@ -260,6 +262,7 @@ for (var i = 0; i < width; i++) {
         else {
             gem.draw_y  = 0;
         }
+        
         
         if (gem.type != BLOCK.NONE) {
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
@@ -323,14 +326,14 @@ for (var i = 0; i < width; i++) {
                         var spr_draw_y = draw_y_min + (draw_y_max - draw_y_min) * 0.5;
                         draw_sprite(spr_mega_enemy_overlay, 0, spr_draw_x, spr_draw_y);
                         
-			            // ✅ Iterate over the whole Mega Block
+			            // Iterate over the whole Mega Block
 			            for (var bx = 0; bx < _width; bx++) {
 			                for (var by = 0; by < _height; by++) {
 			                    var block_x = parent_x + bx;
 			                    var block_y = parent_y + by;
 								
 								if (grid[block_x, block_y].type == BLOCK.NONE) continue;
-			                    //  Determine correct sprite variation
+			                    // Determine correct sprite variation
 			                    var _sprite_index = 0;
 			                    var rotation = 0;
 			                }
@@ -355,7 +358,7 @@ for (var i = 0; i < width; i++) {
 					       
 						if (j == bottom_playable_row)
 						{		
-					        // ✅ Draw Normally but with Transparency
+					        // Draw Normally but with Transparency
 					        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
 						}
 				}
@@ -419,17 +422,18 @@ for (var i = 0; i < width; i++) {
     		if (control_mode == "legacy") {
     				if (hover_i + 1 < width)
     				{
+                        var half_offset = gem_size * 0.5;
     					var hover_gem2 = grid[hover_i + 1, hover_j];
-    					draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    					draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     					
     					if (hover_gem2.type != BLOCK.NONE)
     					{
-    						draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-    						draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    						draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
+    						draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     					}
     				}
     				
-    				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     		}
     		
             if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
@@ -437,17 +441,18 @@ for (var i = 0; i < width; i++) {
                 var rect_y1 = (hover_j * gem_size) + global_y_offset + hover_gem.offset_y + hover_gem.draw_y;
                 var rect_x2 = rect_x1 + gem_size;
                 var rect_y2 = rect_y1 + gem_size;
+                var half_offset = gem_size * 0.5;
     
                 draw_set_alpha(0.3);
                 draw_set_color(c_yellow);
                 draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
                 
     			// ✅ Draw Normally but with Transparency
-    			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
-    			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
+    			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     			
     			if (control_mode == "modern") {
-    			    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - 32, rect_y2 - 32, scale, scale, 0, c_white, 1);
+    			    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     			}
                 draw_set_color(c_white);
                 draw_set_alpha(1.0);
@@ -525,16 +530,15 @@ for (var i = 0; i < width; i++) {
         var pop_data = ds_list_find_value(global.pop_list, idx);
     	
     		if (pop_data.bomb_tracker)
-    		{
-    			    // Base coords
+    		{ 
+                // Base coords
     		    var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
     		    var draw_y = (pop_data.y * gem_size) + offset + global_y_offset + gem.draw_y;
     			
     			var img_number = sprite_get_number(spr_bomb_overlay_wick);
-    			var progress = img_number - (img_number * (grid[pop_data.x, pop_data.y].shake_timer / max_shake_timer));
+    			var progress   = img_number - (img_number * (grid[pop_data.x, pop_data.y].shake_timer / max_shake_timer));
     			
     			draw_sprite_ext(spr_bomb_overlay_wick, 0, draw_x, draw_y, 1.2, 1.2, 0, c_white, 1);
-    			
     		}	
     }
 
@@ -542,7 +546,7 @@ for (var i = 0; i < width; i++) {
     // DRAW COMBO COUNTER
     //---------------------------------------------------------
     if (combo > 1) { // Only show if combo is at 2 or higher
-    	var px = (combo_x * gem_size) + board_x_offset + (gem_size / 2);
+    	var px = (combo_x * gem_size) + board_x_offset  + (gem_size / 2);
     	var py = (combo_y * gem_size) + global_y_offset + (gem_size / 2);
         var background_text_offset = 2;
         
@@ -559,7 +563,6 @@ for (var i = 0; i < width; i++) {
         
         draw_text_heading_font(px_bg, py_bg, combo_string, 1, c_bg, c_bg, c_bg, c_bg);
         draw_text_heading_font(px_fg, py_fg, combo_string, 1, c_fg1, c_fg1, c_fg2, c_fg2);
-
     }
     
     //---------------------------------------------------------
@@ -586,21 +589,21 @@ for (var i = 0; i < width; i++) {
     var thickness = 5; 
     
     // Calculate grid dimensions
-    var grid_width = width * gem_size;
+    var grid_width  = width * gem_size;
     var grid_height = camera_get_view_height(view_get_camera(view_current));
-    var view_diff = room_height - grid_height;
+    var view_diff   = room_height - grid_height;
     
         // Set outline color
     draw_set_color(c_white);
     
     // Draw thick outline around the grid
-    draw_rectangle(board_x_offset - thickness, view_diff - thickness, 
+    draw_rectangle(board_x_offset - thickness, view_diff - thickness,
                     board_x_offset + grid_width + thickness, view_diff + thickness, false); // Top
-    draw_rectangle(board_x_offset - thickness,view_diff - thickness, 
+    draw_rectangle(board_x_offset - thickness,view_diff - thickness,
                     board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
-    draw_rectangle(board_x_offset + grid_width, view_diff - thickness, 
+    draw_rectangle(board_x_offset + grid_width, view_diff - thickness,
                     board_x_offset + grid_width + thickness, view_diff + grid_height - thickness, false); // Right
-    draw_rectangle(board_x_offset - thickness, view_diff + grid_height, 
+    draw_rectangle(board_x_offset - thickness, view_diff + grid_height,
                     board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, false); // Bottom
     
 
@@ -623,9 +626,6 @@ for (var i = 0; i < width; i++) {
                         width, 
                         heart_sprite, 
                         gem_size);
-    
-    
-    
     
     
     if (is_targeting_enemy)
