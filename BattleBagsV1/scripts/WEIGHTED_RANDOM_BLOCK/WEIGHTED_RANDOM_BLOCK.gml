@@ -17,6 +17,7 @@ function create_block_spawn_rates(game_control_object, spawn_rate = 12)
 
 function weighted_random_block(game_control_object) 
 {
+    game_control_object = obj_game_control;
     var total_weight = 0;
     var number_of_block_types = 8;
     

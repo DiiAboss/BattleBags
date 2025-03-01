@@ -107,6 +107,8 @@
     {"name":"ADD_NEW_COLUMN","order":6,"path":"scripts/ADD_NEW_COLUMN/ADD_NEW_COLUMN.yy",},
     {"name":"BLACK_BLOCKS","order":1,"path":"scripts/BLACK_BLOCKS/BLACK_BLOCKS.yy",},
     {"name":"BLOCK_2x2","order":8,"path":"scripts/BLOCK_2x2/BLOCK_2x2.yy",},
+    {"name":"BLOCK_POOL","order":29,"path":"scripts/BLOCK_POOL/BLOCK_POOL.yy",},
+    {"name":"BLOCK_SYSTEM","order":30,"path":"scripts/BLOCK_SYSTEM/BLOCK_SYSTEM.yy",},
     {"name":"CHECK_AND_APPLY_UPGRADES","order":6,"path":"scripts/CHECK_AND_APPLY_UPGRADES/CHECK_AND_APPLY_UPGRADES.yy",},
     {"name":"CONSOLE","order":1,"path":"scripts/CONSOLE/CONSOLE.yy",},
     {"name":"CONTROLS","order":6,"path":"scripts/CONTROLS/CONTROLS.yy",},
