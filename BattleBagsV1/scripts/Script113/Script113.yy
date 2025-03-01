@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Script113",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Script113",
+  "parent":{
+    "name":"ONLINE_STUFF",
+    "path":"folders/Scripts/ONLINE_STUFF.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

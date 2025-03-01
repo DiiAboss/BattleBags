@@ -75,6 +75,15 @@ if !(connected)
 }
 
 
+// Send regular heartbeat to server
+if (current_time - last_heartbeat_time > heartbeat_interval) {
+    last_heartbeat_time = current_time;
+    
+    var data = ds_map_create();
+    ds_map_add(data, "type", DATA_TYPE.HEARTBEAT);
+    send_map_over_UDP(self, data, DATA_TYPE.HEARTBEAT);
+}
+
 // ✅ Handle menu selection (keyboard OR mouse click)
 if (keyboard_check_pressed(vk_escape)) {
         try_to_leave = true;

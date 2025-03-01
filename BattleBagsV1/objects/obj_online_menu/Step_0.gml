@@ -48,14 +48,56 @@ if (input.ActionPress || input.Enter) {
     if (last_hovered_option == -1 || last_hovered_option == selected_option) {
         switch (selected_option) {
             case 0: // Create Room
+                with(obj_connection_manager) {
+                    // Initialize as host
+                    player_role = PLAYER_ROLE.HOST;
+                    connection_state = CONNECTION_STATE.CONNECTING;
+                    
+                    // Create socket if needed
+                    if (client_socket == undefined) {
+                        client_socket = network_create_socket(network_socket_udp);
+                    }
+                    
+                    // Connect to server
+                    var connection = network_connect_raw(client_socket, server_ip, server_port);
+                    
+                    if (connection >= 0) {
+                        // Send create host request
+                        var data = ds_map_create();
+                        send_map_over_UDP(self, data, DATA_TYPE.CREATE_HOST);
+                    } else {
+                        show_message("Failed to connect to server!");
+                    }
+                }
                 room_goto(rm_create_lobby);
                 break;
 
             case 1: // Join Room
+                with(obj_connection_manager) {
+                    // Initialize as client
+                    player_role = PLAYER_ROLE.CLIENT;
+                    connection_state = CONNECTION_STATE.CONNECTING;
+                    
+                    // Create socket if needed
+                    if (client_socket == undefined) {
+                        client_socket = network_create_socket(network_socket_udp);
+                    }
+                    
+                    // Connect to server
+                    var connection = network_connect_raw(client_socket, server_ip, server_port);
+                    
+                    if (connection >= 0) {
+                        // Request list of hosts
+                        var data = ds_map_create();
+                        send_map_over_UDP(self, data, DATA_TYPE.GET_HOSTS);
+                    } else {
+                        show_message("Failed to connect to server!");
+                    }
+                }
                 room_goto(rm_join_lobby);
                 break;
 
-            case 2: // Back to Multiplayer Select
+            case 2: // Back
                 room_goto(rm_multiplayer_selection);
                 break;
         }
