@@ -144,6 +144,8 @@
     {"id":{"name":"ADD_NEW_COLUMN","path":"scripts/ADD_NEW_COLUMN/ADD_NEW_COLUMN.yy",},},
     {"id":{"name":"BLACK_BLOCKS","path":"scripts/BLACK_BLOCKS/BLACK_BLOCKS.yy",},},
     {"id":{"name":"BLOCK_2x2","path":"scripts/BLOCK_2x2/BLOCK_2x2.yy",},},
+    {"id":{"name":"BLOCK_POOL","path":"scripts/BLOCK_POOL/BLOCK_POOL.yy",},},
+    {"id":{"name":"BLOCK_SYSTEM","path":"scripts/BLOCK_SYSTEM/BLOCK_SYSTEM.yy",},},
     {"id":{"name":"CHECK_AND_APPLY_UPGRADES","path":"scripts/CHECK_AND_APPLY_UPGRADES/CHECK_AND_APPLY_UPGRADES.yy",},},
     {"id":{"name":"CONSOLE","path":"scripts/CONSOLE/CONSOLE.yy",},},
     {"id":{"name":"CONTROLS","path":"scripts/CONTROLS/CONTROLS.yy",},},

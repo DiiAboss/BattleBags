@@ -167,6 +167,10 @@ function check_if_enemy_defeated(_self) {
     }
 }
 
+
+
+
+
 /// @function initialize_attack_previews
 /// @description Pre-generates visual previews for all attack types
 function initialize_attack_previews() {
@@ -250,7 +254,14 @@ function add_attack_to_conveyor(attack_name) {
 /// @param {struct} attack_data - The attack data structure
 function draw_attack_on_conveyor(x_pos, y_pos, attack_data) {
     var preview = attack_data.preview_data;
-    
+       
+     // Safety check - if preview is undefined, draw a placeholder and exit
+    if (preview == undefined) {
+        // Draw a fallback/placeholder
+        draw_circle_color(x_pos, y_pos, 20, c_red, c_maroon, false);
+        draw_text(x_pos - 8, y_pos - 4, "?");
+        return;
+    }
     // Background for the attack
     var bg_color;
     

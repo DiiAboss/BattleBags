@@ -67,3 +67,8 @@ shield_amount     = 10;
 max_shield_amount = 10;
 
 depth = 1;
+
+my_belt = instance_create_depth(x, y, depth - 1, obj_conveyor_belt);
+
+animate_attack_targets(self, "FREEZE"); // ✅ Show animation first
+animate_attack_targets(self,  "SLIME"); // ✅ Show animation first
