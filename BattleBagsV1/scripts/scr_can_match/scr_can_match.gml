@@ -13,7 +13,8 @@ function can_match(gem1, gem2) {
 	
     if (gem1.type == BLOCK.PUZZLE_1 || gem2.type == BLOCK.PUZZLE_1) return false;
 	
-		 //✅ 2x2 block handling: Always match by group_id
+    
+    //✅ 2x2 block handling: Always match by group_id
     if (gem1.is_big || gem2.is_big) {
         if (gem1.group_id == gem2.group_id) return true;
     }

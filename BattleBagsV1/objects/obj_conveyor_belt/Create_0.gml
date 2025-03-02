@@ -1,10 +1,13 @@
 /// @description Initialize Conveyor Belt Attack System
 // Conveyor configuration
 conveyor_speed = 2;           // Speed of attacks moving upward
-conveyor_start_y = room_height - 128;  // Bottom position where attacks spawn
-conveyor_activation_y = 192;   // Y position where attacks activate
+conveyor_start_y = room_height;  // Bottom position where attacks spawn
+conveyor_activation_y = 400;   // Y position where attacks activate
 conveyor_width = 400;         // Width of the conveyor display area
-lane_count = 3;               // Number of parallel lanes
+lane_count = 1;   
+
+player_obj = obj_game_control; 
+conveyor_x_start = player_obj.board_x_offset + (player_obj.board_width * player_obj.gem_size) + (conveyor_width * 0.5);           // Number of parallel lanes
 
 // Attack tracking
 conveyor_attacks = ds_list_create();

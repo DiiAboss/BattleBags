@@ -133,26 +133,26 @@ function process_attack_queue(_self) {
             var attack_to_execute = ds_list_find_value(global.enemy_attack_queue, 0);
             
 			
-			switch (attack_to_execute)
-			{
-				case ("FREEZE"):
-					_self.pending_attack = "FREEZE"; // ✅ Store attack for delayed execution
-					alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
-				break;
-				
-				case ("SLIME"):
-					_self.pending_attack = "SLIME"; // ✅ Store attack for delayed execution
-					alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
-				break;
-				
-				case ("BLOCK"):
-					spawn_mega_block(obj_game_control, irandom_range(0, 5), 2, "block_1x3");
-				break;
-				
-				default:
-					toss_down_shape(obj_game_control, attack_to_execute, true);
-				break;
-			}
+			//switch (attack_to_execute)
+			//{
+				//case ("FREEZE"):
+					//_self.pending_attack = "FREEZE"; // ✅ Store attack for delayed execution
+					//alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
+				//break;
+				//
+				//case ("SLIME"):
+					//_self.pending_attack = "SLIME"; // ✅ Store attack for delayed execution
+					//alarm[0] = max_queued_attack_timer; // ✅ Delay actual attack execution by 30 frames
+				//break;
+				//
+				//case ("BLOCK"):
+					//spawn_mega_block(obj_game_control, irandom_range(0, 5), 2, "block_1x3");
+				//break;
+				//
+				//default:
+					//toss_down_shape(obj_game_control, attack_to_execute, true);
+				//break;
+			//}
             
             ds_list_delete(global.enemy_attack_queue, 0);
             _self.queued_attack_timer = 0;

@@ -46,3 +46,16 @@ online_input = new Online_Input();
 
 connected = false;
 connect_new_players = true;
+
+// Add to obj_client/Create_0.gml
+// New variables for enhanced server features
+last_heartbeat_time = current_time;
+heartbeat_interval = 3000; // 3 seconds
+connection_id = ""; // Will store our unique client identifier
+lobby_id = ""; // For the new lobby system
+is_in_matchmaking = false;
+
+// Add these variables
+lobby_id = "";
+is_in_ranked_match = false;
+player_rating = 1200;

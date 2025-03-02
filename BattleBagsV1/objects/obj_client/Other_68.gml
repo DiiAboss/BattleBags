@@ -71,7 +71,33 @@ if (async_load[? "size"] > 0)
                             
 
                             
-        break; 
+        break;
+        
+        // Add to obj_client/Other_68.gml inside your switch statement
+        case DATA_TYPE.CREATE_LOBBY:
+            if (ds_map_find_value(json_resp, "success")) {
+                // Store the lobby ID for future reference
+                lobby_id = ds_map_find_value(json_resp, "lobbyId");
+                player_number = ds_map_find_value(json_resp, "playerNumber");
+                room_goto(rm_online_lobby);
+                show_debug_message("Created lobby: " + lobby_id);
+            }
+        break;
+        
+        case DATA_TYPE.FIND_MATCH:
+            if (ds_map_find_value(json_resp, "matchFound")) {
+                // Match found, join the game
+                lobby_id = ds_map_find_value(json_resp, "lobbyId");
+                player_number = ds_map_find_value(json_resp, "playerNumber");
+                is_in_matchmaking = false;
+                room_goto(rm_online_game);
+                show_debug_message("Joined ranked match: " + lobby_id);
+            } else if (ds_map_find_value(json_resp, "inQueue")) {
+                // Added to queue, show waiting UI
+                show_debug_message("Added to matchmaking queue");
+                // You could set a variable to show a "Searching for match..." message
+            }
+        break;
         
         case DATA_TYPE.GET_PLAYER_STATS:
         

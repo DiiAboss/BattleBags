@@ -28,6 +28,8 @@ function start_swap(_self, ax, ay, bx, by) {
 
         if (parentA[0] != parentB[0] || parentA[1] != parentB[1]) return; // Ensure swapping whole block
     }
+    
+    if (gemA.offset_y != gemB.offset_y) return;
 
     // ✅ Execute the swap normally if no shifting is happening
     execute_swap(_self, ax, ay, bx, by);
@@ -217,7 +219,13 @@ function execute_swap(_self, ax, ay, bx, by) {
 		}
 	}
 	
-
+    var falling = _self.grid[ax, ay].falling || _self.grid[bx, by].falling = true;
+    var fall_delay = max(_self.grid[ax, ay].fall_delay, _self.grid[bx, by].fall_delay)
+    _self.grid[ax, ay].fall_delay = fall_delay;
+    _self.grid[ax, ay].falling = falling;
+    _self.grid[bx, by].fall_delay = fall_delay;
+    _self.grid[bx, by].falling = falling;
+    
     // ✅ Prevent swapping if one of the gems is being destroyed
     if (is_being_destroyed(ax, ay) || is_being_destroyed(bx, by)) return;
 
