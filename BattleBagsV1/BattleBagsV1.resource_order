@@ -260,6 +260,7 @@
     {"name":"spr_powerup_poison","order":10,"path":"sprites/spr_powerup_poison/spr_powerup_poison.yy",},
     {"name":"spr_powerup_timer","order":12,"path":"sprites/spr_powerup_timer/spr_powerup_timer.yy",},
     {"name":"spr_powerup_wild_potion","order":15,"path":"sprites/spr_powerup_wild_potion/spr_powerup_wild_potion.yy",},
+    {"name":"spr_preview_blocks","order":18,"path":"sprites/spr_preview_blocks/spr_preview_blocks.yy",},
     {"name":"spr_purple_gem_1","order":22,"path":"sprites/spr_purple_gem_1/spr_purple_gem_1.yy",},
     {"name":"spr_purple_gem","order":3,"path":"sprites/spr_purple_gem/spr_purple_gem.yy",},
     {"name":"spr_red_gem_1","order":23,"path":"sprites/spr_red_gem_1/spr_red_gem_1.yy",},

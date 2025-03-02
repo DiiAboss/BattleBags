@@ -22,3 +22,25 @@ if (connection_state != CONNECTION_STATE.DISCONNECTED) {
         send_map_over_UDP(self, data, DATA_TYPE.HEARTBEAT);
     }
 }
+
+
+//--------------------------------------------------------
+// GAME FLOW
+//--------------------------------------------------------
+//Game Start
+//↓
+//Initialize obj_connection_manager (in rm_init)
+//↓
+//Main Menu → Multiplayer Menu
+//↓
+//Create Game          Join Game
+//↓                    ↓
+//Set role = HOST     Set role = CLIENT
+//↓                    ↓
+//Initialize Network  Initialize Network
+//↓                    ↓
+//Create Host         Get Host List
+//↓                    ↓
+//Lobby Room          Join Room
+//↓                    ↓
+//Start Game --------→ Game Room

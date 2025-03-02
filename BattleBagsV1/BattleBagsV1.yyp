@@ -338,6 +338,7 @@
     {"id":{"name":"spr_powerup_poison","path":"sprites/spr_powerup_poison/spr_powerup_poison.yy",},},
     {"id":{"name":"spr_powerup_timer","path":"sprites/spr_powerup_timer/spr_powerup_timer.yy",},},
     {"id":{"name":"spr_powerup_wild_potion","path":"sprites/spr_powerup_wild_potion/spr_powerup_wild_potion.yy",},},
+    {"id":{"name":"spr_preview_blocks","path":"sprites/spr_preview_blocks/spr_preview_blocks.yy",},},
     {"id":{"name":"spr_purple_gem_1","path":"sprites/spr_purple_gem_1/spr_purple_gem_1.yy",},},
     {"id":{"name":"spr_purple_gem","path":"sprites/spr_purple_gem/spr_purple_gem.yy",},},
     {"id":{"name":"spr_red_gem_1","path":"sprites/spr_red_gem_1/spr_red_gem_1.yy",},},
