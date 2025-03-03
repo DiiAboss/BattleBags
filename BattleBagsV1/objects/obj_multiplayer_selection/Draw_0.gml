@@ -14,3 +14,5 @@ for (var i = 0; i < array_length(menu_options); i++) {
         draw_text(menu_x, menu_y, menu_options[i]);
     }
 }
+
+

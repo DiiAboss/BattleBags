@@ -41,8 +41,11 @@ if (input.Down)
         input_delay = max_input_delay;
     }
 }
+
+
 // ✅ Handle menu selection
 if (input.ActionPress || input.Enter) {
+    
     if (last_hovered_option != -1 || last_hovered_option == selected_option) {
         switch (selected_option) {
             case 0: // Local Multiplayer

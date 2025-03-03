@@ -7,8 +7,24 @@ assigning_done = false; // Flag to mark when control assignments are done
 rect_width = 150;
 rect_height = 50;
 
-
 max_players = 4;
+
+// Add to Create Event
+// New variables for AI player selection
+ai_available = true;         // Can AI players be added?
+ai_players_enabled = [];     // Array to track which player slots have AI
+for (var i = 0; i < max_players; i++) {
+    ai_players_enabled[i] = false;
+}
+ai_button_width = 120;       // Width of AI button
+ai_button_height = 40;       // Height of AI button
+ai_difficulty = 5;           // Default AI difficulty (1-5)
+ai_difficulty_names = ["Easy", "Medium", "Hard", "Expert", "Master"];
+
+
+
+
+
 
 top_playable_row = 4;
 bottom_playable_row = 20;

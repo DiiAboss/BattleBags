@@ -15,6 +15,7 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
 //----------------------------------------------------------
 if (room == rm_local_multiplayer_lobby)
 {
+    ai_lobby_update(self);
     if (delay > 0) {
         delay--;
     } else {
@@ -105,7 +106,16 @@ if (room == rm_local_multiplayer_lobby)
 
 if (room == rm_local_multiplayer_game)
 {
+    
+    if (player.is_ai && player.input.ActionPress) {
+        show_debug_message("AI trying to swap at position: " + 
+                        string(player.hovered_block[0]) + "," + 
+                        string(player.hovered_block[1]));
+    }
 
+    
+    setup_ai_players_from_lobby(self);
+    update_ai_players(self);
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
         

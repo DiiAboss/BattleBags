@@ -23,3 +23,4 @@ queue_sync_interval = 5;      // How often to sync with global queue
 
 // Visuals
 show_grid_overlay = true;     // Whether to show grid lines
+debug_menu_open = false;

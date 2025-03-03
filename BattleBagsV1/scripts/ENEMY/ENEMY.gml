@@ -309,7 +309,7 @@ function draw_shape_preview(x_pos, y_pos, shape_template) {
     var rows = array_length(shape_template);
     var cols = (rows > 0) ? array_length(shape_template[0]) : 0;
     
-    // Size for preview blocks
+    // Size for preview blocks - using your new sprite size
     var block_size = 16;
     
     // Calculate the total dimensions
@@ -324,10 +324,64 @@ function draw_shape_preview(x_pos, y_pos, shape_template) {
                 var draw_x = x_pos - (total_width / 2) + (col * block_size) + (block_size / 2);
                 var draw_y = y_pos - (total_height / 2) + (row * block_size) + (block_size / 2);
                 
-                // Draw block preview
-                draw_sprite(spr_enemy_attack_preview, block_type, draw_x, draw_y);
+                // Map block type to the appropriate subimage of spr_preview_block
+                var subimage = map_block_type_to_subimage(block_type);
+                
+                // Draw the preview block
+                draw_sprite(spr_preview_block, subimage, draw_x, draw_y);
             }
         }
+    }
+    
+    // Draw an outline around the entire shape
+    draw_set_color(c_white);
+    draw_rectangle(
+        x_pos - (total_width / 2) - 1, 
+        y_pos - (total_height / 2) - 1,
+        x_pos + (total_width / 2), 
+        y_pos + (total_height / 2),
+        true
+    );
+}
+
+//enum BLOCK {
+    //RANDOM = -99,  GAME_OVER = -404, CURSE = -5, PUZZLE_1 = -4, MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    //LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
+//}
+
+
+/// @function map_block_type_to_subimage
+/// @description Maps a block type to the corresponding subimage in spr_preview_block
+/// @param {real} block_type - The block type constant
+/// @returns {real} The subimage index to use
+function map_block_type_to_subimage(block_type) {
+    // This function maps your BLOCK enum values to sprite subimages
+    // Adjust these mappings based on your specific sprites
+    switch (block_type) {
+        case BLOCK.RED:
+            return 0;  // Regular block (first subimage)
+        case BLOCK.YELLOW:
+            return 1;  // Red block
+        case BLOCK.GREEN:
+            return 2;  // Red block
+        case BLOCK.PINK:
+            return 3;  // Red block
+        case BLOCK.PURPLE:
+            return 4;  // Red block
+        case BLOCK.LIGHTBLUE:
+            return 5;  // Green block
+        case BLOCK.ORANGE:
+            return 6;  // Blue block
+        case BLOCK.BLUE:
+            return 7;  // Yellow block
+        case BLOCK.MEGA:
+            return 8;  // Purple block
+        case BLOCK.CURSE:
+            return 9;  // Black block
+        case BLOCK.RANDOM:
+            return irandom(5);  // Random color (0-5)
+        default:
+            return 0;  // Default to regular block
     }
 }
 

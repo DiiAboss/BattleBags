@@ -160,10 +160,11 @@ if (reset)
 	lose_life_timer = 0;
 }
 
+drop_blocks(self);
+
 // Have to find a way to drop blocks while locking in matches
 if (all_pops_finished() && !victory_state) {
     
-	drop_blocks(self);
 	// ✅ If a new match is found, **increase** combo instead of resetting
 	if find_and_destroy_matches(self) {
 		combo_timer = 0;
