@@ -2,6 +2,7 @@
 
 if (room == rm_local_multiplayer_lobby)
 {
+    
     // ✅ Get screen dimensions
     var screen_width = room_width;
     var screen_height = room_height;
@@ -83,12 +84,16 @@ if (room == rm_local_multiplayer_lobby)
         draw_set_color(c_white);
         draw_set_alpha(1);
     }
+    
+    ai_lobby_draw(self);
 }
 
 
 
 if (room == rm_local_multiplayer_game)
 {
+    
+    
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
         
@@ -120,7 +125,7 @@ if (room == rm_local_multiplayer_game)
                 }
 
                 
-                if (player.input.InputType == INPUT.GAMEPAD) {
+                if (player.input.InputType == INPUT.GAMEPAD || player.input.InputType == INPUT.AI) {
                         if (hover_i + 1 < width)
                         {
                             var hover_gem2 = player.grid[hover_i + 1, hover_j];
@@ -136,6 +141,8 @@ if (room == rm_local_multiplayer_game)
                         }
                         
                         draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                    
+                    draw_ai_debug(player);
                 }
                 
                 if (hover_gem.type != BLOCK.NONE && hover_gem.falling == false) {

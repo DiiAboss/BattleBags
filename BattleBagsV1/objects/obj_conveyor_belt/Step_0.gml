@@ -24,3 +24,46 @@ for (var i = 0; i < ds_list_size(conveyor_attacks); i++) {
         i--; // Adjust the loop index
     }
 }
+
+
+/// @description Create Debug Menu
+if (keyboard_check_pressed(vk_tab)) {
+    debug_menu_open = !debug_menu_open;
+}
+
+// Draw debug menu when open
+if (debug_menu_open) {
+    draw_set_alpha(0.9);
+    draw_rectangle_color(
+        room_width - 220, 10,
+        room_width - 10, 250,
+        c_black, c_black, c_black, c_black, false
+    );
+    draw_set_alpha(1.0);
+    
+    draw_set_color(c_white);
+    draw_text(room_width - 210, 20, "Attack Types:");
+    
+    var y_pos = 50;
+    var attack_types = [
+        "rectangle", "L_shape", "Z_shape", 
+        "T_shape", "single_line", "FREEZE", 
+        "SLIME", "BLOCK"
+    ];
+    
+    for (var i = 0; i < array_length(attack_types); i++) {
+        draw_text(room_width - 210, y_pos, string(i+1) + ": " + attack_types[i]);
+        
+        if (point_in_rectangle(mouse_x, mouse_y, 
+                            room_width - 210, y_pos, 
+                            room_width - 10, y_pos + 20) && 
+            mouse_check_button_pressed(mb_left)) {
+            
+            add_specific_attack(attack_types[i]);
+        }
+        
+        y_pos += 25;
+    }
+}
+
+

@@ -32,6 +32,11 @@ function create_player(_id)
         draw_y_start: 256,
         darken_alpha: 1,
         gem_size: 64,
+        is_ai: false,
+        topmost_row: 12,
+        board_is_clearing:false,
+        board_is_shifting: false,
+        
     };
 }
 

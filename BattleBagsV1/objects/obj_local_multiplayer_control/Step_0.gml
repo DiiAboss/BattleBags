@@ -15,6 +15,7 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
 //----------------------------------------------------------
 if (room == rm_local_multiplayer_lobby)
 {
+    ai_lobby_update(self);
     if (delay > 0) {
         delay--;
     } else {
@@ -105,14 +106,25 @@ if (room == rm_local_multiplayer_lobby)
 
 if (room == rm_local_multiplayer_game)
 {
+    
+    if (player.is_ai && player.input.ActionPress) {
+        show_debug_message("AI trying to swap at position: " + 
+                        string(player.hovered_block[0]) + "," + 
+                        string(player.hovered_block[1]));
+    }
 
+    
+    setup_ai_players_from_lobby(self);
+    update_ai_players(self);
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
+        
+        update_topmost_row_mp(self, player);
         
         // Drop the blocks
         drop_blocks_mp(self, player);
         
-                // Destroy the blocks in the pop queue
+        // Destroy the blocks in the pop queue
         if (ds_list_size(player.pop_list) > 0) {
             pop_blocks_in_pop_queue(self, player);
         }
@@ -187,14 +199,14 @@ if (room == rm_local_multiplayer_game)
                            player.hovered_block[0] -= 1;
                        }
                        else {
-                           player.hovered_block[0] = width - 2;
+                           player.hovered_block[0] = width - 1;
                        }
                    player.input_delay = max_input_delay;
                }
                
                if (player.input.Right)
                {
-                   if (player.hovered_block[0] < width - 2)
+                   if (player.hovered_block[0] < width - 1)
                    {
                    player.hovered_block[0] += 1; 
                    }
