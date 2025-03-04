@@ -15,53 +15,83 @@ function AIBoardScanner(player) constructor {
         // Clear previous matches
         ds_queue_clear(self.match_queue);
         
+        var columnHeights = array_create(self.width, 0);
+        
+        for (var col = 0; col < self.width - 1; col++) {
+            columnHeights[col] = getColumnHeight(col);
+        }
+        
+        // Check for severe height differences that could use gravity
+        for (var col = 0; col < self.width - 1; col++) {
+            var height = columnHeights[col];
+            var nextHeight = columnHeights[col+1];
+        
+            if (abs(height - nextHeight) >= 2) {
+                scanForGravitySwap(col, col+1);
+            }
+        }
+        
+        // Respect the topmost row when scanning
+        var effective_top_row = min(self.top_playable_row, player.topmost_row);
+        
         // Scan for horizontal matches
-        scanHorizontalMatches();
+        scanHorizontalMatches(effective_top_row);
         
         // Scan for vertical matches
-        scanVerticalMatches();
+        scanVerticalMatches(effective_top_row);
+        
+        // Scan for direct matches (plain adjacent swaps that form matches)
+        scanDirectMatches(effective_top_row);
+        
+        // Scan for column reduction opportunities
+        scanForColumnReduction();
+        
+        // Prioritize tall column reduction if the board is getting dangerous
+        if (isInDangerZone()) {
+            applyDangerPriorities();
+        }
         
         return !ds_queue_empty(self.match_queue);
     }
     
     // Check for potential horizontal matches
-    scanHorizontalMatches = function() {
+    scanHorizontalMatches = function(effective_top_row) {
         var grid = player.grid;
         
         // For each row in the playable area
-        for (var row = self.top_playable_row; row <= self.bottom_playable_row; row++) {
-            // Check each position that could be the start of a horizontal match
+        for (var row = effective_top_row; row < self.bottom_playable_row - 1; row++) {
+            // For each position that could be the start of a horizontal match
             for (var col = 0; col < self.width - 1; col++) {
-                // Check if swapping col and col+1 would create a match
+                // Skip if blocks cannot be swapped
                 var currentBlock = grid[col, row];
                 var rightBlock = grid[col+1, row];
                 
-                // Skip if blocks cannot be swapped
                 if (currentBlock.type < 0 || rightBlock.type < 0 || 
                     currentBlock.falling || rightBlock.falling ||
-                    currentBlock.popping || rightBlock.popping ||
-                    currentBlock.is_big || rightBlock.is_big) {
+                    currentBlock.popping || rightBlock.popping) {
                     continue;
                 }
                 
-                // Check patterns where swapping would create a horizontal match
-                
                 // Pattern: 1 2 1 1 -> after swap: 1 1 2 1
-                if (col > 0 && col+2 < self.width) {
+                if (col > 0 && col+2 < self.width - 1) {
                     if (currentBlock.type == grid[col-1, row].type && 
                         currentBlock.type == grid[col+2, row].type &&
                         !grid[col-1, row].falling && !grid[col-1, row].popping &&
                         !grid[col+2, row].falling && !grid[col+2, row].popping) {
                         
-                        // Found a potential match at col,row
+                        // Calculate danger score - higher at the bottom of the board
+                        var dangerScore = max(0, self.bottom_playable_row - row);
+                        
+                        // Add bonus for matches that would help level the board
+                        var levelingBonus = calculateLevelingBonus(col, col+1);
+                        
                         var matchInfo = {
                             x: col,
                             y: row,
                             match_type: "horizontal",
-                            score: 10 // Basic score for a match
+                            score: 10 + dangerScore + levelingBonus
                         };
                         
-                        // Add to queue
                         ds_queue_enqueue(self.match_queue, matchInfo);
                     }
                 }
@@ -73,11 +103,14 @@ function AIBoardScanner(player) constructor {
                         !grid[col-1, row].falling && !grid[col-1, row].popping &&
                         !grid[col-2, row].falling && !grid[col-2, row].popping) {
                         
+                        var dangerScore = max(0, self.bottom_playable_row - row);
+                        var levelingBonus = calculateLevelingBonus(col, col+1);
+                        
                         var matchInfo = {
                             x: col,
                             y: row,
                             match_type: "horizontal",
-                            score: 10
+                            score: 10 + dangerScore + levelingBonus
                         };
                         
                         ds_queue_enqueue(self.match_queue, matchInfo);
@@ -91,11 +124,14 @@ function AIBoardScanner(player) constructor {
                         !grid[col+2, row].falling && !grid[col+2, row].popping &&
                         !grid[col+3, row].falling && !grid[col+3, row].popping) {
                         
+                        var dangerScore = max(0, self.bottom_playable_row - row);
+                        var levelingBonus = calculateLevelingBonus(col, col+1);
+                        
                         var matchInfo = {
                             x: col,
                             y: row,
                             match_type: "horizontal",
-                            score: 10
+                            score: 10 + dangerScore + levelingBonus
                         };
                         
                         ds_queue_enqueue(self.match_queue, matchInfo);
@@ -106,131 +142,101 @@ function AIBoardScanner(player) constructor {
     }
     
     // Check for potential vertical matches
-    scanVerticalMatches = function() {
+    scanVerticalMatches = function(effective_top_row) {
         var grid = player.grid;
         
         // For each column
         for (var col = 0; col < self.width - 1; col++) {
-            // For each position that could be the start of a vertical match
-            for (var row = self.top_playable_row; row <= self.bottom_playable_row; row++) {
-                // Check if swapping col and col+1 would create a match
+            // For each row position
+            for (var row = effective_top_row; row < self.bottom_playable_row - 1; row++) {
+                // Skip if blocks cannot be swapped
                 var currentBlock = grid[col, row];
                 var rightBlock = grid[col+1, row];
                 
-                // Skip if blocks cannot be swapped
                 if (currentBlock.type < 0 || rightBlock.type < 0 || 
                     currentBlock.falling || rightBlock.falling ||
-                    currentBlock.popping || rightBlock.popping ||
-                    currentBlock.is_big || rightBlock.is_big) {
+                    currentBlock.popping || rightBlock.popping) {
                     continue;
                 }
                 
-                // Check patterns where swapping would create a vertical match
-                
-                // Pattern: current block forms vertical match when swapped
-                if (row >= self.top_playable_row + 2) {
-                    // Check if the right block would form a match with the two blocks above current
+                // Pattern: right block forms vertical match with blocks above current
+                if (row >= effective_top_row + 2) {
                     if (rightBlock.type == grid[col, row-1].type && 
                         rightBlock.type == grid[col, row-2].type &&
                         !grid[col, row-1].falling && !grid[col, row-1].popping &&
                         !grid[col, row-2].falling && !grid[col, row-2].popping) {
                         
+                        var dangerScore = max(0, self.bottom_playable_row - row);
+                        var heightBonus = calculateColumnHeightBonus(col);
+                        
                         var matchInfo = {
                             x: col,
                             y: row,
                             match_type: "vertical",
-                            score: 15 // Slightly higher score for vertical matches
+                            score: 15 + dangerScore + heightBonus
                         };
                         
                         ds_queue_enqueue(self.match_queue, matchInfo);
                     }
                 }
                 
-                if (row <= self.bottom_playable_row - 2) {
-                    // Check if the right block would form a match with the two blocks below current
-                    if (rightBlock.type == grid[col, row+1].type && 
-                        rightBlock.type == grid[col, row+2].type &&
-                        !grid[col, row+1].falling && !grid[col, row+1].popping &&
-                        !grid[col, row+2].falling && !grid[col, row+2].popping) {
-                        
-                        var matchInfo = {
-                            x: col,
-                            y: row,
-                            match_type: "vertical",
-                            score: 15
-                        };
-                        
-                        ds_queue_enqueue(self.match_queue, matchInfo);
-                    }
-                }
-                
-                if (row >= self.top_playable_row + 1 && row <= self.bottom_playable_row - 1) {
-                    // Check if the right block would form a match with one above and one below
-                    if (rightBlock.type == grid[col, row-1].type && 
-                        rightBlock.type == grid[col, row+1].type &&
-                        !grid[col, row-1].falling && !grid[col, row-1].popping &&
-                        !grid[col, row+1].falling && !grid[col, row+1].popping) {
-                        
-                        var matchInfo = {
-                            x: col,
-                            y: row,
-                            match_type: "vertical",
-                            score: 15
-                        };
-                        
-                        ds_queue_enqueue(self.match_queue, matchInfo);
-                    }
-                }
-                
-                // Now check if the current block forms vertical match when swapped with right
-                if (row >= self.top_playable_row + 2) {
-                    // Check if the current block would form a match with the two blocks above right
+                // Pattern: current block forms vertical match with blocks above right
+                if (row >= effective_top_row + 2) {
                     if (currentBlock.type == grid[col+1, row-1].type && 
                         currentBlock.type == grid[col+1, row-2].type &&
                         !grid[col+1, row-1].falling && !grid[col+1, row-1].popping &&
                         !grid[col+1, row-2].falling && !grid[col+1, row-2].popping) {
                         
+                        var dangerScore = max(0, self.bottom_playable_row - row);
+                        var heightBonus = calculateColumnHeightBonus(col+1);
+                        
                         var matchInfo = {
                             x: col,
                             y: row,
                             match_type: "vertical",
-                            score: 15
+                            score: 15 + dangerScore + heightBonus
                         };
                         
                         ds_queue_enqueue(self.match_queue, matchInfo);
                     }
                 }
                 
+                // Pattern: right block forms vertical match with blocks below current
                 if (row <= self.bottom_playable_row - 2) {
-                    // Check if the current block would form a match with the two blocks below right
+                    if (rightBlock.type == grid[col, row+1].type && 
+                        rightBlock.type == grid[col, row+2].type &&
+                        !grid[col, row+1].falling && !grid[col, row+1].popping &&
+                        !grid[col, row+2].falling && !grid[col, row+2].popping) {
+                        
+                        var dangerScore = max(0, self.bottom_playable_row - row);
+                        var heightBonus = calculateColumnHeightBonus(col);
+                        
+                        var matchInfo = {
+                            x: col,
+                            y: row,
+                            match_type: "vertical",
+                            score: 15 + dangerScore + heightBonus
+                        };
+                        
+                        ds_queue_enqueue(self.match_queue, matchInfo);
+                    }
+                }
+                
+                // Pattern: current block forms vertical match with blocks below right
+                if (row <= self.bottom_playable_row - 2) {
                     if (currentBlock.type == grid[col+1, row+1].type && 
                         currentBlock.type == grid[col+1, row+2].type &&
                         !grid[col+1, row+1].falling && !grid[col+1, row+1].popping &&
                         !grid[col+1, row+2].falling && !grid[col+1, row+2].popping) {
                         
-                        var matchInfo = {
-                            x: col,
-                            y: row,
-                            match_type: "vertical",
-                            score: 15
-                        };
-                        
-                        ds_queue_enqueue(self.match_queue, matchInfo);
-                    }
-                }
-                
-                if (row >= self.top_playable_row + 1 && row <= self.bottom_playable_row - 1) {
-                    // Check if the current block would form a match with one above and one below right
-                    if (currentBlock.type == grid[col+1, row-1].type && 
-                        currentBlock.type == grid[col+1, row+1].type &&
-                        !grid[col+1, row-1].falling && !grid[col+1, row-1].popping &&
-                        !grid[col+1, row+1].falling && !grid[col+1, row+1].popping) {
+                        var dangerScore = max(0, self.bottom_playable_row - row);
+                        var heightBonus = calculateColumnHeightBonus(col+1);
                         
                         var matchInfo = {
                             x: col,
                             y: row,
                             match_type: "vertical",
-                            score: 15
+                            score: 15 + dangerScore + heightBonus
                         };
                         
                         ds_queue_enqueue(self.match_queue, matchInfo);
@@ -240,710 +246,565 @@ function AIBoardScanner(player) constructor {
         }
     }
     
-    // Get the next match from the queue
+    
+    // Modify your scanDirectMatches function:
+    scanDirectMatches = function(effective_top_row) {
+        var grid = player.grid;
+        
+        // For each position in the playable area
+        for (var row = effective_top_row; row <= self.bottom_playable_row - 1; row++) {
+            for (var col = 0; col < self.width - 1; col++) {
+                // Skip invalid blocks (your existing code)
+                var block1 = grid[col, row];
+                var block2 = grid[col+1, row];
+                
+                if (block1.type < 0 || block2.type < 0 || 
+                    block1.falling || block2.falling || 
+                    block1.popping || block2.popping) {
+                    continue;
+                }
+                
+                // Temporarily swap blocks
+                var type1 = block1.type;
+                var type2 = block2.type;
+                
+                // Do the swap
+                block1.type = type2;
+                block2.type = type1;
+                
+                // Now check for matches at both positions, but count match size
+                var match_size1 = 0;
+                var match_size2 = 0;
+                
+                // Only check if this could be a match (3 or more)
+                if (checkForMatch(col, row)) {
+                    match_size1 = countConnectedBlocks(col, row);
+                }
+                
+                if (checkForMatch(col+1, row)) {
+                    match_size2 = countConnectedBlocks(col+1, row);
+                }
+                
+                // Undo the swap
+                block1.type = type1;
+                block2.type = type2;
+                
+                // Use the larger of the two match sizes
+                var max_match_size = max(match_size1, match_size2);
+                
+                if (max_match_size >= 3) {
+                    // Calculate score with strong bias toward larger matches
+                    var base_score = 25;
+                    var size_bonus = 0;
+                    
+                    // Exponential bonus for larger matches
+                    if (max_match_size == 4) {
+                        size_bonus = 40;  // Big jump for 4-matches
+                    } else if (max_match_size >= 5) {
+                        size_bonus = 70;  // Even bigger for 5+
+                    }
+                    
+                    var matchInfo = {
+                        x: col,
+                        y: row,
+                        match_type: max_match_size >= 4 ? "large_match" : "direct",
+                        match_size: max_match_size,
+                        score: base_score + size_bonus + (self.bottom_playable_row - row) * 2
+                    };
+                    
+                    ds_queue_enqueue(self.match_queue, matchInfo);
+                }
+            }
+        }
+    }
+    
+    // Add this helper function to count connected blocks of the same type
+    countConnectedBlocks = function(startCol, startRow) {
+        var grid = player.grid;
+        var targetType = grid[startCol, startRow].type;
+        var counted = array_create(self.width);
+        
+        // Create 2D array for tracking visited positions
+        for (var col = 0; col < self.width; col++) {
+            counted[col] = array_create(self.bottom_playable_row, false);
+        }
+        
+        // Create a data structure to track positions to check
+        var positionsToCheck = ds_queue_create();
+        ds_queue_enqueue(positionsToCheck, [startCol, startRow]);
+        counted[startCol][startRow] = true;
+        
+        var totalCount = 0;
+        
+        // Iterative flood fill (instead of recursive)
+        while (!ds_queue_empty(positionsToCheck)) {
+            var position = ds_queue_dequeue(positionsToCheck);
+            var col = position[0];
+            var row = position[1];
+            
+            // Count this position
+            totalCount++;
+            
+            // Check all four adjacent positions
+            var directions = [
+                [1, 0],  // right
+                [-1, 0], // left
+                [0, 1],  // down
+                [0, -1]  // up
+            ];
+            
+            for (var i = 0; i < 4; i++) {
+                var newCol = col + directions[i][0];
+                var newRow = row + directions[i][1];
+                
+                // Check boundaries
+                if (newCol < 0 || newCol > self.width - 1 || 
+                    newRow < player.topmost_row || newRow > self.bottom_playable_row - 1) {
+                    continue;
+                }
+                
+                // Check if not visited and matches the target type
+                if (!counted[newCol][newRow] && 
+                    grid[newCol, newRow].type == targetType && 
+                    !grid[newCol, newRow].falling && 
+                    !grid[newCol, newRow].popping) {
+                    
+                    counted[newCol][newRow] = true;
+                    ds_queue_enqueue(positionsToCheck, [newCol, newRow]);
+                }
+            }
+        }
+        
+        // Clean up
+        ds_queue_destroy(positionsToCheck);
+        
+        return totalCount;
+    }
+    
+    // Recursive helper for counting connected blocks
+    floodFillCount = function(col, row, targetType, counted, count) {
+        // Check boundaries
+        if (col < 0 || col > self.width - 1 || 
+            row < self.top_playable_row || row > self.bottom_playable_row) {
+            return count;
+        }
+        
+        // Skip if already counted or not the target type
+        if (counted[col][row] || player.grid[col, row].type != targetType ||
+            player.grid[col, row].falling || player.grid[col, row].popping) {
+            return count;
+        }
+        
+        // Count this block
+        counted[col][row] = true;
+        count++;
+        
+        // Continue in all four directions
+        count = floodFillCount(col+1, row, targetType, counted, count); // right
+        count = floodFillCount(col-1, row, targetType, counted, count); // left
+        count = floodFillCount(col, row+1, targetType, counted, count); // down
+        count = floodFillCount(col, row-1, targetType, counted, count); // up
+        
+        return count;
+    }
+    
+    
+    // Add this helper function to count potential match size
+    countMatchSize = function(col, row) {
+        var grid = player.grid;
+        var blockType = grid[col, row].type;
+        var count = 0;
+        
+        // Count horizontal matches
+        var hCount = 1;
+        // Count left
+        for (var c = col - 1; c >= 0; c--) {
+            if (grid[c, row].type == blockType) {
+                hCount++;
+            } else {
+                break;
+            }
+        }
+        // Count right
+        for (var c = col + 1; c < self.width; c++) {
+            if (grid[c, row].type == blockType) {
+                hCount++;
+            } else {
+                break;
+            }
+        }
+        
+        // Count vertical matches
+        var vCount = 1;
+        // Count up
+        for (var r = row - 1; r >= player.topmost_row; r--) {
+            if (grid[col, r].type == blockType) {
+                vCount++;
+            } else {
+                break;
+            }
+        }
+        // Count down
+        for (var r = row + 1; r <= self.bottom_playable_row; r++) {
+            if (grid[col, r].type == blockType) {
+                vCount++;
+            } else {
+                break;
+            }
+        }
+        
+        return max(hCount, vCount);
+    }
+    
+    // Add this function to estimate chain reaction potential
+    estimateChainPotential = function(col, row) {
+        var grid = player.grid;
+        var potential = 0;
+        
+        // Check blocks above that would fall after a match
+        for (var r = row - 1; r >= self.top_playable_row; r--) {
+            if (grid[col, r].type >= 0 && !grid[col, r].falling && !grid[col, r].popping) {
+                // This block would fall after a match
+                potential += 2;
+                
+                // Check if it would form a new match when it falls
+                var blockType = grid[col, r].type;
+                var wouldMatch = false;
+                
+                // Check left/right at the position where it would fall
+                for (var offset = -1; offset <= 1; offset += 2) {
+                    var checkCol = col + offset;
+                    if (checkCol >= 0 && checkCol < self.width) {
+                        if (grid[checkCol, row].type == blockType && 
+                            !grid[checkCol, row].falling && !grid[checkCol, row].popping) {
+                            wouldMatch = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (wouldMatch) {
+                    potential += 10; // Big bonus for chain reactions
+                }
+            }
+        }
+        
+        return potential;
+    }
+    
+    
+    
+    // Check if a position would form a match
+    checkForMatch = function(col, row) {
+        var grid = player.grid;
+        var blockType = grid[col, row].type;
+        
+        if (blockType == BLOCK.NONE) return false;
+        
+        // Check horizontal matches (need at least 3 in a row)
+        var horizontalCount = 1;
+        
+        // Count to the left
+        for (var c = col - 1; c >= 0; c--) {
+            if (grid[c, row].type == blockType) {
+                horizontalCount++;
+            } else {
+                break;
+            }
+        }
+        
+        // Count to the right
+        for (var c = col + 1; c < self.width; c++) {
+            if (grid[c, row].type == blockType) {
+                horizontalCount++;
+            } else {
+                break;
+            }
+        }
+        
+        if (horizontalCount >= 3) return true;
+        
+        // Check vertical matches (need at least 3 in a column)
+        var verticalCount = 1;
+        
+        // Count upward
+        for (var r = row - 1; r >= player.topmost_row; r--) {
+            if (grid[col, r].type == blockType) {
+                verticalCount++;
+            } else {
+                break;
+            }
+        }
+        
+        // Count downward
+        for (var r = row + 1; r <= self.bottom_playable_row; r++) {
+            if (grid[col, r].type == blockType) {
+                verticalCount++;
+            } else {
+                break;
+            }
+        }
+        
+        return verticalCount >= 3;
+    }
+    
+    // Scan for column reduction opportunities
+    scanForColumnReduction = function() {
+        var tallestCol = findTallestColumn();
+        if (tallestCol < 0) return;
+        
+        var grid = player.grid;
+        
+        // Check adjacent columns
+        for (var offset = -1; offset <= 1; offset += 2) {
+            var adjCol = tallestCol + offset;
+            if (adjCol < 0 || adjCol >= self.width) continue;
+            
+            // Check each row in the tall column
+            for (var row = player.topmost_row; row < self.bottom_playable_row - 1; row++) {
+                var block = grid[tallestCol, row];
+                var adjBlock = grid[adjCol, row];
+                
+                if (block.type < 0 || adjBlock.type < 0 || 
+                    block.falling || adjBlock.falling ||
+                    block.popping || adjBlock.popping) {
+                    continue;
+                }
+                
+                // Simulate swap and check if height decreases
+                var beforeHeight = getColumnHeight(tallestCol);
+                
+                // Swap
+                var tempType = block.type;
+                block.type = adjBlock.type;
+                adjBlock.type = tempType;
+                
+                var afterHeight = getColumnHeight(tallestCol);
+                
+                // Swap back
+                adjBlock.type = block.type;
+                block.type = tempType;
+                
+                if (afterHeight < beforeHeight) {
+                    // Higher score for bigger height reduction
+                    var heightDiff = beforeHeight - afterHeight;
+                    
+                    var matchInfo = {
+                        x: min(tallestCol, adjCol),
+                        y: row,
+                        match_type: "column_reduction",
+                        score: 15 + (heightDiff * 3)  // Reduced from 20 + (heightDiff * 5)
+                    };
+                    
+                    ds_queue_enqueue(self.match_queue, matchInfo);
+                }
+            }
+        }
+    }
+    
+    // Look for gravity-based swaps
+    scanForGravitySwap = function(col1, col2) {
+        var grid = player.grid;
+        var height1 = getColumnHeight(col1);
+        var height2 = getColumnHeight(col2);
+        
+        // Only care about significant height differences
+        if (abs(height1 - height2) < 1) return;
+        
+        var tallCol = height1 > height2 ? col1 : col2;
+        var shortCol = height1 > height2 ? col2 : col1;
+        
+        // Look at the interface between columns
+        var interfaceRow = self.bottom_playable_row - min(height1, height2);
+        
+        if (interfaceRow < self.top_playable_row - 1) return; // No valid interface
+        
+        // Check blocks at the interface
+        var tallBlock = grid[tallCol, interfaceRow];
+        var shortBlock = grid[shortCol, interfaceRow];
+        
+        if (tallBlock.type == BLOCK.NONE || shortBlock.type == BLOCK.NONE ||
+            tallBlock.falling || shortBlock.falling ||
+            tallBlock.popping || shortBlock.popping) {
+            return;
+        }
+        
+        // Check if there's a gap below in the short column
+        if (interfaceRow < self.bottom_playable_row - 1 && grid[shortCol, interfaceRow+1].type == BLOCK.NONE) {
+            var matchInfo = {
+                x: min(tallCol, shortCol),
+                y: interfaceRow,
+                match_type: "gravity",
+                score: 25  // Reduced from 35
+            };
+            
+            ds_queue_enqueue(self.match_queue, matchInfo);
+        }
+    }
+    
+    // Helper function to find the tallest column
+    findTallestColumn = function() {
+        var tallest = -1;
+        var maxHeight = 0;
+        
+        for (var col = 0; col < self.width; col++) {
+            var height = getColumnHeight(col);
+            if (height > maxHeight) {
+                maxHeight = height;
+                tallest = col;
+            }
+        }
+        
+        return tallest;
+    }
+    
+    // Calculate column height
+    getColumnHeight = function(col) {
+        var grid = player.grid;
+        
+        for (var row = self.top_playable_row; row < self.bottom_playable_row - 1; row++) {
+            if (grid[col, row].type >= 0) {
+                return self.bottom_playable_row - row + 1;
+            }
+        }
+        
+        return 0;
+    }
+    
+    // Check if the board is in a dangerous state
+    isInDangerZone = function() {
+        // Check if any column is dangerously high
+        for (var col = 0; col < self.width; col++) {
+            if (getColumnHeight(col) > 18) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    
+    applyDangerPriorities = function() {
+        if (ds_queue_empty(self.match_queue)) return;
+        
+        // Create temporary queue
+        var temp_queue = ds_queue_create();
+        
+        // For each match in the queue
+        while (!ds_queue_empty(self.match_queue)) {
+            var match = ds_queue_dequeue(self.match_queue);
+            
+            // Check if this move affects a tall column
+            var col = match.x;
+            var nextCol = (match.match_type == "horizontal" || match.match_type == "direct") ? col + 1 : col;
+            
+            if (getColumnHeight(col) > 18 || getColumnHeight(nextCol) > 18) {
+                match.score += 100; // Massive bonus for reducing dangerous columns
+            }
+            
+            // Give direct matches an extra boost in non-danger situations
+            if (match.match_type == "direct" && !isInDangerZone()) {
+                match.score += 30; // Extra bonus to ensure direct matches get priority
+            }
+            
+            // Re-add to temp queue
+            ds_queue_enqueue(temp_queue, match);
+        }
+        
+        // Restore from temp queue to match queue
+        while (!ds_queue_empty(temp_queue)) {
+            ds_queue_enqueue(self.match_queue, ds_queue_dequeue(temp_queue));
+        }
+        
+        // Clean up
+        ds_queue_destroy(temp_queue);
+    }
+    
+    // Helper function to calculate bonus for matches in tall columns
+    calculateColumnHeightBonus = function(col) {
+        var height = getColumnHeight(col);
+        return max(0, height - 10) * 1; // Bonus points for taller columns
+    }
+    
+    // Helper function to calculate bonus for matches that level the board
+    calculateLevelingBonus = function(col1, col2) {
+        var height1 = getColumnHeight(col1);
+        var height2 = getColumnHeight(col2);
+        
+        // Find the average height of all columns
+        var totalHeight = 0;
+        var columnCount = 0;
+        
+        for (var col = 0; col < self.width; col++) {
+            var height = getColumnHeight(col);
+            if (height > 0) {
+                totalHeight += height;
+                columnCount++;
+            }
+        }
+        
+        var avgHeight = columnCount > 0 ? totalHeight / columnCount : 0;
+        
+        // Bonus for reducing tall columns or filling short ones
+        var bonus = 0;
+        
+        if (height1 > avgHeight + 3) {
+            bonus += min(15, (height1 - avgHeight) * 2);
+        }
+        
+        if (height2 > avgHeight + 3) {
+            bonus += min(15, (height2 - avgHeight) * 2);
+        }
+        
+        return bonus;
+    }
+    
+    // Get the best match from the queue
     getNextMatch = function() {
         if (ds_queue_empty(self.match_queue)) {
             return undefined;
         }
         
-        return ds_queue_dequeue(self.match_queue);
+        // Find the highest scored match
+        var bestMatch = undefined;
+        var bestScore = -1;
+        
+        // Create a temporary queue
+        var tempQueue = ds_queue_create();
+        
+        // Find the best match
+        while (!ds_queue_empty(self.match_queue)) {
+            var match = ds_queue_dequeue(self.match_queue);
+            
+            if (bestMatch == undefined || match.score > bestScore) {
+                bestMatch = match;
+                bestScore = match.score;
+            }
+            
+            ds_queue_enqueue(tempQueue, match);
+        }
+        
+        // Restore all except the best match
+        while (!ds_queue_empty(tempQueue)) {
+            var match = ds_queue_dequeue(tempQueue);
+            
+            if (match != bestMatch) {
+                ds_queue_enqueue(self.match_queue, match);
+            }
+        }
+        
+        // Clean up
+        ds_queue_destroy(tempQueue);
+        
+        return bestMatch;
     }
     
     // Clean up resources
     cleanup = function() {
-        ds_queue_destroy(self.match_queue);
+        if (ds_exists(self.match_queue, ds_type_queue)) {
+            ds_queue_destroy(self.match_queue);
+        }
     }
 }
 
 
-
-
-
-
-
-///// @function AIBoardScanner
-///// @param {struct} player The player struct
-///// @returns {struct} Scanner struct
-//function AIBoardScanner(player) constructor {
-    //self.player = player;
-    //
-    //// Find vertical matches (3+ blocks of same color)
-    //findVerticalMatch = function() {
-        //var result = { found: false, color: -1, bottomRow: -1, topRow: -1 };
-        //var grid = player.grid;
-        //var min_row = 4;  // Top playable row
-        //var max_row = 20; // Bottom playable row
-        //
-        //// Scan grid for vertical patterns of same color
-        //for (var col = 0; col < 8; col++) {
-            //var currentColor = -1;
-            //var matchCount = 0;
-            //var topRow = -1;
-            //
-            //for (var row = min_row; row <= max_row; row++) {
-                //var block = grid[col, row];
-                //
-                //// Check if this is a valid colored block
-                //if (block.type >= 0 && block.type <= 10 && !block.falling && !block.popping) {
-                    //if (currentColor == -1) {
-                        //// First block of potential match
-                        //currentColor = block.type;
-                        //matchCount = 1;
-                        //topRow = row;
-                    //} else if (block.type == currentColor) {
-                        //// Continuing match
-                        //matchCount++;
-                    //} else {
-                        //// Different color, check if we had a match
-                        //if (matchCount >= 2) {
-                            //result.found = true;
-                            //result.color = currentColor;
-                            //result.topRow = topRow;
-                            //result.bottomRow = row - 1;
-                            //return result;
-                        //}
-                        //
-                        //// Reset for new potential match
-                        //currentColor = block.type;
-                        //matchCount = 1;
-                        //topRow = row;
-                    //}
-                //} else {
-                    //// Non-matchable block, reset
-                    //if (matchCount >= 2) {
-                        //result.found = true;
-                        //result.color = currentColor;
-                        //result.topRow = topRow;
-                        //result.bottomRow = row - 1;
-                        //return result;
-                    //}
-                    //
-                    //currentColor = -1;
-                    //matchCount = 0;
-                    //topRow = -1;
-                //}
-            //}
-            //
-            //// Check for match at end of column
-            //if (matchCount >= 2) {
-                //result.found = true;
-                //result.color = currentColor;
-                //result.topRow = topRow;
-                //result.bottomRow = max_row;
-                //return result;
-            //}
-        //}
-        //
-        //return result;
-    //}
-    //
-    //// Find potential vertical matches (2 blocks with one move)
-    //findPotentialVerticalMatch = function() {
-        //var grid = player.grid;
-        //var min_row = 4;  // Top playable row
-        //var max_row = 20; // Bottom playable row
-        //var result = { found: false, pos_x: 0, pos_y: 0, color: -1 };
-        //
-        //// Look for pairs of same-colored blocks separated by one position
-        //for (var col = 0; col < 8; col++) {
-            //var sameColorBlocks = [];
-            //
-            //// Collect valid blocks of the same color
-            //for (var row = min_row; row <= max_row; row++) {
-                //var block = grid[col, row];
-                //if (block.type >= 0 && block.type <= 10 && !block.falling && !block.popping && !block.is_big) {
-                    //// Store row positions of same-colored blocks
-                    //var entry = {row: row, color: block.type};
-                    //sameColorBlocks[array_length(sameColorBlocks)] = entry;
-                //}
-            //}
-            //
-            //// Look for patterns like X-X where X is the same color and - is a gap
-            //for (var i = 0; i < array_length(sameColorBlocks) - 1; i++) {
-                //for (var j = i + 1; j < array_length(sameColorBlocks); j++) {
-                    //var block1 = sameColorBlocks[i];
-                    //var block2 = sameColorBlocks[j];
-                    //
-                    //// Check if same color
-                    //if (block1.color == block2.color) {
-                        //// Check if they have 1 block between them
-                        //if (abs(block1.row - block2.row) == 2) {
-                            //var middleRow = (block1.row + block2.row) / 2;
-                            //
-                            //// Look left and right for a block of the same color
-                            //for (var checkCol = 0; checkCol < 8; checkCol++) {
-                                //if (checkCol != col) {
-                                    //var potentialBlock = grid[checkCol, middleRow];
-                                    //if (potentialBlock.type == block1.color && 
-                                        //!potentialBlock.falling && 
-                                        //!potentialBlock.popping && 
-                                        //!potentialBlock.is_big) {
-                                        //
-                                        //// Found a potential match!
-                                        //result.found = true;
-                                        //result.pos_x = checkCol;
-                                        //result.pos_y = middleRow;
-                                        //result.color = block1.color;
-                                        //return result;
-                                    //}
-                                //}
-                            //}
-                        //}
-                    //}
-                //}
-            //}
-        //}
-        //
-        //return result;
-    //}
-    //
-    //// Find chain reactions where one match leads to another
-    //findChainReaction = function() {
-        //var grid = player.grid;
-        //var min_row = 4;
-        //var max_row = 20;
-        //var result = { found: false, pos_x: 0, pos_y: 0 };
-        //
-        //// Look for potential chain reactions - where a match would cause blocks to fall into another match
-        //for (var col = 0; col < 7; col++) {
-            //for (var row = min_row; row <= max_row - 3; row++) {
-                //// Look for a potential match at the current position
-                //var block1 = grid[col, row];
-                //var block2 = grid[col+1, row];
-                //
-                //// Skip invalid blocks
-                //if (block1.type < 0 || block2.type < 0 || 
-                    //block1.falling || block2.falling ||
-                    //block1.popping || block2.popping ||
-                    //block1.is_big || block2.is_big) {
-                    //continue;
-                //}
-                //
-                //// Check for a match if we swap
-                //var matchFound = false;
-                //
-                //// Temporarily swap blocks
-                //var tempType = block1.type;
-                //block1.type = block2.type;
-                //block2.type = tempType;
-                //
-                //// Check if this creates a match (simplified version - only vertical)
-                //if ((row >= min_row + 2 && block1.type == grid[col, row-1].type && block1.type == grid[col, row-2].type) ||
-                    //(row <= max_row - 2 && block1.type == grid[col, row+1].type && block1.type == grid[col, row+2].type) ||
-                    //(row >= min_row + 1 && row <= max_row - 1 && block1.type == grid[col, row-1].type && block1.type == grid[col, row+1].type) ||
-                    //(row >= min_row + 2 && block2.type == grid[col+1, row-1].type && block2.type == grid[col+1, row-2].type) ||
-                    //(row <= max_row - 2 && block2.type == grid[col+1, row+1].type && block2.type == grid[col+1, row+2].type) ||
-                    //(row >= min_row + 1 && row <= max_row - 1 && block2.type == grid[col+1, row-1].type && block2.type == grid[col+1, row+1].type)) {
-                    //
-                    //// Now check if there's a potential chain reaction above that would fall into place
-                    //var potentialChain = false;
-                    //
-                    //// Check blocks above that would fall
-                    //for (var checkRow = row - 1; checkRow >= min_row; checkRow--) {
-                        //var aboveBlock1 = grid[col, checkRow];
-                        //var aboveBlock2 = grid[col+1, checkRow];
-                        //
-                        //// Simple check: if blocks above would form matches when they fall
-                        //if (!aboveBlock1.is_big && !aboveBlock1.falling && !aboveBlock1.popping &&
-                            //!aboveBlock2.is_big && !aboveBlock2.falling && !aboveBlock2.popping) {
-                            //
-                            //// Check if these blocks would form new matches after falling
-                            //// This is simplified - a full implementation would need to simulate the falling and match logic
-                            //if ((col >= 1 && aboveBlock1.type == grid[col-1, checkRow].type) || 
-                                //(col+2 < 8 && aboveBlock2.type == grid[col+2, checkRow].type) ||
-                                //(checkRow >= min_row + 1 && aboveBlock1.type == grid[col, checkRow-1].type) ||
-                                //(checkRow >= min_row + 1 && aboveBlock2.type == grid[col+1, checkRow-1].type)) {
-                                //
-                                //potentialChain = true;
-                                //break;
-                            //}
-                        //}
-                    //}
-                    //
-                    //if (potentialChain) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //// Restore original block types
-                //block1.type = block2.type;
-                //block2.type = tempType;
-                //
-                //if (matchFound) {
-                    //result.found = true;
-                    //result.pos_x = col;
-                    //result.pos_y = row;
-                    //return result;
-                //}
-            //}
-        //}
-        //
-        //return result;
-    //}
-    //
-    //// Evaluate how "good" the current board state is
-    //evaluateBoard = function() {
-        //var grid = player.grid;
-        //var _score = 0;
-        //
-        //// Look for potential matches
-        //var directMatches = 0;
-        //var potentialMatches = 0;
-        //
-        //// Check for direct match opportunities
-        //var swapMatch = { found: false };
-        //for (var col = 0; col < 7; col++) {
-            //for (var row = 4; row <= 20; row++) {
-                //// Skip invalid blocks
-                //if (grid[col, row].type < 0 || grid[col+1, row].type < 0 || 
-                    //grid[col, row].falling || grid[col+1, row].falling ||
-                    //grid[col, row].popping || grid[col+1, row].popping ||
-                    //grid[col, row].is_big || grid[col+1, row].is_big) {
-                    //continue;
-                //}
-                //
-                //// Temporarily swap blocks
-                //var tempType = grid[col, row].type;
-                //grid[col, row].type = grid[col+1, row].type;
-                //grid[col+1, row].type = tempType;
-                //
-                //// Check for matches
-                //var matchFound = false;
-                //
-                //// Vertical matches for first block
-                //if (row >= 6 && grid[col, row].type == grid[col, row-1].type && grid[col, row].type == grid[col, row-2].type) {
-                    //matchFound = true;
-                //}
-                //
-                //if (row <= 18 && grid[col, row].type == grid[col, row+1].type && grid[col, row].type == grid[col, row+2].type) {
-                    //matchFound = true;
-                //}
-                //
-                //if (row >= 5 && row <= 19 && grid[col, row].type == grid[col, row-1].type && grid[col, row].type == grid[col, row+1].type) {
-                    //matchFound = true;
-                //}
-                //
-                //// Vertical matches for second block
-                //if (row >= 6 && grid[col+1, row].type == grid[col+1, row-1].type && grid[col+1, row].type == grid[col+1, row-2].type) {
-                    //matchFound = true;
-                //}
-                //
-                //if (row <= 18 && grid[col+1, row].type == grid[col+1, row+1].type && grid[col+1, row].type == grid[col+1, row+2].type) {
-                    //matchFound = true;
-                //}
-                //
-                //if (row >= 5 && row <= 19 && grid[col+1, row].type == grid[col+1, row-1].type && grid[col+1, row].type == grid[col+1, row+1].type) {
-                    //matchFound = true;
-                //}
-                //
-                //// Restore blocks
-                //grid[col+1, row].type = grid[col, row].type;
-                //grid[col, row].type = tempType;
-                //
-                //if (matchFound) {
-                    //directMatches++;
-                    //
-                    //// Bonus for matches lower on the board
-                    //_score += (row / 20) * 50;
-                //}
-            //}
-        //}
-        //
-        //// Award points for direct matches
-        //_score += directMatches * 100;
-        //
-        //// Count potential vertical matches (X-X patterns)
-        //for (var col = 0; col < 8; col++) {
-            //for (var row = 4; row <= 18; row++) {
-                //if (grid[col, row].type >= 0 && grid[col, row+2].type >= 0 && 
-                    //grid[col, row].type == grid[col, row+2].type &&
-                    //!grid[col, row].falling && !grid[col, row+2].falling &&
-                    //!grid[col, row].popping && !grid[col, row+2].popping) {
-                    //
-                    //potentialMatches++;
-                    //
-                    //// Higher score for potential matches lower on the board
-                    //_score += (row / 20) * 25;
-                //}
-            //}
-        //}
-        //
-        //// Award points for potential matches
-        //_score += potentialMatches * 50;
-        //
-        //// Evaluate board "cleanliness" - fewer colors is better for matching
-        //var colorCounts = array_create(11, 0); // Assuming 11 possible block types
-        //var distinctColors = 0;
-        //
-        //for (var col = 0; col < 8; col++) {
-            //for (var row = 4; row <= 20; row++) {
-                //var blockType = grid[col, row].type;
-                //if (blockType >= 0 && blockType <= 10) {
-                    //colorCounts[blockType]++;
-                //}
-            //}
-        //}
-        //
-        //// Count distinct colors
-        //for (var i = 0; i < 11; i++) {
-            //if (colorCounts[i] > 0) {
-                //distinctColors++;
-            //}
-        //}
-        //
-        //// Fewer distinct colors is better
-        //_score -= distinctColors * 20;
-        //
-        //// Evaluate stack height - lower stacks are better
-        //var stackHeightPenalty = 0;
-        //for (var col = 0; col < 8; col++) {
-            //var lowestEmptyRow = 20;
-            //for (var row = 4; row <= 20; row++) {
-                //if (grid[col, row].type == BLOCK.NONE) {
-                    //lowestEmptyRow = row;
-                    //break;
-                //}
-            //}
-            //
-            //// Penalize high stacks
-            //stackHeightPenalty += (20 - lowestEmptyRow) * 5;
-        //}
-        //
-        //_score -= stackHeightPenalty;
-        //
-        //return _score;
-    //}
-    //
-    //// Find horizontal match potentials (where one move creates a match)
-    //findHorizontalMatchPotential = function() {
-        //var grid = player.grid;
-        //var min_row = 4;
-        //var max_row = 20;
-        //var result = { found: false, from_x: 0, from_y: 0, to_x: 0, to_y: 0 };
-        //
-        //// Check for patterns like XX_X or X_XX where X is same color and _ is gap
-        //for (var row = min_row; row <= max_row; row++) {
-            //// Find matches of XX_X type (where _ is the gap)
-            //for (var col = 0; col < 5; col++) {
-                //var block1 = grid[col, row];
-                //var block2 = grid[col+1, row];
-                //var block3 = grid[col+3, row];
-                //
-                //// Check if first, second and fourth blocks are the same color
-                //if (block1.type >= 0 && block1.type == block2.type && block1.type == block3.type &&
-                    //!block1.falling && !block2.falling && !block3.falling &&
-                    //!block1.popping && !block2.popping && !block3.popping) {
-                    //
-                    //var gapBlock = grid[col+2, row];
-                    //
-                    //// If gap block can be moved
-                    //if (gapBlock.type >= 0 && gapBlock.type != block1.type && 
-                        //!gapBlock.falling && !gapBlock.popping && !gapBlock.is_big) {
-                        //
-                        //// Find a block to swap with this gap
-                        //for (var searchCol = 0; searchCol < 8; searchCol++) {
-                            //if (abs(searchCol - (col+2)) == 1) { // Must be next to the gap
-                                //var swapBlock = grid[searchCol, row];
-                                //if (swapBlock.type == block1.type && 
-                                    //!swapBlock.falling && !swapBlock.popping && !swapBlock.is_big) {
-                                    //
-                                    //result.found = true;
-                                    //result.from_x = searchCol;
-                                    //result.from_y = row;
-                                    //result.to_x = col+2;
-                                    //result.to_y = row;
-                                    //return result;
-                                //}
-                            //}
-                        //}
-                    //}
-                //}
-            //}
-            //
-            //// Find matches of X_XX type
-            //for (var col = 0; col < 5; col++) {
-                //var block1 = grid[col, row];
-                //var block3 = grid[col+2, row];
-                //var block4 = grid[col+3, row];
-                //
-                //// Check if first, third and fourth blocks are the same color
-                //if (block1.type >= 0 && block1.type == block3.type && block1.type == block4.type &&
-                    //!block1.falling && !block3.falling && !block4.falling &&
-                    //!block1.popping && !block3.popping && !block4.popping) {
-                    //
-                    //var gapBlock = grid[col+1, row];
-                    //
-                    //// If gap block can be moved
-                    //if (gapBlock.type >= 0 && gapBlock.type != block1.type && 
-                        //!gapBlock.falling && !gapBlock.popping && !gapBlock.is_big) {
-                        //
-                        //// Find a block to swap with this gap
-                        //for (var searchCol = 0; searchCol < 8; searchCol++) {
-                            //if (abs(searchCol - (col+1)) == 1) { // Must be next to the gap
-                                //var swapBlock = grid[searchCol, row];
-                                //if (swapBlock.type == block1.type && 
-                                    //!swapBlock.falling && !swapBlock.popping && !swapBlock.is_big) {
-                                    //
-                                    //result.found = true;
-                                    //result.from_x = searchCol;
-                                    //result.from_y = row;
-                                    //result.to_x = col+1;
-                                    //result.to_y = row;
-                                    //return result;
-                                //}
-                            //}
-                        //}
-                    //}
-                //}
-            //}
-        //}
-        //
-        //return result;
-    //}
-    //
-    //// Find column containing a specific color in a row
-    //findColorCol = function(color, row) {
-        //var grid = player.grid;
-        //
-        //for (var col = 0; col < 8; col++) {
-            //if (grid[col, row].type == color && !grid[col, row].falling && !grid[col, row].popping) {
-                //return col;
-            //}
-        //}
-        //
-        //return -1;
-    //}
-    //
-    //// Find blocks that when moved would create a T or L shape (good for combos)
-    //findShapeSetup = function() {
-        //var grid = player.grid;
-        //var min_row = 4;
-        //var max_row = 20;
-        //var result = { found: false, pos_x: 0, pos_y: 0 };
-        //
-        //// Search for potential T and L shaped patterns
-        //for (var col = 1; col < 6; col++) {
-            //for (var row = min_row + 1; row <= max_row - 1; row++) {
-                //// Try to find a block that needs to be moved to create a T or L shape
-                //
-                //// Skip invalid blocks
-                //if (grid[col, row].type < 0 || 
-                    //grid[col, row].falling || 
-                    //grid[col, row].popping || 
-                    //grid[col, row].is_big) {
-                    //continue;
-                //}
-                //
-                //// Check for T shape potential (horizontal line with middle piece missing)
-                //if (col > 0 && col < 7 && 
-                    //grid[col-1, row].type >= 0 && grid[col+1, row].type >= 0 && 
-                    //grid[col-1, row].type == grid[col+1, row].type &&
-                    //grid[col, row].type != grid[col-1, row].type) {
-                    //
-                    //// Look for the needed piece nearby
-                    //for (var searchCol = 0; searchCol < 8; searchCol++) {
-                        //if (abs(searchCol - col) == 1) { // Must be adjacent
-                            //for (var searchRow = row-1; searchRow <= row+1; searchRow++) {
-                                //if (searchRow >= min_row && searchRow <= max_row && searchRow != row) {
-                                    //if (grid[searchCol, searchRow].type == grid[col-1, row].type &&
-                                        //!grid[searchCol, searchRow].falling &&
-                                        //!grid[searchCol, searchRow].popping &&
-                                        //!grid[searchCol, searchRow].is_big) {
-                                        //
-                                        //result.found = true;
-                                        //result.pos_x = searchCol;
-                                        //result.pos_y = searchRow;
-                                        //return result;
-                                    //}
-                                //}
-                            //}
-                        //}
-                    //}
-                //}
-                //
-                //// Check for L shape potential (two adjacent pieces of same color with one missing)
-                //if (row < max_row && col < 7 &&
-                    //grid[col, row+1].type >= 0 && grid[col+1, row].type >= 0 &&
-                    //grid[col, row+1].type == grid[col+1, row].type &&
-                    //grid[col, row].type != grid[col, row+1].type) {
-                    //
-                    //// Look for the needed piece nearby
-                    //for (var searchCol = 0; searchCol < 8; searchCol++) {
-                        //if (abs(searchCol - col) <= 1 && searchCol != col) {
-                            //for (var searchRow = row-1; searchRow <= row+1; searchRow++) {
-                                //if (searchRow >= min_row && searchRow <= max_row && (searchRow != row || searchCol != col)) {
-                                    //if (grid[searchCol, searchRow].type == grid[col, row+1].type &&
-                                        //!grid[searchCol, searchRow].falling &&
-                                        //!grid[searchCol, searchRow].popping &&
-                                        //!grid[searchCol, searchRow].is_big) {
-                                        //
-                                        //result.found = true;
-                                        //result.pos_x = searchCol;
-                                        //result.pos_y = searchRow;
-                                        //return result;
-                                    //}
-                                //}
-                            //}
-                        //}
-                    //}
-                //}
-            //}
-        //}
-        //
-        //return result;
-    //}
-    //
-    //// Find a block that can be moved to make blocks fall
-    //findStackFlatteningMove = function() {
-        //var grid = player.grid;
-        //var result = { pos_x: 0, pos_y: 0, dx: 0, dy: 0 };
-        //var min_row = 4;  // Top playable row
-        //var max_row = 20; // Bottom playable row
-        //
-        //// Look for blocks that can be moved horizontally to create drops
-        //for (var row = max_row; row >= min_row; row--) {
-            //for (var col = 0; col < 8; col++) {
-                //// Check if this is a valid block that can be moved
-                //if (grid[col, row].type >= 0 && !grid[col, row].falling && !grid[col, row].popping && !grid[col, row].is_big) {
-                    //// Check left side for potential moves
-                    //if (col > 0) {
-                        //var found_gap = false;
-                        //for (var checkCol = col-1; checkCol >= 0; checkCol--) {
-                            //if (grid[checkCol, row].type != BLOCK.NONE) break;
-                            //if (row < max_row && grid[checkCol, row+1].type == BLOCK.NONE) {
-                                //found_gap = true;
-                                //result.pos_x = col;
-                                //result.pos_y = row;
-                                //result.dx = checkCol;
-                                //result.dy = row;
-                                //return result;
-                            //}
-                        //}
-                    //}
-                    //
-                    //// Check right side
-                    //if (col < 7) {
-                        //var found_gap = false;
-                        //for (var checkCol = col+1; checkCol < 8; checkCol++) {
-                            //if (grid[checkCol, row].type != BLOCK.NONE) break;
-                            //if (row < max_row && grid[checkCol, row+1].type == BLOCK.NONE) {
-                                //found_gap = true;
-                                //result.pos_x = col;
-                                //result.pos_y = row;
-                                //result.dx = checkCol;
-                                //result.dy = row;
-                                //return result;
-                            //}
-                        //}
-                    //}
-                //}
-            //}
-        //}
-        //
-        //return result;
-    //}
-    //
-    //// Find adjacent blocks that can be swapped to create matches
-    //findSwapMatch = function() {
-        //var grid = player.grid;
-        //var min_row = 4;
-        //var max_row = 20;
-        //var result = { found: false, pos_x: 0, pos_y: 0 };
-        //
-        //// Check all valid positions for potential swaps
-        //for (var row = min_row; row <= max_row; row++) {
-            //for (var col = 0; col < 7; col++) { // Only check positions with a block to the right
-                //var block1 = grid[col, row];
-                //var block2 = grid[col+1, row];
-                //
-                //// Skip if either block can't be swapped
-                //if (block1.type < 0 || block2.type < 0 || 
-                    //block1.falling || block2.falling ||
-                    //block1.popping || block2.popping ||
-                    //block1.is_big || block2.is_big) {
-                    //continue;
-                //}
-                //
-                //// Temporarily swap blocks to check for matches
-                //var tempType = block1.type;
-                //block1.type = block2.type;
-                //block2.type = tempType;
-                //
-                //// Check for vertical matches after swapping
-                //var matchFound = false;
-                //
-                //// Check for vertical match for first block
-                //if (row >= min_row + 2) {
-                    //if (block1.type == grid[col, row-1].type && block1.type == grid[col, row-2].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //if (row <= max_row - 2) {
-                    //if (block1.type == grid[col, row+1].type && block1.type == grid[col, row+2].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //if (row >= min_row + 1 && row <= max_row - 1) {
-                    //if (block1.type == grid[col, row-1].type && block1.type == grid[col, row+1].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //// Check for vertical match for second block
-                //if (row >= min_row + 2) {
-                    //if (block2.type == grid[col+1, row-1].type && block2.type == grid[col+1, row-2].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //if (row <= max_row - 2) {
-                    //if (block2.type == grid[col+1, row+1].type && block2.type == grid[col+1, row+2].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //if (row >= min_row + 1 && row <= max_row - 1) {
-                    //if (block2.type == grid[col+1, row-1].type && block2.type == grid[col+1, row+1].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //// Check for horizontal matches
-                //// For the first block
-                //if (col >= 2) {
-                    //if (block1.type == grid[col-1, row].type && block1.type == grid[col-2, row].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //if (col >= 1 && col+1 < 7) {
-                    //if (block1.type == grid[col-1, row].type && block1.type == grid[col+2, row].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //// For the second block
-                //if (col+1 <= 5) {
-                    //if (block2.type == grid[col+2, row].type && block2.type == grid[col+3, row].type) {
-                        //matchFound = true;
-                    //}
-                //}
-                //
-                //// Restore original block types
-                //block1.type = block2.type;
-                //block2.type = tempType;
-                //
-                //if (matchFound) {
-                    //result.found = true;
-                    //result.pos_x = col;
-                    //result.pos_y = row;
-                    //return result;
-                //}
-            //}
-        //}
-        //
-        //return result;
-    //}
-//}

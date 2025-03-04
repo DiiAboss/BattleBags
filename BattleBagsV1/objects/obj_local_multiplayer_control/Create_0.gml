@@ -40,7 +40,7 @@ xInput = true;
 
 random_seed = irandom(999999) * -1;
 
-shift_speed = 0.25;
+shift_speed = 0.1;
 
 global.player_list = ds_list_create();
 gem_size = 48;
@@ -57,7 +57,7 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
     player.swap_info = create_swap_info();
     player.swap_queue = create_swap_queue();
     player.pop_list = ds_list_create();
-    player.shift_speed = 0.5;
+    player.shift_speed = shift_speed;
     player.random_seed = random_seed;
     player.hovered_block = [4, 12];
     player.input.InputType = INPUT.NONE;
