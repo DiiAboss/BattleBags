@@ -87,7 +87,7 @@ function draw_gem(gem, draw_x, draw_y) {
 
 /// Function: Draw hover effect on the selected block
 function draw_hover_effect(_self) {
-    if (_self.hovered_block[0] < 0 || _self.hovered_block[1] < 0) return;
+    if (_self.hovered_block[0] < 0 && _self.hovered_block[1] < 0) return;
 
     var hover_i = hovered_block[0];
     var hover_j = hovered_block[1];

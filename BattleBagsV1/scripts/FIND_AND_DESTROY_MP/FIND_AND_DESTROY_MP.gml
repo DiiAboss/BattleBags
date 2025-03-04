@@ -167,32 +167,19 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
 }
 
 
-function pop_blocks_in_pop_queue(mp_control, player) 
-{
-    var pops_finished = false;
-    var gem_size = mp_control.gem_size;
-    var board_x_offset = player.board_x_offset;
-    var offset = mp_control.offset;
-    var global_y_offset = player.global_y_offset;
-    var _depth = 10;
-    
-    if (ds_list_size(player.pop_list) == 0) return; 
-    
-    for (var i = 0; i < ds_list_size(player.pop_list); i++) {
+function pop_blocks_in_pop_queue(mp_control, player) {
+    if (ds_list_size(player.pop_list) == 0) return;
+
+    for (var i = ds_list_size(player.pop_list) - 1; i >= 0; i--) {
         var pop_data = ds_list_find_value(player.pop_list, i);
         var _x = pop_data.x;
         var _y = pop_data.y;
-        var px = (_x * gem_size) + board_x_offset + offset;
-        var py = (_y * gem_size) + offset + global_y_offset + player.grid[_x, _y].draw_y + player.grid[_x, _y].offset_y;
-        
-        // Wait for start_delay
+
         if (pop_data.timer < pop_data.start_delay) {
             pop_data.timer++;
             player.combo_timer = 0;
 
-            // Create Smoke effect behind blocks
-            var _color = variable_struct_exists(pop_data, "color") ? pop_data.color : c_white;
-            effect_create_depth(_depth + 1, ef_smoke, px, py - 4, 2, _color);
+        
             
         } else {
             // Grow effect
@@ -222,7 +209,7 @@ function pop_blocks_in_pop_queue(mp_control, player)
             player.grid[_x, _y].pop_timer = false;
             
             // **Create visual effect**
-            effect_create_depth(_depth, ef_firework, px, py - 4, 0.5, pop_data.color);
+            //effect_create_depth(_depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
             // ✅ Create Attack Object with Score
             //var attack = instance_create_depth(px, py, _depth - 1, obj_player_attack);
@@ -248,18 +235,27 @@ function pop_blocks_in_pop_queue(mp_control, player)
             audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
             // Remove from pop_list
             ds_list_delete(player.pop_list, i);
-            //i--; 
+            i--; 
             continue;
             
         }
-        //total_multiplier_next = 1;
-        // Write back updated pop_data
-        ds_list_replace(player.pop_list, i, pop_data);
-        
-        
-        if (pop_data.scale < 1.1) pops_finished = false; 
+
+        pop_data.scale += 0.05;
+
+        if (pop_data.scale >= 1.1) {
+            
+            destroy_block(player, _x, _y);  // Just destroy, don't trigger fall
+
+            audio_play_sound(snd_pop_test_1, 10, false, 0.5, 0, 1.0);
+
+            ds_list_delete(player.pop_list, i);
+            player.grid[_x, _y].popping = false;
+        } else {
+            ds_list_replace(player.pop_list, i, pop_data);
+        }
     }
 }
+
 
 
 function process_popping_mp(player) {

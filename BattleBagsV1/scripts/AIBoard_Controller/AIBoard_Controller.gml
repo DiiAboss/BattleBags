@@ -54,23 +54,23 @@ function AIBoardController(player) constructor {
         }
         
         // Don't act if player is swapping or something is falling
-        if (player.swap_in_progress) {
-            return;
-        }
+        //if (player.swap_in_progress) {
+            //return;
+        //}
         
         self.topmost_row = player.topmost_row;
         
-        // Check if any blocks are falling or if matches are being processed
-        var blocks_moving = false;
-        for (var col = 0; col < 8; col++) {
-            for (var row = 4; row <= 20; row++) {
-                if (player.grid[col, row].falling || player.grid[col, row].popping) {
-                    blocks_moving = true;
-                    //break;
-                }
-            }
-            //if (blocks_moving) break;
-        }
+        //// Check if any blocks are falling or if matches are being processed
+        //var blocks_moving = false;
+        //for (var col = 0; col < 8; col++) {
+            //for (var row = 4; row <= 20; row++) {
+                //if (player.grid[col, row].falling || player.grid[col, row].popping) {
+                    //blocks_moving = true;
+                    ////break;
+                //}
+            //}
+            ////if (blocks_moving) break;
+        //}
         
         // If blocks are moving, wait
         //if (blocks_moving) {
@@ -90,13 +90,13 @@ function AIBoardController(player) constructor {
             var dx = abs(curX - self.last_position_x);
             var dy = abs(curY - self.last_position_y);
             
-            if ((dx > 1 && dx < 7) || dy > 1) { 
-                // Position jumped unexpectedly, reset to idle and plan new move
-                self.current_action = "idle";
-                self.last_decision = "POSITION JUMPED to " + string(curX) + "," + string(curY) + " - resetting";
-                array_push(self.decision_log, self.last_decision);
-                if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-            }
+            //if ((dx > 1 && dx < 7) || dy > 1) { 
+                //// Position jumped unexpectedly, reset to idle and plan new move
+                //self.current_action = "idle";
+                //self.last_decision = "POSITION JUMPED to " + string(curX) + "," + string(curY) + " - resetting";
+                //array_push(self.decision_log, self.last_decision);
+                //if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
+            //}
         }
         
         // Store current position for next frame
@@ -104,7 +104,7 @@ function AIBoardController(player) constructor {
         self.last_position_y = curY;
         
         // Safety check for valid position
-        if (curX < 0 || curX >= self.width || curY < self.top_playable_row || curY > self.bottom_playable_row) {
+        if (curX < 0 || curX > self.width - 1 || curY < self.top_playable_row || curY > self.bottom_playable_row) {
             // Reset to a safe position
             if (self.safe_moves < 3) {
                 // Try moving to center
@@ -213,7 +213,7 @@ function AIBoardController(player) constructor {
                 // Get the next match
                 self.current_match = player.ai_scanner.getNextMatch();
                 
-                //self.last_decision = "FOUND MATCH at " + string(self.current_match.x) + "," + string(self.current_match.y) + " (" + self.current_match.match_type + ")";
+                self.last_decision = "sbfm: FOUND MATCH at " + string(self.current_match.x) + "," + string(self.current_match.y) + " (" + self.current_match.match_type + ")";
                 array_push(self.decision_log, self.last_decision);
                 if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
             }
@@ -235,19 +235,19 @@ function AIBoardController(player) constructor {
         // Look for a match near the current position first
         var curX = player.hovered_block[0];
         var curY = player.hovered_block[1];
-        var nearbyMatch = findNearbyMatch(curX, curY, 2); // Search within 2 blocks
+        var nearbyMatch = undefined;//findNearbyMatch(curX, curY, 10); // Search within 2 blocks
         
-        if (nearbyMatch != undefined) {
-            // Use the nearby match instead of the best overall match
-            self.current_match = nearbyMatch;
-            
-            self.last_decision = "USING NEARBY MATCH at " + string(self.current_match.x) + "," + string(self.current_match.y);
-            array_push(self.decision_log, self.last_decision);
-            if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-        } else if (self.current_match == undefined) {
-            // If no nearby match and no current match, get the best match from the queue
-            self.current_match = player.ai_scanner.getNextMatch();
-        }
+        //if (nearbyMatch != undefined) {
+            //// Use the nearby match instead of the best overall match
+            //self.current_match = nearbyMatch;
+            //
+            //self.last_decision = "USING NEARBY MATCH at " + string(self.current_match.x) + "," + string(self.current_match.y);
+            //array_push(self.decision_log, self.last_decision);
+            //if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
+        //} else if (self.current_match == undefined) {
+            //// If no nearby match and no current match, get the best match from the queue
+            //self.current_match = player.ai_scanner.getNextMatch();
+        //}
         
         // If we have a match, go to it
         if (self.current_match != undefined) {
@@ -265,12 +265,18 @@ function AIBoardController(player) constructor {
         }
         
         
+        
+        
         randomize();
         // If no match is available, randomly explore
-        var pos_x = irandom_range(1, self.width - 3);
+        var pos_x = irandom_range(0, self.width - 2);
         var pos_y = irandom_range(self.topmost_row, self.bottom_playable_row - 4);
         if (irandom(10) < 3) player.input.ActionPress = true;
         random_set_seed(player.random_seed);
+        
+        
+        
+        
         
         
         self.last_decision = "EXPLORING at " + string(pos_x) + "," + string(pos_y);
@@ -598,22 +604,22 @@ function AIBoardController(player) constructor {
             // Check if this swap would create a match
             var creates_match = false;
             
-            // Only do this check if your game has the checkForMatch function
-            if (variable_struct_exists(self, "checkForMatch")) {
-                var type1 = block1.type;
-                var type2 = block2.type;
-                
-                // Temporarily swap
-                block1.type = type2;
-                block2.type = type1;
-                
-                // Check for match
-                creates_match = checkForMatch(pos_x, pos_y) || checkForMatch(pos_x+1, pos_y);
-                
-                // Swap back
-                block1.type = type1;
-                block2.type = type2;
-            }
+            //// Only do this check if your game has the checkForMatch function
+            //if (variable_struct_exists(self, "checkForMatch")) {
+                //var type1 = block1.type;
+                //var type2 = block2.type;
+                //
+                //// Temporarily swap
+                //block1.type = type2;
+                //block2.type = type1;
+                //
+                //// Check for match
+                //creates_match = checkForMatch(pos_x, pos_y) || checkForMatch(pos_x+1, pos_y);
+                //
+                //// Swap back
+                //block1.type = type1;
+                //block2.type = type2;
+            //}
             
             // Always attempt the swap, even if we're not sure it creates a match
             // (this handles cases where your game might have match detection logic we can't access)
@@ -637,7 +643,7 @@ function AIBoardController(player) constructor {
         var grid = player.grid;
         var blockType = grid[col, row].type;
         
-        if (blockType < 0) return false;
+        if (blockType != BLOCK.NONE) return false;
         
         // Check horizontal matches
         var horizontalCount = 1;

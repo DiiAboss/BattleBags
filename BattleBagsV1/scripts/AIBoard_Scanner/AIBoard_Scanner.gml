@@ -22,18 +22,14 @@ function AIBoardScanner(player) constructor {
             columnHeights[col] = getColumnHeight(col);
         }
         
-        // Check for severe height differences that could use gravity
-        for (var col = 0; col < self.width - 1; col++) {
-            var height = columnHeights[col];
-            var nextHeight = columnHeights[col+1];
         
-            if (abs(height - nextHeight) >= 2) {
-                scanForGravitySwap(col, col+1);
-            }
-        }
         
         // Respect the topmost row when scanning
         var effective_top_row = min(self.top_playable_row, player.topmost_row);
+        
+        // Scan for direct matches (plain adjacent swaps that form matches)
+                scanDirectMatches(effective_top_row);
+                
         
         // Scan for horizontal matches
         scanHorizontalMatches(effective_top_row);
@@ -41,23 +37,32 @@ function AIBoardScanner(player) constructor {
         // Scan for vertical matches
         scanVerticalMatches(effective_top_row);
         
-        if (self.cleanup_timer <= 0) {
-            scanForLevelingMoves();
-            self.cleanup_timer = irandom_range(8, 12);
-        } else {
-                self.cleanup_timer--;
-            }
         
-        // Scan for direct matches (plain adjacent swaps that form matches)
-        scanDirectMatches(effective_top_row);
+        // Check for severe height differences that could use gravity
+                for (var col = 0; col < self.width - 1; col++) {
+                    var height = columnHeights[col];
+                    var nextHeight = columnHeights[col+1];
+                
+                    if (abs(height - nextHeight) >= 2) {
+                        scanForGravitySwap(col, col+1);
+                    }
+                }
         
-        // Scan for column reduction opportunities
-        scanForColumnReduction();
+        //if (self.cleanup_timer <= 0) {
+            //scanForLevelingMoves();
+            //self.cleanup_timer = irandom_range(8, 12);
+        //} else {
+                //self.cleanup_timer--;
+            //}
         
-        // Prioritize tall column reduction if the board is getting dangerous
-        if (isInDangerZone()) {
-            applyDangerPriorities();
-        }
+        
+        //// Scan for column reduction opportunities
+        //scanForColumnReduction();
+        //
+        //// Prioritize tall column reduction if the board is getting dangerous
+        //if (isInDangerZone()) {
+            //applyDangerPriorities();
+        //}
         
         return !ds_queue_empty(self.match_queue);
     }
@@ -427,7 +432,7 @@ function AIBoardScanner(player) constructor {
     
         var centerCol = self.width div 2;
     
-        for (var col = 0; col < self.width; col++) {
+        for (var col = 0; col < self.width - 1; col++) {
             //if (columnHeights[col] == 0) continue; // Skip empty columns
     
             var targetCol = (col < centerCol) ? col + 1 : col - 1;
