@@ -43,7 +43,7 @@ random_seed = irandom(999999) * -1;
 shift_speed = 0.1;
 
 global.player_list = ds_list_create();
-gem_size = 48;
+gem_size = 64;
 
 for (var i = 0; i < max_players; i++) {
     ds_list_add(global.player_list, create_player(i));

@@ -12,8 +12,19 @@ function process_popping(player) {
                 var _x = pop_data.x;
                 var _y = pop_data.y;
 
-                if (player.grid[_x, _y] != -1) {
+                if (player.grid[_x, _y] != BLOCK.NONE) {
                     destroy_block(player, _x, _y);
+                    player.grid[_x, _y].popping = false;
+                    player.grid[_x, _y - 1].falling = true; 
+                    player.grid[_x, _y - 1].fall_delay = 10;
+                    
+                    if player.grid[_x, _y - 1] != BLOCK.NONE
+                    {
+                    player.grid[_x, _y - 1].falling = true; 
+                        player.grid[_x, _y - 1].fall_delay = 10;
+                        player.grid[_x, _y - 1].popping = false;
+                    }
+                    
                 }
 
                 var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);

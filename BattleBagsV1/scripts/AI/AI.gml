@@ -182,12 +182,6 @@ function cleanup_ai_players(_self) {
 
 
 
-
-
-
-
-
-
 /// @description MoveActions
 /// GML implementation of move action structs
 
@@ -252,28 +246,4 @@ function draw_ai_debug(player) {
     
     draw_text(board_x, board_y, "Swap in progress: " + string(player.swap_in_progress));
     board_y += 20;
-    
-    // Draw UI helper - box around current block
-    var hover_x = player.hovered_block[0];
-    var hover_y = player.hovered_block[1];
-    
-    if (hover_x >= 0 && hover_y >= 0 && hover_x < 8 && hover_y < 24) {
-        var block_x = player.board_x_offset + (hover_x * player.gem_size);
-        var block_y = (hover_y * player.gem_size) + player.global_y_offset;
-        
-        draw_set_color(c_lime);
-        draw_rectangle(block_x, block_y, block_x + player.gem_size, block_y + player.gem_size, true);
-        
-        // Show next position if swap would happen
-        if (hover_x < 7) {
-            draw_set_color(c_yellow);
-            draw_rectangle(
-                block_x + player.gem_size, 
-                block_y, 
-                block_x + (player.gem_size * 2), 
-                block_y + player.gem_size, 
-                true
-            );
-        }
-    }
 }

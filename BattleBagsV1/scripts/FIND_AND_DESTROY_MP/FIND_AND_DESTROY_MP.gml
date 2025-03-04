@@ -201,7 +201,7 @@ function pop_blocks_in_pop_queue(mp_control, player)
             // Once scale >= 1.1, pop is done
             if (pop_data.scale < 1.1) return;
 
-            if (player.grid[_x, _y] == BLOCK.NONE) return;
+            //if (player.grid[_x, _y] == BLOCK.NONE) return;
             
             // ✅ Store Gem Object Before Destroying
             var gem = player.grid[_x, _y];
@@ -214,10 +214,12 @@ function pop_blocks_in_pop_queue(mp_control, player)
             //total_blocks_destroyed++;
             // **Destroy the block**
             
+
+            destroy_block(player, _x, _y);
+            
             player.grid[_x, _y].shake_timer = 0;
             player.grid[_x, _y].popping = false;
             player.grid[_x, _y].pop_timer = false;
-            destroy_block(player, _x, _y);
             
             // **Create visual effect**
             effect_create_depth(_depth, ef_firework, px, py - 4, 0.5, pop_data.color);
@@ -246,7 +248,7 @@ function pop_blocks_in_pop_queue(mp_control, player)
             audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
             // Remove from pop_list
             ds_list_delete(player.pop_list, i);
-            i--; 
+            //i--; 
             continue;
             
         }
@@ -276,6 +278,8 @@ function process_popping_mp(player) {
 
                 //if (player.grid[_x, _y] != -1) {
                     destroy_block(player, _x, _y);
+                player.grid[_x, _y].popping = false;
+                player.grid[_x, _y - 1].popping = false;
                 //}
 
                 var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);

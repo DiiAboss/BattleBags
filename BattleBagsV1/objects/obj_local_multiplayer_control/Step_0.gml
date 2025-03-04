@@ -98,6 +98,15 @@ if (room == rm_local_multiplayer_lobby)
                 }
                 
                 max_players = ds_list_size(global.player_list);
+                
+                for (var p = 0; p < max_players; p++) {     
+                    var _player = ds_list_find_value(global.player_list, p);
+                    if (max_players > 3) 
+                    {
+                        gem_size = 48;
+                    }  
+                }
+                
                 room_goto(rm_local_multiplayer_game);
             }
         }
