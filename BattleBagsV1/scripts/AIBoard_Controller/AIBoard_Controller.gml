@@ -596,6 +596,20 @@ function AIBoardController(player) constructor {
         var block1 = player.grid[pos_x, pos_y];
         var block2 = player.grid[pos_x+1, pos_y];
         
+        //if (self.current_match!= undefined && self.current_match.match_type == "bridge") {
+            //var fetchX = self.current_match.fetch_from_x;
+            //var targetX = self.current_match.x;
+        //
+            //if (fetchX < targetX) {
+                //player.input.Left = true;
+            //} else {
+                //player.input.Right = true;
+            //}
+        //
+            //player.input.ActionPress = true;
+        //}
+        
+        
         if ((block1.type != BLOCK.NONE || block2.type != BLOCK.NONE) && 
             !block1.falling && !block2.falling &&
             !block1.popping && !block2.popping &&
@@ -736,5 +750,46 @@ function AIBoardController(player) constructor {
     // Clean up data structures
     cleanup = function() {
         ds_queue_destroy(inputQueue);
+    }
+}
+
+
+// Set difficulty level (1-5)
+set_difficulty = function(level) {
+    level = clamp(level, 1, 5);
+    player.ai_difficulty = level;
+    
+    // Adjust AI parameters based on difficulty
+    switch(level) {
+        case 1: // Easy
+            player.ai_max_delay = 15;
+            self.move_delay = 12;
+            self.action_delay = 24;
+            self.scan_delay = 120; // Scan less frequently at easy difficulty
+            break;
+        case 2: // Medium
+            player.ai_max_delay = 10;
+            self.move_delay = 10;
+            self.action_delay = 20;
+            self.scan_delay = 90;
+            break;
+        case 3: // Hard
+            player.ai_max_delay = 8;
+            self.move_delay = 8;
+            self.action_delay = 16;
+            self.scan_delay = 60;
+            break;
+        case 4: // Expert
+            player.ai_max_delay = 6;
+            self.move_delay = 6;
+            self.action_delay = 12;
+            self.scan_delay = 45;
+            break;
+        case 5: // Master
+            player.ai_max_delay = 2;
+            self.move_delay = 2;
+            self.action_delay = 4;
+            self.scan_delay = 10; // Scan very frequently at master difficulty
+            break;
     }
 }

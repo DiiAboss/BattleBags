@@ -36,6 +36,10 @@ function create_player(_id)
         topmost_row: 12,
         board_is_clearing:false,
         board_is_shifting: false,
+        grid_width: 8,
+        grid_height: 28,
+        top_playable_row: 4,
+        bottom_playable_row: 20,
         
     };
 }

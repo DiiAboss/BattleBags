@@ -45,6 +45,9 @@ shift_speed = 0.1;
 global.player_list = ds_list_create();
 gem_size = 64;
 
+width = 8;
+height = 24;
+
 for (var i = 0; i < max_players; i++) {
     ds_list_add(global.player_list, create_player(i));
 }
@@ -62,10 +65,13 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
     player.hovered_block = [4, 12];
     player.input.InputType = INPUT.NONE;
     player.gem_size = gem_size;
+    player.grid_width = width;
+    player.grid_height = height;
+    player.top_playable_row = top_playable_row;
+    player.bottom_playable_row = bottom_playable_row;
 }
 
-width = 8;
-height = 24;
+
 
 
 offset = gem_size * 0.5;

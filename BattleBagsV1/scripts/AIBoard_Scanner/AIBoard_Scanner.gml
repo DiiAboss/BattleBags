@@ -4,67 +4,159 @@
 function AIBoardScanner(player) constructor {
     self.player = player;
     self.match_queue = ds_queue_create();
-    
-    // Game constants - will be picked up from player/controller
+
     self.top_playable_row = 4;
     self.bottom_playable_row = 20;
     self.width = 8;
-    self.cleanup_timer = 0;
+
     
-    // Scan for matches and add them to the match queue
+    
+    
     scanBoard = function() {
-        // Clear previous matches
+        
         ds_queue_clear(self.match_queue);
-        
+
         var columnHeights = array_create(self.width, 0);
-        
-        for (var col = 0; col < self.width - 1; col++) {
-            columnHeights[col] = getColumnHeight(col);
+        for (var _col = 0; _col < self.width; _col++) {
+            columnHeights[_col] = getColumnHeight(_col);
+        }
+
+        var effective_top_row = min(self.top_playable_row, player.topmost_row);
+
+        scanDirectMatches(effective_top_row);
+        scanHorizontalMatches(effective_top_row);
+        scanVerticalMatches(effective_top_row);
+
+        for (var _col = 0; _col < self.width - 1; _col++) {
+            var _height = columnHeights[_col];
+            var _nextHeight = columnHeights[_col+1];
+            if (abs(_height - _nextHeight) >= 2) {
+                scanForGravitySwap(_col, _col+1);
+                player.input.ActionPress = true;
+            }
         }
         
+        if (ds_queue_empty(self.match_queue)) {
+            scanBridgeMoves();
+        }
+
+        return !ds_queue_empty(self.match_queue);
         
-        
-        // Respect the topmost row when scanning
-        var effective_top_row = min(self.top_playable_row, player.topmost_row);
-        
-        // Scan for direct matches (plain adjacent swaps that form matches)
-                scanDirectMatches(effective_top_row);
-                
-        
-        // Scan for horizontal matches
-        scanHorizontalMatches(effective_top_row);
-        
-        // Scan for vertical matches
-        scanVerticalMatches(effective_top_row);
-        
-        
-        // Check for severe height differences that could use gravity
-                for (var col = 0; col < self.width - 1; col++) {
-                    var height = columnHeights[col];
-                    var nextHeight = columnHeights[col+1];
-                
-                    if (abs(height - nextHeight) >= 2) {
-                        scanForGravitySwap(col, col+1);
+    }
+
+    
+    scanBridgeMoves = function() {
+        var grid = player.grid;
+        var colorPairs = [];
+    
+        // Find all pairs of same-color blocks horizontally
+        for (var row = self.top_playable_row; row <= self.bottom_playable_row; row++) {
+            for (var col = 0; col < self.width - 1; col++) {
+                var blockA = grid[col, row];
+                if (blockA.type < 0) continue;
+    
+                for (var checkCol = col + 2; checkCol < self.width; checkCol++) {
+                    var blockB = grid[checkCol, row];
+                    if (blockB.type != blockA.type || blockB.type < 0) continue;
+    
+                    // Check if the space between them is empty or filled with a different type
+                    var validBridge = true;
+                    for (var gapCol = col + 1; gapCol < checkCol; gapCol++) {
+                        var betweenBlock = grid[gapCol, row];
+                        if (betweenBlock.type >= 0 && betweenBlock.type == blockA.type) {
+                            validBridge = false;  // There's already a match here
+                            break;
+                        }
+                    }
+    
+                    if (validBridge) {
+                        array_push(colorPairs, {
+                            color: blockA.type,
+                            left_x: col,
+                            right_x: checkCol,
+                            y: row
+                        });
                     }
                 }
-        
-        //if (self.cleanup_timer <= 0) {
-            //scanForLevelingMoves();
-            //self.cleanup_timer = irandom_range(8, 12);
-        //} else {
-                //self.cleanup_timer--;
-            //}
-        
-        
-        //// Scan for column reduction opportunities
-        //scanForColumnReduction();
-        //
-        //// Prioritize tall column reduction if the board is getting dangerous
-        //if (isInDangerZone()) {
-            //applyDangerPriorities();
-        //}
-        
-        return !ds_queue_empty(self.match_queue);
+            }
+        }
+    
+        // Try to calculate a "fetch plan" for each valid pair
+        for (var i = 0; i < array_length(colorPairs); i++) {
+            var pair = colorPairs[i];
+            var targetColor = pair.color;
+    
+            // Look for another matching block in the same row
+            var fetchPos = undefined;
+            for (var fetchCol = 0; fetchCol < self.width; fetchCol++) {
+                if (fetchCol == pair.left_x || fetchCol == pair.right_x) continue;
+                var checkBlock = grid[fetchCol, pair.y];
+                if (checkBlock.type == targetColor) {
+                    fetchPos = fetchCol;
+                    break;
+                }
+            }
+    
+            if (fetchPos != undefined) {
+                // Calculate distance and score
+                var distance = min(abs(fetchPos - pair.left_x), abs(fetchPos - pair.right_x));
+                var _score = 50 - (distance * 5); // Shorter moves get higher score
+    
+                var movePlan = {
+                    x: min(pair.left_x, pair.right_x),
+                    y: pair.y,
+                    match_type: "bridge",
+                    color: targetColor,
+                    fetch_from_x: fetchPos,
+                    score: _score
+                };
+    
+                ds_queue_enqueue(self.match_queue, movePlan);
+            }
+        }
+    }
+    
+    
+    
+    getNextMatch = function() {
+        if (ds_queue_empty(self.match_queue)) return undefined;
+        var bestMatch = undefined;
+        var bestScore = -1;
+
+        var tempQueue = ds_queue_create();
+        while (!ds_queue_empty(self.match_queue)) {
+            var match = ds_queue_dequeue(self.match_queue);
+            if (bestMatch == undefined || match.score > bestScore) {
+                bestMatch = match;
+                bestScore = match.score;
+            }
+            ds_queue_enqueue(tempQueue, match);
+        }
+
+        while (!ds_queue_empty(tempQueue)) {
+            ds_queue_enqueue(self.match_queue, ds_queue_dequeue(tempQueue));
+        }
+        ds_queue_destroy(tempQueue);
+
+        return bestMatch;
+    }
+
+    
+    cleanup = function() {
+        if (ds_exists(self.match_queue, ds_type_queue)) {
+            ds_queue_destroy(self.match_queue);
+        }
+    }
+
+    
+    
+    getColumnHeight = function(_col) {
+        for (var _row = self.top_playable_row; _row <= self.bottom_playable_row; _row++) {
+            if (player.grid[_col, _row].type >= 0) {
+                return self.bottom_playable_row - _row + 1;
+            }
+        }
+        return 0;
     }
     
     // Check for potential horizontal matches
@@ -715,31 +807,6 @@ function AIBoardScanner(player) constructor {
         return tallest;
     }
     
-    // Calculate column height
-    getColumnHeight = function(col) {
-        var grid = player.grid;
-        
-        for (var row = self.top_playable_row; row < self.bottom_playable_row - 1; row++) {
-            if (grid[col, row].type >= 0) {
-                return self.bottom_playable_row - row + 1;
-            }
-        }
-        
-        return 0;
-    }
-    
-    // Check if the board is in a dangerous state
-    isInDangerZone = function() {
-        // Check if any column is dangerously high
-        for (var col = 0; col < self.width; col++) {
-            if (getColumnHeight(col) > 18) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
     
     applyDangerPriorities = function() {
         if (ds_queue_empty(self.match_queue)) return;
@@ -814,53 +881,6 @@ function AIBoardScanner(player) constructor {
         }
         
         return bonus;
-    }
-    
-    // Get the best match from the queue
-    getNextMatch = function() {
-        if (ds_queue_empty(self.match_queue)) {
-            return undefined;
-        }
-        
-        // Find the highest scored match
-        var bestMatch = undefined;
-        var bestScore = -1;
-        
-        // Create a temporary queue
-        var tempQueue = ds_queue_create();
-        
-        // Find the best match
-        while (!ds_queue_empty(self.match_queue)) {
-            var match = ds_queue_dequeue(self.match_queue);
-            
-            if (bestMatch == undefined || match.score > bestScore) {
-                bestMatch = match;
-                bestScore = match.score;
-            }
-            
-            ds_queue_enqueue(tempQueue, match);
-        }
-        
-        // Restore all except the best match
-        while (!ds_queue_empty(tempQueue)) {
-            var match = ds_queue_dequeue(tempQueue);
-            
-            if (match != bestMatch) {
-                ds_queue_enqueue(self.match_queue, match);
-            }
-        }
-        
-        // Clean up
-        ds_queue_destroy(tempQueue);
-        
-        return bestMatch;
-    }
-    
-    // Clean up resources
-    cleanup = function() {
-        if (ds_exists(self.match_queue, ds_type_queue)) {
-            ds_queue_destroy(self.match_queue);
-        }
     }
 }
 
