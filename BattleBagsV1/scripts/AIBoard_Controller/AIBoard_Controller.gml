@@ -264,9 +264,14 @@ function AIBoardController(player) constructor {
             return;
         }
         
+        
+        randomize();
         // If no match is available, randomly explore
         var pos_x = irandom_range(1, self.width - 3);
         var pos_y = irandom_range(self.topmost_row, self.bottom_playable_row - 4);
+        if (irandom(10) < 3) player.input.ActionPress = true;
+        random_set_seed(player.random_seed);
+        
         
         self.last_decision = "EXPLORING at " + string(pos_x) + "," + string(pos_y);
         array_push(self.decision_log, self.last_decision);
@@ -510,7 +515,7 @@ function AIBoardController(player) constructor {
         // Focus on the middle rows where most matches happen
         var mid_range = floor((self.bottom_playable_row - self.topmost_row) * 0.6);
         var pos_x = irandom_range(0, self.width - 1);
-        var pos_y = irandom_range(self.topmost_row + 2, self.topmost_row + mid_range);
+        var pos_y = irandom_range(self.topmost_row, self.topmost_row + mid_range);
         
         self.last_decision = "EXPLORING at " + string(pos_x) + "," + string(pos_y);
         array_push(self.decision_log, self.last_decision);

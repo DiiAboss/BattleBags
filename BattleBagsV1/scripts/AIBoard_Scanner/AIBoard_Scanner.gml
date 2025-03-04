@@ -9,6 +9,7 @@ function AIBoardScanner(player) constructor {
     self.top_playable_row = 4;
     self.bottom_playable_row = 20;
     self.width = 8;
+    self.cleanup_timer = 0;
     
     // Scan for matches and add them to the match queue
     scanBoard = function() {
@@ -39,6 +40,13 @@ function AIBoardScanner(player) constructor {
         
         // Scan for vertical matches
         scanVerticalMatches(effective_top_row);
+        
+        if (self.cleanup_timer <= 0) {
+            scanForLevelingMoves();
+            self.cleanup_timer = irandom_range(8, 12);
+        } else {
+                self.cleanup_timer--;
+            }
         
         // Scan for direct matches (plain adjacent swaps that form matches)
         scanDirectMatches(effective_top_row);
@@ -406,6 +414,50 @@ function AIBoardScanner(player) constructor {
         count = floodFillCount(col, row-1, targetType, counted, count); // up
         
         return count;
+    }
+    
+    
+    scanForLevelingMoves = function() {
+        var grid = player.grid;
+    
+        var columnHeights = array_create(self.width, 0);
+        for (var col = 0; col < self.width; col++) {
+            columnHeights[col] = getColumnHeight(col);
+        }
+    
+        var centerCol = self.width div 2;
+    
+        for (var col = 0; col < self.width; col++) {
+            //if (columnHeights[col] == 0) continue; // Skip empty columns
+    
+            var targetCol = (col < centerCol) ? col + 1 : col - 1;
+            if (targetCol < 0 || targetCol >= self.width) continue; // Out of bounds safety
+    
+            var myHeight = columnHeights[col];
+            var targetHeight = columnHeights[targetCol];
+    
+            if (targetHeight >= myHeight) continue; // Only pull down to lower columns
+    
+            for (var row = self.top_playable_row; row <= self.bottom_playable_row; row++) {
+                var block = grid[col, row];
+                if (block.type < 0) continue; // Skip empty blocks
+    
+                var adjBlock = grid[targetCol, row];
+                if (adjBlock.type >= 0) continue; // Target spot already filled
+    
+                //if (!can_swap(block, adjBlock)) continue;
+    
+                ds_queue_enqueue(self.match_queue, {
+                    x: min(col, targetCol),
+                    y: row,
+                    match_type: "leveling_move",
+                    score: 25 + (self.bottom_playable_row - row)  // Prioritize lower moves first
+                });
+    
+                // Only consider one move per column per scan (optional to avoid over-weighting)
+                break;
+            }
+        }
     }
     
     
