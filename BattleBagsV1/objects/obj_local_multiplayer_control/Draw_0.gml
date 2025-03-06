@@ -123,7 +123,13 @@ if (room == rm_local_multiplayer_game)
                 {
                     scale = 1 * (gem_size / 64);
                 }
-
+                
+                var color = c_white;
+                
+                if player.is_ai  && player.ai_scanner.leveling_mode
+                {
+                  color = c_red;   
+                }
                 
                 if (player.input.InputType == INPUT.GAMEPAD || player.input.InputType == INPUT.AI) {
                         if (hover_i + 1 < width)
@@ -131,16 +137,16 @@ if (room == rm_local_multiplayer_game)
                             var hover_gem2 = player.grid[hover_i + 1, hover_j];
                             
                             
-                            draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                            draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - offset, rect_y2 - offset, scale, scale, 0, color, 1);
                             
                             if (hover_gem2.type != BLOCK.NONE)
                             {
-                                draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
-                                draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + offset_x, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                                draw_sprite_ext(sprite_for_block(hover_gem2.type), hover_gem2.img_number, rect_x2 + offset, rect_y2 - offset, scale, scale, 0, color, 1);
+                                draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + offset_x, rect_y2 - offset, scale, scale, 0, color, 1);
                             }
                         }
                         
-                        draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + offset, rect_y2 - offset, scale, scale, 0, c_white, 1);
+                        draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 + offset, rect_y2 - offset, scale, scale, 0, color, 1);
                     
                     draw_ai_debug(player);
                 }

@@ -40,6 +40,7 @@ function create_player(_id)
         grid_height: 28,
         top_playable_row: 4,
         bottom_playable_row: 20,
+        board_just_shifted: false
         
     };
 }

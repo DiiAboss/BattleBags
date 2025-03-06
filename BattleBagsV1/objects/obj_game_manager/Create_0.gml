@@ -69,3 +69,5 @@ player[0] = PLAYER_CONTROLLER.MOUSE;
 
 player_controls = [INPUT.KEYBOARD, INPUT.NONE];
 devices = array_create(12, -1);
+
+randomize();

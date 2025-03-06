@@ -36,7 +36,6 @@ function process_popping(player) {
                 i--; // Adjust index after deletion
             }
         }
-        
         ds_list_replace(player.pop_list, i, pop_data);
     }
 }

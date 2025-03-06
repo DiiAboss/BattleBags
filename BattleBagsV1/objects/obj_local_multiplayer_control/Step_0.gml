@@ -116,6 +116,16 @@ if (room == rm_local_multiplayer_lobby)
 if (room == rm_local_multiplayer_game)
 {
     
+    if (keyboard_check_pressed(ord("P")))
+    {
+        if (player.is_ai)
+        {
+            if (!player.ai_scanner.leveling_mode) player.ai_scanner.leveling_mode = true;
+            else player.ai_scanner.leveling_mode = false;
+        }
+    }
+    
+    
     if (player.is_ai && player.input.ActionPress) {
         show_debug_message("AI trying to swap at position: " + 
                         string(player.hovered_block[0]) + "," + 
@@ -125,6 +135,8 @@ if (room == rm_local_multiplayer_game)
     
     setup_ai_players_from_lobby(self);
     update_ai_players(self);
+    
+    
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
         

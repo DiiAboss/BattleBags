@@ -83,6 +83,8 @@ function shift_up_mp(player) {
                 {
                     // ✅ Normal gem movement
                     player.grid[i, j] = player.grid[i, j + 1];
+                    
+                    player.board_just_shifted = true;
                 }
     
     

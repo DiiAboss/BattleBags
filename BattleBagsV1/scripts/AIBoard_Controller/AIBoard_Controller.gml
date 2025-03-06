@@ -19,17 +19,17 @@ function AIBoardController(player) constructor {
     self.scan_timer = 0;           // Timer for board scanning
     self.scan_delay = 60;          // How often to scan the board (in frames)
     self.current_match = undefined; // Current match we're working on
-    // At the top with your other variables
+
     self.match_attempts = 0; // Counter for tracking how many times we've tried a specific match
     self.recent_positions = ds_list_create();  // Track recent positions
-   self.recent_position_limit = 5;  // How many recent positions to remember
+   self.recent_position_limit = 2;  // How many recent positions to remember
    self.swap_variety_counter = 0;  // Track number of consecutive swaps at same position
     self.committed_to_match = false;
     self.commitment_target_x = -1;
     self.commitment_target_y = -1;
     
     self.failed_matches = ds_map_create();
-    self.failed_match_limit = 3; // How many times to try before blacklisting
+    self.failed_match_limit = 2; // How many times to try before blacklisting
     self.cleanup_timer = 0;
     
     // Game constants - will be picked up from player/controller later
@@ -47,35 +47,14 @@ function AIBoardController(player) constructor {
             return;
         }
         
+        
         // If we have swap cooldown, decrement it
         if (self.swap_cooldown > 0) {
             self.swap_cooldown--;
             return;
         }
         
-        // Don't act if player is swapping or something is falling
-        //if (player.swap_in_progress) {
-            //return;
-        //}
-        
         self.topmost_row = player.topmost_row;
-        
-        //// Check if any blocks are falling or if matches are being processed
-        //var blocks_moving = false;
-        //for (var col = 0; col < 8; col++) {
-            //for (var row = 4; row <= 20; row++) {
-                //if (player.grid[col, row].falling || player.grid[col, row].popping) {
-                    //blocks_moving = true;
-                    ////break;
-                //}
-            //}
-            ////if (blocks_moving) break;
-        //}
-        
-        // If blocks are moving, wait
-        //if (blocks_moving) {
-            //return;
-        //}
         
         // Get current position
         var curX = player.hovered_block[0];
@@ -90,13 +69,6 @@ function AIBoardController(player) constructor {
             var dx = abs(curX - self.last_position_x);
             var dy = abs(curY - self.last_position_y);
             
-            //if ((dx > 1 && dx < 7) || dy > 1) { 
-                //// Position jumped unexpectedly, reset to idle and plan new move
-                //self.current_action = "idle";
-                //self.last_decision = "POSITION JUMPED to " + string(curX) + "," + string(curY) + " - resetting";
-                //array_push(self.decision_log, self.last_decision);
-                //if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-            //}
         }
         
         // Store current position for next frame
@@ -131,12 +103,6 @@ function AIBoardController(player) constructor {
             self.safe_moves = 0;
         }
         
-        // Periodically scan the board for potential matches
-        self.scan_timer++;
-        if (self.scan_timer >= self.scan_delay || self.current_match == undefined) {
-            self.scan_timer = 0;
-            scanBoardForMatches();
-        }
         
         // State machine for AI behavior
         switch(self.current_action) {
@@ -152,19 +118,17 @@ function AIBoardController(player) constructor {
                 if (self.move_timer >= self.move_delay) {
                     self.move_timer = 0;
                     
+                    
                     // Check if we've reached the target
                     if (curX == self.target_x && curY == self.target_y) {
                         // We've arrived!
+                        
                         self.last_decision = "ARRIVED at " + string(curX) + "," + string(curY);
                         array_push(self.decision_log, self.last_decision);
                         if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
                         
-                        if (self.swap_after_move) {
-                            self.current_action = "pre_swap";
-                            self.move_timer = 0;
-                        } else {
-                            self.current_action = "idle";
-                        }
+                        self.current_action = "pre_swap";
+                        self.move_timer = 0;
                     } else {
                         // Take one step toward the target
                         moveOneStep();
@@ -173,122 +137,128 @@ function AIBoardController(player) constructor {
                 break;
                 
             case "pre_swap":
-                // Wait before swapping
-                self.move_timer++;
                 
-                if (self.move_timer >= self.action_delay) {
-                    self.move_timer = 0;
-                    
-                    // Try to swap at current position
+                     // Reset all input flags before new move
+                     player.input.Up = false;
+                     player.input.Down = false;
+                     player.input.Left = false;
+                     player.input.Right = false;
+            
                     trySwap();
                     
                     // Back to idle
                     self.current_action = "idle";
-                    self.swap_after_move = false;
+                    //self.swap_after_move = false;
                     
                     // Clear current match after trying it
                     self.current_match = undefined;
-                }
+                //}
+                break;
+            
+            
+            case "vertical_bridge_fetch":
+                handleVerticalBridgeFetch();
                 break;
         }
         
-        
-        self.cleanup_timer++;
-        if (self.cleanup_timer > 300) { // Every 5 seconds at 60 FPS
-            self.cleanup_timer = 0;
-            
+        if (player.board_just_shifted) { // Every 5 seconds at 60 FPS
             // Clear out the failed matches map
             ds_map_clear(self.failed_matches);
             self.last_decision = "CLEARNING match blacklist due to shifting board";
             array_push(self.decision_log, self.last_decision);
+            player.board_just_shifted = false;
+            self.current_match = undefined;
         }
     }
     
-    // Scan the board for matches
-    scanBoardForMatches = function() {
-        // Only scan if we don't already have a match to process
-        if (self.current_match == undefined) {
-            // Have the scanner search for matches
-            if (player.ai_scanner.scanBoard()) {
-                // Get the next match
-                self.current_match = player.ai_scanner.getNextMatch();
-                
-                self.last_decision = "sbfm: FOUND MATCH at " + string(self.current_match.x) + "," + string(self.current_match.y) + " (" + self.current_match.match_type + ")";
-                array_push(self.decision_log, self.last_decision);
-                if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-            }
+
+    
+    
+    
+    handleVerticalBridgeFetch = function() {
+        var curX = player.hovered_block[0];
+        var curY = player.hovered_block[1];
+    
+        var fetchY = self.current_match.fetch_from_y;
+        var targetY = self.current_match.target_y;
+    
+        if (curY != fetchY) {
+            self.target_x = curX; // Stay in column
+            self.target_y = fetchY;
+            moveOneStep();
+            return;
+        }
+    
+        // Arrived at fetch position, time to start swapping the block vertically
+        if (fetchY < targetY) {
+            player.input.Down = true;
+        } else {
+            player.input.Up = true;
+        }
+    
+        //player.input.ActionPress = true;
+    
+        // Move fetch block closer to target
+        if (fetchY < targetY) {
+            self.current_match.fetch_from_y++;
+        } else {
+            self.current_match.fetch_from_y--;
+        }
+    
+        // Once fetch block arrives at target, complete the move
+        if (self.current_match.fetch_from_y == targetY) {
+            self.current_action = "idle";
+            self.current_match = undefined;
+            self.last_decision = "VERTICAL BRIDGE MOVE COMPLETE";
+            array_push(self.decision_log, self.last_decision);
         }
     }
-    
     
     
     planNextMove = function() {
-        // Reset inputs
-        player.input.Up = false;
-        player.input.Down = false;
-        player.input.Left = false;
-        player.input.Right = false;
-        
-        // Scan for matches (this will populate the match queue)
-        scanBoardForMatches();
-        
-        // Look for a match near the current position first
-        var curX = player.hovered_block[0];
-        var curY = player.hovered_block[1];
-        var nearbyMatch = undefined;//findNearbyMatch(curX, curY, 10); // Search within 2 blocks
-        
-        //if (nearbyMatch != undefined) {
-            //// Use the nearby match instead of the best overall match
-            //self.current_match = nearbyMatch;
-            //
-            //self.last_decision = "USING NEARBY MATCH at " + string(self.current_match.x) + "," + string(self.current_match.y);
-            //array_push(self.decision_log, self.last_decision);
-            //if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-        //} else if (self.current_match == undefined) {
-            //// If no nearby match and no current match, get the best match from the queue
-            //self.current_match = player.ai_scanner.getNextMatch();
-        //}
-        
-        // If we have a match, go to it
+        self.current_match = findNearbyMatch(player.hovered_block[0], player.hovered_block[1], 5);
+    
+        if (self.current_match == undefined) {
+            if (player.ai_scanner.scanBoard()) {
+                self.current_match = player.ai_scanner.getNextMatch();
+            }
+        }
+    
         if (self.current_match != undefined) {
             self.target_x = self.current_match.x;
             self.target_y = self.current_match.y;
+            self.target_x = clamp(self.target_x, 0, self.width - 2); // Never allow cursor to overflow
+            
             
             self.last_decision = "MOVING TO MATCH at " + string(self.target_x) + "," + string(self.target_y);
             array_push(self.decision_log, self.last_decision);
             if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-            
+    
             self.current_action = "moving";
             self.move_timer = 0;
             self.swap_after_move = true;
             return;
         }
+    
+        // No match found — go explore
+        exploreStrategically();
+    }
+    
+    moveToCurrentMatch = function() {
+        self.target_x = self.current_match.x;
+        self.target_y = self.current_match.y;
         
         
-        
-        
-        randomize();
-        // If no match is available, randomly explore
-        var pos_x = irandom_range(0, self.width - 2);
-        var pos_y = irandom_range(self.topmost_row, self.bottom_playable_row - 4);
-        if (irandom(10) < 3) player.input.ActionPress = true;
-        random_set_seed(player.random_seed);
-        
-        
-        
-        
-        
-        
-        self.last_decision = "EXPLORING at " + string(pos_x) + "," + string(pos_y);
+        self.last_decision = "MOVING TO MATCH at " + string(self.target_x) + "," + string(self.target_y) +
+                            " (" + self.current_match.match_type + ")";
         array_push(self.decision_log, self.last_decision);
         if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-        
-        self.target_x = pos_x;
-        self.target_y = pos_y;
+    
         self.current_action = "moving";
         self.move_timer = 0;
-        self.swap_after_move = true;
+        //self.swap_after_move = true;
     }
+    
     
     // Add this helper function to find matches near the current position
     // Add this to your findNearbyMatch function
@@ -321,7 +291,7 @@ function AIBoardController(player) constructor {
             var distance = abs(match.x - centerX) + abs(match.y - centerY);
             
             // Prioritize matches within radius and with good scores, but avoid repeated matches
-            if (distance <= radius && !isRepeatedMatch) {
+            if (distance <= radius && !isRepeatedMatch){
                 // Give a bonus to nearby matches
                 match.score += (radius - distance + 1) * 5; // Reduced from 10 to make it less sticky
                 
@@ -330,6 +300,9 @@ function AIBoardController(player) constructor {
                     nearbyMatch = match;
                     bestScore = match.score;
                 }
+            }
+            else {
+                return undefined;
             }
             
             // Save all matches in our temp queue
@@ -369,7 +342,7 @@ function AIBoardController(player) constructor {
             }
             
             // If we've tried the same position too many times, force exploration
-            if (lastMatchAttempts > 3) {
+            if (lastMatchAttempts > 2) {
                 self.last_decision = "ABANDONING repeated match at " + positionKey + " after " + string(lastMatchAttempts) + " attempts";
                 array_push(self.decision_log, self.last_decision);
                 if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
@@ -389,24 +362,11 @@ function AIBoardController(player) constructor {
     
     exploreStrategically = function() {
         // For higher difficulties, use strategic exploration
+        
+        player.global_y_offset -= 2;
+        return;
+        
         if (player.ai_difficulty >= 3) {
-            
-            var check_edges = irandom(10) < 3; // 30% chance to check edges
-            
-            if (check_edges) {
-                // Choose one of the edge columns to explore
-                var edge_choice = irandom(1);
-                var explore_col = edge_choice == 0 ? 0 : self.width - 1;
-                var explore_row = irandom_range(self.topmost_row, self.bottom_playable_row - 2);
-                
-                self.target_x = explore_col;
-                self.target_y = explore_row;
-                
-                self.last_decision = "EXPLORING EDGE at " + string(explore_col) + "," + string(explore_row);
-                array_push(self.decision_log, self.last_decision);
-                if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-            } else {
-            
                // Find the tallest column and go there
                var tallest_col = -1;
                var max_height = 0;
@@ -493,7 +453,7 @@ function AIBoardController(player) constructor {
                    // Fall back to semi-random exploration
                    strategicRandomExplore();
                }
-            }
+            
            } else {
                // Lower difficulties just use random exploration
                strategicRandomExplore();
@@ -518,9 +478,9 @@ function AIBoardController(player) constructor {
     
     // More strategic random exploration
     strategicRandomExplore = function() {
-        // Focus on the middle rows where most matches happen
+
         var mid_range = floor((self.bottom_playable_row - self.topmost_row) * 0.6);
-        var pos_x = irandom_range(0, self.width - 1);
+        var pos_x = irandom_range(0, self.width - 2);
         var pos_y = irandom_range(self.topmost_row, self.topmost_row + mid_range);
         
         self.last_decision = "EXPLORING at " + string(pos_x) + "," + string(pos_y);
@@ -533,124 +493,290 @@ function AIBoardController(player) constructor {
     
     
     
-    // Move one step toward the target
-    // Add path planning to moveOneStep
+    
+    
+    
     moveOneStep = function() {
         var curX = player.hovered_block[0];
         var curY = player.hovered_block[1];
-        
-        // Reset all input flags
+    
+        // Reset all input flags before new move (safety reset)
         player.input.Up = false;
         player.input.Down = false;
         player.input.Left = false;
         player.input.Right = false;
-        
-        // Safety bounds checking
-        if (self.target_y <= self.topmost_row + 1) {
-            self.target_y = self.topmost_row + 1;
-        }
-        if (self.target_y >= self.bottom_playable_row) {
-            self.target_y = self.bottom_playable_row;
-        }
-        
-        // For higher difficulties, use more direct pathing
-        if (player.ai_difficulty >= 4) {
-            // Calculate Manhattan distance in both directions
-            var dx = self.target_x - curX;
-            var dy = self.target_y - curY;
-            
-            // Choose the optimal direction based on which one gets us closer
-            if (abs(dx) >= abs(dy) && dx != 0) {
-                // Move horizontally first if that's the longer dimension
-                if (dx > 0) player.input.Right = true;
-                else player.input.Left = true;
-            } else if (dy != 0) {
-                // Move vertically if that's the longer dimension
-                if (dy > 0) player.input.Down = true;
-                else player.input.Up = true;
+    
+        // Safety bounds clamp (just in case target drifted out)
+        self.target_y = clamp(self.target_y, self.top_playable_row, self.bottom_playable_row);
+        self.target_x = clamp(self.target_x, 0, self.width - 1);
+    
+        var dx = self.target_x - curX;
+        var dy = self.target_y - curY;
+    
+        // Evaluate column safety (don't walk into death)
+        var currentColumnSafe = isColumnSafe(curX);
+        var targetColumnSafe = isColumnSafe(self.target_x);
+    
+        if (!targetColumnSafe) {
+            self.last_decision = "Target column UNSAFE at " + string(self.target_x);
+            array_push(self.decision_log, self.last_decision);
+            if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
+    
+            // Re-aim to nearest safe column
+            self.target_x = findNearestSafeColumn(curX);
+    
+            if (self.target_x >= self.width - 1) {
+                self.target_x = self.width - 2;  // Ensure space for 2-block cursor
             }
-        } else {
-            // Lower difficulties use simpler movement (existing code)
-            if (curX < self.target_x) {
-                player.input.Right = true;
-            } else if (curX > self.target_x) {
-                player.input.Left = true;
-            } else if (curY < self.target_y) {
-                player.input.Down = true;
-            } else if (curY > self.target_y) {
-                player.input.Up = true;
-            }
+    
+            dx = self.target_x - curX;  // Recalculate after adjustment
         }
+    
+        // Calculate how many steps to move this frame based on AI difficulty
+        var maxSteps = clamp(abs(2 - player.ai_difficulty), 1, 3);  // Easy = 1, Master = 3
+    
+        // ** Horizontal Movement First **
+        if (dx != 0) {
+            var stepDirection = sign(dx);  // -1 for left, +1 for right
+            var stepsToTake = min(abs(dx), maxSteps);
+    
+            for (var step = 0; step < stepsToTake; step++) {
+                if (stepDirection > 0) {
+                    player.input.Right = true;
+
+                    curX++;  // Update our internal tracking
+                } else {
+                    player.input.Left = true;
+
+                    curX--;
+                }
+            }
+    
+            // Log movement
+            self.last_decision = "Moved HORIZONTALLY to " + string(curX) + "," + string(curY);
+            array_push(self.decision_log, self.last_decision);
+            if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
+    
+            return;  // Prioritize horizontal
+        }
+    
+        // ** Vertical Movement if Horizontal Aligned **
+        if (dy != 0) {
+            var stepDirection = sign(dy);  // -1 for up, +1 for down
+            var stepsToTake = min(abs(dy), maxSteps);
+    
+            for (var step = 0; step < stepsToTake; step++) {
+                if (stepDirection > 0) {
+                    player.input.Down = true;
+
+                    curY++;
+                } else {
+                    player.input.Up = true;
+
+                    curY--;
+                }
+            }
+    
+            // Log movement
+            self.last_decision = "Moved VERTICALLY to " + string(curX) + "," + string(curY);
+            array_push(self.decision_log, self.last_decision);
+            if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
+    
+            return;  // Done for this frame
+        }
+    
+        // Final arrival (fully aligned)
+        self.last_decision = "ARRIVED at " + string(curX) + "," + string(curY);
+        array_push(self.decision_log, self.last_decision);
+        if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
+    
+        self.current_action = "idle";  // Ready for next AI step
     }
+    
+    
+    
+       
+    
+    
+    
+    
+    isColumnSafe = function(col) {
+        for (var row = self.top_playable_row; row < self.bottom_playable_row; row++) {
+            var block = player.grid[col, row];
+            //if (block.falling || block.popping) {
+             //   return false;
+            //}
+        }
+        return true;
+    }
+    
+    findNearestSafeColumn = function(startCol) {
+        var left = startCol - 1;
+        var right = startCol + 1;
+    
+        while (left >= 0 || right < self.width) {
+            if (left >= 0 && isColumnSafe(left)) return left;
+            if (right < self.width && isColumnSafe(right)) return right;
+            left--;
+            right++;
+        }
+    
+        // No safe column found — this should almost never happen
+        return startCol; // Fall back to original (no better option)
+    }
+    
     
     
     
     trySwap = function() {
         var pos_x = player.hovered_block[0];
-        var pos_y = player.hovered_block[1];
+            var pos_y = player.hovered_block[1];
         
+            var matchKey = string(pos_x) + "," + string(pos_y);
+        
+    
         // Check if position is valid for a swap
-        if (pos_x < 0 || pos_x > self.width - 1 || pos_y < self.top_playable_row || pos_y > self.bottom_playable_row) return;
-        
-        // Check if blocks are valid for swapping
+        if (pos_x < 0 || pos_x >= self.width - 1 || pos_y < self.top_playable_row || pos_y > self.bottom_playable_row) return;
+    
         var block1 = player.grid[pos_x, pos_y];
-        var block2 = player.grid[pos_x+1, pos_y];
+        self.current_action = "idle";   // Done with this special move
+        var block2 = undefined; // Depending on match type, block2 could be horizontal or vertical
         
-        //if (self.current_match!= undefined && self.current_match.match_type == "bridge") {
-            //var fetchX = self.current_match.fetch_from_x;
-            //var targetX = self.current_match.x;
-        //
-            //if (fetchX < targetX) {
-                //player.input.Left = true;
-            //} else {
-                //player.input.Right = true;
-            //}
-        //
-            //player.input.ActionPress = true;
-        //}
         
+        
+        if (self.current_match != undefined) {
+            // Horizontal swap (default behavior)
+            if (pos_x + 1 > self.width - 1) return; // Safety check
+            block2 = player.grid[pos_x + 1, pos_y];
+        }
+    
+        
+        if (block2 == undefined) return;
+        if (block1.type == block2.type) return;
         
         if ((block1.type != BLOCK.NONE || block2.type != BLOCK.NONE) && 
             !block1.falling && !block2.falling &&
             !block1.popping && !block2.popping &&
             !block1.is_big && !block2.is_big) {
-            
-            // Check if this swap would create a match
-            var creates_match = false;
-            
-            //// Only do this check if your game has the checkForMatch function
-            //if (variable_struct_exists(self, "checkForMatch")) {
-                //var type1 = block1.type;
-                //var type2 = block2.type;
-                //
-                //// Temporarily swap
-                //block1.type = type2;
-                //block2.type = type1;
-                //
-                //// Check for match
-                //creates_match = checkForMatch(pos_x, pos_y) || checkForMatch(pos_x+1, pos_y);
-                //
-                //// Swap back
-                //block1.type = type1;
-                //block2.type = type2;
-            //}
-            
-            // Always attempt the swap, even if we're not sure it creates a match
-            // (this handles cases where your game might have match detection logic we can't access)
+    
             self.last_decision = "SWAP at " + string(pos_x) + "," + string(pos_y);
             array_push(self.decision_log, self.last_decision);
             if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-            
-            // Perform the swap
+    
             player.input.ActionPress = true;
-            player.input.ActionKey = true;
-            
-            // Set cooldown (shorter if it creates a match, so we can find follow-up matches quicker)
-            self.swap_cooldown = creates_match ? 5 : 10;
+            //input.ActionKey = true;
+    
+            self.swap_cooldown = 1;  // Adjust if you want quicker chaining
+            //self.scan_delay = 1; // Scan very frequently at master difficulty
         }
+    
+   }
+    
+    
+    function buildMovePlan(board) {
+        var simulatedBoard = cloneBoard(board);
+        var plan = [];
+        var visited = ds_map_create();
+        
+        var queue = ds_queue_create();
+    
+        var initialState = {
+            board: simulatedBoard,
+            path: []
+        };
+    
+        ds_queue_enqueue(queue, initialState);
+        
+        while (!ds_queue_empty(queue)) {
+            var currentState = ds_queue_dequeue(queue);
+            var currentBoard = currentState.board;
+            var currentPath = currentState.path;
+    
+            if (isBoardCleared(currentBoard)) {
+                plan = currentPath;
+                break;
+            }
+            
+            var validSwaps = findAllValidSwaps(currentBoard);
+            
+            for (var i = 0; i < array_length(validSwaps); i++) {
+                var swap = validSwaps[i];
+                var newBoard = cloneBoard(currentBoard);
+                applySwap(newBoard, swap[0], swap[1]);
+    
+                var boardKey = boardToString(newBoard);
+                if (!ds_map_exists(visited, boardKey)) {
+                    ds_map_add(visited, boardKey, true);
+    
+                    var newPath = array_create(array_length(currentPath) + 1);
+                    array_copy(newPath, 0, currentPath, 0, array_length(currentPath));
+                    newPath[array_length(currentPath)] = swap; // Add new move to path
+    
+                    ds_queue_enqueue(queue, {board: newBoard, path: newPath});
+                }
+            }
+        }
+        
+        ds_map_destroy(visited);
+        ds_queue_destroy(queue);
+        
+        return plan;  // Final move sequence
+    }
+    
+    function findAllValidSwaps(board) {
+        var swaps = [];
+        for (var _y = self.top_playable_row; _y <= self.bottom_playable_row; _y++) {
+            for (var _x = 0; _x < self.width - 1; _x++) {
+                if (canBlocksSwap(board[_x, _y], board[_x+1, _y])) {
+                    array_push(swaps, [_x, _y]);
+                }
+            }
+        }
+        return swaps;
+    }
+    
+    function canBlocksSwap(blockA, blockB) {
+        if (blockA.type < 0 || blockB.type < 0) return false;
+        if (blockA.falling || blockB.falling) return false;
+        if (blockA.popping || blockB.popping) return false;
+        return true;
+    }
+    
+    function applySwap(board, x, y) {
+        var temp = board[x, y];
+        board[x, y] = board[x+1, y];
+        board[x+1, y] = temp;
     }
     
     
+    exploreStrategically = function() {
+        var tallest_column = 0;
+        var tallest_height = 0;
+    
+        for (var col = 0; col < self.width; col++) {
+            var height = self.player.ai_scanner.getColumnHeight(col);
+            if (height > tallest_height) {
+                tallest_height = height;
+                tallest_column = col;
+            }
+        }
+    
+        if (irandom(3) == 0) {
+            self.target_x = tallest_column; // Bias toward tallest column 25% of the time
+        } else {
+            self.target_x = irandom_range(0, self.width - 2);
+        }
+    
+        var mid_range = floor((self.bottom_playable_row - self.topmost_row) * 0.6);
+        self.target_y = irandom_range(self.topmost_row, self.topmost_row + mid_range);
+    
+        self.last_decision = "EXPLORING at " + string(self.target_x) + "," + string(self.target_y);
+        array_push(self.decision_log, self.last_decision);
+        if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
+    
+        self.current_action = "moving";
+        self.move_timer = 0;
+    }
     
     // Helper function to check if a swap would create a match
     checkForMatch = function(col, row) {
@@ -739,9 +865,9 @@ function AIBoardController(player) constructor {
                 self.scan_delay = 45;
                 break;
             case 5: // Master
-                player.ai_max_delay = 2;
-                self.move_delay = 2;
-                self.action_delay = 4;
+                player.ai_max_delay = 0;
+                self.move_delay = 0;
+                self.action_delay = 0;
                 self.scan_delay = 10; // Scan very frequently at master difficulty
                 break;
         }
@@ -750,46 +876,5 @@ function AIBoardController(player) constructor {
     // Clean up data structures
     cleanup = function() {
         ds_queue_destroy(inputQueue);
-    }
-}
-
-
-// Set difficulty level (1-5)
-set_difficulty = function(level) {
-    level = clamp(level, 1, 5);
-    player.ai_difficulty = level;
-    
-    // Adjust AI parameters based on difficulty
-    switch(level) {
-        case 1: // Easy
-            player.ai_max_delay = 15;
-            self.move_delay = 12;
-            self.action_delay = 24;
-            self.scan_delay = 120; // Scan less frequently at easy difficulty
-            break;
-        case 2: // Medium
-            player.ai_max_delay = 10;
-            self.move_delay = 10;
-            self.action_delay = 20;
-            self.scan_delay = 90;
-            break;
-        case 3: // Hard
-            player.ai_max_delay = 8;
-            self.move_delay = 8;
-            self.action_delay = 16;
-            self.scan_delay = 60;
-            break;
-        case 4: // Expert
-            player.ai_max_delay = 6;
-            self.move_delay = 6;
-            self.action_delay = 12;
-            self.scan_delay = 45;
-            break;
-        case 5: // Master
-            player.ai_max_delay = 2;
-            self.move_delay = 2;
-            self.action_delay = 4;
-            self.scan_delay = 10; // Scan very frequently at master difficulty
-            break;
     }
 }

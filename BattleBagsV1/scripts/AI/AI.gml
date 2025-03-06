@@ -129,8 +129,20 @@ function setup_ai_players(controller) {
         ds_list_add(global.player_list, ai_player);
         
         show_debug_message("Created AI player " + string(i));
+        
+        // Make sure the AI board scanner exists
+        if (player.ai_scanner == undefined) {
+            player.ai_scanner = new AIBoardScanner(player);
+        }
+        
+        // Make sure the AI controller exists
+        if (player.ai_controller == undefined) {
+            player.ai_controller = new AIBoardController(player);
+        }
     }
 }
+
+
 
 
 
@@ -142,16 +154,6 @@ function update_ai_players(_self) {
         var player = ds_list_find_value(global.player_list, i);
         
         if (player != undefined && player.is_ai && player.alive) {
-            // Make sure the AI board scanner exists
-            if (player.ai_scanner == undefined) {
-                player.ai_scanner = new AIBoardScanner(player);
-            }
-            
-            // Make sure the AI controller exists
-            if (player.ai_controller == undefined) {
-                player.ai_controller = new AIBoardController(player);
-            }
-            
             // Process AI thinking
             player.ai_controller.tick();
         }
@@ -171,33 +173,6 @@ function cleanup_ai_players(_self) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-/// @description MoveActions
-/// GML implementation of move action structs
-
-// Define block move action structure
-function BlockMoveAction(_x, _y, _dx, _dy) constructor {
-    x = _x;
-    y = _y;
-    dx = _dx;
-    dy = _dy;
-}
-
-// Define cursor move action structure
-function CursorMoveAction(_x, _y) constructor {
-    x = _x;
-    y = _y;
-}
 
 
 /// @function draw_ai_debug
