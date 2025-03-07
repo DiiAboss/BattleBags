@@ -148,8 +148,7 @@ function AIBoardController(player) constructor {
                     
                     // Back to idle
                     self.current_action = "idle";
-                    //self.swap_after_move = false;
-                    
+            
                     // Clear current match after trying it
                     self.current_match = undefined;
                 //}
@@ -166,6 +165,7 @@ function AIBoardController(player) constructor {
             ds_map_clear(self.failed_matches);
             self.last_decision = "CLEARNING match blacklist due to shifting board";
             array_push(self.decision_log, self.last_decision);
+            if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
             player.board_just_shifted = false;
             self.current_match = undefined;
         }
@@ -211,6 +211,7 @@ function AIBoardController(player) constructor {
             self.current_match = undefined;
             self.last_decision = "VERTICAL BRIDGE MOVE COMPLETE";
             array_push(self.decision_log, self.last_decision);
+            if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
         }
     }
     
@@ -229,14 +230,27 @@ function AIBoardController(player) constructor {
             self.target_y = self.current_match.y;
             self.target_x = clamp(self.target_x, 0, self.width - 2); // Never allow cursor to overflow
             
-            
+            if (player.grid[target_x, target_y].type == player.grid[target_x + 1, target_y].type)
+            {
+                self.current_match = undefined;
+                self.current_action = "idle";
+                return;
+            } 
+
             self.last_decision = "MOVING TO MATCH at " + string(self.target_x) + "," + string(self.target_y);
             array_push(self.decision_log, self.last_decision);
             if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-    
+            
+            if (target_x == player.hovered_block[0] && target_y == player.hovered_block[1])
+            {
+                self.current_action = "pre_swap";  // Ready for next AI step
+                self.move_timer = 0;
+                return;
+            }
+            
             self.current_action = "moving";
             self.move_timer = 0;
-            self.swap_after_move = true;
+            //self.swap_after_move = true;
             return;
         }
     
@@ -361,11 +375,7 @@ function AIBoardController(player) constructor {
     
     
     exploreStrategically = function() {
-        // For higher difficulties, use strategic exploration
-        
-        player.global_y_offset -= 2;
-        return;
-        
+        player.shift_speed = player.default_shift_speed * player.ai_difficulty;
         if (player.ai_difficulty >= 3) {
                // Find the tallest column and go there
                var tallest_col = -1;
@@ -440,6 +450,8 @@ function AIBoardController(player) constructor {
                    self.target_x = tallest_col;
                    self.target_y = target_row;
                    
+                    
+                
                    // Add to recent positions
                    ds_list_add(self.recent_positions, string(self.target_x) + "," + string(self.target_y));
                    if (ds_list_size(self.recent_positions) > self.recent_position_limit) {
@@ -478,7 +490,7 @@ function AIBoardController(player) constructor {
     
     // More strategic random exploration
     strategicRandomExplore = function() {
-
+        if (irandom(10) <= 3) self.current_action = "pre_swap";
         var mid_range = floor((self.bottom_playable_row - self.topmost_row) * 0.6);
         var pos_x = irandom_range(0, self.width - 2);
         var pos_y = irandom_range(self.topmost_row, self.topmost_row + mid_range);
@@ -508,11 +520,11 @@ function AIBoardController(player) constructor {
     
         // Safety bounds clamp (just in case target drifted out)
         self.target_y = clamp(self.target_y, self.top_playable_row, self.bottom_playable_row);
-        self.target_x = clamp(self.target_x, 0, self.width - 1);
+        self.target_x = clamp(self.target_x, 0, self.width - 2);
     
         var dx = self.target_x - curX;
         var dy = self.target_y - curY;
-    
+        
         // Evaluate column safety (don't walk into death)
         var currentColumnSafe = isColumnSafe(curX);
         var targetColumnSafe = isColumnSafe(self.target_x);
@@ -589,8 +601,10 @@ function AIBoardController(player) constructor {
         self.last_decision = "ARRIVED at " + string(curX) + "," + string(curY);
         array_push(self.decision_log, self.last_decision);
         if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-    
-        self.current_action = "idle";  // Ready for next AI step
+        
+        if (ds_queue_empty(player.ai_scanner.match_queue))  self.current_action = "pre_swap";  // Ready for next AI step
+       
+        else self.current_action = "moving";  // Ready for next AI step
     }
     
     
@@ -601,11 +615,9 @@ function AIBoardController(player) constructor {
     
     
     isColumnSafe = function(col) {
+        return true;
         for (var row = self.top_playable_row; row < self.bottom_playable_row; row++) {
             var block = player.grid[col, row];
-            //if (block.falling || block.popping) {
-             //   return false;
-            //}
         }
         return true;
     }
@@ -621,7 +633,7 @@ function AIBoardController(player) constructor {
             right++;
         }
     
-        // No safe column found — this should almost never happen
+        exploreStrategically();
         return startCol; // Fall back to original (no better option)
     }
     
@@ -630,29 +642,40 @@ function AIBoardController(player) constructor {
     
     trySwap = function() {
         var pos_x = player.hovered_block[0];
-            var pos_y = player.hovered_block[1];
+        var pos_y = player.hovered_block[1];
         
-            var matchKey = string(pos_x) + "," + string(pos_y);
+        var matchKey = string(pos_x) + "," + string(pos_y);
         
     
         // Check if position is valid for a swap
         if (pos_x < 0 || pos_x >= self.width - 1 || pos_y < self.top_playable_row || pos_y > self.bottom_playable_row) return;
     
         var block1 = player.grid[pos_x, pos_y];
-        self.current_action = "idle";   // Done with this special move
-        var block2 = undefined; // Depending on match type, block2 could be horizontal or vertical
+        var block2 = undefined;
         
         
         
         if (self.current_match != undefined) {
             // Horizontal swap (default behavior)
-            if (pos_x + 1 > self.width - 1) return; // Safety check
+            if (pos_x + 1 > self.width - 1)
+            {
+                return;
+            } // Safety check
             block2 = player.grid[pos_x + 1, pos_y];
         }
     
         
-        if (block2 == undefined) return;
-        if (block1.type == block2.type) return;
+        if (block2 == undefined) {
+            self.current_action = "moving";   // Done with this special move
+            ds_queue_dequeue(player.ai_scanner.match_queue);
+            return;
+        } // Safety check
+        
+        if (block1.type == block2.type) {
+            self.current_action = "moving";   // Done with this special move
+            ds_queue_dequeue(player.ai_scanner.match_queue);
+            return;
+        } // Safety check
         
         if ((block1.type != BLOCK.NONE || block2.type != BLOCK.NONE) && 
             !block1.falling && !block2.falling &&
@@ -664,89 +687,15 @@ function AIBoardController(player) constructor {
             if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
     
             player.input.ActionPress = true;
-            //input.ActionKey = true;
-    
-            self.swap_cooldown = 1;  // Adjust if you want quicker chaining
-            //self.scan_delay = 1; // Scan very frequently at master difficulty
+            //player.input.ActionPress = true;
+
+            self.current_action = "idle"; 
+            //ds_queue_clear(player.ai_scanner.match_queue);
+            ds_queue_dequeue(player.ai_scanner.match_queue);
+            player.board_just_shifted = true;
         }
     
    }
-    
-    
-    function buildMovePlan(board) {
-        var simulatedBoard = cloneBoard(board);
-        var plan = [];
-        var visited = ds_map_create();
-        
-        var queue = ds_queue_create();
-    
-        var initialState = {
-            board: simulatedBoard,
-            path: []
-        };
-    
-        ds_queue_enqueue(queue, initialState);
-        
-        while (!ds_queue_empty(queue)) {
-            var currentState = ds_queue_dequeue(queue);
-            var currentBoard = currentState.board;
-            var currentPath = currentState.path;
-    
-            if (isBoardCleared(currentBoard)) {
-                plan = currentPath;
-                break;
-            }
-            
-            var validSwaps = findAllValidSwaps(currentBoard);
-            
-            for (var i = 0; i < array_length(validSwaps); i++) {
-                var swap = validSwaps[i];
-                var newBoard = cloneBoard(currentBoard);
-                applySwap(newBoard, swap[0], swap[1]);
-    
-                var boardKey = boardToString(newBoard);
-                if (!ds_map_exists(visited, boardKey)) {
-                    ds_map_add(visited, boardKey, true);
-    
-                    var newPath = array_create(array_length(currentPath) + 1);
-                    array_copy(newPath, 0, currentPath, 0, array_length(currentPath));
-                    newPath[array_length(currentPath)] = swap; // Add new move to path
-    
-                    ds_queue_enqueue(queue, {board: newBoard, path: newPath});
-                }
-            }
-        }
-        
-        ds_map_destroy(visited);
-        ds_queue_destroy(queue);
-        
-        return plan;  // Final move sequence
-    }
-    
-    function findAllValidSwaps(board) {
-        var swaps = [];
-        for (var _y = self.top_playable_row; _y <= self.bottom_playable_row; _y++) {
-            for (var _x = 0; _x < self.width - 1; _x++) {
-                if (canBlocksSwap(board[_x, _y], board[_x+1, _y])) {
-                    array_push(swaps, [_x, _y]);
-                }
-            }
-        }
-        return swaps;
-    }
-    
-    function canBlocksSwap(blockA, blockB) {
-        if (blockA.type < 0 || blockB.type < 0) return false;
-        if (blockA.falling || blockB.falling) return false;
-        if (blockA.popping || blockB.popping) return false;
-        return true;
-    }
-    
-    function applySwap(board, x, y) {
-        var temp = board[x, y];
-        board[x, y] = board[x+1, y];
-        board[x+1, y] = temp;
-    }
     
     
     exploreStrategically = function() {

@@ -179,7 +179,7 @@ function cleanup_ai_players(_self) {
 /// @description Draw debug information for AI players
 /// @param {struct} player The player to debug
 function draw_ai_debug(player) {
-    return;
+    //return;
     if (!player.is_ai) return;
     
     // Get screen position to draw debug info

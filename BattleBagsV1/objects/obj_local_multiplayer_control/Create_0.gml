@@ -40,7 +40,7 @@ xInput = true;
 
 random_seed = irandom(999999) * -1;
 
-shift_speed = 0.15;
+shift_speed = 0.25;
 
 global.player_list = ds_list_create();
 gem_size = 64;
@@ -61,6 +61,7 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
     player.swap_queue = create_swap_queue();
     player.pop_list = ds_list_create();
     player.shift_speed = shift_speed;
+    player.default_shift_speed = shift_speed;
     player.random_seed = random_seed;
     player.hovered_block = [4, 12];
     player.input.InputType = INPUT.NONE;
@@ -75,7 +76,7 @@ for (var i = 0; i < ds_list_size(global.player_list); i++) {
 
 
 offset = gem_size * 0.5;
-show_debug_overlay(true);
+//show_debug_overlay(true);
 
 gamepad_taken_list = array_create(12, -1);
 

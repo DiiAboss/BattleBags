@@ -140,6 +140,22 @@ if (room == rm_local_multiplayer_game)
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
         
+        if (player.combo > 0 || !ds_list_empty(player.pop_list))
+        {
+            player.combo_timer += 1;
+            player.shift_speed = 0.5 * player.default_shift_speed;
+        }
+        else {
+            player.shift_speed = player.default_shift_speed;
+        }
+        
+        if (player.combo_timer == player.max_combo_timer)
+        {
+            player.combo = 0;
+            player.combo_timer = player.max_combo_timer;   
+        }
+        
+        
         update_topmost_row_mp(self, player);
         
         // Drop the blocks
@@ -201,7 +217,9 @@ if (room == rm_local_multiplayer_game)
                    {
                        player.hovered_block[1] -= 1;
                    }
-                   player.input_delay = max_input_delay;
+                if !(player.is_ai) player.input_delay = max_input_delay;
+                    else player.input_delay = 1;
+                   
                }
                
                if (player.input.Down)
@@ -210,7 +228,8 @@ if (room == rm_local_multiplayer_game)
                    {
                    player.hovered_block[1] += 1; 
                    }
-                   player.input_delay = max_input_delay;
+                   if !(player.is_ai) player.input_delay = max_input_delay;
+                    else player.input_delay = 1;
                }
                
                if (player.input.Left)
@@ -222,7 +241,8 @@ if (room == rm_local_multiplayer_game)
                        else {
                            player.hovered_block[0] = width - 1;
                        }
-                   player.input_delay = max_input_delay;
+                   if !(player.is_ai) player.input_delay = max_input_delay;
+                    else player.input_delay = 1;
                }
                
                if (player.input.Right)
@@ -234,7 +254,8 @@ if (room == rm_local_multiplayer_game)
                    else {
                        player.hovered_block[0] = 0;
                    }
-                   player.input_delay = max_input_delay;
+                   if !(player.is_ai) player.input_delay = max_input_delay;
+                    else player.input_delay = 1;
                }
            }
        }

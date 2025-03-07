@@ -95,7 +95,7 @@ function show_hovered_block_stats(player, block_x, block_y)
     draw_text(player.board_x_offset + 10, player.draw_y_start + 10,
         "Hovering: (" + string(block_x) + ", " + string(block_y) +
         ")\n | Type: " + string(block.type) + 
-        "\n | Powerup: " + string(block.powerup) +
+        "\n | Combo: " + string(player.combo) +
         "\n | falling: " + string(block.falling) +
         "\n | popping:  " + string(block.popping)
     );
