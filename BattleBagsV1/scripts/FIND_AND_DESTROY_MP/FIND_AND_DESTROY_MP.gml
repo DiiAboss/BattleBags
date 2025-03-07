@@ -30,7 +30,7 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
             {
                 player.grid[xx, yy].popping = true;
                 player.grid[xx, yy].falling = false;
-                player.grid[xx, yy].fall_delay = 0;
+                player.grid[xx, yy].fall_delay = 1;
             }
             else
             {
@@ -54,6 +54,8 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
                         match_count++;
                     } else {
                         if (match_count >= 3) {
+                            player.combo += 1;
+                                        player.combo_timer = 0;
                             for (var k = 0; k < match_count; k++) {
                                 var xx = start_idx + k;
                                 if (xx >= 0 && xx < width) {
@@ -65,6 +67,10 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
                     }
                 }
                 if (match_count >= 3) {
+                    
+                                player.combo += 1;
+                                player.combo_timer = 0;
+                    
                     for (var k = 0; k < match_count; k++) {
                         var xx = start_idx + k;
                         if (xx >= 0 && xx < width) {
@@ -89,6 +95,8 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
                 match_count++;
             } else {
                 if (match_count >= 3) {
+                    player.combo += 1;
+                                player.combo_timer = 0;
                     for (var k = 0; k < match_count; k++) {
                         var yy = start_idx + k;
                         
@@ -102,6 +110,10 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
             }
         }
         if (match_count >= 3) {
+            
+            player.combo += 1;
+            player.combo_timer = 0;
+            
             for (var k = 0; k < match_count; k++) {
                 var yy = start_idx + k;
                 if (yy >= 0 && yy <= bottom_row) {
@@ -155,6 +167,8 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
                 player.grid[i, j].popping   = true;
                 player.grid[i, j].shake_timer   = _start_delay * dist;
                 player.grid[i, j].pop_timer = dist;
+                
+                
                 var _pitch = clamp(1 + (0.2 * player.combo), 0.5, 5);
 
                 audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
@@ -193,13 +207,6 @@ function pop_blocks_in_pop_queue(mp_control, player) {
             // ✅ Store Gem Object Before Destroying
             var gem = player.grid[_x, _y];
 
-            //if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2
-
-            //Loop Through Multipliers
-            //process_powerup(self, _x, _y, gem, total_multiplier_next);
-            
-            //total_blocks_destroyed++;
-            // **Destroy the block**
             
 
             destroy_block(player, _x, _y);

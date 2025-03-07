@@ -33,25 +33,33 @@ function AIBoardScanner(player) constructor {
         
         // Prioritize scanning edge columns first
         //scanEdgeColumnTowers();
-        scanColumnTowers();
-        scanDirectMatches(effective_top_row);
         
-            
-        scanIndirectMatches(effective_top_row);
+        scanDirectMatches(effective_top_row);
         scanHorizontalMatches(effective_top_row);
         scanVerticalMatches(effective_top_row);
-        scanForPotentialPairs();
-
+        scanColumnTowers();
+        //
             
-        // Check for gravity swap opportunities between adjacent columns
-        for (var _col = 0; _col < self.width - 1; _col++) {
-            var _height = columnHeights[_col];
-            var _nextHeight = columnHeights[_col+1];
-            
-            if (abs(_height - _nextHeight) >= 2) {
-                scanForGravitySwap(_col, _col+1);
-            }
+        if ds_queue_empty(self.match_queue) 
+        {
+            scanIndirectMatches(effective_top_row);
+           //scanBridgeMoves() ;
         }
+        
+        if ds_queue_empty(self.match_queue) 
+        {
+            scanForPotentialPairs(); 
+        }
+            
+        //// Check for gravity swap opportunities between adjacent columns
+        //for (var _col = 0; _col < self.width - 1; _col++) {
+            //var _height = columnHeights[_col];
+            //var _nextHeight = columnHeights[_col+1];
+            //
+            //if (abs(_height - _nextHeight) >= 2) {
+                //scanForGravitySwap(_col, _col+1);
+            //}
+        //}
         
         
         return !ds_queue_empty(self.match_queue);
@@ -431,17 +439,6 @@ function AIBoardScanner(player) constructor {
         
         if (block1.type != block2.type) return;
     
-        // Now check if the blocks between them are swappable
-        var canSwap = true;
-        for (var middle = 1; middle < gap; middle++) {
-            var middleBlock = grid[col + middle, row];
-            if (middleBlock.type < 0 || middleBlock.falling || middleBlock.popping) {
-                canSwap = false;
-                break;
-            }
-        }
-        if (!canSwap) return;
-    
         // Find the block to move (closest to a match)
         var bestMove = undefined;
         var bestScore = -9999;
@@ -505,61 +502,55 @@ function AIBoardScanner(player) constructor {
     
     
     
-    /// Scan for direct matches by temporary block swapping (continued)
     scanDirectMatches = function(effective_top_row) {
         var grid = player.grid;
         
         for (var row = effective_top_row; row <= self.bottom_playable_row - 1; row++) {
             for (var col = 0; col < self.width - 1; col++) {
-                // Skip invalid blocks
+                // Skip invalid blocks - check everything at once
                 var block1 = grid[col, row];
                 var block2 = grid[col+1, row];
                 
                 if (block1.type < 0 || block2.type < 0 || 
                     block1.falling || block2.falling || 
-                    block1.popping || block2.popping) {
+                    block1.popping || block2.popping ||
+                    block1.type == block2.type) {  // Important: skip same type blocks!
                     continue;
                 }
                 
-                // Temporarily swap blocks
+                // Temporarily swap blocks and check for matches
                 var type1 = block1.type;
                 var type2 = block2.type;
                 
-                // Do the swap
                 block1.type = type2;
                 block2.type = type1;
                 
-                // Now check for matches at both positions, but count match size
                 var match_size1 = 0;
                 var match_size2 = 0;
                 
-                // Only check if this could be a match (3 or more)
                 if (checkForMatch(col, row)) {
                     match_size1 = countConnectedBlocks(col, row);
                 }
                 
                 if (checkForMatch(col+1, row)) {
                     match_size2 = countConnectedBlocks(col+1, row);
-                    
                 }
                 
                 // Undo the swap
                 block1.type = type1;
                 block2.type = type2;
                 
-                // Use the larger of the two match sizes
                 var max_match_size = max(match_size1, match_size2);
                 
+                // Only queue legitimate matches
                 if (max_match_size >= 3) {
-                    // Calculate score with strong bias toward larger matches
                     var base_score = 40;
                     var size_bonus = 0;
                     
-                    // Exponential bonus for larger matches
                     if (max_match_size == 4) {
-                        size_bonus = 80;  // Big jump for 4-matches
+                        size_bonus = 80;
                     } else if (max_match_size >= 5) {
-                        size_bonus = 120;  // Even bigger for 5+
+                        size_bonus = 120;
                     }
                     var distance = abs(player.hovered_block[0] - col) + abs(player.hovered_block[1] - row);
                     var matchInfo = {
@@ -805,7 +796,7 @@ function AIBoardScanner(player) constructor {
                 var type2 = block2.type;
                 block1.type = type2;
                 block2.type = type1;
-    
+                
                 // Check if the swap creates any 2-block pair (not a full 3-match yet)
                 var pairStrength = evaluate2BlockPotential(col, row) + evaluate2BlockPotential(col+1, row);
     
@@ -823,7 +814,7 @@ function AIBoardScanner(player) constructor {
                         x: col,
                         y: row,
                         match_type: "potential_pair",
-                        score: 2 * strength - (distance * irandom(3)) // Nearby pairs more valuable
+                        score: strength - (distance * irandom(3)) // Nearby pairs more valuable
                     };
                     random_set_seed(player.random_seed);
                     ds_queue_enqueue(self.match_queue, movePlan);
@@ -944,13 +935,15 @@ function AIBoardScanner(player) constructor {
             var targetRow = columnTopRows[targetCol];
     
             // Prefer swaps within 1-3 rows from the top (avoid deep digging)
-            var swapRow = clamp(targetRow - 2, player.topmost_row, self.bottom_playable_row);
+            var swapRow = clamp(targetRow - (1 + irandom(1)), player.topmost_row, self.bottom_playable_row);
     
             // Step 4: Validate swap opportunity
             var sourceBlock = grid[col, swapRow];
             var targetBlock = grid[targetCol, swapRow];
             
-            if (sourceBlock.type != BLOCK.NONE && targetBlock.type != BLOCK.NONE) return;
+            if (sourceBlock.type != BLOCK.NONE && targetBlock.type != BLOCK.NONE) return; 
+                
+            if (sourceBlock.type == targetBlock.type) return;
             
             // only decrement the swap side if we need to swap to left, as its set to righ naturally
             var swap_side = targetCol > col ? 0 : -1;

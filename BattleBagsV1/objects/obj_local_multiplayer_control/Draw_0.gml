@@ -101,13 +101,13 @@ if (room == rm_local_multiplayer_game)
             draw_player_grid(self, player);
         }
         
-        
+        draw_text(player.hovered_block[0], player.hovered_block[1], "Combo: " + string(player.combo))
         
         if (player.hovered_block[0] >= 0 && player.hovered_block[1] >= 0) {
             var hover_i = player.hovered_block[0];
             var hover_j = player.hovered_block[1];
             show_hovered_block_stats(player, hover_i, hover_j);
-        
+            
             if (hover_i >= 0 && hover_i < width && hover_j >= 0 && hover_j < height) {
                 var hover_gem = player.grid[hover_i, hover_j];
                 var rect_x1 = player.board_x_offset + (hover_i * gem_size);

@@ -177,6 +177,7 @@ function setup_ai_players_from_lobby(_self) {
             
             player.random_seed = _self.random_seed;
             player.shift_speed = _self.shift_speed;
+            player.default_shift_speed = _self.shift_speed;
             player.alive = true;
         }
     }
