@@ -59,7 +59,9 @@ function toss_down_shape(_self, shape_name, is_enemy_attack = true, is_freeze = 
             }
         }
     }
-
+  
+    
+    
     // ✅ Force a secondary drop pass **to process falling blocks**
     //for (var i = 0; i < 3; i++) { 
         drop_blocks(_self);
