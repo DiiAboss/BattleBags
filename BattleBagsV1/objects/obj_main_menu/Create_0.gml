@@ -14,4 +14,5 @@ max_input_delay = 10;
 var testSeq = sq_title_card;
 var seqTestLayer = "Instances";
 
-layer_sequence_create(seqTestLayer, room_width/2, room_height/2, testSeq);
+start_seq = layer_sequence_create(seqTestLayer, room_width/2, room_height/2, testSeq);
+
