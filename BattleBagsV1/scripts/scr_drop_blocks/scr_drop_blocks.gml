@@ -18,7 +18,15 @@ function drop_blocks(_self, fall_speed = 2) {
                     continue;
                 }
                 
-
+                if gem.freeze_on_land
+                {
+                    if (gem.fall_delay == 0 && !gem.falling) 
+                    {
+                        gem.frozen = true;
+                        gem.freeze_on_land = false;
+                    }  
+                }
+                
 				
                 // 🔹 **Slime Block Falling**
                 if (gem.slime_hp > 0) { 
