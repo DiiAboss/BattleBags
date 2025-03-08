@@ -29,38 +29,34 @@ function AIBoardScanner(player) constructor {
         var columnHeights = self.columnHeights;
         
         // Determine effective top row
-        var effective_top_row = min(self.top_playable_row, player.topmost_row);
+        var effective_top_row = max(self.top_playable_row, player.topmost_row);
         
         // Prioritize scanning edge columns first
         //scanEdgeColumnTowers();
         
-        scanDirectMatches(effective_top_row);
+        //scanDirectMatches(effective_top_row);
         scanHorizontalMatches(effective_top_row);
         scanVerticalMatches(effective_top_row);
         scanColumnTowers();
-        //
-            
-        if ds_queue_empty(self.match_queue) 
-        {
-            scanIndirectMatches(effective_top_row);
-           //scanBridgeMoves() ;
-        }
+        scanIndirectMatches(effective_top_row);
+        
+        for (var row = self.top_playable_row; row <= self.bottom_playable_row; row++) {
+                    var str = "ROW: " +string(row)
+                    for (var col = 0; col < self.width - 1; col++) {
+                        var _add = player.grid[col, row].type >= 0 ? string(player.grid[col, row].type) : "e";
+                        
+                        str += "[" + _add + "]";
+                    }
+                show_debug_message(str);
+                    //str += "\n";
+                    }
+        show_debug_message("");
         
         if ds_queue_empty(self.match_queue) 
         {
-            scanForPotentialPairs(); 
+            //scanForPotentialPairs(); 
         }
             
-        //// Check for gravity swap opportunities between adjacent columns
-        //for (var _col = 0; _col < self.width - 1; _col++) {
-            //var _height = columnHeights[_col];
-            //var _nextHeight = columnHeights[_col+1];
-            //
-            //if (abs(_height - _nextHeight) >= 2) {
-                //scanForGravitySwap(_col, _col+1);
-            //}
-        //}
-        
         
         return !ds_queue_empty(self.match_queue);
     }
@@ -115,7 +111,7 @@ function AIBoardScanner(player) constructor {
         if (ds_queue_empty(self.match_queue)) return undefined;
         
         var bestMatch = undefined;
-        var bestScore = -1;
+        var bestScore = -999;
 
         
         // Create a temporary queue to preserve original order
@@ -408,105 +404,160 @@ function AIBoardScanner(player) constructor {
     }
     
     scanIndirectMatches = function(effective_top_row) {
-        var grid = player.grid;
+        var maxGap = 7;  // Check up to 4 spaces away
     
         for (var row = effective_top_row; row <= self.bottom_playable_row - 1; row++) {
-            for (var col = 0; col < self.width - 2; col++) {  // Scan 2 blocks apart first
-                checkIndirectMatchAt(col, row, 2, 30); // Distance of 2, base score 30
-            }
-            for (var col = 0; col < self.width - 3; col++) {  // Scan 3 blocks apart
-                checkIndirectMatchAt(col, row, 3, 20); // Distance of 3, lower base score 20
-            }
-            
-            for (var col = 0; col < self.width - 4; col++) {  // Scan 3 blocks apart
-                checkIndirectMatchAt(col, row, 4, 10); // Distance of 3, lower base score 20
+            for (var col = 0; col < self.width; col++) {
+                var block = player.grid[col, row];
+    
+                if (block.type < 0 || block.falling || block.popping) {
+                    continue; // Skip unusable blocks
+                }
+    
+                for (var gap = 1; gap <= maxGap; gap++) {
+                    if checkGapMatch(col, row, gap, 100 - gap * 10) continue; // Scan rightward
+                    if checkGapMatch(col, row, -gap, 100 - gap * 10) continue; // Scan leftward
+                }
             }
         }
     }
     
-    // Helper function to scan a pair of blocks separated by 'gap' spaces
-    checkIndirectMatchAt = function(col, row, gap, baseScore) {
+    
+    checkGapMatch = function(col, row, gap, baseScore) {
+        
         var grid = player.grid;
+        var targetCol = col + gap;
+        if gap > 0 dir = 0;
+        var dir = gap > 0 ? 0 : 1;    
+        //var move_dir = gap >= 0 ? 1 : 1;
+        var moveCol = col - dir; // - move_dir;
+        
+        
+        // [col] + 4 . 0-4, 1-5, 2-6, 3,7
+        if (targetCol < 0 || targetCol >= player.width) return false;
         
         var block1 = grid[col, row];
-        var block2 = grid[col + gap, row];
+        var block1_left = grid[max(0, col - 1), row];
+        var block1_right = grid[min(col + 1, player.width - 1), row];
         
-        if (block1.type < 0 || block2.type < 0 || 
-            block1.falling || block2.falling ||
-            block1.popping || block2.popping) {
-            return;
+        if (block1.type == BLOCK.NONE) return false;
+        
+        var block2 = grid[targetCol, row];
+        var block3 = grid[targetCol - sign(gap), row]; 
+        
+        var block2_down_1 = grid[targetCol, row + 1].type;
+        var block2_up_1 = grid[targetCol, row - 1].type;
+        var block2_left_1 = grid[max(0,targetCol - 1), row].type;
+        var block2_right_1 = grid[min(player.width - 1, targetCol + 1), row].type;
+        
+        
+        
+        if (block2.falling || block2.popping) {
+            return false;
         }
         
-        if (block1.type != block2.type) return;
-    
-        // Find the block to move (closest to a match)
-        var bestMove = undefined;
-        var bestScore = -9999;
-    
-        for (var middle = 1; middle < gap; middle++) {
-            // Try swapping this middle block left or right
-            var leftCol = col + middle - 1;
-            var rightCol = col;
-    
-            // Temporarily swap left
-            if (leftCol >= 0) {
-                swapBlocks(col + middle, row, leftCol, row);
-                if (checkForMatch(leftCol, row)) {
-                    var matchSize = countConnectedBlocks(leftCol, row);
-                    var distance = abs(player.hovered_block[0] - leftCol) + abs(player.hovered_block[1] - row);
-                    var _score = baseScore + matchSize * 10 - distance * 5;
-                    if (_score > bestScore) {
-                        bestScore = _score;
-                        bestMove = { x: leftCol, y: row };
-                    }
-                }
-                swapBlocks(col + middle, row, leftCol, row);  // Undo
-            }
-    
-            // Temporarily swap right
-            if (rightCol < self.width) {
-                swapBlocks(col + middle, row, rightCol, row);
-                if (checkForMatch(rightCol, row)) {
-                    var matchSize = countConnectedBlocks(rightCol, row);
-                    var distance = abs(player.hovered_block[0] - rightCol) + abs(player.hovered_block[1] - row);
-                    var _score = baseScore + matchSize * 10 - distance * 5;
-                    if (_score > bestScore) {
-                        bestScore = _score;
-                        bestMove = { x: rightCol, y: row };
-                    }
-                }
-                swapBlocks(col + middle, row, rightCol, row);  // Undo
-            }
+        if (block1.type != block2_down_1
+        && block1.type != block2_up_1
+        && block1.type != block2_left_1
+        && block1.type != block2_right_1) return false;
+        
+        
+        
+        
+        
+        //0 -> 4
+        //[0]
+        if (dir == 0)
+        {
+            if (block1.type == block1_right.type) return false;
+        }
+        else {
+            if (block1.type == block1_left.type) return false;
         }
     
-        if (bestMove != undefined) {
-            var matchInfo = {
-                x: bestMove.x,
-                y: bestMove.y,
-                match_type: "indirect",
-                match_size: 3, // Technically, you could pass the actual detected size
-                score: bestScore
-            };
-            ds_queue_enqueue(self.match_queue, matchInfo);
-        }
+        // Swap on the temp grid
+        var type1 = block1.type;
+        var type2 = block2.type;
+        var type3 = block3.type;
+    
+        block1.type = type3;
+        block3.type = type2;
+        block2.type = type1;
+    
+        var valid = checkTempMatch(targetCol, row)
+        var matchSize = countConnectedBlocksInGrid(targetCol, row);
+        
+        block1.type = type1;
+        block2.type = type2;
+        block3.type = type3;
+        
+        
+        
+        if (matchSize < 3 || !valid) return;
+        
+        show_debug_message("Col: " + string(col) + "\n"
+                                + "Row: " + string(row) + "\n"
+                                    + "Target Col: " + string(targetCol) + "\n"
+                                        + "Move Col: " + string(moveCol) + "\n"
+        + "Move Dir: " + string(dir) + "\n")
+        
+        show_debug_message("Match Size: " + string(matchSize) + "\n")
+        randomize();
+        // Check for match in the temp grid at the target position (where the moveBlock landed)
+        var distance = abs(player.hovered_block[0] - moveCol) + abs(player.hovered_block[1] - row);
+        var _score = (baseScore) - distance * 1 + irandom(5);
+    
+        ds_queue_enqueue(self.match_queue, {
+            x: moveCol,  // Where cursor needs to go to perform swap
+            y: row,
+            match_type: "indirect",
+            size: matchSize,
+            score: _score
+        });
+    
+        return true;  // Found match, stop further scanning for this block
+        random_set_seed(player.random_seed);
     }
     
-    // Helper function to swap two blocks (this should already exist somewhere in your codebase)
-    swapBlocks = function(x1, y1, x2, y2) {
-        var temp = player.grid[x1, y1].type;
-        player.grid[x1, y1].type = player.grid[x2, y2].type;
-        player.grid[x2, y2].type = temp;
+    checkTempMatch = function(col, row) {
+        if (col < 0 || col > player.width - 1) return false;
+        var blockType = player.grid[col, row].type;
+    
+        if (blockType < 0) return false;
+    
+        // Horizontal check
+        var horizontalCount = 1;
+        for (var c = col - 1; c >= 0 && player.grid[c, row].type == blockType; c--) horizontalCount++;
+        for (var c = col + 1; c < player.width && player.grid[c, row].type == blockType; c++) horizontalCount++;
+        if (horizontalCount >= 3) return true;
+    
+        // Vertical check
+        var verticalCount = 1;
+        for (var r = row - 1; r >= player.topmost_row && player.grid[col, r].type == blockType; r--) verticalCount++;
+        for (var r = row + 1; r <= player.bottom_playable_row && player.grid[col, r].type == blockType; r++) verticalCount++;
+        if (verticalCount >= 3) return true;
+    
+        return false;
     }
     
+    countConnectedBlocksInGrid = function(col, row) {
+        if (col < 0 || col > player.width - 1) return false;
+        var blockType = player.grid[col, row].type;
     
+        var count = 1;  // Itself counts
+        for (var c = col - 1; c >= 0 && player.grid[c, row].type == blockType; c--) count++;
+        for (var c = col + 1; c < player.width - 1 && player.grid[c, row].type == blockType; c++) count++;
+        for (var r = row - 1; r >= player.topmost_row && player.grid[col, r].type == blockType; r--) count++;
+        for (var r = row + 1; r <= player.bottom_playable_row && player.grid[col, r].type == blockType; r++) count++;
     
-    
+        return count;
+    }
     
     scanDirectMatches = function(effective_top_row) {
         var grid = player.grid;
         
         for (var row = effective_top_row; row <= self.bottom_playable_row - 1; row++) {
-            for (var col = 0; col < self.width - 1; col++) {
+            for (var col = 0; col < player.width - 1; col++) {
                 // Skip invalid blocks - check everything at once
                 var block1 = grid[col, row];
                 var block2 = grid[col+1, row];
@@ -558,7 +609,7 @@ function AIBoardScanner(player) constructor {
                         y: row,
                         match_type: max_match_size >= 4 ? "large_match" : "direct",
                         match_size: max_match_size,
-                        score: (base_score + size_bonus - distance * 5)
+                        score: (base_score + size_bonus - distance * 5  - (row * 2))
                     };
                     
                     ds_queue_enqueue(self.match_queue, matchInfo);

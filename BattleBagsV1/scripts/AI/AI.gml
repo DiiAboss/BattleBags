@@ -184,7 +184,7 @@ function draw_ai_debug(player) {
     
     // Get screen position to draw debug info
     var board_x = player.board_x_offset - 100;
-    var board_y = 300;
+    var board_y = room_height - 300;
     
     draw_set_color(c_white);
     draw_set_halign(fa_left);

@@ -47,6 +47,11 @@ function AIBoardController(player) constructor {
             return;
         }
         
+        if self.swap_cooldown == self.move_timer 
+        {
+            self.swap_cooldown -= 1;
+            return;
+        }
         
         // If we have swap cooldown, decrement it
         if (self.swap_cooldown > 0) {
@@ -116,19 +121,17 @@ function AIBoardController(player) constructor {
                 self.move_timer++;
                 
                 if (self.move_timer >= self.move_delay) {
-                    self.move_timer = 0;
+                    //self.move_timer = 0;
                     
                     
                     // Check if we've reached the target
                     if (curX == self.target_x && curY == self.target_y) {
+                        player.hovered_block[0] = curX;
+                        player.hovered_block[1] = curY;
                         // We've arrived!
-                        
-                        self.last_decision = "ARRIVED at " + string(curX) + "," + string(curY);
-                        array_push(self.decision_log, self.last_decision);
-                        if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
-                        
                         self.current_action = "pre_swap";
-                        self.move_timer = 0;
+                        self.move_timer = self.move_delay;
+                        self.swap_cooldown = 0;
                     } else {
                         // Take one step toward the target
                         moveOneStep();
@@ -138,6 +141,14 @@ function AIBoardController(player) constructor {
                 
             case "pre_swap":
                 
+            self.last_decision = "ARRIVED at " + string(curX) + "," + string(curY);
+            array_push(self.decision_log, self.last_decision);
+            if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);    
+            
+                if (self.swap_cooldown > 0) {
+                        self.swap_cooldown--;  // This ensures a delay between arriving and swapping.
+                        break;
+                    }
                      // Reset all input flags before new move
                      player.input.Up = false;
                      player.input.Down = false;
@@ -147,10 +158,17 @@ function AIBoardController(player) constructor {
                     trySwap();
                     
                     // Back to idle
-                    self.current_action = "idle";
-            
+                    //self.current_action = "idle";
+                 player.hovered_block[0] = self.target_x;
                     // Clear current match after trying it
-                    self.current_match = undefined;
+                    //self.current_match = undefined;
+                player.input.ActionPress = true;
+                self.swap_cooldown = 0;  // Ensure no double swap.
+                ds_queue_dequeue(player.ai_scanner.match_queue);
+               //self.current_match = undefined;    
+               self.current_action = "idle";
+        
+                
                 //}
                 break;
             
@@ -217,32 +235,38 @@ function AIBoardController(player) constructor {
     
     
     planNextMove = function() {
-        self.current_match = findNearbyMatch(player.hovered_block[0], player.hovered_block[1], 5);
+        //self.current_match = findNearbyMatch(player.hovered_block[0], player.hovered_block[1], 5);
     
-        if (self.current_match == undefined) {
+        
             if (player.ai_scanner.scanBoard()) {
                 self.current_match = player.ai_scanner.getNextMatch();
             }
-        }
+        
     
         if (self.current_match != undefined) {
             self.target_x = self.current_match.x;
             self.target_y = self.current_match.y;
             self.target_x = clamp(self.target_x, 0, self.width - 2); // Never allow cursor to overflow
             
-            if (player.grid[target_x, target_y].type == player.grid[target_x + 1, target_y].type)
-            {
-                self.current_match = undefined;
-                self.current_action = "idle";
-                return;
-            } 
+            //if (player.grid[target_x, target_y].type == player.grid[target_x + 1, target_y].type)
+            //{
+                //self.current_match = undefined;
+                //self.current_action = "idle";
+                //return;
+            //} 
 
             self.last_decision = "MOVING TO MATCH at " + string(self.target_x) + "," + string(self.target_y);
             array_push(self.decision_log, self.last_decision);
             if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
             
+            show_debug_message("MOVING: \nTarget_X: " + string(target_x)
+            +" Target_Y: " + string(target_y)
+            +" Hover_X: " + string(player.hovered_block[0])
+            +" Hover_Y: " + string(player.hovered_block[1]) + "\n")
+            
             if (target_x == player.hovered_block[0] && target_y == player.hovered_block[1])
             {
+                show_debug_message("Pre_swap")
                 self.current_action = "pre_swap";  // Ready for next AI step
                 self.move_timer = 0;
                 return;
@@ -550,9 +574,7 @@ function AIBoardController(player) constructor {
         // ** Horizontal Movement First **
         if (dx != 0) {
             var stepDirection = sign(dx);  // -1 for left, +1 for right
-            var stepsToTake = min(abs(dx), maxSteps);
-    
-            for (var step = 0; step < stepsToTake; step++) {
+
                 if (stepDirection > 0) {
                     player.input.Right = true;
 
@@ -562,7 +584,7 @@ function AIBoardController(player) constructor {
 
                     curX--;
                 }
-            }
+            
     
             // Log movement
             self.last_decision = "Moved HORIZONTALLY to " + string(curX) + "," + string(curY);
@@ -575,9 +597,7 @@ function AIBoardController(player) constructor {
         // ** Vertical Movement if Horizontal Aligned **
         if (dy != 0) {
             var stepDirection = sign(dy);  // -1 for up, +1 for down
-            var stepsToTake = min(abs(dy), maxSteps);
-    
-            for (var step = 0; step < stepsToTake; step++) {
+
                 if (stepDirection > 0) {
                     player.input.Down = true;
 
@@ -587,7 +607,7 @@ function AIBoardController(player) constructor {
 
                     curY--;
                 }
-            }
+            
     
             // Log movement
             self.last_decision = "Moved VERTICALLY to " + string(curX) + "," + string(curY);
@@ -602,9 +622,7 @@ function AIBoardController(player) constructor {
         array_push(self.decision_log, self.last_decision);
         if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
         
-        if (ds_queue_empty(player.ai_scanner.match_queue))  self.current_action = "pre_swap";  // Ready for next AI step
-       
-        else self.current_action = "moving";  // Ready for next AI step
+        
     }
     
     
@@ -651,7 +669,7 @@ function AIBoardController(player) constructor {
         if (pos_x < 0 || pos_x >= self.width - 1 || pos_y < self.top_playable_row || pos_y > self.bottom_playable_row) return;
     
         var block1 = player.grid[pos_x, pos_y];
-        var block2 = undefined;
+        var block2 = player.grid[pos_x + 1, pos_y];
         
         
         
@@ -663,21 +681,10 @@ function AIBoardController(player) constructor {
             } // Safety check
             block2 = player.grid[pos_x + 1, pos_y];
         }
-    
         
-        if (block2 == undefined) {
-            self.current_action = "moving";   // Done with this special move
-            ds_queue_dequeue(player.ai_scanner.match_queue);
-            return;
-        } // Safety check
+        if block1.type == block2.type return;
         
-        if (block1.type == block2.type) {
-            self.current_action = "moving";   // Done with this special move
-            ds_queue_dequeue(player.ai_scanner.match_queue);
-            return;
-        } // Safety check
-        
-        if ((block1.type != BLOCK.NONE || block2.type != BLOCK.NONE) && 
+        if ((block1.type != BLOCK.NONE && block2.type != BLOCK.NONE) && 
             !block1.falling && !block2.falling &&
             !block1.popping && !block2.popping &&
             !block1.is_big && !block2.is_big) {
@@ -692,7 +699,11 @@ function AIBoardController(player) constructor {
             self.current_action = "idle"; 
             //ds_queue_clear(player.ai_scanner.match_queue);
             ds_queue_dequeue(player.ai_scanner.match_queue);
-            player.board_just_shifted = true;
+            player.board_just_shifted = false;
+        }
+        else {
+            self.current_action = "idle"; 
+            ds_queue_dequeue(player.ai_scanner.match_queue);
         }
     
    }
@@ -782,6 +793,7 @@ function AIBoardController(player) constructor {
     }
     
     
+    
     // Set difficulty level (1-5)
     set_difficulty = function(level) {
         level = clamp(level, 1, 5);
@@ -814,9 +826,9 @@ function AIBoardController(player) constructor {
                 self.scan_delay = 45;
                 break;
             case 5: // Master
-                player.ai_max_delay = 0;
-                self.move_delay = 0;
-                self.action_delay = 0;
+                player.ai_max_delay = 2;
+                self.move_delay = 1;
+                self.action_delay = 2;
                 self.scan_delay = 10; // Scan very frequently at master difficulty
                 break;
         }
