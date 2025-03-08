@@ -29,25 +29,6 @@
     //3, c_red, c_red
 //);
 //
-//// Draw all attacks on the conveyor
-//for (var i = 0; i < ds_list_size(conveyor_attacks); i++) {
-    //var attack_data = conveyor_attacks[| i];
-    //
-    //// Calculate lane position
-    //var lane_width = conveyor_width / lane_count;
-    //var lane_x = conveyor_x_start - conveyor_width/2 + (attack_data.lane * lane_width) + (lane_width/2);
-    //
-    //// Draw attack preview
-    //draw_attack_on_conveyor(lane_x, attack_data.y_pos, attack_data);
-//}
-//
-//// Draw attack queue stats
-//draw_set_color(c_white);
-//draw_text(conveyor_x_start + conveyor_width/2 + 10, conveyor_activation_y, 
-        //"Queue Size: " + string(ds_list_size(global.enemy_attack_queue)));
-//draw_text(conveyor_x_start + conveyor_width/2 + 10, conveyor_activation_y + 20, 
-        //"Conveyor Attacks: " + string(ds_list_size(conveyor_attacks)));
-
 
 
 
@@ -109,3 +90,24 @@ draw_rectangle_color(
     c_red, c_red, c_red, c_red, false
 );
 draw_set_alpha(1.0);
+
+
+// Draw all attacks on the conveyor
+for (var i = 0; i < ds_list_size(conveyor_attacks); i++) {
+    var attack_data = conveyor_attacks[| i];
+    
+    // Calculate lane position
+    var lane_width = conveyor_width / lane_count;
+    var lane_x = conveyor_x_start - conveyor_width/2 + (attack_data.lane * lane_width) + (lane_width/2);
+    
+    // Draw attack preview
+    draw_attack_on_conveyor(lane_x, attack_data.y_pos, attack_data);
+}
+
+// Draw attack queue stats
+draw_set_color(c_white);
+draw_text(conveyor_x_start + conveyor_width/2 + 10, conveyor_activation_y, 
+        "Queue Size: " + string(ds_list_size(global.enemy_attack_queue)));
+draw_text(conveyor_x_start + conveyor_width/2 + 10, conveyor_activation_y + 20, 
+        "Conveyor Attacks: " + string(ds_list_size(conveyor_attacks)));
+

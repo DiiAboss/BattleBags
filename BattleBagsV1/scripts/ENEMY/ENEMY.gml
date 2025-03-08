@@ -190,19 +190,50 @@ function initialize_attack_previews() {
         attack_type: ENEMY_ATTACK_TYPE.BLOCK 
     });
     
+    ds_map_add(attack_preview_cache, "MULTI", { 
+            sprite: spr_gameOver, 
+            attack_type: ENEMY_ATTACK_TYPE.BLOCK 
+        });
+    
     // For shape-based attacks, we'll generate previews from templates
     var shape_names = ds_map_keys_to_array(global.shape_templates);
     for (var i = 0; i < array_length(shape_names); i++) {
         var shape_name = shape_names[i];
         // Skip special attacks we've already handled
-        if (shape_name != "FREEZE" && shape_name != "SLIME" && shape_name != "BLOCK") {
-            ds_map_add(attack_preview_cache, shape_name, {
-                shape_template: ds_map_find_value(global.shape_templates, shape_name),
-                attack_type: ENEMY_ATTACK_TYPE.BASIC
-            });
-        }
+        if (!ds_map_exists(attack_preview_cache, shape_name)) {
+                    var shape_template = ds_map_find_value(global.shape_templates, shape_name);
+                    var preview_shape = generateAttackPreview(shape_template);
+                    
+                    ds_map_add(attack_preview_cache, "OTHER", {
+                        shape_template: preview_shape,
+                        attack_type: ENEMY_ATTACK_TYPE.BASIC
+                    });
+                }
     }
 }
+
+/// @function generateAttackPreview
+function generateAttackPreview(shape_template) {
+    var preview_shape = array_create(array_length(shape_template));
+
+    // Select a **consistent** random color for this attack preview
+    var randomBlockType = irandom(7);
+
+    for (var row = 0; row < array_length(shape_template); row++) {
+        preview_shape[row] = array_create(array_length(shape_template[row]));
+        
+        for (var col = 0; col < array_length(shape_template[row]); col++) {
+            if (shape_template[row][col] == BLOCK.RANDOM) {
+                preview_shape[row][col] = randomBlockType; // Assign color
+            } else {
+                preview_shape[row][col] = shape_template[row][col]; // Keep original
+            }
+        }
+    }
+
+    return preview_shape;
+}
+
 
 /// @function sync_with_global_queue
 /// @description Ensures conveyor visually represents the global attack queue
@@ -211,6 +242,7 @@ function sync_with_global_queue() {
     if (ds_list_size(global.enemy_attack_queue) == 0 && ds_list_size(conveyor_attacks) > 0) {
         return;
     }
+    
     
     // Add new attacks from global queue to conveyor
     var attacks_to_add = min(
@@ -223,6 +255,9 @@ function sync_with_global_queue() {
             var queue_index = ds_list_size(conveyor_attacks);
             if (queue_index < ds_list_size(global.enemy_attack_queue)) {
                 var attack_name = global.enemy_attack_queue[| queue_index];
+                
+                
+                
                 add_attack_to_conveyor(attack_name);
             }
         }
@@ -287,8 +322,8 @@ function draw_attack_on_conveyor(x_pos, y_pos, attack_data) {
             break;
             
         default: // Basic attacks
-            bg_color = c_gray;
-            draw_shape_preview(x_pos, y_pos, preview.shape_template);
+            bg_color = c_orange;
+                        draw_sprite(preview.sprite, 0, x_pos, y_pos);
             break;
     }
     
@@ -328,7 +363,7 @@ function draw_shape_preview(x_pos, y_pos, shape_template) {
                 var subimage = map_block_type_to_subimage(block_type);
                 
                 // Draw the preview block
-                draw_sprite(spr_preview_block, subimage, draw_x, draw_y);
+                draw_sprite(spr_preview_blocks, subimage, draw_x, draw_y);
             }
         }
     }

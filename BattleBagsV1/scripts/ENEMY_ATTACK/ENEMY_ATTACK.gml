@@ -175,7 +175,7 @@ function generate_attack_shape(_attack, game_control_object, shape_type = "rando
                 }
             }
             
-            attack_name = "dynamic_" + string(_attack) + "_" + string(irandom(9999));
+            attack_name = "OTHER";
             break;
     }
     
