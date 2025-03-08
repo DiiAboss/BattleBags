@@ -415,8 +415,8 @@ function AIBoardScanner(player) constructor {
                 }
     
                 for (var gap = 1; gap <= maxGap; gap++) {
-                    if checkGapMatch(col, row, gap, 100 - gap * 10) continue; // Scan rightward
-                    if checkGapMatch(col, row, -gap, 100 - gap * 10) continue; // Scan leftward
+                    if checkGapMatch(col, row, gap, 100 - (gap * 5)) continue; // Scan rightward
+                    if checkGapMatch(col, row, -gap, 100 - (gap * 5)) continue; // Scan leftward
                 }
             }
         }
@@ -504,8 +504,8 @@ function AIBoardScanner(player) constructor {
         show_debug_message("Match Size: " + string(matchSize) + "\n")
         randomize();
         // Check for match in the temp grid at the target position (where the moveBlock landed)
-        var distance = abs(player.hovered_block[0] - moveCol) + abs(player.hovered_block[1] - row);
-        var _score = (baseScore) - distance * 1 + irandom(5);
+        var distance = abs(player.hovered_block[0] - moveCol) + abs(player.hovered_block[1]) - (row * (2));
+        var _score = (baseScore) - ((distance) * (1 + irandom(1)));
     
         ds_queue_enqueue(self.match_queue, {
             x: moveCol,  // Where cursor needs to go to perform swap
@@ -1001,8 +1001,8 @@ function AIBoardScanner(player) constructor {
             
             // Step 5: Score and enqueue the swap move
             var distance = abs(player.hovered_block[0] - col) + abs(player.hovered_block[1] - swapRow);
-            var dangerScore = (self.bottom_playable_row - swapRow);
-            var levelingBonus = (heightDifference * 5);
+            var dangerScore = (self.bottom_playable_row - swapRow) * 5;
+            var levelingBonus = (heightDifference * 10);
     
             var match = {
                 x: col + swap_side,
