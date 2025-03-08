@@ -14,7 +14,6 @@ function find_and_destroy_matches(_self) {
     var first_found			 = false; // ✅ Track the first block in the combo
     var total_match_points	 = 0;     // ✅ Accumulates points for multiple matches
 	
-	
 	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
 	
 	global.black_blocks_to_transform = ds_list_create(); // ✅ Track black blocks to transform
@@ -164,7 +163,7 @@ function find_and_destroy_matches(_self) {
 	            var dx = i - global.lastSwapX;
 	            var dy = j - global.lastSwapY;
 	            var dist = sqrt(dx * dx + dy * dy);
-	            var _start_delay = (gem.type == BLOCK.BLACK) ? 5 : 5; // Longer delay for black blocks
+	            var _start_delay = 5; // adjustable could be used as upgrade
 			
 	            // ✅ If it's a BIG BLOCK, transform it into separate blocks
 	            if (gem.is_big) {
@@ -176,7 +175,7 @@ function find_and_destroy_matches(_self) {
 
 	                        if (other_gem.group_id == group_id) {
 	                            // ✅ Convert each big block part into a small block of the same type
-	                            _self.grid[_x, _y] = create_block(gem.type);						
+	                            _self.grid[_x, _y] = create_block(gem.type);
 							
 								 // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
 					            var pop_info = {
@@ -198,7 +197,7 @@ function find_and_destroy_matches(_self) {
 					                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 					                bomb_level: 0,
 									img_number: gem.img_number,
-                                    is_big: true,
+                                    is_big: false,  // if this is set to true, the big blocks level behind remnants, could be used for upgrades.
 					            };
 							
 	                            _self.grid[_x, _y].popping   = true;  // Start popping process
@@ -250,11 +249,6 @@ function find_and_destroy_matches(_self) {
 	        }
 	    }
 	}
-	
-	
-	// ✅ Transform black blocks **after matches are removed**
-    //update_black_blocks(self, black_blocks_to_transform);
-	
 
     ds_list_destroy(black_blocks_to_transform);
 	
