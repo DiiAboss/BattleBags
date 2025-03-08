@@ -1,5 +1,9 @@
 /// @description Handle menu navigation and selection.
 var input = obj_game_manager.input;
+if layer_sequence_is_finished(start_seq)
+{
+    layer_sequence_destroy(start_seq);
+}
 
 input.Update(self, x, y);
 
