@@ -26,7 +26,7 @@ amount_of_enemies = array_length(enemy_array);
 attack_preview_box_x = 1000;
 attack_preview_box_y = 500;
 
-attack_preview_box_width = 400;
+attack_preview_box_width = 128;
 attack_preview_box_height = 300;
 
 attack_preview_active = true;

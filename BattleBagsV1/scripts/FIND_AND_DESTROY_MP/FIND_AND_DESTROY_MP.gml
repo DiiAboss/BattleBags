@@ -29,7 +29,7 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
             if (player.grid[xx, yy].shake_timer > 0)
             {
                 player.grid[xx, yy].popping = true;
-                player.grid[xx, yy].falling = false;
+                //player.grid[xx, yy].falling = false;
                 player.grid[xx, yy].fall_delay = 1;
             }
             else
@@ -182,7 +182,16 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
 
 
 function pop_blocks_in_pop_queue(mp_control, player) {
-    if (ds_list_size(player.pop_list) == 0) return;
+    if (ds_list_empty(player.pop_list)) {
+        // Reset any lingering popping states
+        for (var i = 0; i < player.grid_width; i++) {
+            for (var j = 0; j < player.grid_height; j++) {
+                player.grid[i, j].popping = false;
+                player.grid[i, j].shake_timer = 0;
+                return;
+            }
+        }
+    }
 
     for (var i = ds_list_size(player.pop_list) - 1; i >= 0; i--) {
         var pop_data = ds_list_find_value(player.pop_list, i);

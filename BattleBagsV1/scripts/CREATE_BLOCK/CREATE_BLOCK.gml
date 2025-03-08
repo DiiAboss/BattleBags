@@ -81,6 +81,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		swap_speed: 0.15,
         draw_y: 0,
         dist_without_touching: 0,
+        freeze_on_land: false,
     };
 }
 

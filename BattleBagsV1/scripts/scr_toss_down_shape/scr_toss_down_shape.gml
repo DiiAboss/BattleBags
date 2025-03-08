@@ -1,8 +1,8 @@
-function toss_down_shape(_self, shape_name, is_enemy_attack = false, _start_x = -1) {
+function toss_down_shape(_self, shape_name, is_enemy_attack = true, is_freeze = true, _start_x = -1) {
     var width = _self.width;
     var height = _self.height;
     var gem_size = _self.gem_size;
-
+    
     // ✅ Retrieve shape template from map
     var shape = ds_map_find_value(global.shape_templates, shape_name);
     if (shape == undefined) return; // Prevent errors if shape not found
@@ -48,7 +48,13 @@ function toss_down_shape(_self, shape_name, is_enemy_attack = false, _start_x = 
                 if (is_enemy_attack) {
                     _self.grid[gem_x, gem_y].is_enemy_block = true;
                     _self.grid[gem_x, gem_y].falling = true;
-                    _self.grid[gem_x, gem_y].fall_delay = 5;
+                    _self.grid[gem_x, gem_y].fall_delay = 0;
+                }
+                
+                if (is_freeze)
+                {
+                    _self.grid[gem_x, gem_y].freeze_on_land = true;
+                    _self.grid[gem_x, gem_y].freeze_timer = 600;
                 }
             }
         }
