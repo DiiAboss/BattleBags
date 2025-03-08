@@ -40,7 +40,7 @@ xInput = true;
 
 random_seed = irandom(999999) * -1;
 
-shift_speed = 0.25;
+shift_speed = 0.5;
 
 global.player_list = ds_list_create();
 gem_size = 64;
