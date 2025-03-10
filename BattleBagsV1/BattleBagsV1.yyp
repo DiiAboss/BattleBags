@@ -100,6 +100,8 @@
     {"id":{"name":"obj_client","path":"objects/obj_client/obj_client.yy",},},
     {"id":{"name":"obj_connection_manager","path":"objects/obj_connection_manager/obj_connection_manager.yy",},},
     {"id":{"name":"obj_conveyor_belt","path":"objects/obj_conveyor_belt/obj_conveyor_belt.yy",},},
+    {"id":{"name":"obj_deposit_block","path":"objects/obj_deposit_block/obj_deposit_block.yy",},},
+    {"id":{"name":"obj_drone","path":"objects/obj_drone/obj_drone.yy",},},
     {"id":{"name":"obj_enemy_basic_parent","path":"objects/obj_enemy_basic_parent/obj_enemy_basic_parent.yy",},},
     {"id":{"name":"obj_enemy_basic","path":"objects/obj_enemy_basic/obj_enemy_basic.yy",},},
     {"id":{"name":"obj_enemy_control","path":"objects/obj_enemy_control/obj_enemy_control.yy",},},
