@@ -1,69 +1,44 @@
 /// @description Update Conveyor Movement
 
-// Sync with global attack queue
-queue_sync_timer++;
-if (queue_sync_timer >= queue_sync_interval) {
-    sync_with_global_queue();
-    queue_sync_timer = 0;
-}
+// Update belt animation
+belt_animation_offset += conveyor_speed * throughput_rate * 0.5;
+if (belt_animation_offset >= 32) belt_animation_offset = 0;
 
-// Move all attacks upward
-for (var i = 0; i < ds_list_size(conveyor_attacks); i++) {
-    var attack_data = conveyor_attacks[| i];
+// Only process if conveyor is active
+if (!conveyor_active) exit;
+
+// Move all blocks upward
+for (var i = 0; i < ds_list_size(conveyor_blocks); i++) {
+    var block_data = conveyor_blocks[| i];
     
-    // Move the attack upward
-    attack_data.y_pos -= conveyor_speed;
+    // Apply movement based on speed and throughput
+    var effective_speed = conveyor_speed * throughput_rate;
+    if (variable_struct_exists(block_data, "speed_multiplier")) {
+        effective_speed *= block_data.speed_multiplier;
+    }
     
-    // Check if attack has reached activation position
-    if (attack_data.y_pos <= conveyor_activation_y) {
-        // Trigger attack execution in the game system
-        trigger_attack_execution(attack_data.attack_name);
+    block_data.y_pos -= effective_speed;
+    
+    // Check if block has reached activation position
+    if (block_data.y_pos <= conveyor_activation_y) {
+        // Get the block type
+        var block_type = variable_struct_exists(block_data, "block_type") ? 
+                    block_data.block_type : BLOCK.RANDOM;
+        
+        // Activate the block (add to game board)
+        activate_block(block_type, block_data.lane);
+        
+        // Update stats
+        blocks_processed++;
+        if (variable_struct_exists(block_data, "is_special") && block_data.is_special) {
+            special_blocks_processed++;
+        }
         
         // Remove from conveyor
-        ds_list_delete(conveyor_attacks, i);
+        ds_list_delete(conveyor_blocks, i);
         i--; // Adjust the loop index
     }
 }
 
-
-/// @description Create Debug Menu
-if (keyboard_check_pressed(vk_tab)) {
-    debug_menu_open = !debug_menu_open;
-}
-
-// Draw debug menu when open
-if (debug_menu_open) {
-    draw_set_alpha(0.9);
-    draw_rectangle_color(
-        room_width - 220, 10,
-        room_width - 10, 250,
-        c_black, c_black, c_black, c_black, false
-    );
-    draw_set_alpha(1.0);
-    
-    draw_set_color(c_white);
-    draw_text(room_width - 210, 20, "Attack Types:");
-    
-    var y_pos = 50;
-    var attack_types = [
-        "rectangle", "L_shape", "Z_shape", 
-        "T_shape", "single_line", "FREEZE", 
-        "SLIME", "BLOCK"
-    ];
-    
-    for (var i = 0; i < array_length(attack_types); i++) {
-        draw_text(room_width - 210, y_pos, string(i+1) + ": " + attack_types[i]);
-        
-        if (point_in_rectangle(mouse_x, mouse_y, 
-                            room_width - 210, y_pos, 
-                            room_width - 10, y_pos + 20) && 
-            mouse_check_button_pressed(mb_left)) {
-            
-            add_specific_attack(attack_types[i]);
-        }
-        
-        y_pos += 25;
-    }
-}
-
-
+// Pulsing animation for highlight effects
+pulsing_alpha = 0.3 + 0.2 * sin(current_time * 0.003);

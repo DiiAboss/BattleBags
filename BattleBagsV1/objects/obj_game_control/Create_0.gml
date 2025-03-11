@@ -4,6 +4,8 @@ image_speed = 0.1;
 image_alpha = 0.75;
 depth       = -1;
 
+simple_draw = true;
+
 //--------------------------------------------------
 // Positioning Cursor
 //--------------------------------------------------
@@ -99,16 +101,7 @@ global.player_level = 1;
 //-----------------------------------------
 // DRONE MANAGEMENT
 //-----------------------------------------
-function drone() {
-    x = 0;
-    y = 0;
-    my_sprite = noone;
-    experience = 0;
-    max_experience = 0;
-    level = 0;
-    max_level = 0;
-    target = noone;
-}
+
 
 number_of_drones = 1;
 

@@ -113,11 +113,12 @@ else
                             board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, c_black, c_black, c_black, c_black, false);
     draw_set_alpha(1);
     
-    surface_set_target(surBase);
-        draw_clear(c_black);
-        
     
-    
+    if !simple_draw
+    {
+        surface_set_target(surBase);
+            draw_clear(c_black);
+    }
     
         for (var i = 0; i < width; i++)
         {
@@ -137,51 +138,53 @@ else
     //----------------------------------------------------------------
     // DRAW GLOWING BLOCKS
     //----------------------------------------------------------------
+    if !(simple_draw)
+    {
         surface_reset_target();
-        
-        // Make it glow horizontally
-        surface_set_target(surPass);
-        draw_clear_alpha(c_black, 0);
-        
-        shader_set(shd_blur_horizontal);
-        shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
-        shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_time"), current_time);
-        
-        gpu_set_blendenable(false);
-        draw_surface(surBase, 0, 0);
-        gpu_set_blendenable(true);
-        
-        shader_reset();
-        surface_reset_target();
-        
-        //// Vertical pass + final adjustments, add on top
-        gpu_set_blendmode(bm_add);
-        
-        shader_set(shd_blur_vertical);
-        shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
-        shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
-        draw_surface(surPass, 0, 0);
-        shader_reset();
-        
-        gpu_set_blendmode(bm_normal); 
-    
-      draw_set_alpha(0.75);
-      draw_rectangle_color( board_x_offset,
-                            view_diff - thickness,
-                            board_x_offset + grid_width + thickness,
-                            view_diff + grid_height - thickness,
-                            c_black,
-                            c_black,
-                            c_black,
-                            c_black,
-                            false);
-      draw_set_alpha(1);
-    
-    
-        draw_set_color(c_lime);
-        geogrid.geogrid_draw(self);
-        draw_set_color(c_white);
-    
+                
+                // Make it glow horizontally
+                surface_set_target(surPass);
+                draw_clear_alpha(c_black, 0);
+                
+                shader_set(shd_blur_horizontal);
+                shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+                shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_time"), current_time);
+                
+                gpu_set_blendenable(false);
+                draw_surface(surBase, 0, 0);
+                gpu_set_blendenable(true);
+                
+                shader_reset();
+                surface_reset_target();
+                
+                //// Vertical pass + final adjustments, add on top
+                gpu_set_blendmode(bm_add);
+                
+                shader_set(shd_blur_vertical);
+                shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+                shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
+                draw_surface(surPass, 0, 0);
+                shader_reset();
+                
+                gpu_set_blendmode(bm_normal); 
+            
+            draw_set_alpha(0.75);
+            draw_rectangle_color( board_x_offset,
+                                    view_diff - thickness,
+                                    board_x_offset + grid_width + thickness,
+                                    view_diff + grid_height - thickness,
+                                    c_black,
+                                    c_black,
+                                    c_black,
+                                    c_black,
+                                    false);
+            draw_set_alpha(1);
+            
+            
+                draw_set_color(c_lime);
+                geogrid.geogrid_draw(self);
+    }
+       draw_set_color(c_white); 
     
 //----------------------------------------------------------------
 // DRAW COLUMN SHAKE
@@ -636,7 +639,6 @@ for (var i = 0; i < width; i++) {
         
         draw_rectangle_color(850, 300, room_width - 82, room_height - 44, c_white, c_white, c_white, c_white, true);
     }
-    var enemy_target = self.enemy_target;
     
     if (enemy_target != noone)
     {
@@ -644,7 +646,7 @@ for (var i = 0; i < width; i++) {
         { 
             var scale = 1.1; // Slightly enlarged
             var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
-            draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
+            //draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
             
             draw_sprite_ext(spr_crosshair, 0, x, y, scale, scale, rotation, c_red, 1);
         }
