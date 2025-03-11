@@ -92,6 +92,62 @@ global.enemy_timer_game_speed = 1;
 global.player_total_level = 1;
 global.player_level = 1;
 
+
+
+
+
+//-----------------------------------------
+// DRONE MANAGEMENT
+//-----------------------------------------
+function drone() {
+    x = 0;
+    y = 0;
+    my_sprite = noone;
+    experience = 0;
+    max_experience = 0;
+    level = 0;
+    max_level = 0;
+    target = noone;
+}
+
+number_of_drones = 1;
+
+
+
+
+//-----------------------------------------
+// ADJUSTABLE STATS
+//-----------------------------------------
+
+game_board_speed = 1;
+big_block_multi = 1;
+combo_multi = 1.1;
+drone_speed = 1;
+
+
+
+// Currency
+red_blocks = 0;
+yellow_blocks = 0;
+green_blocks = 0;
+blue_blocks = 0;
+lightblue_blocks = 0;
+orange_blocks = 0;
+pink_blocks = 0;
+purple_blocks = 0;
+
+bronze_blocks = 0;
+silver_blocks = 0;
+gold_blocks = 0;
+
+factory_points = 0;
+
+//----------------------------------------
+//
+//----------------------------------------
+
+
+
 level = 1;
 target_level = 0;
 
@@ -102,6 +158,9 @@ max_exp_mod = 50;
 max_exp_level_mod = 10;
 
 max_experience_points = max_exp_mod + ((max_exp_level_mod * level) + (level * level)) - level;
+
+
+
 
 fight_for_your_life = false;
 
@@ -199,7 +258,10 @@ global.swap_queue = {
 // ------------------------------------------------------
 // Board Setup
 // ------------------------------------------------------
-board_x_offset = 128;
+
+left_column_ui_length = 192;
+
+board_x_offset = 128 + left_column_ui_length;
 
 max_shake_timer = 30;
 

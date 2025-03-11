@@ -636,8 +636,9 @@ for (var i = 0; i < width; i++) {
         
         draw_rectangle_color(850, 300, room_width - 82, room_height - 44, c_white, c_white, c_white, c_white, true);
     }
-
-    if (enemy_target != -1)
+    var enemy_target = self.enemy_target;
+    
+    if (enemy_target != noone)
     {
         with (enemy_target)
         { 
