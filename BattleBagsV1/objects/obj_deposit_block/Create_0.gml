@@ -41,8 +41,8 @@ max_depletion_time = room_speed * 15; // 15 seconds to recover from depletion
 
 // Visual properties
 float_offset = 0;
-float_speed = 0.05;
-float_range = 4;
+float_speed = 0.01;
+float_range = 1;
 glow_alpha = 0;
 sparkle_timer = 0;
 sparkle_interval = 10;
@@ -99,6 +99,13 @@ get_block_type = function() {
     return -1;
 }
 
-current_block_type = choose_weighted_block_type(self);
+current_block_type = choose_weighted_block_type();
 
 targetter = noone;
+
+
+// Initialize the pyramid structure if this is a stacked block
+if (variable_instance_exists(id, "stacked_blocks") && ds_list_size(stacked_blocks) > 0) {
+    initialize_pyramid_grid();
+    update_pyramid_with_blocks();
+}

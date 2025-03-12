@@ -1,91 +1,42 @@
-/// @description Draw deposit block with visual state indicators
+draw_sprite_ext(sprite_for_block(current_block_type), 0, x, y, 0.5, 0.5, 0, c_white, 1);
 
-// Draw base sprite
-//draw_sprite(sprite_index, 0, x, y);
-
-if (y > obj_conveyor_belt.conveyor_start_y)
-{
-    y = obj_conveyor_belt.conveyor_start_y;
+// If we have stacked blocks, draw them in pyramid form
+if (variable_instance_exists(id, "stacked_blocks") && ds_list_size(stacked_blocks) > 0) {
+    // Draw all blocks in the pyramid
+    for (var yy = max_height - 1; yy >= 0; yy--) {
+        // Calculate vertical position with floating effect
+        var draw_y_base = y - yy * vertical_spacing;
+        
+        if (yy == 0) {
+            // Add float effect only to the top layer
+            draw_y_base -= float_offset;
+        }
+        
+        for (var xx = 0; xx < max_width; xx++) {
+            var block_type = current_block_type;
+            
+            if (block_type != -1) {
+                // Calculate position for this block
+                var draw_x = x + xx * horizontal_spacing + x_offset_for_row(yy);
+                var draw_y = draw_y_base;
+                
+                // Draw the block (use sprite based on block type)
+                var block_sprite = sprite_for_block(current_block_type);
+                draw_sprite_ext(block_sprite, 0, draw_x, draw_y, 0.5, 0.5, 0, c_white, 1);
+                
+                // Draw highlight on top blocks
+                if (is_top_block(xx, yy)) {
+                    draw_sprite_ext(
+                        block_sprite, 1,
+                        draw_x, draw_y,
+                        0.6, 0.6, 0, c_white, 0.3 + sin(current_time * 0.005) * 0.2
+                    );
+                }
+            }
+        }
+    }
 }
 
-// Draw based on current state
-switch(state) {
-    case "ready":
-        // Draw the current block hovering above the deposit
-        var block_sprite = sprite_for_block(current_block_type);
-        var block_y = y - 24 + float_offset;
-        
-        // Draw glow effect
-        draw_set_alpha(glow_alpha);
-        draw_circle_color(
-            x, block_y, 
-            20, c_white, c_yellow, 
-            false
-        );
-        draw_set_alpha(1);
-        
-        // Draw the block
-        draw_sprite_ext(
-            block_sprite, 0, 
-            x, block_y, 
-            0.5, 0.5, 0, c_white, 1
-        );
-        break;
-        
-    case "cooldown":
-        // Draw regeneration progress bar
-        var progress = (regen_timer / max_regen_time);
-        var bar_width = 32;
-        var bar_height = 6;
-        
-        draw_healthbar(
-            x - bar_width/2, y - 32,
-            x + bar_width/2, y - 32 + bar_height,
-            progress * 100,
-            c_gray, c_blue, c_lime,
-            0, true, true
-        );
-        break;
-        
-    case "depleted":
-        // Draw depletion indicator
-        draw_set_color(c_red);
-        draw_set_alpha(0.7);
-        draw_sprite_ext(
-            sprite_index, 0,
-            x, y,
-            1, 1, 0, c_gray, 0.5
-        );
-        
-        // Draw "X" to indicate depletion
-        var cross_size = 16;
-        draw_line_width(
-            x - cross_size, y - 16 - cross_size,
-            x + cross_size, y - 16 + cross_size,
-            3
-        );
-        draw_line_width(
-            x + cross_size, y - 16 - cross_size,
-            x - cross_size, y - 16 + cross_size,
-            3
-        );
-        
-        // Draw recovery progress
-        var recovery_progress = (depletion_timer / max_depletion_time);
-        var bar_width = 32;
-        var bar_height = 6;
-        
-        draw_healthbar(
-            x - bar_width/2, y - 42,
-            x + bar_width/2, y - 42 + bar_height,
-            recovery_progress * 100,
-            c_maroon, c_red, c_yellow,
-            0, true, true
-        );
-        
-        draw_set_alpha(1);
-        break;
-}
 
 // Draw debug info
 if (keyboard_check(vk_tab)) {

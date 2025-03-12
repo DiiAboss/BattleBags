@@ -73,6 +73,7 @@
     {"name":"fnt_basic","order":1,"path":"fonts/fnt_basic/fnt_basic.yy",},
     {"name":"fnt_heading1","order":3,"path":"fonts/fnt_heading1/fnt_heading1.yy",},
     {"name":"fnt_textFont","order":2,"path":"fonts/fnt_textFont/fnt_textFont.yy",},
+    {"name":"obj_block_stack","order":18,"path":"objects/obj_block_stack/obj_block_stack.yy",},
     {"name":"obj_block_transfer_y","order":17,"path":"objects/obj_block_transfer_y/obj_block_transfer_y.yy",},
     {"name":"obj_block_transfer","order":16,"path":"objects/obj_block_transfer/obj_block_transfer.yy",},
     {"name":"obj_bomb","order":1,"path":"objects/obj_bomb/obj_bomb.yy",},

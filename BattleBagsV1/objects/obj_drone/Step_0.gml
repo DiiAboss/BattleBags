@@ -1,4 +1,32 @@
 // Find nearest deposit block and conveyor belt
+// Helper function to find untargeted block sources
+            function find_untargeted_source() {
+                // Check for available deposit blocks
+                var block_count = instance_number(obj_deposit_block);
+                for (var i = 0; i < block_count; i++) {
+                    var block = instance_find(obj_deposit_block, i);
+                    if (block != noone && 
+                        (!variable_instance_exists(block, "targetter") || 
+                        block.targetter == noone)) {
+                        return block;
+                    }
+                }
+                
+                // Check for available block stacks
+                var stack_count = instance_number(obj_block_stack);
+                for (var i = 0; i < stack_count; i++) {
+                    var stack = instance_find(obj_block_stack, i);
+                    if (stack != noone && stack.block_count > 0 && 
+                        (!variable_instance_exists(stack, "targetter") || 
+                        stack.targetter == noone)) {
+                        return stack;
+                    }
+                }
+                
+                return noone;
+            }
+
+
 var deposit_blocks = noone;
 if (deposit_blocks == noone)
 {
@@ -18,67 +46,50 @@ if (deposit_blocks == noone)
         // State machine for drone behavior
         switch(state) {
             case "seeking":
-                // If deposit block exists and we're not at max capacity
-                if (deposit_blocks != noone && blocks_carried < carry_capacity) {
-                    deposit_blocks.targetter = id;
-                    // Check if this block is already targeted by another drone
-                    if (deposit_blocks.targetter != id) {
-                        
-                        // Find all deposit blocks
-                        var block_count = instance_number(obj_deposit_block);
-                        
-                        // Look for an untargeted block
-                        for (var i = 0; i < block_count; i++) {
-                            var block = instance_find(obj_deposit_block, i);
-                            if (block.targetter == noone){
-                                
-                                target = block;
-                                break;
-                            }
-                        }
-                        
-                        if (target != noone) {
-                            deposit_blocks = target;
-                        } else {
-                            // No untargeted blocks, move randomly
-                            if (random(1) < 0.05) { // Only change direction occasionally
-                                walk_direction = irandom(360);
-                            }
-                            
-                            // Apply avoidance and movement
-                            drone_x += lengthdir_x(move_speed, walk_direction);
-                            if (conveyor != noone) drone_y = conveyor.conveyor_start_y; // Stay on conveyor level
-                            
-                            break;
-                        }
-                    }
-                    
+                // Find nearest deposit block or block stack
+                if (deposit_blocks == noone)
+            {
+                    var deposit_blocks = instance_exists(obj_deposit_block) ? 
+                                    instance_find(obj_deposit_block, irandom(instance_number(obj_deposit_block) - 1)) : noone;
+            }
 
-                        
-
-                    
-                    // Go toward deposit block
+                
+            if (deposit_blocks != noone) {
                     target = deposit_blocks;
-                    var target_dir = point_direction(drone_x, drone_y, target.x, drone_y);
-                    walk_direction = target_dir;
+                
+            
+                // Check if target is already claimed
+                if (target.targetter != noone && 
+                    target.targetter != id) {
+                    // Claim the target
+                        target.targetter = id;
+                    // Find an untargeted source
+                    var untargeted_source = find_untargeted_source();
                     
-                    // Update position with collision avoidance
-                    drone_x += lengthdir_x(move_speed, walk_direction);
-                    if (conveyor != noone) drone_y = conveyor.conveyor_start_y; // Stay on conveyor level
-                    
-                    // Check if we've reached the deposit block
-                    if (point_distance(drone_x, drone_y, target.x, target.y) < 10) {
-                        state = "collecting";
-                        pickup_timer = 0;
+                    if (untargeted_source != noone) {
+                        target = untargeted_source;
                     }
-                } else if (blocks_carried > 0) {
-                    // Already carrying blocks, head to conveyor
-                    state = "delivering";
-                } else {
-                    // No blocks to collect or deliver, go to idle
-                    state = "idle";
                 }
+                
+                
+                // Move toward target
+                var target_dir = point_direction(drone_x, drone_y, target.x, drone_y);
+                walk_direction = target_dir;
+                
+                // Update position with collision avoidance (only with other seeking drones)
+                drone_x += lengthdir_x(move_speed, walk_direction);
+                if (conveyor != noone) drone_y = conveyor.conveyor_start_y; // Stay on conveyor level
+                
+                // Check if we've reached the target
+                if (point_distance(drone_x, drone_y, target.x, target.y) < 10) {
+                    state = "collecting";
+                    pickup_timer = 0;
+                }
+            }
                 break;
+            
+            
+            
                 
             case "collecting":
                 // Collection animation/timer
