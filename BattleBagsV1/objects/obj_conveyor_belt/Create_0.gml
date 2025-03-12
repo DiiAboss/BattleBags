@@ -1,20 +1,22 @@
+
 /// @description Initialize Conveyor Belt System
 // Conveyor configuration
+
+player_obj = obj_game_control;
 conveyor_speed = 2;  // Speed of blocks moving upward
-/// @description Initialize Conveyor Belt System
-// Conveyor configuration
-conveyor_speed = 2;  // Speed of blocks moving upward
-conveyor_start_y = room_height - 128;  // Bottom position where blocks spawn
-conveyor_activation_y = 400;  // Y position where blocks activate
+conveyor_start_y = room_height - 96;  // Bottom position where blocks spawn
+conveyor_activation_y = conveyor_start_y - ((player_obj.bottom_playable_row - player_obj.top_playable_row) * 64) + 64;  // Y position where blocks activate
 conveyor_width = 128;  // Width of the conveyor display area
 lane_count = 1;  // Number of parallel lanes
 lanes_unlocked = 1;  // How many lanes are currently available to use
 
 
 // Position setup
-var offset = 176;
-player_obj = obj_game_control;
+var offset = 4;
+
 conveyor_x_start = player_obj.board_x_offset + (player_obj.board_width * player_obj.gem_size) + (conveyor_width * 0.5) + offset;
+
+
 x = conveyor_x_start;
 
 // Block tracking

@@ -18,22 +18,21 @@ block_types = [
 
 // Rarity weights for different block types (higher = more common)
 block_weights = ds_map_create();
-ds_map_add(block_weights, BLOCK.RED, 10);
-ds_map_add(block_weights, BLOCK.YELLOW, 10);
-ds_map_add(block_weights, BLOCK.GREEN, 10);
-ds_map_add(block_weights, BLOCK.PINK, 10);
-ds_map_add(block_weights, BLOCK.PURPLE, 10);
-ds_map_add(block_weights, BLOCK.LIGHTBLUE, 10);
-ds_map_add(block_weights, BLOCK.ORANGE, 10);
-ds_map_add(block_weights, BLOCK.BLUE, 10);
+ds_map_add(block_weights, BLOCK.RED, 5);
+ds_map_add(block_weights, BLOCK.YELLOW, 5);
+ds_map_add(block_weights, BLOCK.GREEN, 5);
+ds_map_add(block_weights, BLOCK.PINK, 5);
+ds_map_add(block_weights, BLOCK.PURPLE, 5);
+ds_map_add(block_weights, BLOCK.LIGHTBLUE, 5);
+ds_map_add(block_weights, BLOCK.ORANGE, 5);
+ds_map_add(block_weights, BLOCK.BLUE, 5);
 
 // Rare types have lower chance of appearing
-ds_map_add(block_weights, BLOCK.BLACK, 2);
-ds_map_add(block_weights, BLOCK.WILD, 1);
+ds_map_add(block_weights, BLOCK.BLACK, 25);
+ds_map_add(block_weights, BLOCK.WILD, 0);
 
 // Block state management
 state = "ready";
-current_block_type = choose_weighted_block_type();
 regen_timer = 0;
 max_regen_time = room_speed * 3; // 3 seconds to regenerate
 depletion_chance = 0.1; // 10% chance to become depleted after pickup
@@ -52,7 +51,6 @@ sparkle_interval = 10;
 function choose_weighted_block_type() {
     // Create a weighted list
     var weighted_list = ds_list_create();
-    
     // Add block types according to their weights
     var keys = ds_map_find_first(block_weights);
     while (!is_undefined(keys)) {
@@ -101,3 +99,6 @@ get_block_type = function() {
     return -1;
 }
 
+current_block_type = choose_weighted_block_type(self);
+
+targetter = noone;

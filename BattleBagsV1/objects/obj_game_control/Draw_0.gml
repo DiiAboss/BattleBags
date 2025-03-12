@@ -118,7 +118,7 @@ else
     {
         surface_set_target(surBase);
             draw_clear(c_black);
-    }
+    
     
         for (var i = 0; i < width; i++)
         {
@@ -133,7 +133,7 @@ else
                 }
             }
         }
-        
+      }  
     
     //----------------------------------------------------------------
     // DRAW GLOWING BLOCKS
@@ -182,7 +182,7 @@ else
             
             
                 draw_set_color(c_lime);
-                geogrid.geogrid_draw(self);
+                //geogrid.geogrid_draw(self);
     }
        draw_set_color(c_white); 
     
@@ -631,14 +631,14 @@ for (var i = 0; i < width; i++) {
                         gem_size);
     
     
-    if (is_targeting_enemy)
-    {
-        draw_set_alpha(0.95);
-        draw_rectangle_color(0, 0, 800, room_height, c_black, c_black, c_black, c_black, false);
-        draw_set_alpha(1);
-        
-        draw_rectangle_color(850, 300, room_width - 82, room_height - 44, c_white, c_white, c_white, c_white, true);
-    }
+    //if (is_targeting_enemy)
+    //{
+        //draw_set_alpha(0.95);
+        //draw_rectangle_color(0, 0, 800, room_height, c_black, c_black, c_black, c_black, false);
+        //draw_set_alpha(1);
+        //
+        //draw_rectangle_color(850, 300, room_width - 82, room_height - 44, c_white, c_white, c_white, c_white, true);
+    //}
     
     if (enemy_target != noone)
     {

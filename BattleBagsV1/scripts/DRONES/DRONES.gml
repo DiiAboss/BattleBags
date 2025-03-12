@@ -24,9 +24,9 @@ function drone() constructor {
     
     // Timers and counters
     pickup_timer = 0;
-    max_pickup_timer = 30;
+    max_pickup_timer = 15;
     throw_timer = 0;
-    max_throw_timer = 45;
+    max_throw_timer = 15;
     
     update = function(game_control) {
         // Find nearest deposit block and conveyor belt
@@ -35,14 +35,27 @@ function drone() constructor {
         var conveyor = instance_exists(obj_conveyor_belt) ? 
                     instance_nearest(drone_x, drone_y, obj_conveyor_belt) : noone;
         
+        
+        if (deposit_blocks != noone && deposit_blocks.y > conveyor.conveyor_start_y) return;
+        
+        
+        if (drone_y != obj_conveyor_belt.conveyor_start_y)
+        {
+            drone_y = obj_conveyor_belt.conveyor_start_y;
+        }
+        
         // State machine for drone behavior
         switch(state) {
             case "seeking":
                 // If deposit block exists and we're not at max capacity
                 if (deposit_blocks != noone && blocks_carried < carry_capacity) {
+                    
+                    if (deposit_blocks.targetter != noone && deposit_blocks.targetter != self) deposit_blocks = instance_find(obj_deposit_block, irandom(instance_number(obj_deposit_block) - 1));
+                     if !(deposit_blocks) return;  
+                    if (deposit_blocks.targetter == noone) deposit_blocks.targetter = self;
                     // Go toward nearest deposit block
                     target = deposit_blocks;
-                    var target_dir = point_direction(drone_x, drone_y, target.x, target.y);
+                    var target_dir = (point_direction(drone_x, drone_y, target.x, drone_y));
                     walk_direction = target_dir;
                     
                     // Update position
@@ -79,6 +92,11 @@ function drone() constructor {
                                 offset_x: irandom_range(-8, 8),
                                 offset_y: -16 - (blocks_carried * 8) // Stack blocks visually
                             });
+                            
+                            with deposit_blocks
+                            {
+                                instance_destroy();
+                            }
                             
                             blocks_carried++;
                             
@@ -130,7 +148,7 @@ function drone() constructor {
                 
             case "throwing":
                 // Throwing animation/timer
-                throw_timer++;
+                throw_timer = max_throw_timer;
                 
                 if (throw_timer >= max_throw_timer) {
                     // Throw all blocks
@@ -160,7 +178,7 @@ function drone() constructor {
                 // Move toward right side of screen (or left if too far right)
                 if (drone_x > room_width - 50) {
                     walk_direction = 180; // Move left
-                } else if (drone_x < 50) {
+                } else if (drone_x < room_width * 0.5) {
                     walk_direction = 0; // Move right
                 }
                 

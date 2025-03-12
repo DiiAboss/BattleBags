@@ -1,5 +1,52 @@
 /// @description Update deposit block state
 
+if (y + speed > obj_floor.y - 64)
+{
+    if (speed <= 0)
+    {
+        speed = 0;
+        y = obj_floor.y - 64;
+        return;
+    }
+    
+    direction =- direction;
+    speed = speed * 0.5;
+    
+}
+
+if (x > room_width - 32)
+{
+    direction = 180;
+}
+
+if  (x < room_width * 0.5)
+{
+    direction = 0;
+}
+
+// Function to select a block type based on weights
+function choose_weighted_block_type() {
+    // Create a weighted list
+    var weighted_list = ds_list_create();
+    // Add block types according to their weights
+    var keys = ds_map_find_first(block_weights);
+    while (!is_undefined(keys)) {
+        var weight = ds_map_find_value(block_weights, keys);
+        repeat(weight) {
+            ds_list_add(weighted_list, keys);
+        }
+        keys = ds_map_find_next(block_weights, keys);
+    }
+    
+    // Select a random block type from the weighted list
+    var selected_type = ds_list_find_value(weighted_list, irandom(ds_list_size(weighted_list) - 1));
+    
+    // Clean up
+    ds_list_destroy(weighted_list);
+    
+    return selected_type;
+}
+
 // Visual updates
 float_offset = sin(current_time * float_speed) * float_range;
 glow_alpha = 0.5 + sin(current_time * 0.002) * 0.2;
@@ -37,7 +84,7 @@ switch(state) {
         // Check if depletion recovery is complete
         if (depletion_timer >= max_depletion_time) {
             state = "ready";
-            current_block_type = choose_weighted_block_type();
+            current_block_type = choose_weighted_block_type(self);
             
             // Create effect to show source is active again
             repeat(5) {

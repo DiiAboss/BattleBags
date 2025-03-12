@@ -323,7 +323,7 @@ game_over_blocks_popped = 0;
 inputDelay   = 10;
 devices      = [];
 
-enemy_control = instance_create_depth(x, y, depth, obj_enemy_control);
+//enemy_control = instance_create_depth(x, y, depth, obj_enemy_control);
 is_targeting_enemy = true;
 enemy_target = -1;
 
@@ -384,4 +384,9 @@ default_font = fnt_basic;
 
 
 var geo_size = (board_width * gem_size) + 128;
-geogrid = new geowars_grid(board_x_offset, 256, geo_size, room_height, 128);
+//geogrid = new geowars_grid(board_x_offset, 256, geo_size, room_height, 128);
+conveyor_belt = instance_create_depth(x, y, depth - 1, obj_conveyor_belt);
+
+
+
+show_debug_overlay(true);

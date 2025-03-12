@@ -10,24 +10,24 @@ draw_rectangle_color(
 );
 draw_set_alpha(1.0);
 
-// Draw conveyor belt lines (scrolling animation)
-var belt_segments = 20;
-var segment_height = (conveyor_start_y - conveyor_activation_y) / belt_segments;
-
-for (var i = 0; i <= belt_segments; i++) {
-    var y_pos = conveyor_activation_y + (i * segment_height) + belt_animation_offset;
-    if (y_pos > conveyor_start_y) y_pos -= segment_height;
-    
-    var line_alpha = 0.5 + (0.5 * (i mod 2)); // Alternate opacity for visual interest
-    
-    draw_set_alpha(line_alpha);
-    draw_line_width_color(
-        x - conveyor_width/2, y_pos,
-        x + conveyor_width/2, y_pos,
-        1, c_gray, c_gray
-    );
-}
-draw_set_alpha(1.0);
+//// Draw conveyor belt lines (scrolling animation)
+//var belt_segments = 20;
+//var segment_height = (conveyor_start_y - conveyor_activation_y) / belt_segments;
+//
+//for (var i = 0; i <= belt_segments; i++) {
+    //var y_pos = conveyor_activation_y - ((i * segment_height) + belt_animation_offset);
+    //if (y_pos < conveyor_start_y) y_pos += segment_height;
+    //
+    //var line_alpha = 0.5 + (0.5 * (i mod 2)); // Alternate opacity for visual interest
+    //
+    //draw_set_alpha(line_alpha);
+    //draw_line_width_color(
+        //x - conveyor_width/2, y_pos,
+        //x + conveyor_width/2, y_pos,
+        //1, c_gray, c_gray
+    //);
+//}
+//draw_set_alpha(1.0);
 
 // Draw lane separators
 if (show_grid_overlay) {

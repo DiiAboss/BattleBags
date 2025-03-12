@@ -10,7 +10,7 @@ uInnerLengthMultiplier = max(0, uInnerLengthMultiplier + (keyboard_check(ord("C"
 var input = obj_game_manager.input;
 input.Update(self, last_position[0], last_position[1]);
 
-geogrid.geogrid_update(self, input);
+//geogrid.geogrid_update(self, input);
 //------------------------------------------
 // GAME OVER STATE
 //------------------------------------------
@@ -94,7 +94,7 @@ else
 process_inputs_and_delay(self, input);
 
 // Enemy Targetting System
-process_targetting_enemy(self, input, enemy_control, is_targeting_enemy);
+//process_targetting_enemy(self, input, enemy_control, is_targeting_enemy);
 
 
 if (control_mode == "modern") {
@@ -210,3 +210,5 @@ if (keyboard_check_pressed(vk_tab))
         effect = 0;
     }
 }
+
+

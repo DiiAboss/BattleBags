@@ -1,3 +1,3 @@
 /// @description
 
-draw_gui_neon_shader_stats(self)
+//draw_gui_neon_shader_stats(self)

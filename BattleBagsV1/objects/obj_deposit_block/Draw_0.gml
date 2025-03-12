@@ -1,7 +1,12 @@
 /// @description Draw deposit block with visual state indicators
 
 // Draw base sprite
-draw_sprite(sprite_index, 0, x, y);
+//draw_sprite(sprite_index, 0, x, y);
+
+if (y > obj_conveyor_belt.conveyor_start_y)
+{
+    y = obj_conveyor_belt.conveyor_start_y;
+}
 
 // Draw based on current state
 switch(state) {
@@ -23,7 +28,7 @@ switch(state) {
         draw_sprite_ext(
             block_sprite, 0, 
             x, block_y, 
-            1, 1, 0, c_white, 1
+            0.5, 0.5, 0, c_white, 1
         );
         break;
         
