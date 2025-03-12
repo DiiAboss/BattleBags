@@ -435,7 +435,8 @@ for (var i = 0; i < width; i++) {
     						draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     					}
     				}
-    				
+                
+    				var half_offset = gem_size * 0.5;
     				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     		}
     		

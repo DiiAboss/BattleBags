@@ -6,19 +6,23 @@ function block_dragged_mp(mp_control, player) {
         var gem_size = mp_control.gem_size;
         var global_y_offset = player.global_y_offset;
         
+        
         // 🔹 Convert pointer position to player's grid coordinates
         var hover_x = floor((player.pointer_x - board_x_offset) / gem_size);
         var hover_y = floor((player.pointer_y - global_y_offset) / gem_size);
         
+        
+    
         // ✅ Ensure hover is within player’s grid
         if (hover_x >= 0 && hover_x < width && hover_y >= 0 && hover_y < height) {
             player.hovered_block = [hover_x, hover_y];
-        } else {
+        }/* else {
             player.hovered_block = [-1, -1]; // Reset if out of bounds
-        }
-    
+        }*/
+        
         // ✅ Select block when action key is pressed (ONLY within player's grid)
         if (input.ActionPress) {
+            
             player.selected_x = hover_x;
             player.selected_y = hover_y;
     
@@ -45,6 +49,7 @@ function block_dragged_mp(mp_control, player) {
             }
         }
     
+        
         // ✅ Swap logic when dragging
         if (input.ActionKey && !player.dragged && player.selected_x != -1) {
             var target_x = floor((player.pointer_x - board_x_offset) / gem_size);

@@ -45,7 +45,7 @@ function create_player(_id)
         combo: 0,
         max_combo_timer: 60,
         combo_timer: 60,
-        
+        dragged: false,
         
     };
 }
