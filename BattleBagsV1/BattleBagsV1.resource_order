@@ -81,6 +81,7 @@
     {"name":"obj_connection_manager","order":5,"path":"objects/obj_connection_manager/obj_connection_manager.yy",},
     {"name":"obj_conveyor_belt","order":6,"path":"objects/obj_conveyor_belt/obj_conveyor_belt.yy",},
     {"name":"obj_deposit_block","order":12,"path":"objects/obj_deposit_block/obj_deposit_block.yy",},
+    {"name":"obj_drone_1","order":19,"path":"objects/obj_drone_1/obj_drone_1.yy",},
     {"name":"obj_drone","order":11,"path":"objects/obj_drone/obj_drone.yy",},
     {"name":"obj_enemy_basic","order":6,"path":"objects/obj_enemy_basic/obj_enemy_basic.yy",},
     {"name":"obj_enemy_parent","order":1,"path":"objects/obj_enemy_parent/obj_enemy_parent.yy",},

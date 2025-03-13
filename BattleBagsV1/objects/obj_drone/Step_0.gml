@@ -1,30 +1,30 @@
 // Find nearest deposit block and conveyor belt
 // Helper function to find untargeted block sources
-            function find_untargeted_source() {
-                // Check for available deposit blocks
-                var block_count = instance_number(obj_deposit_block);
-                for (var i = 0; i < block_count; i++) {
-                    var block = instance_find(obj_deposit_block, i);
-                    if (block != noone && 
-                        (!variable_instance_exists(block, "targetter") || 
-                        block.targetter == noone)) {
-                        return block;
-                    }
-                }
-                
-                // Check for available block stacks
-                var stack_count = instance_number(obj_block_stack);
-                for (var i = 0; i < stack_count; i++) {
-                    var stack = instance_find(obj_block_stack, i);
-                    if (stack != noone && stack.block_count > 0 && 
-                        (!variable_instance_exists(stack, "targetter") || 
-                        stack.targetter == noone)) {
-                        return stack;
-                    }
-                }
-                
-                return noone;
-            }
+function find_untargeted_source() {
+    // Check for available deposit blocks
+    var block_count = instance_number(obj_deposit_block);
+    for (var i = 0; i < block_count; i++) {
+        var block = instance_find(obj_deposit_block, i);
+        if (block != noone && 
+            (!variable_instance_exists(block, "targetter") || 
+            block.targetter == noone)) {
+            return block;
+        }
+    }
+    
+    // Check for available block stacks
+    var stack_count = instance_number(obj_block_stack);
+    for (var i = 0; i < stack_count; i++) {
+        var stack = instance_find(obj_block_stack, i);
+        if (stack != noone && stack.block_count > 0 && 
+            (!variable_instance_exists(stack, "targetter") || 
+            stack.targetter == noone)) {
+            return stack;
+        }
+    }
+    
+    return noone;
+}
 
 
 var deposit_blocks = noone;
