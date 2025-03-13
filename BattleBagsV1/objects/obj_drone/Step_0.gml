@@ -62,6 +62,23 @@ switch(state) {
         state = "collecting";
         break;
     }
+    
+
+    if (blocks_carried > 1 && wait_to_return < wait_to_return_max)
+    {
+        wait_to_return ++;
+    }
+    else {
+        wait_to_return ++;
+        if (wait_to_return >= wait_to_return_max)
+        {
+            state = "delivering";
+            break;
+        }
+        wait_to_return = 0;
+    }
+    
+    
 
     if (deposit_blocks != noone) {
             
@@ -92,8 +109,9 @@ switch(state) {
         drone_x += lengthdir_x(move_speed, walk_direction);
         if (conveyor != noone) drone_y = conveyor.conveyor_start_y; // Stay on conveyor level
         
+        
         // Check if we've reached the target
-        if (point_distance(drone_x, drone_y, target.x, drone_y) <= 16) {
+        if (point_distance(drone_x, drone_y, target.x, target.y) <= 16) {
             state = "collecting";
             pickup_timer = max_pickup_timer;
         }
@@ -106,7 +124,7 @@ switch(state) {
     case "collecting":
         // Collection animation/timer
         pickup_timer++;
-        
+        wait_to_return = 0;
         if (pickup_timer >= max_pickup_timer && blocks_carried < carry_capacity) {
             if (deposit_blocks != noone) {
                 // Get block type based on deposit block's current state
@@ -117,7 +135,7 @@ switch(state) {
                     array_push(carried_blocks, {
                         type: block_type,
                         offset_x: irandom_range(-8, 8),
-                        offset_y: -16 - (blocks_carried * 8) // Stack blocks visually
+                        offset_y: -32 - (blocks_carried * 32) // Stack blocks visually
                     });
                     
                     // Destroy the deposit block
@@ -148,6 +166,7 @@ switch(state) {
         break;
         
     case "delivering":
+        wait_to_return = 0;
         if (conveyor != noone) {
             // Move towards conveyor belt with collision avoidance
             target = conveyor;
@@ -162,7 +181,6 @@ switch(state) {
             if (point_distance(drone_x, drone_y, target.x, target.conveyor_start_y) <= throw_distance && blocks_carried > 0) {
                 // Start throwing animation
                 state = "throwing";
-                throw_timer = 0;
             }
         } else {
             // No conveyor belt found, go to idle
@@ -193,6 +211,7 @@ switch(state) {
             state = "seeking";
             throw_timer = 0;
         }
+        
         break;
         
     case "idle":

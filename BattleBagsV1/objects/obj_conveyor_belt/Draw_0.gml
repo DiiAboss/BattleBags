@@ -10,25 +10,6 @@ draw_rectangle_color(
 );
 draw_set_alpha(1.0);
 
-//// Draw conveyor belt lines (scrolling animation)
-//var belt_segments = 20;
-//var segment_height = (conveyor_start_y - conveyor_activation_y) / belt_segments;
-//
-//for (var i = 0; i <= belt_segments; i++) {
-    //var y_pos = conveyor_activation_y - ((i * segment_height) + belt_animation_offset);
-    //if (y_pos < conveyor_start_y) y_pos += segment_height;
-    //
-    //var line_alpha = 0.5 + (0.5 * (i mod 2)); // Alternate opacity for visual interest
-    //
-    //draw_set_alpha(line_alpha);
-    //draw_line_width_color(
-        //x - conveyor_width/2, y_pos,
-        //x + conveyor_width/2, y_pos,
-        //1, c_gray, c_gray
-    //);
-//}
-//draw_set_alpha(1.0);
-
 // Draw lane separators
 if (show_grid_overlay) {
     var lane_width = conveyor_width / lane_count;
@@ -65,35 +46,59 @@ draw_rectangle_color(
 );
 draw_set_alpha(1.0);
 
-// Draw all blocks on the conveyor
+// Step 1: Find unique y-positions and store indices of blocks sharing them
+var y_positions = [];  // Stores unique y-positions
+var grouped_blocks = [];  // Stores block indices per y-position
+
 for (var i = 0; i < ds_list_size(conveyor_blocks); i++) {
     var block_data = conveyor_blocks[| i];
+    var y_value = block_data.y_pos;
     
-    // Calculate lane position
-    var lane_width = conveyor_width / lane_count;
-    var lane_x = x - conveyor_width/2 + (block_data.lane * lane_width) + (lane_width/2);
-    
-    // Get the block type
-    var block_type = variable_struct_exists(block_data, "block_type") ? 
-                block_data.block_type : BLOCK.RANDOM;
-    
-    // Get the appropriate sprite
-    var block_sprite = block_sprites[? block_type];
-    if (block_sprite == undefined) {
-        block_sprite = sprite_for_block(BLOCK.RANDOM);
+    // Check if y_position exists
+    var found_index = -1;
+    for (var j = 0; j < array_length(y_positions); j++) {
+        if (y_positions[j] == y_value) {
+            found_index = j;
+            break;
+        }
     }
     
-    // Draw the block
-    draw_sprite(block_sprite, 0, lane_x, block_data.y_pos);
+    // If new y_position, add it and create an array for blocks at this height
+    if (found_index == -1) {
+        array_push(y_positions, y_value);
+        array_push(grouped_blocks, [i]); // Create new array with this block index
+    } else {
+        array_push(grouped_blocks[found_index], i); // Add to existing y-position group
+    }
+}
+
+// Step 2: Draw the blocks, adjusting only those at the same y-position
+for (var k = 0; k < array_length(y_positions); k++) {
+    var block_list = grouped_blocks[k];  // Blocks sharing this y-position
+    var block_count = array_length(block_list);
     
-    // Draw special effects for special blocks
-    if (variable_struct_exists(block_data, "is_special") && block_data.is_special) {
-        draw_set_alpha(pulsing_alpha);
-        draw_circle_color(
-            lane_x, block_data.y_pos,
-            16, c_white, c_yellow, false
-        );
-        draw_set_alpha(1.0);
+    // Calculate spacing based on count
+    var max_block_width = conveyor_width * 0.9;  
+    var block_spacing = max_block_width / block_count;
+    var block_size = clamp(block_spacing * 0.8, 16, 64);  
+    var start_x = x - (block_spacing * (block_count - 1)) * 0.5;  
+    
+    // Draw each block at the computed X position
+    for (var j = 0; j < block_count; j++) {
+        var index = block_list[j];
+        var block_data = conveyor_blocks[| index];
+
+        var block_type = variable_struct_exists(block_data, "block_type") ? block_data.block_type : BLOCK.RANDOM;
+        var block_sprite = block_sprites[? block_type];
+
+        if (block_sprite == undefined) {
+            block_sprite = sprite_for_block(BLOCK.RANDOM);
+        }
+
+        var block_x = start_x + (j * block_spacing); // Position block correctly
+        
+        draw_sprite_ext(block_sprite, 0, block_x, block_data.y_pos, 
+            block_size / 64, block_size / 64, 0, c_white, 1);
     }
 }
 

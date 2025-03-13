@@ -9,7 +9,7 @@ drone_x = 0;
     walk_direction = 0;
     aim_direction = 0;
     color = c_white;
-    carry_capacity = 1;
+    carry_capacity = 8;
     throw_distance = 128;
     selected = false;
 
@@ -32,4 +32,7 @@ drone_x = 0;
     game_control = obj_game_control;
 
     target = noone;
+
+wait_to_return = 0;
+wait_to_return_max = 60;
 
