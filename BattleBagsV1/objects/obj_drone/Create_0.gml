@@ -19,7 +19,7 @@ drone_x = 0;
     carried_blocks = array_create(0); // Stores info about carried blocks
     
     // Movement properties
-    move_speed = 2;
+    move_speed = 4;
     state = "seeking"; // seeking, collecting, delivering, idle
     
     // Timers and counters

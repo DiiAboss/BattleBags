@@ -16,6 +16,8 @@ block_types = [
     BLOCK.BLUE
 ];
 
+rand = irandom_range(-99999, 99999);
+
 // Rarity weights for different block types (higher = more common)
 block_weights = ds_map_create();
 ds_map_add(block_weights, BLOCK.RED, 5);
@@ -46,6 +48,8 @@ float_range = 1;
 glow_alpha = 0;
 sparkle_timer = 0;
 sparkle_interval = 10;
+max_height = 99;
+max_width = 99;
 
 // Function to select a block type based on weights
 function choose_weighted_block_type() {
@@ -102,10 +106,6 @@ get_block_type = function() {
 current_block_type = choose_weighted_block_type();
 
 targetter = noone;
-
-
-// Initialize the pyramid structure if this is a stacked block
-if (variable_instance_exists(id, "stacked_blocks") && ds_list_size(stacked_blocks) > 0) {
-    initialize_pyramid_grid();
-    update_pyramid_with_blocks();
-}
+falling = true;
+vsp = 1;
+base = obj_conveyor_belt.conveyor_start_y;
