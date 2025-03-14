@@ -7,9 +7,9 @@ function Drone(_id, _x, _y) constructor {
     
     // Basic Stats
     stats = {
-        move_speed: 4,
-        carry_capacity: 24,
-        throw_distance: 256,
+        move_speed: 2,
+        carry_capacity: 4,
+        throw_distance: 128,
         experience: 0,
         max_experience: 100,
         level: 1,
@@ -161,7 +161,7 @@ function Drone(_id, _x, _y) constructor {
                     var block_x = x + block.offset_x;
                     var block_y = y + block.offset_y;
                     var block_sprite = sprite_for_block(block.type);
-                    draw_sprite_ext(block_sprite, 0, block_x, block_y, 0.5, 0.5, 0, c_white, 1);
+                    draw_sprite_ext(block_sprite, 0, block_x, block_y, 0.75, 0.75, 0, c_white, 1);
                 }
             }
         
@@ -186,7 +186,7 @@ function Drone(_id, _x, _y) constructor {
         
                             var arc_pos = calculate_arc(start_x, start_y, target_x, target_y, block_progress);
                             var block_sprite = sprite_for_block(carried_blocks[i].type);
-                            draw_sprite_ext(block_sprite, 0, arc_pos[0], arc_pos[1], 0.5, 0.5, 0, c_white, 1);
+                            draw_sprite_ext(block_sprite, 0, arc_pos[0], arc_pos[1], 0.75, 0.75, 0, c_white, 1);
                         }
                     }
                 }

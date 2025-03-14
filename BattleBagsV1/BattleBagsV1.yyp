@@ -370,6 +370,7 @@
     {"id":{"name":"spr_target","path":"sprites/spr_target/spr_target.yy",},},
     {"id":{"name":"spr_test_dummy","path":"sprites/spr_test_dummy/spr_test_dummy.yy",},},
     {"id":{"name":"spr_titleCard","path":"sprites/spr_titleCard/spr_titleCard.yy",},},
+    {"id":{"name":"spr_transfer_block","path":"sprites/spr_transfer_block/spr_transfer_block.yy",},},
     {"id":{"name":"spr_upgrade_frame","path":"sprites/spr_upgrade_frame/spr_upgrade_frame.yy",},},
     {"id":{"name":"spr_upgrade_gem_spawn_up","path":"sprites/spr_upgrade_gem_spawn_up/spr_upgrade_gem_spawn_up.yy",},},
     {"id":{"name":"spr_wild_gem","path":"sprites/spr_wild_gem/spr_wild_gem.yy",},},

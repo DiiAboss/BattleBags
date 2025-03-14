@@ -290,6 +290,7 @@
     {"name":"spr_shield_gem","order":8,"path":"sprites/spr_shield_gem/spr_shield_gem.yy",},
     {"name":"spr_target","order":21,"path":"sprites/spr_target/spr_target.yy",},
     {"name":"spr_titleCard","order":2,"path":"sprites/spr_titleCard/spr_titleCard.yy",},
+    {"name":"spr_transfer_block","order":23,"path":"sprites/spr_transfer_block/spr_transfer_block.yy",},
     {"name":"spr_upgrade_frame","order":6,"path":"sprites/spr_upgrade_frame/spr_upgrade_frame.yy",},
     {"name":"spr_upgrade_gem_spawn_up","order":5,"path":"sprites/spr_upgrade_gem_spawn_up/spr_upgrade_gem_spawn_up.yy",},
     {"name":"spr_wild_gem","order":7,"path":"sprites/spr_wild_gem/spr_wild_gem.yy",},

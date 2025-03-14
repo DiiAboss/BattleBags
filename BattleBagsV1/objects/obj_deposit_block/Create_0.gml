@@ -51,6 +51,14 @@ sparkle_interval = 10;
 max_height = 99;
 max_width = 99;
 
+default_size = 64;
+size_mod = 0.75;
+
+scale = default_size * size_mod;
+image_xscale = size_mod;
+image_yscale = size_mod;
+
+
 // Function to select a block type based on weights
 function choose_weighted_block_type() {
     // Create a weighted list
@@ -107,5 +115,10 @@ current_block_type = choose_weighted_block_type();
 
 targetter = noone;
 falling = true;
-vsp = 1;
+vsp = 3;
 base = obj_conveyor_belt.conveyor_start_y;
+rotation = irandom(360);
+rotation_speed = 1 + irandom(2) * choose(1, -1);
+
+
+

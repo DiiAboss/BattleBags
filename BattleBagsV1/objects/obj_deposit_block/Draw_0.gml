@@ -1,4 +1,4 @@
-draw_sprite_ext(sprite_for_block(current_block_type), 0, x, y, 0.5, 0.5, 0, c_white, 1);
+draw_sprite_ext(sprite_for_block(current_block_type), 0, x, y, 0.75, 0.75, rotation, c_white, 1);
 
 
 
