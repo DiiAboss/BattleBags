@@ -40,5 +40,8 @@ for (var i = 0; i < ds_list_size(conveyor_blocks); i++) {
     }
 }
 
+// Process the queue whenever called
+process_block_queue();
+
 // Pulsing animation for highlight effects
 pulsing_alpha = 0.3 + 0.2 * sin(current_time * 0.003);

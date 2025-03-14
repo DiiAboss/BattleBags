@@ -10,7 +10,7 @@ conveyor_width = 192;  // Width of the conveyor display area
 lane_count = 1;  // Number of parallel lanes
 lanes_unlocked = 1;  // How many lanes are currently available to use
 
-
+block_queue = array_create(0);
 // Position setup
 var offset = 4;
 

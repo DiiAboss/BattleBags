@@ -47,32 +47,109 @@ function add_block_to_conveyor(block_type, lane = 0, speed_mult = 1) {
 }
 
 /// @function activate_block
-/// @description Called when a block reaches the activation point
+/// @description Called when a block reaches activation point
 /// @param {enum} block_type The type of block to activate
 /// @param {real} lane The lane the block was in
+
 function activate_block(block_type, lane) {
-    // Create visual effect
-    var effect_x = x - conveyor_width/2 + (lane * (conveyor_width / lane_count)) + (conveyor_width / lane_count / 2);
-    var effect_y = conveyor_activation_y;
-    effect_create_above(ef_ring, effect_x, effect_y, 0, c_white);
+
+    // Queue the incoming block
+    array_push(block_queue, block_type);
+}
+
+
+
+/// Process the queued blocks and place them onto the board properly
+function process_block_queue() {
+    var total_blocks = array_length(block_queue);
+    var board_width = obj_game_control.width;
+    var blocks_processed = 0;
+    var current_row = 0;
     
-    // Add block to the game board
-    with (player_obj) {
-        // Determine spawn column based on lane position
-        var spawn_column = irandom(width - 1);
+    while (blocks_processed < total_blocks) {
+        var blocks_this_row = min(board_width, total_blocks - blocks_processed);
         
-        // Create the block in the top row
-        grid[spawn_column, top_playable_row].type = block_type;
-        grid[spawn_column, top_playable_row].falling = true;
-        
-        // Special processing for certain block types
-        if (block_type == BLOCK.BLACK) {
-            // Black blocks might have special behavior
+        for (var i = current_row; i > 0; i--)
+        {
+            // Determine number of blocks for this row
+            push_rows_down(i);
         }
-        else if (block_type == BLOCK.WILD) {
-            // Wild blocks might have special behavior
+        
+        place_blocks_in_row(0, blocks_this_row);
+        
+        blocks_processed += blocks_this_row;
+        current_row ++;
+    }
+
+    // Clear the queue after processing
+    block_queue = array_create(0);
+}
+
+function place_blocks_in_row(row_index, blocks_to_place) {
+    var board_width = obj_game_control.width;
+    
+    if (array_length(block_queue) < board_width)
+    {
+        var diff = board_width - blocks_to_place;
+        for (var i = 0; i < diff; i++)
+        {
+            array_push(block_queue, -1);
         }
     }
+    
+    // Shuffle available columns to randomize placement
+    block_queue = array_shuffle(block_queue);
+    
+    // Place blocks
+    for (var i = 0; i < board_width; i++) {
+        
+            var type_to_spawn = array_pop(block_queue);
+        if type_to_spawn != -1
+            {
+        obj_game_control.grid[i, row_index].type = type_to_spawn;
+        obj_game_control.grid[i, row_index].falling = true; 
+    }
+    }
+}
+
+/// Helper function to push all rows down by one
+function push_rows_down(current_row) {
+    var board_width = obj_game_control.width;
+    var height = obj_game_control.top_playable_row;
+
+    // Move blocks from top downwards, starting at the top
+    
+    if (current_row > 0)
+    {
+        for (var col = 0; col < board_width; col++) {
+            obj_game_control.grid[col, current_row].type = obj_game_control.grid[col, current_row - 1].type;
+            obj_game_control.grid[col, current_row].falling = obj_game_control.grid[col, current_row - 1].falling;
+        }
+        
+        // Clear the top row after pushing down
+        for (var col = 0; col < board_width; col++) {
+            obj_game_control.grid[col, current_row - 1].type = BLOCK.NONE;
+            obj_game_control.grid[col, current_row - 1].falling = false;
+        }
+    }
+
+
+
+
+    
+
+}
+
+/// Check if any block exists in specified row
+function row_is_full(row_index) {
+    var board_width = obj_game_control.width;
+    var full = false;
+    for (var col = 0; col < board_width; col++) {
+        if (obj_game_control.grid[col, row_index].type == BLOCK.NONE) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /// @function pause_conveyor

@@ -8,8 +8,8 @@ function Drone(_id, _x, _y) constructor {
     // Basic Stats
     stats = {
         move_speed: 4,
-        carry_capacity: 8,
-        throw_distance: 128,
+        carry_capacity: 24,
+        throw_distance: 256,
         experience: 0,
         max_experience: 100,
         level: 1,
@@ -19,6 +19,7 @@ function Drone(_id, _x, _y) constructor {
         max_pickup_timer: 1,
         wait_to_return_max: 60,
         max_throw_timer: 1,
+        max_think_timer: 15,
     };
 
     // State and targeting
@@ -31,15 +32,23 @@ function Drone(_id, _x, _y) constructor {
     wait_to_return = stats.wait_to_return_max;
     throw_timer = stats.max_throw_timer;
     
+    throw_progress = 0;
+    throw_duration = 30; // frames it takes to throw
+    is_throwing = false;
+    
     aim_direction = 0;
     walk_direction = 0;
     selected = false; 
+    
+    think_timer = 0;
     
     // Modular Functions
     mods = [];
     
     update = function()
     {
+        think_timer ++;
+        
         var game_control = obj_game_control;
         
         var deposit_blocks = noone;
@@ -60,6 +69,17 @@ function Drone(_id, _x, _y) constructor {
             y = conveyor.conveyor_start_y;
         }
         
+        if (deposit_blocks != noone)
+        {
+            if (blocks_carried < stats.carry_capacity)
+                    {
+                        if (point_distance(x, y, instance_nearest(x, y, obj_deposit_block).x, instance_nearest(x, y, obj_deposit_block).y) < 16)
+                        {
+                            target = instance_nearest(x, y, obj_deposit_block);
+                            state = "collecting";
+                        }
+                    }
+        }
         
         
         switch(state) {
@@ -96,11 +116,11 @@ function Drone(_id, _x, _y) constructor {
                 // Click on this drone, select it
                 
                 // Deselect all other drones
-                var all_drones = instance_number(obj_drone);
+                var all_drones = instance_number(obj_drone_1);
                 for (var i = 0; i < all_drones; i++) {
-                    var drone_inst = instance_find(obj_drone, i);
-                    if (drone_inst != id) {
-                        drone_inst.selected = false;
+                    var drone_inst = instance_find(obj_drone_1, i);
+                    if (drone_inst.id != id) {
+                        drone_inst.drone.selected = false;
                     }
                 }
                 
@@ -134,16 +154,43 @@ function Drone(_id, _x, _y) constructor {
             false
         );
         
-        // Draw carried blocks
-        for (var i = 0; i < blocks_carried; i++) {
-            var block = carried_blocks[i];
-            var block_x = x + block.offset_x;
-            var block_y = y + block.offset_y;
-            
-            // Draw sprite for the block type
-            var block_sprite = sprite_for_block(block.type);
-            draw_sprite_ext(block_sprite, 0, block_x, block_y, 0.5, 0.5, 0, c_white, 1);
-        }
+        // Draw carried blocks (regular stacked)
+            if (!is_throwing) {
+                for (var i = 0; i < blocks_carried; i++) {
+                    var block = carried_blocks[i];
+                    var block_x = x + block.offset_x;
+                    var block_y = y + block.offset_y;
+                    var block_sprite = sprite_for_block(block.type);
+                    draw_sprite_ext(block_sprite, 0, block_x, block_y, 0.5, 0.5, 0, c_white, 1);
+                }
+            }
+        
+            // Draw blocks flying toward conveyor (during throwing)
+            else {
+                var conveyor = instance_nearest(x, y, obj_conveyor_belt);
+                if (conveyor != noone) {
+                    var target_x = conveyor.x;
+                    var target_y = conveyor.conveyor_start_y;
+        
+                    for (var i = 0; i < blocks_carried; i++) {
+                        throw_duration = ((x - conveyor.x) / 128) * 30;
+                        var throw_delay = (i * 5); // delay each block throw
+                        
+                    
+                        show_debug_message("Thro Duration: " + string(throw_duration));
+                        var block_progress = clamp((throw_progress - throw_delay) / (throw_duration - throw_delay), 0, 1);
+        
+                        if (block_progress < 1) {
+                            var start_x = x + carried_blocks[i].offset_x;
+                            var start_y = y + carried_blocks[i].offset_y;
+        
+                            var arc_pos = calculate_arc(start_x, start_y, target_x, target_y, block_progress);
+                            var block_sprite = sprite_for_block(carried_blocks[i].type);
+                            draw_sprite_ext(block_sprite, 0, arc_pos[0], arc_pos[1], 0.5, 0.5, 0, c_white, 1);
+                        }
+                    }
+                }
+            }
         
         // Draw selection indicator if selected
         if (selected) {
@@ -218,10 +265,12 @@ function Drone(_id, _x, _y) constructor {
         }
     }
     
+    
+    
     seek_target = function(conveyor, deposit_blocks) {
         
         var seek_distance = 16;
-        
+        throw_progress = 0;
         // Find nearest deposit block or block stack
                 if (deposit_blocks == noone)
             {
@@ -236,7 +285,7 @@ function Drone(_id, _x, _y) constructor {
             }
             
         
-            if (blocks_carried > 1 && wait_to_return < stats.wait_to_return_max)
+            if (blocks_carried > ceil(0.5 * stats.carry_capacity) && wait_to_return < stats.wait_to_return_max)
             {
                 wait_to_return ++;
             }
@@ -277,9 +326,15 @@ function Drone(_id, _x, _y) constructor {
                     }
                 }
                 
-                
+                var target_dir = walk_direction;
                 // Move toward target
-                var target_dir = point_direction(x, y, target.x, y);
+                if (think_timer >= stats.max_think_timer)
+                {
+                    think_timer = 0;
+                    target_dir = point_direction(x, y, target.x, y);
+                }
+                        
+                
                 walk_direction = target_dir;
                 
                 // Update position with collision avoidance (only with other seeking drones)
@@ -329,7 +384,7 @@ function Drone(_id, _x, _y) constructor {
                         state = "delivering";
                         return;
                     } else {
-                        state = "seeking";
+                        state = "idle";
                         return;
                     }
                 } else {
@@ -375,29 +430,33 @@ function Drone(_id, _x, _y) constructor {
     }
     
     throw_blocks = function(conveyor) {
-        // Throwing animation/timer
-        throw_timer = stats.max_throw_timer;
-        
-        if (throw_timer >= stats.max_throw_timer) {
-            // Throw all blocks
-            if (blocks_carried > 0 && conveyor != noone) {
-                // Add blocks to conveyor
-                for (var i = 0; i < blocks_carried; i++) {
-                    with (conveyor) {
-                        add_block_to_conveyor(other.carried_blocks[i].type);
-                    }
-                }
-                
-                // Reset carried blocks
-                blocks_carried = 0;
-                carried_blocks = array_create(0);
+            if (!is_throwing) {
+                is_throwing = true;
+                throw_progress = 0;
             }
             
-            // Go back to seeking
-            state = "seeking";
-            throw_timer = 0;
-        }
-    }
+            throw_progress++;
+            
+
+            if (throw_progress >= throw_duration) {
+                // Actually deliver blocks now
+                for (var i = 0; i < blocks_carried; i++) {
+                    with (conveyor) {
+                     add_block_to_conveyor(other.carried_blocks[i].type);
+                    }
+                }
+        
+                // Clear blocks
+                blocks_carried = 0;
+                carried_blocks = array_create(0);
+        
+                // Reset state
+                is_throwing = false;
+                throw_progress = 0;
+                state = "idle";
+            }
+        };
+
     
     idle_behavior = function(conveyor, deposit_blocks) {
         // Move with collision avoidance
@@ -479,4 +538,11 @@ function Mod(_name, _speed_mod, _capacity_mod) constructor {
     name = _name;
     speed_modifier = _speed_mod;
     capacity_modifier = _capacity_mod;
+}
+
+function calculate_arc(_start_x, _start_y, _end_x, _end_y, _progress) {
+    var height = -abs(_start_x - _end_x); // peak height of arc (negative for upward)
+    var px = lerp(_start_x, _end_x, _progress);
+    var py = lerp(_start_y, _end_y, _progress) + height * sin(pi * _progress);
+    return [px, py];
 }

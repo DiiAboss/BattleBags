@@ -36,7 +36,8 @@ function all_pops_finished()
 	            var _y = pop_data.y;
 	            var px = (_x * gem_size) + board_x_offset + offset;
 	            var py = (_y * gem_size) + offset + global_y_offset;// + gem_y_offsets[_x, _y];
-                    
+                
+                if _x < 0 || _y < 0 return;
 	            // ✅ Store Gem Object Before Destroying
 				if (self.grid[_x, _y] != -1) && (pop_data != -1)
 				{
