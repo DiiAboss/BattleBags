@@ -13,6 +13,7 @@ function find_and_destroy_matches(_self) {
     var found_any			 = false;
     var first_found			 = false; // ✅ Track the first block in the combo
     var total_match_points	 = 0;     // ✅ Accumulates points for multiple matches
+    var total_match_count    = 0;
 	
 	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
 	
@@ -49,7 +50,7 @@ function find_and_destroy_matches(_self) {
         for (var i = 1; i < width; i++) {
             if (can_match(_self.grid[i, j], _self.grid[i - 1, j])) {
                 if (match_count == 1) start_idx = i - 1;
-                match_count++;
+                if (_self.grid[i, j].type >= 0) match_count++;
             } else {
                 if (match_count >= 3) {
                     for (var k = 0; k < match_count; k++) {
@@ -67,6 +68,7 @@ function find_and_destroy_matches(_self) {
                         }
                     }
                     // ✅ Add points based on match size
+                    total_match_count += match_count;
                     total_match_points += calculate_match_points(self, match_count);
                 }
                 match_count = 1;
@@ -87,6 +89,7 @@ function find_and_destroy_matches(_self) {
                      check_adjacent_black_blocks(self, j, xx, black_blocks_to_transform);
                 }
             }
+            total_match_count += match_count;
            total_match_points += calculate_match_points(self, match_count);
         }
     }
@@ -101,7 +104,9 @@ function find_and_destroy_matches(_self) {
         for (var j = 1; j <= _self.bottom_playable_row; j++) {
             if (can_match(_self.grid[i, j], _self.grid[i, j - 1])) {
                 if (match_count == 1) start_idx = j - 1;
-                match_count++;
+                    
+                if (_self.grid[i, j].type >= 0) match_count++;
+                
             } else {
                 if (match_count >= 3) {
                     for (var k = 0; k < match_count; k++) {
@@ -119,6 +124,7 @@ function find_and_destroy_matches(_self) {
                             check_adjacent_black_blocks(self, i, yy, black_blocks_to_transform);
                         }
                     }
+                    total_match_count += match_count;
                     total_match_points += calculate_match_points(self, match_count);
                 }
                 match_count = 1;
@@ -139,10 +145,12 @@ function find_and_destroy_matches(_self) {
                      check_adjacent_black_blocks(self, i, yy, black_blocks_to_transform);
                 }
             }
+            total_match_count += match_count;
             total_match_points += calculate_match_points(self, match_count);
         }
     }
 
+    
      //-------------------------
      //✅ DIAGONAL MATCHES (If enabled)
      //-------------------------
@@ -151,7 +159,7 @@ function find_and_destroy_matches(_self) {
     // -------------------------
     // ✅ HANDLE MATCHED GEMS
     // -------------------------
-
+    var first_match = false;
 	for (var i = 0; i < width; i++) {
 	    for (var j = 0; j <= _self.bottom_playable_row; j++) {
 	        if (marked_for_removal[i, j]) {
@@ -159,12 +167,21 @@ function find_and_destroy_matches(_self) {
 	            _self.grid[i, j].shake_timer = _self.max_shake_timer; // Start shaking effect
 
 	            var gem = _self.grid[i, j];
-
+                
 	            var dx = i - global.lastSwapX;
 	            var dy = j - global.lastSwapY;
 	            var dist = sqrt(dx * dx + dy * dy);
 	            var _start_delay = 5; // adjustable could be used as upgrade
-			
+			     
+                var m_size = 1;
+                if !first_match
+                {
+                    first_match = true;
+                    m_size = total_match_count;
+                }
+                else {
+                    m_size = 1;
+                }                
 	            // ✅ If it's a BIG BLOCK, transform it into separate blocks
 	            if (gem.is_big) {
 	                var group_id = gem.group_id;
@@ -172,11 +189,12 @@ function find_and_destroy_matches(_self) {
 	                for (var _x = 0; _x < width; _x++) {
 	                    for (var _y = 0; _y <= bottom_row; _y++) {
 	                        var other_gem = grid[_x, _y];
-
+                            
+                            
 	                        if (other_gem.group_id == group_id) {
 	                            // ✅ Convert each big block part into a small block of the same type
 	                            _self.grid[_x, _y] = create_block(gem.type);
-							
+							 
 								 // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
 					            var pop_info = {
 					                x: _x,
@@ -192,7 +210,7 @@ function find_and_destroy_matches(_self) {
 					                offset_y: gem.offset_y,
 					                color: gem.color,
 					                y_offset_global: _self.global_y_offset,
-					                match_size: match_count, // ✅ Store the match size
+					                match_size: m_size, // ✅ Store the match size
 					                match_points: total_match_points * 1.5,
 					                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 					                bomb_level: 0,
@@ -230,7 +248,7 @@ function find_and_destroy_matches(_self) {
 	                offset_y: gem.offset_y,
 	                color: gem.color,
 	                y_offset_global: _self.global_y_offset,
-	                match_size: match_count, // ✅ Store the match size
+	                match_size: m_size, // ✅ Store the match size
 	                match_points: total_match_points,
 	                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
 	                bomb_level: 0,
@@ -249,7 +267,7 @@ function find_and_destroy_matches(_self) {
 	        }
 	    }
 	}
-
+    
     ds_list_destroy(black_blocks_to_transform);
 	
     return found_any;

@@ -1,6 +1,6 @@
 
 enum BLOCK {
-    RANDOM = -99, GAME_OVER = -404, CURSE = -5, PUZZLE_1 = -4, MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    RANDOM = -99, GAME_OVER = -404, COLOR_BOMB = -6, CURSE = -5, PUZZLE_1 = -4, MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
     LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
 }
 
@@ -82,6 +82,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
         draw_y: 0,
         dist_without_touching: 0,
         freeze_on_land: false,
+        cb: BLOCK.NONE,
     };
 }
 

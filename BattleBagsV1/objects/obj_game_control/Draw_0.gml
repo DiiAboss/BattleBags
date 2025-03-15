@@ -524,6 +524,9 @@ for (var i = 0; i < width; i++) {
            1.0
    		);
    	}
+    
+    
+    draw_text(draw_x, draw_y, string(pop_data.match_size));
    	
    }
 

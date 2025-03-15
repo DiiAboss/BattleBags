@@ -222,6 +222,7 @@
     {"id":{"name":"scr_darken_bottom_row","path":"scripts/scr_darken_bottom_row/scr_darken_bottom_row.yy",},},
     {"id":{"name":"scr_destroy_block_in_direction","path":"scripts/scr_destroy_block_in_direction/scr_destroy_block_in_direction.yy",},},
     {"id":{"name":"scr_destroy_block","path":"scripts/scr_destroy_block/scr_destroy_block.yy",},},
+    {"id":{"name":"scr_destroy_blocks_of_color","path":"scripts/scr_destroy_blocks_of_color/scr_destroy_blocks_of_color.yy",},},
     {"id":{"name":"scr_destroy_rows_from_bottom","path":"scripts/scr_destroy_rows_from_bottom/scr_destroy_rows_from_bottom.yy",},},
     {"id":{"name":"scr_diagonal_matches_process","path":"scripts/scr_diagonal_matches_process/scr_diagonal_matches_process.yy",},},
     {"id":{"name":"scr_draw_line_DDA_ext","path":"scripts/scr_draw_line_DDA_ext/scr_draw_line_DDA_ext.yy",},},

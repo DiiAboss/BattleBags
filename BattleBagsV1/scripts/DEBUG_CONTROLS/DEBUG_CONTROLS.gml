@@ -37,6 +37,12 @@ function enable_debug_controls(_self, hover_x, hover_y, debug_active = false)
     {
         victory_state = true;
     }
+    
+    if (keyboard_check_pressed(ord("G")))
+        {
+            self.grid[hover_x, hover_y].type = BLOCK.COLOR_BOMB;
+        }
+    
 
 	// 🌟 Vertical Destruction
 	if (keyboard_check_pressed(ord("I"))) { 

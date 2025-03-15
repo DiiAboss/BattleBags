@@ -69,6 +69,12 @@ function all_pops_finished()
                         // ✅ Add accumulated match points to total_points
                         total_points += attack.damage;
                     }
+                    
+                if (pop_data.match_size >= 5)
+                {
+                    self.grid[_x, _y] = create_block(BLOCK.COLOR_BOMB);
+                }
+                
                 else {
                     //destroy_block(self, _x, _y);
                 }

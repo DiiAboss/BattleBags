@@ -19,7 +19,10 @@ function start_swap(_self, ax, ay, bx, by) {
 
     var gemA = _self.grid[ax, ay];
     var gemB = _self.grid[bx, by];
-
+    var type_A = gemA.type;
+    var type_B = gemB.type;
+    
+    
     // ✅ Prevent swapping `big` blocks if they belong to different groups
     if (gemA.is_big || gemB.is_big) {
         if (gemA.group_id != gemB.group_id) return;
@@ -30,9 +33,37 @@ function start_swap(_self, ax, ay, bx, by) {
     }
     
     if (gemA.offset_y != gemB.offset_y) return;
-
+    
     // ✅ Execute the swap normally if no shifting is happening
     execute_swap(_self, ax, ay, bx, by);
+    
+        if (type_A != BLOCK.NONE && type_B != BLOCK.NONE)
+            if (type_A == BLOCK.COLOR_BOMB || type_B == BLOCK.COLOR_BOMB)
+            {
+                if type_A == BLOCK.COLOR_BOMB && type_B == BLOCK.COLOR_BOMB
+                {
+                    //destroy_entire_board
+                    return;
+                }
+                
+                var target_type = BLOCK.COLOR_BOMB;
+                
+                if (type_A) == BLOCK.COLOR_BOMB
+                {
+                    target_type = type_B;
+                        _self.grid[ax, ay].type = target_type;
+                    _self.grid[ax, ay].cb = target_type;
+                    
+                }
+                else {
+                    target_type = type_A;
+                        _self.grid[bx, by].type = target_type;
+                    _self.grid[ax, ay].cb = target_type;
+                }
+                
+                
+            }
+
 }
 
 
@@ -76,6 +107,11 @@ function process_swap(_self, swap_info)
 	            _self.grid[swap_info.from_x, swap_info.from_y - 1] = _self.grid[swap_info.to_x, swap_info.to_y - 1];
 	            _self.grid[swap_info.to_x, swap_info.to_y - 1] = temp;
 	        }
+            
+            if temp.cb != BLOCK.NONE
+            {
+                destroy_blocks_of_color(temp.cb);
+            }
 
 	        // Reset offsets
 	        _self.grid[swap_info.from_x, swap_info.from_y].offset_x = 0;
@@ -84,6 +120,9 @@ function process_swap(_self, swap_info)
 	        _self.grid[swap_info.to_x,   swap_info.to_y].offset_y   = 0;
 
 	        _self.swap_in_progress = false;
+            
+            
+            
 	    } else {
 	        // Animate the swap
 	        var distance = gem_size * swap_info.progress;
