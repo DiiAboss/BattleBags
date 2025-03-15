@@ -42,8 +42,47 @@ function start_swap(_self, ax, ay, bx, by) {
             {
                 if type_A == BLOCK.COLOR_BOMB && type_B == BLOCK.COLOR_BOMB
                 {
-                    //destroy_entire_board
+                    var height = obj_game_control.bottom_playable_row;
+                    var width = obj_game_control.board_width;
+                    var grid = obj_game_control.grid;
+                    
+                    for (var i = height; i > 0; i--)
+                    {
+                        for (var j = 0; j < width; j++)
+                            {
+                            var gem = grid[j, i]
+                            if (gem.type == BLOCK.NONE) continue;
+                            // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
+                            var pop_info = {
+                                x: j,
+                                y: i,
+                                gem_type: gem.type,
+                                timer: 0,
+                                start_delay: i * j, // Wave effect
+                                scale: 1.0,
+                                popping: true,
+                                powerup: gem.powerup,
+                                dir: gem.dir,
+                                offset_x: gem.offset_x,
+                                offset_y: gem.offset_y,
+                                color: gem.color,
+                                y_offset_global: _self.global_y_offset,
+                                match_size: 1, // ✅ Store the match size
+                                match_points: 1000,
+                                bomb_tracker: false, // Flag to mark this pop as bomb‐generated
+                                bomb_level: 0,
+                                img_number: gem.img_number,
+                                is_big: false,
+                            };
+                        
+                            _self.grid[j, i].popping   = true;
+                            _self.grid[j, i].pop_timer = i * j;
+                            ds_list_add(global.pop_list, pop_info);
+                        }
+                    }
+                    
                     return;
+                        
                 }
                 
                 var target_type = BLOCK.COLOR_BOMB;
