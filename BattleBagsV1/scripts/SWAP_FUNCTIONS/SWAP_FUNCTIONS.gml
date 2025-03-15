@@ -31,11 +31,15 @@ function start_swap(_self, ax, ay, bx, by) {
 
         if (parentA[0] != parentB[0] || parentA[1] != parentB[1]) return; // Ensure swapping whole block
     }
-    
+    if (gemA.frozen || gemB.frozen) return;
+        
     if (gemA.offset_y != gemB.offset_y) return;
     
     // ✅ Execute the swap normally if no shifting is happening
     execute_swap(_self, ax, ay, bx, by);
+    
+    var target_type = BLOCK.COLOR_BOMB;
+                    
     
         if (type_A != BLOCK.NONE && type_B != BLOCK.NONE)
             if (type_A == BLOCK.COLOR_BOMB || type_B == BLOCK.COLOR_BOMB)
@@ -80,24 +84,23 @@ function start_swap(_self, ax, ay, bx, by) {
                             ds_list_add(global.pop_list, pop_info);
                         }
                     }
-                    
-                    return;
-                        
+                    destroy_block(_self, ax, ay);
+                    destroy_block(_self, bx, by);
+                    return;  
                 }
-                
-                var target_type = BLOCK.COLOR_BOMB;
                 
                 if (type_A) == BLOCK.COLOR_BOMB
                 {
                     target_type = type_B;
-                        _self.grid[ax, ay].type = target_type;
-                    _self.grid[ax, ay].cb = target_type;
-                    
+                    _self.grid[ax, ay].type = target_type;
+                    _self.grid[ax, ay].cb   = target_type;
+                    //_self.grid[ax, ay].popping   = true;
                 }
-                else {
+                if (type_B) == BLOCK.COLOR_BOMB {
                     target_type = type_A;
-                        _self.grid[bx, by].type = target_type;
-                    _self.grid[ax, ay].cb = target_type;
+                    _self.grid[bx, by].type = target_type;
+                    _self.grid[bx, by].cb   = target_type;
+                    //_self.grid[bx, by].popping   = true;
                 }
                 
                 
@@ -146,11 +149,6 @@ function process_swap(_self, swap_info)
 	            _self.grid[swap_info.from_x, swap_info.from_y - 1] = _self.grid[swap_info.to_x, swap_info.to_y - 1];
 	            _self.grid[swap_info.to_x, swap_info.to_y - 1] = temp;
 	        }
-            
-            if temp.cb != BLOCK.NONE
-            {
-                destroy_blocks_of_color(temp.cb);
-            }
 
 	        // Reset offsets
 	        _self.grid[swap_info.from_x, swap_info.from_y].offset_x = 0;
@@ -158,6 +156,14 @@ function process_swap(_self, swap_info)
 	        _self.grid[swap_info.to_x,   swap_info.to_y].offset_x   = 0;
 	        _self.grid[swap_info.to_x,   swap_info.to_y].offset_y   = 0;
 
+            if _self.grid[swap_info.from_x, swap_info.from_y].cb != BLOCK.NONE
+            {
+                destroy_blocks_of_color(_self.grid[swap_info.from_x, swap_info.from_y].cb);
+            }
+            if _self.grid[swap_info.to_x,   swap_info.to_y].cb != BLOCK.NONE
+            {
+                destroy_blocks_of_color(_self.grid[swap_info.to_x,   swap_info.to_y].cb);
+            }
 	        _self.swap_in_progress = false;
             
             

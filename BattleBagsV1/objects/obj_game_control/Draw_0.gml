@@ -462,7 +462,7 @@ for (var i = 0; i < width; i++) {
                 draw_set_alpha(1.0);
     
                 // ✅ OPTIONAL: Show gem info in the corner
-                draw_text(10, draw_y_start + 10,
+                draw_text(10, room_height - 64,
                     "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
                     ") | Type: " + string(hover_gem.type) + 
                     " | Powerup: " + string(hover_gem.powerup)
@@ -471,7 +471,7 @@ for (var i = 0; i < width; i++) {
     		else
     		{
     			// ✅ OPTIONAL: Show gem info in the corner
-                draw_text(10, draw_y_start + 10,
+                draw_text(10, room_height - 64,
                     "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
                     ") | Type: " + string(hover_gem.type) + 
                     " | Powerup: " + string(hover_gem.powerup)
