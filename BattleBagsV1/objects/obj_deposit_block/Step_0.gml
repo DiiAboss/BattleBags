@@ -10,7 +10,7 @@ if (rotation < 0) rotation = 360;
 var block_size = scale;
 var half_block_size = block_size * 0.5;
 
-var block_below = collision_rectangle(x - half_block_size, y + half_block_size, x + half_block_size, y + half_block_size + block_size, obj_deposit_block, false, true);//instance_position(x, y + 17, obj_deposit_block);
+var block_below = collision_rectangle(x - half_block_size, y + half_block_size, x + half_block_size, y  + block_size, obj_deposit_block, false, true);//instance_position(x, y + 17, obj_deposit_block);
 
 
 if block_below != noone
@@ -38,9 +38,35 @@ if (abs(vsp) < 1 && (y >= base - 1))
 {
     y = base;
     vsp = 0;
-    speed = 0;
+    //speed = 0;
     falling = false;
-    if abs(rotation > 1)
+    var dist_to_bottom = abs(y - obj_conveyor_belt.conveyor_start_y);
+    var blocks_to_bottom = dist_to_bottom / scale;
+    
+    if (blocks_to_bottom > 1)
+    {
+        var half_plus_one = (scale);
+        
+        var half_size = scale * 0.5;
+        
+            //if !(instance_position(x + half_plus_one - 20, y + half_plus_one, obj_deposit_block))
+             if !(collision_rectangle(x, y + half_size, x - scale, y + scale, obj_deposit_block, false, true))  
+            {
+                x --;
+                rotation_speed += 0.25;
+            }
+            else if !(collision_rectangle(x, y + half_size, x + scale, y + scale, obj_deposit_block, false, true))
+            {
+                if (x+1 < room_width - scale)
+                {
+                    x ++;
+                    rotation_speed -= 0.05;
+                }
+
+            }
+    }
+    
+    
     rotation_speed *= 0.9;
 }
 else {
@@ -58,12 +84,12 @@ else {
         //y -= 1;
         
         rotation_speed *= 0.999;
-        x -= 0.5 * ((rotation_speed * vsp) / (obj_recycler.y / distance_to_point(x, obj_conveyor_belt.conveyor_start_y)));
+        //x -= 0.5 * ((rotation_speed * vsp) / (obj_recycler.y / distance_to_point(x, obj_conveyor_belt.conveyor_start_y)));
         
         
         
         vsp = -vsp * 0.5;
-        speed = 0;
+        //speed = 0;
     }
     
     y += vsp;

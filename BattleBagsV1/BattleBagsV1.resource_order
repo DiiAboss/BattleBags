@@ -229,6 +229,7 @@
     {"name":"spr_bomb_overlay_wick","order":2,"path":"sprites/spr_bomb_overlay_wick/spr_bomb_overlay_wick.yy",},
     {"name":"spr_bomb_overlay","order":10,"path":"sprites/spr_bomb_overlay/spr_bomb_overlay.yy",},
     {"name":"spr_checker","order":14,"path":"sprites/spr_checker/spr_checker.yy",},
+    {"name":"spr_coll","order":24,"path":"sprites/spr_coll/spr_coll.yy",},
     {"name":"spr_crosshair","order":12,"path":"sprites/spr_crosshair/spr_crosshair.yy",},
     {"name":"spr_cursed_gem_2","order":3,"path":"sprites/spr_cursed_gem_2/spr_cursed_gem_2.yy",},
     {"name":"spr_cursed_gem","order":5,"path":"sprites/spr_cursed_gem/spr_cursed_gem.yy",},

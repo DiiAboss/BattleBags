@@ -118,7 +118,7 @@ falling = true;
 vsp = 3;
 base = obj_conveyor_belt.conveyor_start_y;
 rotation = irandom(360);
-rotation_speed = 1 + irandom(2) * choose(1, -1);
+rotation_speed = 1 + irandom(2);
 
 
 

@@ -18,15 +18,22 @@ if !(other.falling)
     x += sign(rotation_speed) * dcos(angle) * push_distance * 0.05 - 0.25;
         // Optional: Slightly nudge the other block too
     
-    var other_push = (sign(rotation_speed) * (dcos(angle) * push_distance  * 0.1 + (0.05 * vsp)));
+    var other_push = (sign(rotation_speed) * (dcos(angle) * push_distance  * 0.1 + (0.1 * vsp)));
     other.x -= other_push;
     other.speed = other_push;
 }
 else {
     x += dcos(angle) * push_distance;
+    vsp =+ other.vsp;
+    falling = other.falling;
     
+    
+    var distance_to_bottom = point_distance(x, y, x, obj_conveyor_belt.conveyor_start_y);
+    var blocks_to_bottom = distance_to_bottom / scale;
     
     
     // Optional: Slightly nudge the other block too
     other.x -= (dcos(angle) * push_distance);
 }
+
+

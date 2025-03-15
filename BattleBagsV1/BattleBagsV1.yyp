@@ -303,6 +303,7 @@
     {"id":{"name":"spr_bomb_overlay","path":"sprites/spr_bomb_overlay/spr_bomb_overlay.yy",},},
     {"id":{"name":"spr_checker","path":"sprites/spr_checker/spr_checker.yy",},},
     {"id":{"name":"spr_clouds","path":"sprites/spr_clouds/spr_clouds.yy",},},
+    {"id":{"name":"spr_coll","path":"sprites/spr_coll/spr_coll.yy",},},
     {"id":{"name":"spr_crosshair","path":"sprites/spr_crosshair/spr_crosshair.yy",},},
     {"id":{"name":"spr_cursed_gem_2","path":"sprites/spr_cursed_gem_2/spr_cursed_gem_2.yy",},},
     {"id":{"name":"spr_cursed_gem","path":"sprites/spr_cursed_gem/spr_cursed_gem.yy",},},

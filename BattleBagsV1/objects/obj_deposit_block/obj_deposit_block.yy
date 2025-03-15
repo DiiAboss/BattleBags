@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_preview_blocks",
-    "path":"sprites/spr_preview_blocks/spr_preview_blocks.yy",
+    "name":"spr_coll",
+    "path":"sprites/spr_coll/spr_coll.yy",
   },
   "spriteMaskId":null,
   "visible":true,
