@@ -1,6 +1,7 @@
 // Script Created By DiiAboss AKA Dillon Abotossaway
 function enable_debug_controls(_self, hover_x, hover_y, debug_active = false)
 {
+    //return;
 	if !debug_active return;
 	//  Horizontal Destruction
 	if (keyboard_check_pressed(ord("L"))) { 

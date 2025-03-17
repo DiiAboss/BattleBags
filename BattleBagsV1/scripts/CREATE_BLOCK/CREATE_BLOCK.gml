@@ -10,9 +10,9 @@ function create_block(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()
 		_type = weighted_random_block(self);
     }
 	
-if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
-    _powerup = create_powerup(POWERUP.NONE, 0);
-}
+   if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
+       _powerup = create_powerup(POWERUP.NONE, 0);
+   }
 	
 	var _dir = choose(0, 90, 180, 270);
 	var _bomb_level = 1;

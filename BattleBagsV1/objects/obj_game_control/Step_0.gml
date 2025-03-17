@@ -1,5 +1,6 @@
 
 
+
 uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .01);
 uInnerIntensity        = max(0, uInnerIntensity + (keyboard_check(ord("S")) - keyboard_check(ord("A"))) * .01);
 uInnerLengthMultiplier = max(0, uInnerLengthMultiplier + (keyboard_check(ord("C")) - keyboard_check(ord("X"))) * .01);
@@ -22,6 +23,7 @@ if (game_over_state)
     audio_stop_sound(songs[current_song]);
     audio_stop_sound(global.music_fight);
     audio_stop_sound(global.music_regular);
+    alarm[0] = scan_board;
     return;
 }
 

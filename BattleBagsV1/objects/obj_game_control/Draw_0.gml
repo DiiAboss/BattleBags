@@ -421,6 +421,48 @@ for (var i = 0; i < width; i++) {
             {
                 draw_text(hovered_block[0], hovered_block[1], string(combo_points));
             }
+            
+            
+            
+            
+            if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
+                            var rect_x1 = board_x_offset + (hover_i * gem_size);
+                            var rect_y1 = (hover_j * gem_size) + global_y_offset + hover_gem.offset_y + hover_gem.draw_y;
+                            var rect_x2 = rect_x1 + gem_size;
+                            var rect_y2 = rect_y1 + gem_size;
+                            var half_offset = gem_size * 0.5;
+                
+                            draw_set_alpha(0.3);
+                            draw_set_color(c_yellow);
+                            draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
+                            
+                            // ✅ Draw Normally but with Transparency
+                            draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
+                            draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
+                            
+                            if (control_mode == "modern") {
+                                draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
+                            }
+                            draw_set_color(c_white);
+                            draw_set_alpha(1.0);
+                
+                            // ✅ OPTIONAL: Show gem info in the corner
+                            draw_text(10, room_height - 64,
+                                "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
+                                ") | Type: " + string(hover_gem.type) + 
+                                " | Powerup: " + string(hover_gem.powerup)
+                            );
+                        }
+                        else
+                        {
+                            // ✅ OPTIONAL: Show gem info in the corner
+                            draw_text(10, room_height - 64,
+                                "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
+                                ") | Type: " + string(hover_gem.type) + 
+                                " | Powerup: " + string(hover_gem.powerup)
+                            );
+                        }
+            
     		
     		if (control_mode == "legacy") {
     				if (hover_i + 1 < width)
@@ -440,43 +482,8 @@ for (var i = 0; i < width; i++) {
     				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     		}
     		
-            if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
-                var rect_x1 = board_x_offset + (hover_i * gem_size);
-                var rect_y1 = (hover_j * gem_size) + global_y_offset + hover_gem.offset_y + hover_gem.draw_y;
-                var rect_x2 = rect_x1 + gem_size;
-                var rect_y2 = rect_y1 + gem_size;
-                var half_offset = gem_size * 0.5;
-    
-                draw_set_alpha(0.3);
-                draw_set_color(c_yellow);
-                draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
-                
-    			// ✅ Draw Normally but with Transparency
-    			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
-    			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
-    			
-    			if (control_mode == "modern") {
-    			    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
-    			}
-                draw_set_color(c_white);
-                draw_set_alpha(1.0);
-    
-                // ✅ OPTIONAL: Show gem info in the corner
-                draw_text(10, room_height - 64,
-                    "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-                    ") | Type: " + string(hover_gem.type) + 
-                    " | Powerup: " + string(hover_gem.powerup)
-                );
-            }
-    		else
-    		{
-    			// ✅ OPTIONAL: Show gem info in the corner
-                draw_text(10, room_height - 64,
-                    "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-                    ") | Type: " + string(hover_gem.type) + 
-                    " | Powerup: " + string(hover_gem.powerup)
-                );
-    		}
+           
+           
         }
     }
 

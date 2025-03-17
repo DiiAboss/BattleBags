@@ -42,6 +42,32 @@ control_mode = "modern";
 iType = "click_and_drag";
 
 
+
+
+big_blocks_on_board =
+{
+    red: 0,
+    yellow: 0,
+    green: 0,
+    blue: 0,
+    lightblue: 0,
+    orange: 0,
+    pink: 0,
+    purple: 0,
+}
+
+black_blocks_on_board = 0;
+blocks_to_activate_color_bomb = 5;
+
+combo_tiers = [0, 5, 10, 15, 20, 25, 30];
+
+combo_tier_level = 0;
+
+black_block_spawn_rate_per_tier = [50, 40, 30, 20, 10, 0];
+
+block_life_outside_of_grid = 360;
+
+
 //----------------------------------------------------
 // Board Creation
 //----------------------------------------------------
@@ -95,6 +121,7 @@ global.player_total_level = 1;
 global.player_level = 1;
 
 
+scan_board = 5;
 
 
 
@@ -138,7 +165,7 @@ factory_points = 0;
 //----------------------------------------
 //
 //----------------------------------------
-
+big_block_types_on_grid = array_create(0);
 
 
 level = 1;
@@ -387,6 +414,6 @@ var geo_size = (board_width * gem_size) + 128;
 //geogrid = new geowars_grid(board_x_offset, 256, geo_size, room_height, 128);
 conveyor_belt = instance_create_depth(x, y, depth - 1, obj_conveyor_belt);
 
-
+alarm[0] = scan_board;
 
 show_debug_overlay(true);
