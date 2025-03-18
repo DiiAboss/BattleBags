@@ -1,4 +1,7 @@
-
+for (var d = 0; d< number_of_drones; d++)
+{
+   drone_array[d].update();
+}
 
 
 uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .01);

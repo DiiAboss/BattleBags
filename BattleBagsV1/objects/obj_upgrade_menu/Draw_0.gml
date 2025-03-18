@@ -56,7 +56,7 @@ if (upgrade_init_timer > 0)
             }
 
                 var scale = 2 - lerp(0, 1.0, progress); // Scale up from 0.2 to normal size
-                effect_create_depth(-99, ef_smoke, btn.x + irandom_range(-64, 64), btn.y + irandom_range(-64, 64), scale, c_white);
+                //effect_create_depth(-99, ef_smoke, btn.x + irandom_range(-64, 64), btn.y + irandom_range(-64, 64), scale, c_white);
     }
     
 }

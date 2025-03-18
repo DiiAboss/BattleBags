@@ -28,7 +28,7 @@ function add_block_to_conveyor(block_type, lane = 0, speed_mult = 1) {
         // Create visual effect for special blocks
         var effect_x = x + (lane * (conveyor_width / lane_count));
         var effect_y = conveyor_start_y;
-        effect_create_above(ef_star, effect_x, effect_y, 1, c_yellow);
+        //effect_create_above(ef_star, effect_x, effect_y, 1, c_yellow);
     }
     
     // Add the block to the conveyor queue
@@ -37,7 +37,7 @@ function add_block_to_conveyor(block_type, lane = 0, speed_mult = 1) {
     // Create visual effect for block addition
     var effect_x = x + (lane * (conveyor_width / lane_count));
     var effect_y = conveyor_start_y;
-    effect_create_above(ef_smoke, effect_x, effect_y, 0, c_white);
+    //effect_create_above(ef_smoke, effect_x, effect_y, 0, c_white);
     
     // Optionally play a sound
     // audio_play_sound(snd_block_add, 1, false);
@@ -170,7 +170,7 @@ function resume_conveyor() {
 function upgrade_throughput(amount) {
     throughput_rate += amount;
     // Visual effect for upgrade
-    effect_create_above(ef_firework, x, conveyor_start_y, 1, c_lime);
+    //effect_create_above(ef_firework, x, conveyor_start_y, 1, c_lime);
 }
 
 /// @function unlock_lane
@@ -180,7 +180,7 @@ function unlock_lane() {
         lanes_unlocked++;
         // Visual effect for lane unlock
         var lane_x = x - conveyor_width/2 + (lanes_unlocked * (conveyor_width / lane_count));
-        effect_create_above(ef_firework, lane_x, (conveyor_start_y + conveyor_activation_y) / 2, 1, c_aqua);
+        //effect_create_above(ef_firework, lane_x, (conveyor_start_y + conveyor_activation_y) / 2, 1, c_aqua);
         return true;
     }
     return false;

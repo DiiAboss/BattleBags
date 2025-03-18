@@ -37,10 +37,10 @@ function block_dragged_mp(mp_control, player) {
                 // ✅ Reduce freeze timer if applicable
                 if (player.grid[hover_x, hover_y].freeze_timer > 0) {
                     player.grid[hover_x, hover_y].freeze_timer -= 20;
-                    effect_create_depth(mp_control.depth - 99, ef_smoke, 
-                                        (hover_x * gem_size) + board_x_offset + 32, 
-                                        (hover_y * gem_size) + global_y_offset + 32, 
-                                        1, c_blue);
+                    //effect_create_depth(mp_control.depth - 99, ef_smoke, 
+                                        //(hover_x * gem_size) + board_x_offset + 32, 
+                                        //(hover_y * gem_size) + global_y_offset + 32, 
+                                        //1, c_blue);
                 }
             } else {
                 // Reset selection if clicking on an invalid block

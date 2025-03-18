@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"DEPOSIT_BLOCK",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"DEPOSIT_BLOCKS",
+    "path":"folders/Scripts/DEPOSIT_BLOCKS.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

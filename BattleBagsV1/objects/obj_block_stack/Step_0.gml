@@ -21,7 +21,7 @@ if (block_count > 0) {
                     var block_y = _y * vertical_spacing - float_offset;
                     
                     // Create sparkle effect
-                    effect_create_above(ef_star, block_x, block_y, 0, c_white);
+                    //effect_create_above(ef_star, block_x, block_y, 0, c_white);
                     found_block = true;
                     break;
                 }

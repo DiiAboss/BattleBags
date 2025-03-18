@@ -14,7 +14,7 @@ function game_over_screen(_self, game_over_state)
                 var _y = pop_data.y;
     
                 // ✅ Visual pop effect
-                effect_create_depth(-99, ef_smoke, (_x * _self.gem_size) + _self.board_x_offset, (_y * _self.gem_size), 2, c_gray);
+                //effect_create_depth(-99, ef_smoke, (_x * _self.gem_size) + _self.board_x_offset, (_y * _self.gem_size), 2, c_gray);
                 
                 var _pitch = clamp(1 - (0.01 * _self.game_over_blocks_popped), 0.1, 1);
                 var _gain = clamp(0.5 - (0.01 * _self.game_over_blocks_popped), 0.1, 1);

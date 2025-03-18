@@ -240,7 +240,7 @@ function process_mega_blocks(_self, _x, _y) {
                                         _self.grid[block_x, block_y].pop_timer = dist * _start_delay + _start_delay;
 					                    var draw_x = (block_x * 64) + _self.board_x_offset + 32;
 					                    var draw_y = (block_y * 64) + _self.global_y_offset + 32;
-					                    effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
+					                    //effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
 					                }
 					            }
 							}

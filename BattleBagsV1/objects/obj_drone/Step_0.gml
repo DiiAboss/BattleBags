@@ -50,15 +50,16 @@ if (conveyor != noone && drone_y != conveyor.conveyor_start_y) {
 switch(state) {
     case "seeking":
         // Find nearest deposit block or block stack
-        if (deposit_blocks == noone)
+    if (deposit_blocks == noone)
        {
                var deposit_blocks = instance_exists(obj_deposit_block) ? 
                                instance_find(obj_deposit_block, irandom(instance_number(obj_deposit_block) - 1)) : noone;
        }
     
-    if instance_exists(obj_deposit_block) && (distance_to_object(obj_deposit_block) <= 16) {
+    if instance_exists(obj_deposit_block) {
         deposit_blocks = instance_nearest(x, y, obj_deposit_block);
-        target = instance_nearest(x, y, obj_deposit_block);
+        if (distance_to_point(deposit_blocks.x, deposit_blocks.y) <= 16) 
+        target = deposit_blocks;
         state = "collecting";
         break;
     }
@@ -84,6 +85,7 @@ switch(state) {
             
         if (deposit_blocks.targetter != id)
         {
+            return;
             deposit_blocks = instance_find(obj_deposit_block, irandom(instance_number(obj_deposit_block) - 1))
         }
         target = deposit_blocks;
@@ -238,7 +240,7 @@ switch(state) {
 // Keep drone within screen bounds
 drone_x = clamp(drone_x, 0, room_width);
 
-// Update facing direction (0-right, 180-left)
+// Update facing direction (0 right, 180 left)
 aim_direction = (walk_direction > 90 && walk_direction < 270) ? 180 : 0;
 
 // Handle selection logic

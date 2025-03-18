@@ -33,7 +33,7 @@ else {
     
 }
 
-
+var grv = 0;
 if (abs(vsp) < 1 && (y >= base - 1))
 {
     y = base;
@@ -73,7 +73,7 @@ else {
     
     if (y <= base)
     {
-        var grv = 0.2;
+        grv = 0.2;
         vsp += grv;
         rotation_speed *= 1.005;
         
@@ -186,7 +186,7 @@ switch(state) {
             repeat(5) {
                 var effect_x = x + irandom_range(-24, 24);
                 var effect_y = y + irandom_range(-24, 0);
-                effect_create_above(ef_firework, effect_x, effect_y, 0, c_white);
+                //effect_create_above(ef_firework, effect_x, effect_y, 0, c_white);
             }
         }
         break;

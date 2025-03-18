@@ -75,7 +75,7 @@ get_block_type = function() {
                     // Create removal effect
                     var block_x = _x * horizontal_spacing + x_offset_for_row(_y);
                     var block_y = _y * vertical_spacing;
-                    effect_create_above(ef_spark, x + block_x, y - block_y, 0, c_white);
+                    //effect_create_above(ef_spark, x + block_x, y - block_y, 0, c_white);
                     
                     // If stack is empty, destroy or reset
                     if (block_count <= 0) {

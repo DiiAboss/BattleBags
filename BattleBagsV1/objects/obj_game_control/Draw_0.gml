@@ -1,6 +1,10 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
+for (var d = 0; d< number_of_drones; d++)
+{
+drone_array[d].draw();
+}
 
 //// Horizontal pass
 if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) { 
@@ -254,7 +258,7 @@ for (var i = 0; i < width; i++) {
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
             var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
             
-            effect_create_depth(depth + 1, ef_smokeup, draw_x, draw_y, 1, c_red);
+            //effect_create_depth(depth + 1, ef_smokeup, draw_x, draw_y, 1, c_red);
         }
         
         if (gem.falling)

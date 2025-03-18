@@ -28,7 +28,7 @@ if (processing) {
     
     // Emit particles during processing
     if (process_time mod 5 == 0) {
-        part_emitter_burst(particles, emitter, smoke_particle, 1);
+        //part_emitter_burst(particles, emitter, smoke_particle, 1);
     }
     
     // If processing is complete, potentially spawn a block
@@ -69,13 +69,13 @@ if (processing) {
             }
             
             // Create effect at ejection point
-            part_emitter_burst(particles, emitter, sparkle_particle, 10);
+            //part_emitter_burst(particles, emitter, sparkle_particle, 10);
             
             // Play sound
             // audio_play_sound(snd_block_eject, 1, false);
         } else {
             // Failed to create block - just emit some smoke
-            part_emitter_burst(particles, emitter, smoke_particle, 5);
+            //part_emitter_burst(particles, emitter, smoke_particle, 5);
         }
     }
 }
@@ -93,7 +93,7 @@ if (transfer_block != noone && cooldown <= 0 && !processing) {
     }
     
     // Create effect
-    part_emitter_burst(particles, emitter, smoke_particle, 5);
+    //part_emitter_burst(particles, emitter, smoke_particle, 5);
     
     // Play sound
     // audio_play_sound(snd_recycler_process, 1, false);

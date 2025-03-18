@@ -4,7 +4,16 @@ function Drone(_id, _x, _y) constructor {
     id = _id;
     my_sprite = spr_drone;
     color = c_white;
+    size = 32;
+    coll_offset = size * 0.5;
+    coll_x_min = x - (coll_offset);
+    coll_x_max = x - (coll_offset);
+    coll_y_min = y - (coll_offset);
+    coll_y_max = y + (coll_offset);
     
+    collision = false;
+     
+    color = c_white;
     // Basic Stats
     stats = {
         move_speed: 2,
@@ -21,7 +30,7 @@ function Drone(_id, _x, _y) constructor {
         max_throw_timer: 1,
         max_think_timer: 15,
     };
-
+    
     // State and targeting
     state = "idle";
     target = noone;
@@ -49,8 +58,13 @@ function Drone(_id, _x, _y) constructor {
     {
         think_timer ++;
         
-        var game_control = obj_game_control;
+        coll_x_min = x - (coll_offset);
+        coll_x_max = x - (coll_offset);
+        coll_y_min = y - (coll_offset);
+        coll_y_max = y + (coll_offset);
         
+        var game_control = obj_game_control;
+        collision = collide_with_other_drones(game_control);
         var deposit_blocks = noone;
         if (deposit_blocks == noone)
         {
@@ -84,7 +98,7 @@ function Drone(_id, _x, _y) constructor {
         
         switch(state) {
             case "seeking":
-                seek_target(conveyor, deposit_blocks);
+                seek_target(conveyor);
                 break;
         
             case "collecting":
@@ -132,6 +146,9 @@ function Drone(_id, _x, _y) constructor {
     draw = function()
     {
         var _dir = (aim_direction == 0) ? 1 : -1;
+        
+        if (collision) color = c_red
+            else color = c_white;
                 
         // Draw drone
         draw_sprite_ext(my_sprite, 0, x, y, _dir, 1, 0, color, 1);
@@ -172,7 +189,7 @@ function Drone(_id, _x, _y) constructor {
                     var target_x = conveyor.x;
                     var target_y = conveyor.conveyor_start_y;
         
-                    for (var i = 0; i < blocks_carried; i++) {
+                    for (var i = blocks_carried - 1; i > 0; i--) {
                         throw_duration = ((x - conveyor.x) / 128) * 30;
                         var throw_delay = (i * 5); // delay each block throw
                         
@@ -267,22 +284,32 @@ function Drone(_id, _x, _y) constructor {
     
     
     
-    seek_target = function(conveyor, deposit_blocks) {
+    seek_target = function(conveyor) {
         
         var seek_distance = 16;
         throw_progress = 0;
         // Find nearest deposit block or block stack
-                if (deposit_blocks == noone)
-            {
-                    deposit_blocks = instance_exists(obj_deposit_block) ? 
-                                    instance_find(obj_deposit_block, irandom(instance_number(obj_deposit_block) - 1)) : noone;
-            }
+        //if (deposit_blocks == noone)
+        //{
+                //deposit_blocks = instance_exists(obj_deposit_block) ? 
+                                //instance_find(obj_deposit_block, irandom(instance_number(obj_deposit_block) - 1)) : noone;
+        //}
             
-            if instance_exists(obj_deposit_block) && (distance_to_object(obj_deposit_block) <= seek_distance) {
+            if instance_exists(obj_deposit_block){
                 deposit_blocks = instance_nearest(x, y, obj_deposit_block);
-                target = deposit_blocks;
-                state = "collecting";
+                
+                if deposit_blocks < 0 return; 
+                
+                if (abs(x - deposit_blocks.x)) <= seek_distance
+                {
+                    target = deposit_blocks;
+                    state = "collecting"; 
+                }
             }
+        else {
+            state = "idle";
+            return;
+        }
             
         
             if (blocks_carried > ceil(0.5 * stats.carry_capacity) && wait_to_return < stats.wait_to_return_max)
@@ -323,6 +350,9 @@ function Drone(_id, _x, _y) constructor {
                     
                     if (untargeted_source != noone) {
                         target = untargeted_source;
+                    }
+                    else {
+                        return;
                     }
                 }
                 
@@ -530,6 +560,46 @@ function Drone(_id, _x, _y) constructor {
     remove_mod = function(_mod) {
         array_delete(mods, array_index_of(mods, _mod), 1);
         recalculate_stats();
+    }
+    
+    // Collision
+    collide_with_other_drones = function(game_control)
+    {
+        var is_collided = false;
+        var number_of_drones = game_control.number_of_drones;
+        var _drone_array = game_control.drone_array;
+        // Collision Check for objects within the game_control_object.
+        
+        for (var _i = 0; _i < number_of_drones; _i++)
+        {
+            var _drone_1 = _drone_array[_i];
+            
+            var _x = _drone_1.x;
+            var _y = _drone_1.y;
+            
+            var d1_col_x_min = _drone_1.coll_x_min;
+            var d1_col_x_max = _drone_1.coll_x_max;
+            var d1_col_y_min = _drone_1.coll_y_min;
+            var d1_col_y_max = _drone_1.coll_y_max;
+            
+            for (var _x = 0; _x < number_of_drones; _x++)
+            {
+                var _drone_2 = _drone_array[_x];
+                if (_drone_1.id == _drone_2.id) continue;
+                    
+                var d2_col_x_min = _drone_2.coll_x_min;
+                var d2_col_x_max = _drone_2.coll_x_max;
+                var d2_col_y_min = _drone_2.coll_y_min;
+                var d2_col_y_max = _drone_2.coll_y_max;
+                
+                if (d2_col_x_min <= d1_col_x_max && d1_col_x_min <= d2_col_x_min)
+                {
+                    return true;
+                    // Collision Happened, put code here.
+                }
+            }
+            return false;
+        }
     }
 }
 

@@ -21,8 +21,8 @@ function update_freeze_timer(_self) {
                 // ❄️ If timer hits zero, thaw the block
                 if (gem.freeze_timer <= 0) {
                     gem.frozen = false;
-                    effect_create_depth(depth - 1, ef_spark, _x, _y, 1, c_blue);
-                    effect_create_depth(depth - 1, ef_firework, _x, _y, 0.5, c_white);
+                    //effect_create_depth(depth - 1, ef_spark, _x, _y, 1, c_blue);
+                    //effect_create_depth(depth - 1, ef_firework, _x, _y, 0.5, c_white);
                 }
             }
         }

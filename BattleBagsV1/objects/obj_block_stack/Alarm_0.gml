@@ -32,4 +32,4 @@ for (var _y = max_height - 1; _y >= 0; _y--) {
 }
 
 // Create reset effect
-effect_create_above(ef_ring, x, y - vertical_spacing * 2, 1, c_white);
+//effect_create_above(ef_ring, x, y - vertical_spacing * 2, 1, c_white);

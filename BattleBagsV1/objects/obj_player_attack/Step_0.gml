@@ -16,7 +16,7 @@ else
 {
 
 	speed = spd;
-	effect_create_depth(depth, ef_smoke, x, y, 0.5, color);
+	//effect_create_depth(depth, ef_smoke, x, y, 0.5, color);
 }
 
 
@@ -28,7 +28,7 @@ if (obj_game_control.game_over_state)
 if (destroy_flag)
 {
     obj_target.c_timer = 0;
-    effect_create_depth(depth, ef_firework, x, y, 1, color);
+    //effect_create_depth(depth, ef_firework, x, y, 1, color);
     instance_create_depth(obj_target.x, y, -1, obj_block_transfer_y);
     instance_destroy();
 }

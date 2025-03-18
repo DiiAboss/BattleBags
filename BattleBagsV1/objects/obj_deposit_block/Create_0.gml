@@ -1,6 +1,6 @@
 /// @description Initialize deposit block
 // Basic properties
-sprite_index = spr_preview_blocks;
+//sprite_index = spr_preview_blocks;
 image_speed = 0;
 depth = 10;
 
@@ -36,10 +36,10 @@ ds_map_add(block_weights, BLOCK.WILD, 0);
 // Block state management
 state = "ready";
 regen_timer = 0;
-max_regen_time = room_speed * 3; // 3 seconds to regenerate
+max_regen_time = 60 * 3; // 3 seconds to regenerate
 depletion_chance = 0.1; // 10% chance to become depleted after pickup
 depletion_timer = 0;
-max_depletion_time = room_speed * 15; // 15 seconds to recover from depletion
+max_depletion_time = 60 * 15; // 15 seconds to recover from depletion
 
 // Visual properties
 float_offset = 0;
@@ -103,7 +103,7 @@ get_block_type = function() {
         }
         
         // Create pickup effect
-        effect_create_above(ef_spark, x, y - 8, 0, c_white);
+        //effect_create_above(ef_spark, x, y - 8, 0, c_white);
         
         return block_to_return;
     }

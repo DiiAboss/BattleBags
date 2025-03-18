@@ -22,7 +22,7 @@ function all_pops_finished()
 				_color = pop_data.color;
 			}
 			
-			effect_create_depth(depth + 1, ef_smoke, px, py - 4, 2, _color);
+			//effect_create_depth(depth + 1, ef_smoke, px, py - 4, 2, _color);
 			
 	    } else {
 	        // Grow effect
@@ -80,7 +80,7 @@ function all_pops_finished()
                 }
 					
                     // **Create visual effect**
-		            effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
+		            //effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
 					var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
 					var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
@@ -134,7 +134,7 @@ function pop_block_in_queue(_self)
                 _color = pop_data.color;
             }
             
-            effect_create_depth(_self.depth + 1, ef_smoke, px, py - 4, 2, _color);
+            //effect_create_depth(_self.depth + 1, ef_smoke, px, py - 4, 2, _color);
             
         } else {
             // Grow effect
@@ -179,7 +179,7 @@ function pop_block_in_queue(_self)
                     
                     
                     // **Create visual effect**
-                    effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
+                    //effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
                     // ✅ Create Attack Object with Score
                     var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);

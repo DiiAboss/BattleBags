@@ -46,8 +46,8 @@ function pop_adjacent_black_blocks(_self, gem_x, gem_y) {
                     // 🔥 **Create a pop effect**
                     var draw_x = (gem_x * 64) + _self.board_x_offset + 32;
                     var draw_y = (gem_y * 64) + _self.global_y_offset + 32;
-                    effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
-                    effect_create_above(ef_smokeup, draw_x, draw_y, 1, c_red);
+                    //effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
+                    //effect_create_above(ef_smokeup, draw_x, draw_y, 1, c_red);
                 }
             }
         }

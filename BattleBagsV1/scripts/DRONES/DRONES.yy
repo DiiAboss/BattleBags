@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"DRONES",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"DRONES",
+    "path":"folders/Scripts/DRONES.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
