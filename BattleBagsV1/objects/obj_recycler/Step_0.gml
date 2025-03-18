@@ -1,6 +1,32 @@
 
 /// @description Process recycling and block generation
 
+// Function to select a block type based on weights
+function choose_weighted_block_type() {
+    // Create a weighted list
+    var weighted_list = ds_list_create();
+    
+    // Add block types according to their weights
+    var keys = ds_map_find_first(block_weights);
+    while (!is_undefined(keys)) {
+        var weight = ds_map_find_value(block_weights, keys);
+        repeat(weight) {
+            ds_list_add(weighted_list, keys);
+        }
+        keys = ds_map_find_next(block_weights, keys);
+    }
+    
+    // Select a random block type from the weighted list
+    var selected_type = ds_list_find_value(weighted_list, irandom(ds_list_size(weighted_list) - 1));
+    
+    // Clean up
+    ds_list_destroy(weighted_list);
+    
+    return selected_type;
+}
+
+
+
 if (rotation < max_rotation)
 {
     rotation_direction = 1;
@@ -54,7 +80,7 @@ if (processing) {
             
             // Set the block type and physics properties
             with (new_block) {
-                current_block_type = choose_weighted_block_type();
+                current_block_type = block_type;//choose_weighted_block_type();
                 state = "ready";
                 // Apply physics
                 //vspeed = 0;

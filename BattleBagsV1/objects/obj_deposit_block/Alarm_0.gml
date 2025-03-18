@@ -4,7 +4,8 @@
 
 if (rotation_speed == 0)
 {
-    destroy_matches(self);
+    
+    //destroy_matches(self);
 }
 
 

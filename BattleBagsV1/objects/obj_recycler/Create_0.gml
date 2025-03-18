@@ -39,55 +39,8 @@ eject_speed_max = 5;
 eject_point_x = x;
 eject_point_y = y - 32;
 
-//// Visual effects
-//particles = part_system_create();
-//part_system_depth(particles, depth - 1);
-//
-//// Create smoke particle
-//smoke_particle = part_type_create();
-//part_type_sprite(smoke_particle, spr_preview_blocks, true, true, false);
-//part_type_scale(smoke_particle, 0.5, 0.5);
-//part_type_alpha3(smoke_particle, 0.2, 0.4, 0);
-//part_type_speed(smoke_particle, 0.5, 1, 0, 0);
-//part_type_direction(smoke_particle, 70, 110, 0, 0);
-//part_type_life(smoke_particle, room_speed * 0.5, room_speed * 1);
-//
-//// Create sparkle particle
-//sparkle_particle = part_type_create();
-//part_type_sprite(sparkle_particle, spr_preview_blocks, true, true, false);
-//part_type_scale(sparkle_particle, 0.3, 0.3);
-//part_type_alpha3(sparkle_particle, 0.2, 0.7, 0);
-//part_type_speed(sparkle_particle, 1, 2, -0.1, 0);
-//part_type_direction(sparkle_particle, 0, 360, 0, 5);
-//part_type_life(sparkle_particle, room_speed * 0.2, room_speed * 0.5);
-//
-//// Emitter for the particles
-//emitter = part_emitter_create(particles);
-//part_emitter_region(particles, emitter, x - 16, x + 16, y - 24, y, ps_shape_rectangle, ps_distr_linear);
 
-// Function to select a block type based on weights
-function choose_weighted_block_type() {
-    // Create a weighted list
-    var weighted_list = ds_list_create();
-    
-    // Add block types according to their weights
-    var keys = ds_map_find_first(block_weights);
-    while (!is_undefined(keys)) {
-        var weight = ds_map_find_value(block_weights, keys);
-        repeat(weight) {
-            ds_list_add(weighted_list, keys);
-        }
-        keys = ds_map_find_next(block_weights, keys);
-    }
-    
-    // Select a random block type from the weighted list
-    var selected_type = ds_list_find_value(weighted_list, irandom(ds_list_size(weighted_list) - 1));
-    
-    // Clean up
-    ds_list_destroy(weighted_list);
-    
-    return selected_type;
-}
+
 
 rotation_speed = 0.1;
 rotation_direction = -1;

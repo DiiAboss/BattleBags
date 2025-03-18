@@ -289,12 +289,6 @@ function Drone(_id, _x, _y) constructor {
         var seek_distance = 16;
         throw_progress = 0;
         // Find nearest deposit block or block stack
-        //if (deposit_blocks == noone)
-        //{
-                //deposit_blocks = instance_exists(obj_deposit_block) ? 
-                                //instance_find(obj_deposit_block, irandom(instance_number(obj_deposit_block) - 1)) : noone;
-        //}
-            
             if instance_exists(obj_deposit_block){
                 deposit_blocks = instance_nearest(x, y, obj_deposit_block);
                 
