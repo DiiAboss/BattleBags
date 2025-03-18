@@ -417,3 +417,7 @@ conveyor_belt = instance_create_depth(x, y, depth - 1, obj_conveyor_belt);
 alarm[0] = scan_board;
 
 show_debug_overlay(true);
+
+
+big_block_mod_list = ds_list_create();
+

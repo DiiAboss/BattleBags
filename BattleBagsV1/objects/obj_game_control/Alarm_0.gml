@@ -1,5 +1,11 @@
 /// @description SCAN THE BOARD FOR CERTAIN BLOCKS
 
+if (game_over_state)
+{
+    alarm[0] = scan_board;
+    return;
+}
+
 // Reset all spawn weights to default (12)
 for (var _c = 0; _c < numberOfGemTypes; _c++) {
     global.color_spawn_weight[_c] = 12;

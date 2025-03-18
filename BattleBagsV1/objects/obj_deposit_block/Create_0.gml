@@ -20,7 +20,7 @@ rand = irandom_range(-99999, 99999);
 
 // Rarity weights for different block types (higher = more common)
 block_weights = ds_map_create();
-ds_map_add(block_weights, BLOCK.RED, 5);
+ds_map_add(block_weights, BLOCK.RED, 50);
 ds_map_add(block_weights, BLOCK.YELLOW, 5);
 ds_map_add(block_weights, BLOCK.GREEN, 5);
 ds_map_add(block_weights, BLOCK.PINK, 5);
@@ -30,7 +30,7 @@ ds_map_add(block_weights, BLOCK.ORANGE, 5);
 ds_map_add(block_weights, BLOCK.BLUE, 5);
 
 // Rare types have lower chance of appearing
-ds_map_add(block_weights, BLOCK.BLACK, 25);
+ds_map_add(block_weights, BLOCK.BLACK, 5);
 ds_map_add(block_weights, BLOCK.WILD, 0);
 
 // Block state management
@@ -58,6 +58,7 @@ scale = default_size * size_mod;
 image_xscale = size_mod;
 image_yscale = size_mod;
 
+is_active = false;
 
 // Function to select a block type based on weights
 function choose_weighted_block_type() {
@@ -121,4 +122,7 @@ rotation = irandom(360);
 rotation_speed = 1 + irandom(2);
 
 
+check_for_match = 30;
+
+alarm[0] = check_for_match;
 
