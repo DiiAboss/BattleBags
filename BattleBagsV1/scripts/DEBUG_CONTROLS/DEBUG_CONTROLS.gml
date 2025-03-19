@@ -110,7 +110,7 @@ if (keyboard_check_pressed(vk_home)) {
 	}
 
 	if (keyboard_check_pressed(ord("U"))) {
-		bring_up_upgrade_menu();
+		bring_up_shop_menu();
 	}
 
 	if (keyboard_check_pressed(ord("Q"))) {

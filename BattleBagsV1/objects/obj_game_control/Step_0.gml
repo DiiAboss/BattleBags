@@ -1,7 +1,3 @@
-for (var d = 0; d< number_of_drones; d++)
-{
-   drone_array[d].update();
-}
 
 
 uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .01);
@@ -59,8 +55,8 @@ if (victory_state)
 //------------------------------------------------
 // Leveling and Upgrades
 //------------------------------------------------
-var in_menu = instance_exists(obj_upgrade_menu); // optimize
-process_upgrades(self, in_menu, input);
+var in_menu = instance_exists(obj_upgrade_menu) || instance_exists(obj_shop_controller) ; // optimize
+//process_upgrades(self, in_menu, input);
 
 //------------------------------------------------------
 // PAUSE THE GAME
@@ -68,6 +64,12 @@ process_upgrades(self, in_menu, input);
 if (global.paused) || global.in_upgrade_menu {
 	return;
 }
+
+for (var d = 0; d< number_of_drones; d++)
+{
+drone_array[d].update();
+}
+
 
 // ------------------------------------------------------
 // TIMERS AND SPEEDS

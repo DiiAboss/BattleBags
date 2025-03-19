@@ -125,11 +125,11 @@ if (room == rm_local_multiplayer_game)
     }
     
     
-    if (player.is_ai && player.input.ActionPress) {
-        show_debug_message("AI trying to swap at position: " + 
-                        string(player.hovered_block[0]) + "," + 
-                        string(player.hovered_block[1]));
-    }
+    //if (player.is_ai && player.input.ActionPress) {
+        //show_debug_message("AI trying to swap at position: " + 
+                        //string(player.hovered_block[0]) + "," + 
+                        //string(player.hovered_block[1]));
+    //}
 
     
     setup_ai_players_from_lobby(self);

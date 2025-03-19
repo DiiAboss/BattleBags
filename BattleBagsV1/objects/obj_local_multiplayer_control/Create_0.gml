@@ -21,8 +21,9 @@ ai_button_height = 40;       // Height of AI button
 ai_difficulty = 5;           // Default AI difficulty (1-5)
 ai_difficulty_names = ["Easy", "Medium", "Hard", "Expert", "Master"];
 
+numberOfGemTypes = 8;
 
-
+create_block_spawn_rates(self);
 
 
 

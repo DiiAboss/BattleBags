@@ -1,6 +1,8 @@
 
 /// @description Process recycling and block generation
 
+if (global.paused) return;
+
 // Function to select a block type based on weights
 function choose_weighted_block_type() {
     // Create a weighted list

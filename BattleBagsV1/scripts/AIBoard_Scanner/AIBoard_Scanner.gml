@@ -40,7 +40,7 @@ function AIBoardScanner(player) constructor {
         }
         
         
-        show_grid_in_debug();
+        //show_grid_in_debug();
             
         
         return !ds_queue_empty(self.match_queue);
@@ -404,13 +404,13 @@ function AIBoardScanner(player) constructor {
         
         if (matchSize < 3 || !valid) return;
         
-        show_debug_message("Col: " + string(col) + "\n"
-                                + "Row: " + string(row) + "\n"
-                                    + "Target Col: " + string(targetCol) + "\n"
-                                        + "Move Col: " + string(moveCol) + "\n"
-        + "Move Dir: " + string(dir) + "\n")
+        //show_debug_message("Col: " + string(col) + "\n"
+                                //+ "Row: " + string(row) + "\n"
+                                    //+ "Target Col: " + string(targetCol) + "\n"
+                                        //+ "Move Col: " + string(moveCol) + "\n"
+        //+ "Move Dir: " + string(dir) + "\n")
         
-        show_debug_message("Match Size: " + string(matchSize) + "\n")
+        //show_debug_message("Match Size: " + string(matchSize) + "\n")
         randomize();
         // Check for match in the temp grid at the target position (where the moveBlock landed)
         var distance = (abs(player.hovered_block[0] - moveCol) + abs(player.hovered_block[1])) + (row * (2));
@@ -647,7 +647,7 @@ function AIBoardScanner(player) constructor {
             score: score
         });
     
-        show_debug_message("📌 Queued pair setup: Move [" + string(startCol) + "," + string(startRow) + "] ➡ [" + string(targetCol) + "," + string(targetRow) + "]");
+        //show_debug_message("📌 Queued pair setup: Move [" + string(startCol) + "," + string(startRow) + "] ➡ [" + string(targetCol) + "," + string(targetRow) + "]");
     }
     
     

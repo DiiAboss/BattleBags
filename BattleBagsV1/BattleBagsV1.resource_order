@@ -100,6 +100,7 @@
     {"name":"obj_pause_menu","order":1,"path":"objects/obj_pause_menu/obj_pause_menu.yy",},
     {"name":"obj_recycler","order":15,"path":"objects/obj_recycler/obj_recycler.yy",},
     {"name":"obj_server","order":1,"path":"objects/obj_server/obj_server.yy",},
+    {"name":"obj_shop_controller","order":22,"path":"objects/obj_shop_controller/obj_shop_controller.yy",},
     {"name":"obj_sorter_drone","order":20,"path":"objects/obj_sorter_drone/obj_sorter_drone.yy",},
     {"name":"obj_stats_menu","order":2,"path":"objects/obj_stats_menu/obj_stats_menu.yy",},
     {"name":"obj_target","order":14,"path":"objects/obj_target/obj_target.yy",},

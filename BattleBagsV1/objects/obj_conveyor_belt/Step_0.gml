@@ -1,4 +1,9 @@
 /// @description Update Conveyor Movement
+/// 
+/// 
+
+if (global.paused) return;
+
 if loading_blocks_timer > 0
 {
     loading_blocks_timer --;

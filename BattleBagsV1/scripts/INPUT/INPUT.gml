@@ -46,7 +46,10 @@ function Input() constructor {
 	CycleSkillUp    = false;
 	CycleSkillDown  = false;
 	cycleSkillDelay = 10; // Prevent fast scrolling issues
-
+    
+    ScrollDown      = false;
+    ScrollUp        = false;
+    
 	// UI & Misc Inputs
 	Back           = false;
 	Escape         = false;
@@ -92,6 +95,9 @@ function Input() constructor {
 				AltKey          = mouse_check_button(InputMap.AltKey);
 				AltPress        = mouse_check_button_pressed(InputMap.AltKey);
 				AltRelease      = mouse_check_button_released(InputMap.AltKey);
+                
+                ScrollUp        = mouse_wheel_up();
+                ScrollDown      = mouse_wheel_down();
 
 				// Speed Up Key
 				SpeedUpKey      = keyboard_check(InputMap.SpeedUpKey);
@@ -144,6 +150,9 @@ function Input() constructor {
 
 				// Speed Up (Left Trigger)
 				SpeedUpKey      = gamepad_button_check(Device, ControllerMap.SpeedUpKey);
+                
+                ScrollUp        = gamepad_button_check(Device, gp_shoulderr) || gamepad_button_check(Device, gp_shoulderrb);
+                ScrollDown      = gamepad_button_check(Device, gp_shoulderl) || gamepad_button_check(Device, gp_shoulderlb);
 
 				// Skill Cycling (Bumpers)
 				CycleSkillUp   = gamepad_button_check(Device, ControllerMap.CycleSkillUp);

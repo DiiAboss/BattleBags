@@ -1,5 +1,11 @@
 /// @description Update deposit block state
 
+if (global.paused)
+{
+    x = xprevious;
+    y = yprevious;
+    return;
+}
 
 image_angle = rotation;
 x -= 0.1 * rotation_speed;

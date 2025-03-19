@@ -665,7 +665,7 @@ for (var i = 0; i < width; i++) {
     }
     
 
-if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instance_exists(obj_upgrade_menu) {
+if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instance_exists(obj_upgrade_menu) && !instance_exists(obj_shop_controller) {
 
 
 	draw_set_color(c_black);

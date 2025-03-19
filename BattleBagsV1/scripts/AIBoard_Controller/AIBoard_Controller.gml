@@ -259,14 +259,14 @@ function AIBoardController(player) constructor {
             array_push(self.decision_log, self.last_decision);
             if (array_length(self.decision_log) > 10) array_delete(self.decision_log, 0, 1);
             
-            show_debug_message("MOVING: \nTarget_X: " + string(target_x)
-            +" Target_Y: " + string(target_y)
-            +" Hover_X: " + string(player.hovered_block[0])
-            +" Hover_Y: " + string(player.hovered_block[1]) + "\n")
+            //show_debug_message("MOVING: \nTarget_X: " + string(target_x)
+            //+" Target_Y: " + string(target_y)
+            //+" Hover_X: " + string(player.hovered_block[0])
+            //+" Hover_Y: " + string(player.hovered_block[1]) + "\n")
             
             if (target_x == player.hovered_block[0] && target_y == player.hovered_block[1])
             {
-                show_debug_message("Pre_swap")
+                //show_debug_message("Pre_swap")
                 self.current_action = "pre_swap";  // Ready for next AI step
                 self.move_timer = 0;
                 return;

@@ -2,7 +2,7 @@
 
 target_y = 256;
 depth = -room_height;
-
+default_speed = 8;
 if (instance_exists(obj_target))
 {
     var target_x = obj_target.x;

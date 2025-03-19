@@ -196,7 +196,7 @@ function Drone(_id, _x, _y) constructor {
                         var throw_delay = (i * 5); // delay each block throw
                         
                     
-                        show_debug_message("Thro Duration: " + string(throw_duration));
+                        //show_debug_message("Thro Duration: " + string(throw_duration));
                         var block_progress = clamp((throw_progress - throw_delay) / (throw_duration - throw_delay), 0, 1);
         
                         if (block_progress < 1) {

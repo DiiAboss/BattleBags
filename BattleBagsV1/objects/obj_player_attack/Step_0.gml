@@ -1,6 +1,7 @@
 /// @description Insert description here
 // You can write your code in this editor
 	// ✅ Stop everything except the pause check
+
 if (x > obj_target.x)
 {
     destroy_flag = true;

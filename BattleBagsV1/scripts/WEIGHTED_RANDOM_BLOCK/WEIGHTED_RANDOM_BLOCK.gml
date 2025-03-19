@@ -20,6 +20,10 @@ function create_block_spawn_rates(game_control_object, spawn_rate = 12)
         array_push(global.color_spawn_weight, 0);
         
     }
+    else {
+        number_of_block_types = game_control_object.numberOfGemTypes;
+        global.color_spawn_weight = array_create(number_of_block_types, spawn_rate);
+    }
 	
 }
 
