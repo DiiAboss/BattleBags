@@ -6,37 +6,78 @@ if (input.Escape) || keyboard_check_pressed(ord("U"))
     instance_destroy();
 }
 
-// Scrolling control
+var t_scroll = -1;
+
+// Mouse scroll (smooth snapping)
 if (input.ScrollUp) {
-    scroll_offset = max(scroll_offset - scroll_speed, 0);
+    hover_index = max(hover_index - 1, 0);
+    t_scroll = max_scroll_default + (hover_index * (item_height + item_padding));
 }
 if (input.ScrollDown) {
-    var total_height = array_length(shop_items) * (item_height + item_padding);
-    max_scroll = max(0, total_height - scroll_area_height);
-    scroll_offset = min(scroll_offset + scroll_speed, max_scroll);
+    hover_index = min(hover_index + 1, array_length(shop_items) - 1);
+    t_scroll = max_scroll_default + (hover_index * (item_height + item_padding));
 }
 
-// Item selection
-if (input.ActionPress) {
+
+scroll_offset = lerp(scroll_offset, target_scroll, scroll_speed);
+// Smoothly interpolate toward the target scroll position
+
+
+// Clamp scroll_offset
+scroll_offset = clamp(scroll_offset, max_scroll_default, 880);
+
+// Update hovered item based on hover_index
+for (var i = 0; i < array_length(shop_items); i++) {
+    shop_items[i].hovered = (i == hover_index);
+}
+
+
+//// Mouse input for direct selection
+if (input.InputType == INPUT.KEYBOARD) {
     var mx = mouse_x;
     var my = mouse_y;
-
     if (point_in_rectangle(mx, my, scroll_area_x, scroll_area_y, scroll_area_x + scroll_area_width, scroll_area_y + scroll_area_height)) {
-        var relative_y = my - scroll_area_y + scroll_offset;
+        var relative_y = my - scroll_area_y + scroll_offset - max_scroll_default;
         var clicked_index = floor(relative_y / (item_height + item_padding));
-
-        if (clicked_index >= 0 && clicked_index < array_length(shop_items)) {
-            selected_item = clicked_index;
-            dialogue_text = shop_items[selected_item].desc + " (Cost: " + string(shop_items[selected_item].price) + " gold)";
+        if (input.ActionPress)
+        {
+            if (clicked_index >= 0 && clicked_index < array_length(shop_items)) {
+                hover_index = clicked_index;
+                t_scroll = hover_index * (item_height + item_padding);
+                target_scroll = t_scroll;
+            }
         }
-    } else if (selected_item != -1 && mouse_y > room_height - dialogue_box_height) {
-        // Attempt to buy selected item when clicking dialogue box
-        var item = shop_items[selected_item];
+
+    }
+}
+
+if (input_delay <= 0)
+{
+    if (t_scroll != -1)
+    {
+       target_scroll = t_scroll; 
+        if (scroll_offset == target_scroll)
+        {
+                    input_delay = input_delay_max;
+        }
+
+    }
+    
+}
+input_delay--;
+
+// Confirm selection and attempt purchase
+if (input.ActionPress) {
+    selected_item = hover_index;
+    var item = shop_items[selected_item];
+    
+    dialogue_text = item.desc + " (Cost: " + string(item.price) + " gold)";
+
+    if (mouse_y > room_height - dialogue_box_height) {
         if (!item.purchased && player_currency >= item.price) {
             player_currency -= item.price;
             item.purchased = true;
             dialogue_text = "Purchased: " + item.name;
-            
             // TODO: Apply upgrade or give drone to player here
         } else if (item.purchased) {
             dialogue_text = "You already purchased " + item.name + ".";
