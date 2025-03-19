@@ -1,6 +1,6 @@
 
 enum BLOCK {
-    RANDOM = -99, GAME_OVER = -404, COLOR_BOMB = -6, CURSE = -5, PUZZLE_1 = -4, MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
+    RANDOM = -99, GAME_OVER = -404, COLOR_BOMB = 14, CURSE = 13, PUZZLE_1 = 12, MEGA = -3, WILD = 11, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
     LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
 }
 
@@ -41,6 +41,7 @@ function create_block(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()
 		case BLOCK.BLUE:   _color = c_blue; break;
 		case BLOCK.BLACK:  _color = c_black; break;
 		case BLOCK.MEGA:   _color = c_white; break;
+            default: break;
 	}
 	
     return {

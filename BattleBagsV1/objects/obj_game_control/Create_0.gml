@@ -23,7 +23,7 @@ gold_pickup_mod   = 0;
 exp_pick_mod      = 0;
 crit_chance_mod   = 0;
 crit_multi_mod    = 0;
-
+gold = 0;
 
 total_blocks_destroyed = 0;
 total_combo_counter    = 0;
@@ -40,6 +40,9 @@ current_skill = 0;
 //----------------------------------------------------
 control_mode = "modern";
 iType = "click_and_drag";
+
+
+objective_manager = instance_create_depth(x, y, -room_height, obj_objective_manager);
 
 
 

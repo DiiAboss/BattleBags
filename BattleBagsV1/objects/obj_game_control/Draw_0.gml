@@ -592,13 +592,13 @@ for (var i = 0; i < width; i++) {
     //---------------------------------------------------------
     // DRAW EXPERIENCE BAR
     //---------------------------------------------------------
-    var y_start = draw_y_start + 128;
-    var y_end   = draw_y_start + camera_get_view_height(view_get_camera(view_current)) - 128; 
-    var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
-    
-    draw_rectangle_color(board_x_offset * 0.5, y_start, board_x_offset * 0.9, y_end,              c_white,   c_white,  c_white,  c_white,  true);
-    draw_rectangle_color(board_x_offset * 0.5, y_end,   board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
-    
+    //var y_start = draw_y_start + 128;
+    //var y_end   = draw_y_start + camera_get_view_height(view_get_camera(view_current)) - 128; 
+    //var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
+    //
+    //draw_rectangle_color(board_x_offset * 0.5, y_start, board_x_offset * 0.9, y_end,              c_white,   c_white,  c_white,  c_white,  true);
+    //draw_rectangle_color(board_x_offset * 0.5, y_end,   board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
+    //
     
     //---------------------------------------------------------
     // DRAW BOARDER AROUND THE GRID
@@ -645,15 +645,6 @@ for (var i = 0; i < width; i++) {
                         heart_sprite, 
                         gem_size);
     
-    
-    //if (is_targeting_enemy)
-    //{
-        //draw_set_alpha(0.95);
-        //draw_rectangle_color(0, 0, 800, room_height, c_black, c_black, c_black, c_black, false);
-        //draw_set_alpha(1);
-        //
-        //draw_rectangle_color(850, 300, room_width - 82, room_height - 44, c_white, c_white, c_white, c_white, true);
-    //}
     
     if (enemy_target != noone)
     {

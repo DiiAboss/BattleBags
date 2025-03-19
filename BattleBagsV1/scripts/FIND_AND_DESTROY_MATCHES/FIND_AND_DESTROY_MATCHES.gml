@@ -178,6 +178,13 @@ function find_and_destroy_matches(_self) {
                 {
                     first_match = true;
                     m_size = total_match_count;
+                    
+                    
+                    
+                    objective_progress(OBJECTIVE_TYPE.MATCH_SIZE, undefined, total_match_count);
+                    
+                    
+                    
                 }
                 else {
                     m_size = 1;

@@ -23,7 +23,7 @@ function add_block_to_conveyor(block_type, lane = 0, speed_mult = 1) {
         block_data.is_special = true;
         
         // Special blocks might move slower on conveyor
-        block_data.speed_multiplier = 0.75;
+        block_data.speed_multiplier = 1;
         
         // Create visual effect for special blocks
         var effect_x = x + (lane * (conveyor_width / lane_count));
@@ -184,4 +184,38 @@ function unlock_lane() {
         return true;
     }
     return false;
+}
+
+
+function draw_grouped_blocks(conveyor, conveyor_blocks, conveyor_width, center_x) {
+    var y_positions = conveyor.y_positions;
+    var grouped_blocks = conveyor.grouped_blocks;
+    for (var k = 0; k < array_length(y_positions); k++) {
+        var block_list = grouped_blocks[k];
+        var block_count = array_length(block_list);
+
+        var max_block_width = conveyor_width * 0.9;  
+        var block_spacing = max_block_width / block_count;
+        var block_size = clamp(block_spacing * 0.8, 16, 64);  
+        var start_x = center_x - (block_spacing * (block_count - 1)) * 0.5;
+
+        for (var j = 0; j < block_count; j++) {
+            var index = block_list[j];
+            var block_data = conveyor_blocks[| index];
+            
+            if !(block_data) continue;
+            
+            var block_type = block_data.block_type;
+            var block_sprite = conveyor.block_sprites[? block_type];
+
+            if (block_sprite == noone) {
+                block_sprite = sprite_for_block(BLOCK.RANDOM);
+            }
+
+            var block_x = start_x + (j * block_spacing);
+
+            draw_sprite_ext(block_sprite, 0, block_x, block_data.y_pos, 
+                block_size / 64, block_size / 64, 0, c_white, 1);
+        }
+    }
 }

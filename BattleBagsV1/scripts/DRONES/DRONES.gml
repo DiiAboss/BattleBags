@@ -17,7 +17,7 @@ function Drone(_id, _x, _y) constructor {
     // Basic Stats
     stats = {
         move_speed: 2,
-        carry_capacity: 4,
+        carry_capacity: 8,
         throw_distance: 128,
         experience: 0,
         max_experience: 100,
@@ -146,12 +146,14 @@ function Drone(_id, _x, _y) constructor {
     draw = function()
     {
         var _dir = (aim_direction == 0) ? 1 : -1;
+        var hover_amount = 8;
+        var hover = hover_draw(hover_amount);
         
         if (collision) color = c_red
             else color = c_white;
                 
         // Draw drone
-        draw_sprite_ext(my_sprite, 0, x, y, _dir, 1, 0, color, 1);
+        draw_sprite_ext(my_sprite, 0, x, y + hover, _dir, 1, 0, color, 1);
         
         // Draw state indicator (optional)
         var state_colors = {
@@ -178,7 +180,7 @@ function Drone(_id, _x, _y) constructor {
                     var block_x = x + block.offset_x;
                     var block_y = y + block.offset_y;
                     var block_sprite = sprite_for_block(block.type);
-                    draw_sprite_ext(block_sprite, 0, block_x, block_y, 0.75, 0.75, 0, c_white, 1);
+                    draw_sprite_ext(block_sprite, 0, block_x, block_y + hover, 0.75, 0.75, 0, c_white, 1);
                 }
             }
         
@@ -443,8 +445,9 @@ function Drone(_id, _x, _y) constructor {
                     y = conveyor.conveyor_start_y; // Stay on conveyor level
                     
                     // Check if we're within throwing distance of conveyor belt
-                    if (point_distance(x, y, target.x, y) <= stats.throw_distance && blocks_carried > 0) {
+                    if (point_distance(x, y, target.x, y) <= stats.throw_distance && blocks_carried > 0 && conveyor.loading_blocks_timer <= 0) {
                         // Start throwing animation
+                        conveyor.loading_blocks_timer = throw_duration;
                         state = "throwing";
                     }
                 } else {

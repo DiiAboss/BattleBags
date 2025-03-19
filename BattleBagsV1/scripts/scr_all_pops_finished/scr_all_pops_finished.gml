@@ -21,8 +21,7 @@ function all_pops_finished()
 			{
 				_color = pop_data.color;
 			}
-			
-			//effect_create_depth(depth + 1, ef_smoke, px, py - 4, 2, _color);
+
 			
 	    } else {
 	        // Grow effect
@@ -79,6 +78,17 @@ function all_pops_finished()
                     //destroy_block(self, _x, _y);
                 }
 					
+                objective_progress(OBJECTIVE_TYPE.BREAK_COLOR, pop_data.gem_type);
+                
+                //for (var _o = 0; _o < array_length(obj_objective_manager.objectives); _o++)
+                //{
+                    //if (pop_data.type == obj_objective_manager.objectives[_o])
+                    //{
+                        //
+                    //}
+                //}
+                
+                
                     // **Create visual effect**
 		            //effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
@@ -148,7 +158,12 @@ function pop_block_in_queue(_self)
                 var _y = pop_data.y;
                 var px = (_x * gem_size) + board_x_offset + offset;
                 var py = (_y * gem_size) + offset + global_y_offset;// + gem_y_offsets[_x, _y];
-
+                
+                var type = pop_data.gem_type;
+                
+                
+                //objective_progress(OBJECTIVE_TYPE.BREAK_COLOR, type);
+                
                 // ✅ Store Gem Object Before Destroying
                 if (self.grid[_x, _y] != -1)
                 {

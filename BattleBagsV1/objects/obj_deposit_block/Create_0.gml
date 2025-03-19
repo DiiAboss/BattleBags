@@ -1,6 +1,4 @@
 /// @description Initialize deposit block
-// Basic properties
-//sprite_index = spr_preview_blocks;
 image_speed = 0;
 depth = 10;
 
@@ -56,7 +54,8 @@ current_block_type = BLOCK.NONE;
 targetter = noone;
 falling = true;
 vsp = 3;
-base = obj_conveyor_belt.conveyor_start_y;
+default_base = obj_conveyor_belt.conveyor_start_y;
+base = default_base;
 rotation = irandom(360);
 rotation_speed = 1 + irandom(2);
 
@@ -64,4 +63,4 @@ rotation_speed = 1 + irandom(2);
 check_for_match = 30;
 
 alarm[0] = check_for_match;
-
+gravity = 0;

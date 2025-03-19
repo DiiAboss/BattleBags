@@ -44,3 +44,10 @@ throughput_rate = 1.0;  // Multiplier for conveyor speed (upgradeable)
 // Stats tracking
 blocks_processed = 0;
 special_blocks_processed = 0;
+
+conveyor_drones = array_create(0);
+
+y_positions = [];
+grouped_blocks = [];
+
+loading_blocks_timer = 30;

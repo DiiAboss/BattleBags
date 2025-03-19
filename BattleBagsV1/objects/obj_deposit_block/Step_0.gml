@@ -1,36 +1,30 @@
 /// @description Update deposit block state
-gravity = 0;
+
+
 image_angle = rotation;
 x -= 0.1 * rotation_speed;
 rotation += rotation_speed;
 if (rotation > 360) rotation = 0;
-    
 if (rotation < 0) rotation = 360;
 
 var block_size = scale;
 var half_block_size = block_size * 0.5;
 
-var block_below = collision_rectangle(x - half_block_size, y + half_block_size, x + half_block_size, y  + block_size, obj_deposit_block, false, true);//instance_position(x, y + 17, obj_deposit_block);
+var block_below = collision_rectangle(x - half_block_size, y + half_block_size, x + half_block_size, y  + block_size, obj_deposit_block, false, true);
 
-
-if block_below != noone
+if (block_below != noone)
 {
     if (block_below.falling == false)
     {
         base = block_below.y - (block_size + 1);
-        //falling = false; 
     }
     else {
         falling = block_below.falling;
         vsp = block_below.vsp;
     }
-
-    
 }
 else {
-    base = obj_conveyor_belt.conveyor_start_y;
-    
-    
+    base = default_base;
 }
 
 var grv = 0;
@@ -38,9 +32,8 @@ if (abs(vsp) < 1 && (y >= base - 1))
 {
     y = base;
     vsp = 0;
-    //speed = 0;
     falling = false;
-    var dist_to_bottom = abs(y - obj_conveyor_belt.conveyor_start_y);
+    var dist_to_bottom = abs(y - default_base);
     var blocks_to_bottom = dist_to_bottom / scale;
     
     if (blocks_to_bottom > 1)
@@ -48,25 +41,22 @@ if (abs(vsp) < 1 && (y >= base - 1))
         var half_plus_one = (scale);
         
         var half_size = scale * 0.5;
-        
-            //if !(instance_position(x + half_plus_one - 20, y + half_plus_one, obj_deposit_block))
-             if !(collision_rectangle(x, y + half_size, x - scale, y + scale, obj_deposit_block, false, true))  
-            {
-                x --;
-                rotation_speed += 0.25;
-            }
-            else if !(collision_rectangle(x, y + half_size, x + scale, y + scale, obj_deposit_block, false, true))
-            {
-                if (x+1 < room_width - scale)
-                {
-                    x ++;
-                    rotation_speed -= 0.05;
-                }
 
-            }
+       if !(collision_rectangle(x, y + half_size, x - scale, y + scale, obj_deposit_block, false, true))  
+       {
+           x --;
+           rotation_speed += 0.25;
+       }
+       else 
+        if !(collision_rectangle(x, y + half_size, x + scale, y + scale, obj_deposit_block, false, true)) 
+        {
+          if (x+1 < room_width - scale)
+          {
+               x ++;
+               rotation_speed -= 0.05; 
+          }
+       }
     }
-    
-    
     rotation_speed *= 0.9;
 }
 else {
@@ -81,17 +71,9 @@ else {
     
     if (y > base)
     {
-        //y -= 1;
-        
         rotation_speed *= 0.999;
-        //x -= 0.5 * ((rotation_speed * vsp) / (obj_recycler.y / distance_to_point(x, obj_conveyor_belt.conveyor_start_y)));
-        
-        
-        
         vsp = -vsp * 0.5;
-        //speed = 0;
     }
-    
     y += vsp;
 }
 

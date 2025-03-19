@@ -115,6 +115,8 @@ if (gem.is_big) {
     _self.darken_alpha = 0;
     
 	number_of_rows_spawned ++;
+    
+    objective_progress(OBJECTIVE_TYPE.CLEAR_LINES, undefined, 1);
 }
 
 

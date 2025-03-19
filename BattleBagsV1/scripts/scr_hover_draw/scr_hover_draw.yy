@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_hover_draw",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_hover_draw",
+  "parent":{
+    "name":"DRAW",
+    "path":"folders/Scripts/DRAW.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

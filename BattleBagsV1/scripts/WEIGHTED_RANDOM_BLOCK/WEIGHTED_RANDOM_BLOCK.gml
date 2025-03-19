@@ -11,6 +11,14 @@ function create_block_spawn_rates(game_control_object, spawn_rate = 12)
     {
         number_of_block_types = game_control_object.numberOfGemTypes;
         global.color_spawn_weight = array_create(number_of_block_types, spawn_rate);
+        array_push(global.color_spawn_weight, 0);
+        array_push(global.color_spawn_weight, 0);
+        array_push(global.color_spawn_weight, 0);
+        array_push(global.color_spawn_weight, 0);
+        array_push(global.color_spawn_weight, 0);
+        array_push(global.color_spawn_weight, 0);
+        array_push(global.color_spawn_weight, 0);
+        
     }
 	
 }
@@ -19,7 +27,7 @@ function weighted_random_block(game_control_object)
 {
     game_control_object = obj_game_control;
     var total_weight = 0;
-    var number_of_block_types = 8;
+    var number_of_block_types = array_length(global.color_spawn_weight);
     
     var single_player = instance_exists(obj_game_control);
     var spawn_rates = 12.5;

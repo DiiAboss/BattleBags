@@ -1,7 +1,8 @@
 /// @description
 
 //draw_gui_neon_shader_stats(self)
-for (var _i = 0; _i < numberOfGemTypes; _i++)
+var arr = array_length(global.color_spawn_weight);
+for (var _i = 0; _i < arr; _i++)
 {
     draw_text(64, 256 + (32 * _i), string(_i) + ": " + string(global.color_spawn_weight[_i]));
     

@@ -49,8 +49,9 @@ function start_swap(_self, ax, ay, bx, by) {
                     var height = obj_game_control.bottom_playable_row;
                     var width = obj_game_control.board_width;
                     var grid = obj_game_control.grid;
+                    var topmost_row = obj_game_control.top_playable_row;
                     
-                    for (var i = height; i > 0; i--)
+                    for (var i = height; i > topmost_row; i--)
                     {
                         for (var j = 0; j < width; j++)
                             {
