@@ -6,8 +6,8 @@ player_stats =
 	enemies_defeated: 0,
 	blocks_destroyed: 0,
 	longest_run: 0,
+    highest_score: 0,
 }
-
 
 
 //  Console State
