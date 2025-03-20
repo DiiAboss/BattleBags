@@ -219,4 +219,39 @@ if (keyboard_check_pressed(vk_tab))
 }
 
 
+var dist = -1;
+for (var u = 0; u < array_length(upgrade_slots); u++)
+{
+    if (upgrade_slots[u] != -1)
+    {
+        var u_slot = upgrade_slots[u];
+        var current_x = u_slot.x_pos;
+        var target_x = (u_slot.lane * 64) + (board_x_offset + offset);
+ 
+        
+        if (current_x - 4 <= target_x)
+        {
+            current_x = target_x;
+            upgrade_slots[u].angle = 0;
+            if (grid[u_slot.lane, bottom_playable_row].type != BLOCK.NONE)
+            {
+                if (global_y_offset > -6)
+                {
+                   show_debug_message("yay")
+                }
+            }
+            
+            continue;
+        }
+        else
+        {
+            if ((current_x - target_x) > dist) dist = current_x - target_x;
+            var time = 30;
+            var x_speed = ((current_x - target_x) / time);
+            upgrade_slots[u].x_pos -= x_speed;
+            upgrade_slots[u].angle += (360/dist);
+            continue;
+        }
+    }
+}
 

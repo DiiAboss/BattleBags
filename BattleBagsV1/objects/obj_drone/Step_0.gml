@@ -133,6 +133,12 @@ switch(state) {
                 var block_type = deposit_blocks.get_block_type();
                 
                 if (block_type != -1) {
+
+                    var target_y = conveyor.conveyor_start_y;
+                    var target_x = conveyor.x;
+
+
+                    
                     // Store the block in our carried blocks array
                     array_push(carried_blocks, {
                         type: block_type.type,
@@ -140,7 +146,9 @@ switch(state) {
                         sprite: block_type.sprite,
                         img: block_type.img,
                         offset_x: irandom_range(-8, 8),
-                        offset_y: -32 - (blocks_carried * 32) // Stack blocks visually
+                        offset_y: -32 - (blocks_carried * 32), // Stack blocks visually
+                        target_x: target_x,
+                        target_y: target_y,
                     });
                     
                     // Destroy the deposit block

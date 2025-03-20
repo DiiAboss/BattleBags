@@ -189,13 +189,17 @@ function Drone(_id, _x, _y) constructor {
             else {
                 var conveyor = instance_nearest(x, y, obj_conveyor_belt);
                 if (conveyor != noone) {
-                    var target_x = conveyor.x;
-                    var target_y = conveyor.conveyor_start_y;
+
         
-                    for (var i = blocks_carried - 1; i > 0; i--) {
-                        throw_duration = ((x - conveyor.x) / 128) * 30;
-                        var throw_delay = (i * 5); // delay each block throw
+                    for (var i = blocks_carried - 1; i > 0; i--) { 
+                        var target_x = carried_blocks[i].target_x;
+                        var target_y = carried_blocks[i].target_y;   
+                        var next_throw = ((x - target_x) / 128) * 30;
                         
+                        if (next_throw > throw_duration) throw_duration = next_throw;
+                        
+                        
+                        var throw_delay = (i * 5); // delay each block throw
                     
                         //show_debug_message("Thro Duration: " + string(throw_duration));
                         var block_progress = clamp((throw_progress - throw_delay) / (throw_duration - throw_delay), 0, 1);
@@ -381,6 +385,7 @@ function Drone(_id, _x, _y) constructor {
         // Collection animation/timer
         var block_size = 32;
         var x_stack_offset = 8;
+        var conveyor = instance_nearest(x, y, obj_conveyor_belt);
         
         pickup_timer++;
         wait_to_return = 0;
@@ -390,6 +395,11 @@ function Drone(_id, _x, _y) constructor {
                 var block_type = deposit_blocks.get_block_type();
                 
                 if (block_type != -1) {
+                    
+                    var target_y = conveyor.conveyor_start_y;
+                    var target_x = conveyor.x;
+
+                    
                     // Store the block in our carried blocks array
                     array_push(carried_blocks, {
                         type: block_type.type,
@@ -397,7 +407,9 @@ function Drone(_id, _x, _y) constructor {
                         sprite: block_type.sprite,
                         img: block_type.img,
                         offset_x: irandom_range(-x_stack_offset, x_stack_offset),
-                        offset_y: -block_size - (blocks_carried * block_size) // Stack blocks visually
+                        offset_y: -block_size - (blocks_carried * block_size), // Stack blocks visually
+                        target_x: target_x,
+                        target_y: target_y,
                     });
                     
                     // Destroy the deposit block

@@ -4,7 +4,13 @@
 /// @param {real} lane Optional lane number (defaults to 0)
 /// @param {real} speed_mult Optional speed multiplier (defaults to 1)
 function add_block_to_conveyor(block, lane = 0, speed_mult = 1) {
-    if (block.type) == DEPOSIT_BLOCK.UPGRADE return;
+    if !(block) return;
+        
+    if (block.type) == DEPOSIT_BLOCK.UPGRADE
+    {
+        add_upgrades_to_bottom(block);
+        return;
+    }
     // Make sure lane is valid
     lane = clamp(lane, 0, lanes_unlocked - 1);
     
@@ -18,23 +24,27 @@ function add_block_to_conveyor(block, lane = 0, speed_mult = 1) {
         lane: lane,
         speed_multiplier: speed_mult,
         is_special: false,
-        creation_time: current_time
+        creation_time: current_time,
+        x_pos: -1,
+        angle: 0,
     };
     
     // Determine if this is a special block type
-    if (block.value == BLOCK.BLACK || block.value == BLOCK.WILD || 
-        block.value == BLOCK.MEGA || block.value == BLOCK.CURSE) {
-        block_data.is_special = true;
-        
-        // Special blocks might move slower on conveyor
-        block_data.speed_multiplier = 1;
-        
-        // Create visual effect for special blocks
-        var effect_x = x + (lane * (conveyor_width / lane_count));
-        var effect_y = conveyor_start_y;
-        //effect_create_above(ef_star, effect_x, effect_y, 1, c_yellow);
+    if (block_data.type == DEPOSIT_BLOCK.BLOCK)
+    {
+        if (block.value == BLOCK.BLACK || block.value == BLOCK.WILD || 
+            block.value == BLOCK.MEGA || block.value == BLOCK.CURSE) {
+            block_data.is_special = true;
+            
+            // Special blocks might move slower on conveyor
+            block_data.speed_multiplier = 1;
+            
+            // Create visual effect for special blocks
+            var effect_x = x + (lane * (conveyor_width / lane_count));
+            var effect_y = conveyor_start_y;
+            //effect_create_above(ef_star, effect_x, effect_y, 1, c_yellow);
+        }
     }
-    
     // Add the block to the conveyor queue
     ds_list_add(conveyor_blocks, block_data);
     
@@ -61,6 +71,52 @@ function activate_block(block, lane) {
     array_push(block_queue, block);
 }
 
+
+function add_upgrades_to_bottom(block, position = -1)
+{
+    var lane = position;
+    var game_control = obj_game_control;
+    var upgrade_slots = game_control.upgrade_slots;
+    if (position == -1)
+    {
+        var temp_array = [];
+        for (var slot = 0; slot < array_length(upgrade_slots); slot++)
+        {
+            if (upgrade_slots[slot] == -1)
+            {
+                array_push(temp_array, slot);
+            }
+        }
+        
+        if (array_length(temp_array) > 0)
+        {
+            lane = irandom(array_length(temp_array));
+        }
+    }
+    
+   
+    
+    var y_bottom = game_control.bottom_playable_row * 64;
+    var speed_mult = 1; 
+    
+    
+    // Create block data structure
+    var block_data = {
+        type: block.type,
+        value: block.value,
+        sprite: block.sprite,
+        img: block.img,
+        y_pos: y_bottom,
+        lane: lane,
+        speed_multiplier: speed_mult,
+        is_special: false,
+        creation_time: current_time,
+        x_pos: obj_conveyor_belt.x,
+        angle: 0
+    };
+    
+    obj_game_control.upgrade_slots[lane] = block_data;
+}
 
 
 /// Process the queued blocks and place them onto the board properly
@@ -89,6 +145,7 @@ function process_block_queue() {
     block_queue = array_create(0);
 }
 
+
 function place_blocks_in_row(row_index, blocks_to_place) {
     var board_width = obj_game_control.width;
     
@@ -106,15 +163,15 @@ function place_blocks_in_row(row_index, blocks_to_place) {
     
     // Place blocks
     for (var i = 0; i < board_width; i++) {
-        
-            var type_to_spawn = array_pop(block_queue);
+        var type_to_spawn = array_pop(block_queue);
         if type_to_spawn != -1
-            {
-        obj_game_control.grid[i, row_index].type = type_to_spawn;
-        obj_game_control.grid[i, row_index].falling = true; 
-    }
+        {
+            obj_game_control.grid[i, row_index].type = type_to_spawn;
+            obj_game_control.grid[i, row_index].falling = true; 
+        }
     }
 }
+
 
 /// Helper function to push all rows down by one
 function push_rows_down(current_row) {
@@ -122,7 +179,6 @@ function push_rows_down(current_row) {
     var height = obj_game_control.top_playable_row;
 
     // Move blocks from top downwards, starting at the top
-    
     if (current_row > 0)
     {
         for (var col = 0; col < board_width; col++) {
@@ -136,12 +192,6 @@ function push_rows_down(current_row) {
             obj_game_control.grid[col, current_row - 1].falling = false;
         }
     }
-
-
-
-
-    
-
 }
 
 /// Check if any block exists in specified row

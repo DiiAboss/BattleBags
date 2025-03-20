@@ -118,3 +118,5 @@ if (keyboard_check(vk_tab)) {
     draw_text(x + conveyor_width/2 + 10, conveyor_activation_y + 40, 
             "Special blocks: " + string(special_blocks_processed));
 }
+
+draw_sprite(spr_sorter, 0, x, conveyor_start_y);

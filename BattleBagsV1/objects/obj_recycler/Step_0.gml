@@ -128,6 +128,8 @@ if (processing) {
             // Choose a block type
             var block_type = choose_weighted_block_type(deposit_blocks);
             
+            if !(block_type) return;
+            
             // Create deposit block
             var new_block = instance_create_depth(
                 x + lengthdir_x(96, 270 + irandom_range(-2, 2)), 
@@ -136,23 +138,17 @@ if (processing) {
                 obj_deposit_block, block_type
             );
             
-            //new_block.get_block_type();
-            //new_block.sprite = block_type.sprite;
-            //new_block.type   = block_type.type;
-            //
             // Set the block type and physics properties
             with (new_block) {
                 type = block_type.type;
-                current_block_type = block_type.value;//choose_weighted_block_type();
+                current_block_type = block_type.value;
                 state = "ready";
                 sprite = block_type.sprite;
-                // Apply physics
-                //vspeed = 0;
                 speed = random_range(other.eject_speed_min, other.eject_speed_max);
-                hspeed = random_range(-2, 2);
-                direction = 270;//random_range(other.eject_angle_min, other.eject_angle_max);
+                hspeed = random_range(-2, 1);
+                direction = 270;
                 gravity = 0.2;
-                rotation_speed = random_range(-5, 5);
+                rotation_speed = random_range(-1, 5);
             }
         }
     }

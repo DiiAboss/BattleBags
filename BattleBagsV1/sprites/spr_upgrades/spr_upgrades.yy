@@ -26,8 +26,8 @@
   "height":64,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"76b58da0-4e10-46c0-bf93-546ff29ad56e","blendMode":0,"displayName":"default","isLocked":false,"name":"76b58da0-4e10-46c0-bf93-546ff29ad56e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"04a8786e-4fe1-44d9-bb0c-8567cbe2d104","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"04a8786e-4fe1-44d9-bb0c-8567cbe2d104","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"76b58da0-4e10-46c0-bf93-546ff29ad56e","blendMode":0,"displayName":"default","isLocked":false,"name":"76b58da0-4e10-46c0-bf93-546ff29ad56e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_upgrades",
   "nineSlice":null,

@@ -587,18 +587,7 @@ for (var i = 0; i < width; i++) {
     // DRAW STATS
     //---------------------------------------------------------
     draw_text_stats(self, 10, draw_y_start, true);
-
     
-    //---------------------------------------------------------
-    // DRAW EXPERIENCE BAR
-    //---------------------------------------------------------
-    //var y_start = draw_y_start + 128;
-    //var y_end   = draw_y_start + camera_get_view_height(view_get_camera(view_current)) - 128; 
-    //var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
-    //
-    //draw_rectangle_color(board_x_offset * 0.5, y_start, board_x_offset * 0.9, y_end,              c_white,   c_white,  c_white,  c_white,  true);
-    //draw_rectangle_color(board_x_offset * 0.5, y_end,   board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
-    //
     
     //---------------------------------------------------------
     // DRAW BOARDER AROUND THE GRID
@@ -722,6 +711,18 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
         }
         
     }
-    
+
+    for (var u = 0; u < array_length(upgrade_slots); u++)
+    {
+        if (upgrade_slots[u] != -1)
+        {
+            var draw_x = board_x_offset + (u * gem_size) + offset;
+            var draw_y = (bottom_playable_row * gem_size);
+            var current_x = upgrade_slots[u].x_pos;
+            
+            draw_sprite_ext(upgrade_slots[u].sprite, upgrade_slots[u].img, current_x, draw_y, 1, 1, upgrade_slots[u].angle, c_white, 1);
+            draw_sprite(spr_upgrades_overlay, 0, current_x, draw_y);
+        }
+    }
 }
 

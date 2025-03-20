@@ -2,13 +2,7 @@
 image_speed = 0;
 depth = 10;
 
-
 rand = irandom_range(-99999, 99999);
-
-
-
-//type = DEPOSIT_BLOCK.BLOCK;
-//
 
 // Block state management
 state = "ready";
@@ -36,7 +30,6 @@ image_xscale = size_mod;
 image_yscale = size_mod;
 
 is_active = false;
-
 
 // Interface function for drones to get a block
 get_block_type = function() {
@@ -75,10 +68,3 @@ check_for_match = 30;
 
 alarm[0] = check_for_match;
 gravity = 0;
-
-
-//type = DEPOSIT_BLOCK.UPGRADE;
-//weight = 5;
-//value = UPGRADE.HEART;
-//sprite = spr_upgrades;
-//img = 0;
