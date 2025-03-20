@@ -296,6 +296,7 @@
     {"name":"spr_transfer_block","order":23,"path":"sprites/spr_transfer_block/spr_transfer_block.yy",},
     {"name":"spr_upgrade_frame","order":6,"path":"sprites/spr_upgrade_frame/spr_upgrade_frame.yy",},
     {"name":"spr_upgrade_gem_spawn_up","order":5,"path":"sprites/spr_upgrade_gem_spawn_up/spr_upgrade_gem_spawn_up.yy",},
+    {"name":"spr_upgrades","order":18,"path":"sprites/spr_upgrades/spr_upgrades.yy",},
     {"name":"spr_wild_gem","order":7,"path":"sprites/spr_wild_gem/spr_wild_gem.yy",},
     {"name":"spr_yellow_gem_1","order":24,"path":"sprites/spr_yellow_gem_1/spr_yellow_gem_1.yy",},
     {"name":"spr_yellow_gem","order":5,"path":"sprites/spr_yellow_gem/spr_yellow_gem.yy",},

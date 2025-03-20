@@ -4,6 +4,10 @@ enum BLOCK {
     LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
 }
 
+enum UPGRADE {
+    RANDOM = -99, NONE = -1, HEART = 0, ARROW = 1, BOMB = 2
+}
+
 function create_block(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()) {
 	
 	if (_type == BLOCK.RANDOM) { // If generating a new random gem

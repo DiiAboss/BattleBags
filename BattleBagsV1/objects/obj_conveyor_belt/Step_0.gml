@@ -56,9 +56,8 @@ for (var i = 0; i < ds_list_size(conveyor_blocks); i++) {
     
     // Check if block has reached activation position
     if (block_data.y_pos <= conveyor_activation_y) {
-        // Get the block type
-        var block_type = variable_struct_exists(block_data, "block_type") ? 
-                    block_data.block_type : BLOCK.RANDOM;
+        // Get the block value
+        block_type = block_data.value;
         
         // Activate the block (add to game board)
         activate_block(block_type, block_data.lane);
@@ -107,8 +106,8 @@ for (var i = 0; i < ds_list_size(conveyor_blocks); i++) {
                 
                 if !(block_data) continue;
                 
-                var block_type = block_data.block_type;
-                var block_sprite = block_sprites[? block_type];
+                var block_type = block_data.type;
+                var block_sprite = block_data.sprite;
     
                 if (block_sprite == noone) {
                     block_sprite = sprite_for_block(BLOCK.RANDOM);

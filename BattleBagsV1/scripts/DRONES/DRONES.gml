@@ -179,8 +179,9 @@ function Drone(_id, _x, _y) constructor {
                     var block = carried_blocks[i];
                     var block_x = x + block.offset_x;
                     var block_y = y + block.offset_y;
-                    var block_sprite = sprite_for_block(block.type);
-                    draw_sprite_ext(block_sprite, 0, block_x, block_y + hover, 0.75, 0.75, 0, c_white, 1);
+                    var block_sprite = block.sprite;
+                    var img = block.img;
+                    draw_sprite_ext(block_sprite, img, block_x, block_y + hover, 0.75, 0.75, 0, c_white, 1);
                 }
             }
         
@@ -204,8 +205,9 @@ function Drone(_id, _x, _y) constructor {
                             var start_y = y + carried_blocks[i].offset_y;
         
                             var arc_pos = calculate_arc(start_x, start_y, target_x, target_y, block_progress);
-                            var block_sprite = sprite_for_block(carried_blocks[i].type);
-                            draw_sprite_ext(block_sprite, 0, arc_pos[0], arc_pos[1], 0.75, 0.75, 0, c_white, 1);
+                            var block_sprite = carried_blocks[i].sprite;
+                            var img = carried_blocks[i].img;
+                            draw_sprite_ext(block_sprite, img, arc_pos[0], arc_pos[1], 0.75, 0.75, 0, c_white, 1);
                         }
                     }
                 }
@@ -390,7 +392,10 @@ function Drone(_id, _x, _y) constructor {
                 if (block_type != -1) {
                     // Store the block in our carried blocks array
                     array_push(carried_blocks, {
-                        type: block_type,
+                        type: block_type.type,
+                        value: block_type.value,
+                        sprite: block_type.sprite,
+                        img: block_type.img,
                         offset_x: irandom_range(-x_stack_offset, x_stack_offset),
                         offset_y: -block_size - (blocks_carried * block_size) // Stack blocks visually
                     });
@@ -469,7 +474,7 @@ function Drone(_id, _x, _y) constructor {
                 // Actually deliver blocks now
                 for (var i = 0; i < blocks_carried; i++) {
                     with (conveyor) {
-                     add_block_to_conveyor(other.carried_blocks[i].type);
+                     add_block_to_conveyor(other.carried_blocks[i]);
                     }
                 }
         

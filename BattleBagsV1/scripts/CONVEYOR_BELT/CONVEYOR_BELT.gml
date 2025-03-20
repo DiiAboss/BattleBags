@@ -1,15 +1,19 @@
 /// @function add_block_to_conveyor
 /// @description Adds a block to the conveyor belt queue
-/// @param {enum} block_type The type of block to add
+/// @param {enum} block The block to add
 /// @param {real} lane Optional lane number (defaults to 0)
 /// @param {real} speed_mult Optional speed multiplier (defaults to 1)
-function add_block_to_conveyor(block_type, lane = 0, speed_mult = 1) {
+function add_block_to_conveyor(block, lane = 0, speed_mult = 1) {
+    if (block.type) == DEPOSIT_BLOCK.UPGRADE return;
     // Make sure lane is valid
     lane = clamp(lane, 0, lanes_unlocked - 1);
     
     // Create block data structure
     var block_data = {
-        block_type: block_type,
+        type: block.type,
+        value: block.value,
+        sprite: block.sprite,
+        img: block.img,
         y_pos: conveyor_start_y,
         lane: lane,
         speed_multiplier: speed_mult,
@@ -18,8 +22,8 @@ function add_block_to_conveyor(block_type, lane = 0, speed_mult = 1) {
     };
     
     // Determine if this is a special block type
-    if (block_type == BLOCK.BLACK || block_type == BLOCK.WILD || 
-        block_type == BLOCK.MEGA || block_type == BLOCK.CURSE) {
+    if (block.value == BLOCK.BLACK || block.value == BLOCK.WILD || 
+        block.value == BLOCK.MEGA || block.value == BLOCK.CURSE) {
         block_data.is_special = true;
         
         // Special blocks might move slower on conveyor
@@ -48,13 +52,13 @@ function add_block_to_conveyor(block_type, lane = 0, speed_mult = 1) {
 
 /// @function activate_block
 /// @description Called when a block reaches activation point
-/// @param {enum} block_type The type of block to activate
+/// @param {enum} block The type of block to activate
 /// @param {real} lane The lane the block was in
 
-function activate_block(block_type, lane) {
+function activate_block(block, lane) {
 
     // Queue the incoming block
-    array_push(block_queue, block_type);
+    array_push(block_queue, block);
 }
 
 
@@ -205,16 +209,16 @@ function draw_grouped_blocks(conveyor, conveyor_blocks, conveyor_width, center_x
             
             if !(block_data) continue;
             
-            var block_type = block_data.block_type;
-            var block_sprite = conveyor.block_sprites[? block_type];
-
+            var block_type = block_data.type;
+            var block_sprite = block_data.sprite;
+            var block_img = block_data.img;
             if (block_sprite == noone) {
                 block_sprite = sprite_for_block(BLOCK.RANDOM);
             }
 
             var block_x = start_x + (j * block_spacing);
 
-            draw_sprite_ext(block_sprite, 0, block_x, block_data.y_pos, 
+            draw_sprite_ext(block_sprite, block_img, block_x, block_data.y_pos, 
                 block_size / 64, block_size / 64, 0, c_white, 1);
         }
     }

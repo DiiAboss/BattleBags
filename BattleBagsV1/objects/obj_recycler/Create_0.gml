@@ -31,6 +31,115 @@ ds_map_add(block_weights, BLOCK.BLUE, 5);
 ds_map_add(block_weights, BLOCK.BLACK, 20);
 ds_map_add(block_weights, BLOCK.WILD, 0);
 
+upgrade_weights = ds_map_create();
+ds_map_add(upgrade_weights, 100, 5);
+ds_map_add(upgrade_weights, 101, 5);
+ds_map_add(upgrade_weights, 102, 5);
+
+// TODO: HAVE A DEPOSIT BLOCKS MANAGER
+
+deposit_blocks =
+{
+    red:
+    {
+        type: DEPOSIT_BLOCK.BLOCK, 
+        weight: 5,
+        value: BLOCK.RED,
+        sprite: spr_red_gem,
+        img: 0,
+    },
+    yellow:
+    {
+        type: DEPOSIT_BLOCK.BLOCK, 
+        weight: 5,
+        value: BLOCK.YELLOW,
+        sprite: spr_yellow_gem,
+        img: 0,
+    },
+    green:
+    {
+        type: DEPOSIT_BLOCK.BLOCK,
+        weight: 5,
+        value: BLOCK.GREEN,
+        sprite: spr_green_gem,
+        img: 0,
+    },
+    pink:
+    {
+        type: DEPOSIT_BLOCK.BLOCK,
+        weight: 5,
+        value: BLOCK.PINK,
+        sprite: spr_pink_gem,
+        img: 0,
+    },
+    purple:
+    {
+        type: DEPOSIT_BLOCK.BLOCK,
+        weight: 5,
+        value: BLOCK.PURPLE,
+        sprite: spr_purple_gem,
+        img: 0,
+    },
+    lightblue:
+    {
+        type: DEPOSIT_BLOCK.BLOCK,
+        weight: 5,
+        value: BLOCK.LIGHTBLUE,
+        sprite: spr_lightblue_gem,
+        img: 0,
+    },
+    orange:
+    {
+         type: DEPOSIT_BLOCK.BLOCK,
+         weight: 5,
+         value: BLOCK.ORANGE,
+         sprite: spr_orange_gem,
+        img: 0,
+    },
+    blue:
+    {
+        type: DEPOSIT_BLOCK.BLOCK,
+        weight: 5,
+        value: BLOCK.BLUE,
+        sprite: spr_blue_gem,
+        img: 0,
+    },
+    black:
+    {
+        type: DEPOSIT_BLOCK.BLOCK,
+        weight: 25,
+        value: BLOCK.BLACK,
+        sprite: spr_gameOver,
+        img: 0,
+    },
+    wild:
+    {
+        type: DEPOSIT_BLOCK.BLOCK,
+        weight: 0,
+        value: BLOCK.WILD,
+        sprite: spr_Oshki,
+        img: 0,
+    },
+    arrow:
+    {
+        type: DEPOSIT_BLOCK.UPGRADE,
+        weight: 5,
+        value: UPGRADE.ARROW,
+        sprite: spr_upgrades,
+        img: 0,
+    },
+    heart:
+    {
+        type: DEPOSIT_BLOCK.UPGRADE,
+        weight: 5,
+        value: UPGRADE.HEART,
+         sprite: spr_upgrades,
+         img: 1,
+    }
+    
+}
+// TODO: CHANGE BLOCK SPRITE LOADING AND OTHER DEPOSIT BLOCK FEATURES!
+
 // Ejection parameters
 eject_speed_min = 4;
 eject_speed_max = 5;

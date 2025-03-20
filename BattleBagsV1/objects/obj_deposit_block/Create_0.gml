@@ -6,6 +6,10 @@ depth = 10;
 rand = irandom_range(-99999, 99999);
 
 
+
+//type = DEPOSIT_BLOCK.BLOCK;
+//
+
 // Block state management
 state = "ready";
 regen_timer = 0;
@@ -38,7 +42,14 @@ is_active = false;
 get_block_type = function() {
     if (state == "ready") {
         // Store the current block type to return
-        var block_to_return = current_block_type;
+        var block_to_return = 
+        {
+            current_block_type,
+            type,
+            value,
+            sprite,
+            img,
+        }
         
         // Transition to cooldown state
         state = "cooldown";
@@ -64,3 +75,10 @@ check_for_match = 30;
 
 alarm[0] = check_for_match;
 gravity = 0;
+
+
+//type = DEPOSIT_BLOCK.UPGRADE;
+//weight = 5;
+//value = UPGRADE.HEART;
+//sprite = spr_upgrades;
+//img = 0;

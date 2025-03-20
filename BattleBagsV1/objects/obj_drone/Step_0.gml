@@ -135,7 +135,10 @@ switch(state) {
                 if (block_type != -1) {
                     // Store the block in our carried blocks array
                     array_push(carried_blocks, {
-                        type: block_type,
+                        type: block_type.type,
+                        value: block_type.value,
+                        sprite: block_type.sprite,
+                        img: block_type.img,
                         offset_x: irandom_range(-8, 8),
                         offset_y: -32 - (blocks_carried * 32) // Stack blocks visually
                     });
@@ -200,7 +203,7 @@ switch(state) {
                 // Add blocks to conveyor
                 for (var i = 0; i < blocks_carried; i++) {
                     with (conveyor) {
-                        add_block_to_conveyor(other.carried_blocks[i].type);
+                        add_block_to_conveyor(other.carried_blocks[i]);
                     }
                 }
                 

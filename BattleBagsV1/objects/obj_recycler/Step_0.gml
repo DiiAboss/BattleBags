@@ -3,30 +3,87 @@
 
 if (global.paused) return;
 
-// Function to select a block type based on weights
-function choose_weighted_block_type() {
-    // Create a weighted list
-    var weighted_list = ds_list_create();
+//// Function to select a block type based on weights
+//function choose_weighted_block_type(_type) {
+    //// Create a weighted list
+    //var weighted_list = ds_list_create();
+    //
+    //if (_type == DEPOSIT_BLOCK.BLOCK)
+        //{
+            //// Add block types according to their weights
+            //var keys = ds_map_find_first(block_weights);
+            //while (!is_undefined(keys)) {
+                //var weight = ds_map_find_value(block_weights, keys);
+                //repeat(weight) {
+                    //ds_list_add(weighted_list, keys);
+                //}
+                //keys = ds_map_find_next(block_weights, keys);
+            //}
+        //}
+        //
+        //if (_type == DEPOSIT_BLOCK.UPGRADE)
+        //{
+            //// Add block types according to their weights
+            //var keys = ds_map_find_first(upgrade_weights);
+            //while (!is_undefined(keys)) {
+                //var weight = ds_map_find_value(upgrade_weights, keys);
+//
+                //repeat(weight) {
+                    //ds_list_add(weighted_list, keys);
+                //}
+                //keys = ds_map_find_next(upgrade_weights, keys);
+            //}
+        //}
+    //
+    //// Select a random block type from the weighted list
+    //var selected_type = ds_list_find_value(weighted_list, irandom(ds_list_size(weighted_list) - 1));
+    //
+    //
+    //
+    //// Clean up
+    //ds_list_destroy(weighted_list);
+    //
+    //return selected_type;
+//}
+function choose_weighted_block_type(deposit_blocks, _type = DEPOSIT_BLOCK.RANDOM) {
+
+    var weighted_list = [];
     
-    // Add block types according to their weights
-    var keys = ds_map_find_first(block_weights);
-    while (!is_undefined(keys)) {
-        var weight = ds_map_find_value(block_weights, keys);
-        repeat(weight) {
-            ds_list_add(weighted_list, keys);
-        }
-        keys = ds_map_find_next(block_weights, keys);
+    var __type = _type;
+    if (_type) == DEPOSIT_BLOCK.RANDOM
+    {
+        __type = choose(DEPOSIT_BLOCK.BLOCK, DEPOSIT_BLOCK.UPGRADE);
     }
     
-    // Select a random block type from the weighted list
-    var selected_type = ds_list_find_value(weighted_list, irandom(ds_list_size(weighted_list) - 1));
-    
-    // Clean up
-    ds_list_destroy(weighted_list);
-    
-    return selected_type;
-}
+    // Loop through each block in deposit_blocks
+    var keys = variable_struct_get_names(deposit_blocks);
+    var len = array_length(keys);
 
+    // Build weighted list based on type
+    for (var i = 0; i < len; i++) {
+        var block = deposit_blocks[$ keys[i]];
+        var __type = _type;
+        if (_type) == DEPOSIT_BLOCK.RANDOM
+        {
+            __type = choose(DEPOSIT_BLOCK.BLOCK, DEPOSIT_BLOCK.UPGRADE);
+        }
+        if (block.type == __type && block.weight > 0) {
+            repeat(block.weight) {
+                array_push(weighted_list, keys[i]);
+            }
+        }
+    }
+
+    // Safety check if no weighted items exist
+    if (array_length(weighted_list) == 0) {
+        show_debug_message("No available blocks for type: " + string(__type));
+        return undefined;
+    }
+
+    // Choose a random block from the weighted list
+    var chosen_key = weighted_list[irandom(array_length(weighted_list) - 1)];
+    return deposit_blocks[$ chosen_key];
+}
 
 
 if (rotation < max_rotation)
@@ -67,23 +124,28 @@ if (processing) {
         
         // Determine if a block is created
         if (random(1) < success_chance) {
+            
             // Choose a block type
-            var block_type = choose_weighted_block_type();
+            var block_type = choose_weighted_block_type(deposit_blocks);
             
             // Create deposit block
             var new_block = instance_create_depth(
                 x + lengthdir_x(96, 270 + irandom_range(-2, 2)), 
                 y + lengthdir_y(96, 270 + irandom_range(-2, 2)), 
                 depth - 5, 
-                obj_deposit_block
+                obj_deposit_block, block_type
             );
             
-            new_block.get_block_type();
-            
+            //new_block.get_block_type();
+            //new_block.sprite = block_type.sprite;
+            //new_block.type   = block_type.type;
+            //
             // Set the block type and physics properties
             with (new_block) {
-                current_block_type = block_type;//choose_weighted_block_type();
+                type = block_type.type;
+                current_block_type = block_type.value;//choose_weighted_block_type();
                 state = "ready";
+                sprite = block_type.sprite;
                 // Apply physics
                 //vspeed = 0;
                 speed = random_range(other.eject_speed_min, other.eject_speed_max);
@@ -91,19 +153,7 @@ if (processing) {
                 direction = 270;//random_range(other.eject_angle_min, other.eject_angle_max);
                 gravity = 0.2;
                 rotation_speed = random_range(-5, 5);
-                
-                // Set state
-                //state = "falling";
             }
-            
-            // Create effect at ejection point
-            //part_emitter_burst(particles, emitter, sparkle_particle, 10);
-            
-            // Play sound
-            // audio_play_sound(snd_block_eject, 1, false);
-        } else {
-            // Failed to create block - just emit some smoke
-            //part_emitter_burst(particles, emitter, smoke_particle, 5);
         }
     }
 }
@@ -119,10 +169,4 @@ if (transfer_block != noone && cooldown <= 0 && !processing) {
     with (transfer_block) {
         instance_destroy();
     }
-    
-    // Create effect
-    //part_emitter_burst(particles, emitter, smoke_particle, 5);
-    
-    // Play sound
-    // audio_play_sound(snd_recycler_process, 1, false);
 }

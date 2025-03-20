@@ -28,8 +28,9 @@ for (var i = 0; i < blocks_carried; i++) {
     var block_y = drone_y + block.offset_y;
     
     // Draw sprite for the block type
-    var block_sprite = sprite_for_block(block.type);
-    draw_sprite_ext(block_sprite, 0, block_x, block_y, 0.5, 0.5, 0, c_white, 1);
+    var block_sprite = block.sprite;
+    var img          = block.img;
+    draw_sprite_ext(block_sprite, img, block_x, block_y, 0.5, 0.5, 0, c_white, 1);
 }
 
 // Draw selection indicator if selected
