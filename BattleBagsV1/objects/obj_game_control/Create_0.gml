@@ -15,7 +15,7 @@ hovered_block  = [-1, -1];
 //--------------------------------------------------
 // Player Stats
 //--------------------------------------------------
-global.gold       = 0;
+global.gold       = 10000;
 luck              = 0;
 damage_mod        = 0;
 health_pickup_mod = 0;

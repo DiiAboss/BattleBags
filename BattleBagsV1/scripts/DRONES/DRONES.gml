@@ -17,7 +17,7 @@ function Drone(_id, _x, _y) constructor {
     // Basic Stats
     stats = {
         move_speed: 2,
-        carry_capacity: 8,
+        carry_capacity: 4,
         throw_distance: 128,
         experience: 0,
         max_experience: 100,

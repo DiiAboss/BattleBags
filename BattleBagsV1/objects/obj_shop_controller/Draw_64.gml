@@ -16,24 +16,47 @@ draw_set_valign(fa_top);
 
 var item_y = scroll_area_y - scroll_offset;
 
+var border_color = c_green;
+
 for (var i = 0; i < array_length(shop_items); i++) {
     var item = shop_items[i];
 
     // Draw item background
     var hv_color = item.hovered ? c_green : c_white;
     var bg_color = item.purchased ? c_dkgray : (selected_item == i ? c_navy : c_gray);
-    draw_rectangle_color(scroll_area_x, item_y, scroll_area_x + scroll_area_width, item_y + item_height, bg_color, bg_color, bg_color, bg_color, false);
-    draw_rectangle_color(scroll_area_x, item_y, scroll_area_x + scroll_area_width, item_y + item_height, hv_color, hv_color, hv_color, hv_color, true);
+    
+    
+    if !(item.hovered)
+    {
+        draw_rectangle_color(scroll_area_x - 90, item_y, scroll_area_x + scroll_area_width, item_y + item_height, bg_color, bg_color, bg_color, bg_color, false);
+        draw_rectangle_color(scroll_area_x - 90, item_y, scroll_area_x + scroll_area_width, item_y + item_height, hv_color, hv_color, hv_color, hv_color, true);
+        // Draw item name and price
+        draw_set_color(c_white);
+        draw_text(scroll_area_x - 88, item_y + 20, item.name);
+        //draw_set_color(c_yellow);
+        //draw_text(scroll_area_x - 88, item_y + 45, "Price: " + string(item.price));
+    }
+    
     // Draw item sprite placeholder
     draw_sprite(item.sprite, 0, scroll_area_x + 40, item_y + item_height / 2);
     
-    // Draw item name and price
-    draw_set_color(c_white);
-    draw_text(scroll_area_x + 80, item_y + 20, item.name);
-    draw_set_color(c_yellow);
-    draw_text(scroll_area_x + 80, item_y + 45, "Price: " + string(item.price));
+
     
     item_y += item_height + item_padding;
+}
+
+var current_item = shop_items[hover_index];
+if (current_item)
+{
+    var bg_color2 = current_item.purchased ? c_dkgray : c_ltgray;
+    item_y = scroll_area_y - scroll_offset + (item_height + item_padding) * hover_index;
+    draw_rectangle_color(scroll_area_x, item_y, scroll_area_x + scroll_area_width, item_y + (item_height * 3), bg_color2, bg_color2, bg_color2, bg_color2, false);
+    draw_rectangle_color(scroll_area_x, item_y, scroll_area_x + scroll_area_width, item_y + (item_height * 3), border_color, border_color, border_color, border_color, true);
+    // Draw item name and price
+        draw_set_color(c_white);
+        draw_text(scroll_area_x + 80, item_y + 20, current_item.name);
+        draw_set_color(c_yellow);
+        draw_text(scroll_area_x + 80, item_y + 45, "Price: " + string(current_item.price));
 }
 
 draw_set_color(c_black);

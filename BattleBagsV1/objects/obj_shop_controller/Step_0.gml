@@ -59,6 +59,7 @@ if (input_delay <= 0)
         if (scroll_offset == target_scroll)
         {
                     input_delay = input_delay_max;
+                    are_you_sure = false;
         }
 
     }
@@ -68,12 +69,17 @@ input_delay--;
 
 // Confirm selection and attempt purchase
 if (input.ActionPress) {
+    
+    if !(are_you_sure)
+    {
+        are_you_sure = true;
+        return;
+    }
+    
     selected_item = hover_index;
     var item = shop_items[selected_item];
     
     dialogue_text = item.desc + " (Cost: " + string(item.price) + " gold)";
-
-    if (mouse_y > room_height - dialogue_box_height) {
         if (!item.purchased && player_currency >= item.price) {
             player_currency -= item.price;
             item.purchased = true;
@@ -84,6 +90,6 @@ if (input.ActionPress) {
         } else {
             dialogue_text = "You don't have enough gold!";
         }
-    }
+    are_you_sure = false;
 }
 

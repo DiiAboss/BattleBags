@@ -49,3 +49,4 @@ global.paused = true;
 
 input_delay_max = 30;
 input_delay = input_delay_max;
+are_you_sure = false;
