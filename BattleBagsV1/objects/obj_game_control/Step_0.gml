@@ -234,7 +234,7 @@ for (var u = 0; u < array_length(powerup_slots); u++)
             current_x = target_x;
             powerup_slots[u].angle = 0;
             var grid_slot = grid[u_slot.lane, bottom_playable_row];
-            if (grid_slot.type != BLOCK.NONE) && !grid_slot.popping
+            if (grid_slot.type != BLOCK.NONE) && !grid_slot.popping && powerup_slots[u].angle == 0
             {
                 if (global_y_offset - shift_speed < -32)
                 {
