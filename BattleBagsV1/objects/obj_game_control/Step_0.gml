@@ -227,7 +227,7 @@ for (var u = 0; u < array_length(powerup_slots); u++)
         var u_slot = powerup_slots[u];
         var current_x = u_slot.x_pos;
         var target_x = (u_slot.lane * 64) + (board_x_offset + offset);
- 
+        dist = current_x - target_x > dist ? current_x - target_x : dist;
         
         if (current_x - 4 <= target_x)
         {

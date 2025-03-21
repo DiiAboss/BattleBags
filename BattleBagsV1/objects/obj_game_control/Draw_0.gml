@@ -186,7 +186,6 @@ else
             
             
                 draw_set_color(c_lime);
-                //geogrid.geogrid_draw(self);
     }
        draw_set_color(c_white); 
     
@@ -623,16 +622,16 @@ for (var i = 0; i < width; i++) {
     //--------------------------------------
     // DRAW HEARTS
     //--------------------------------------
-    var heart_sprite = spr_health_new;
-    var hearts_y_pos = draw_y_start + grid_height - 34;
-    draw_player_hearts(self, 
-                        player_health, 
-                        max_player_health, 
-                        board_x_offset, 
-                        hearts_y_pos, 
-                        width, 
-                        heart_sprite, 
-                        gem_size);
+    //var heart_sprite = spr_health_new;
+    //var hearts_y_pos = draw_y_start + grid_height - 34;
+    //draw_player_hearts(self, 
+                        //player_health, 
+                        //max_player_health, 
+                        //board_x_offset, 
+                        //hearts_y_pos, 
+                        //width, 
+                        //heart_sprite, 
+                        //gem_size);
     
     
     if (enemy_target != noone)
@@ -720,14 +719,16 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
             var draw_y = (bottom_playable_row * gem_size);
             var current_x = powerup_slots[u].x_pos;
             var _scale = 1;
+            var max_y_offset = 64;
+            
             
             if grid[u, bottom_playable_row].type != BLOCK.NONE
             {
-                _scale = obj_game_control.global_y_offset > -32 ? 1 : 1.5 - (obj_game_control.global_y_offset / -64)
+                _scale = abs(obj_game_control.global_y_offset) / max_y_offset;
             }
             
             draw_sprite_ext(powerup_slots[u].sprite, powerup_slots[u].img, current_x, draw_y, _scale, _scale, powerup_slots[u].angle, c_white, 1);
-            draw_sprite(spr_upgrades_overlay, 0, current_x, draw_y);
+            draw_sprite_ext(spr_upgrades_overlay, 0, current_x, draw_y, _scale, _scale, 0, c_white, 1);
         }
     }
 }

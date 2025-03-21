@@ -16,7 +16,6 @@
     {"name":"inst_5680CE29","path":"rooms/rm_gameRoom/rm_gameRoom.yy",},
     {"name":"inst_BDA25B2","path":"rooms/rm_gameRoom/rm_gameRoom.yy",},
     {"name":"inst_7B2D4250","path":"rooms/rm_gameRoom/rm_gameRoom.yy",},
-    {"name":"inst_4E06F906","path":"rooms/rm_gameRoom/rm_gameRoom.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -24,7 +23,6 @@
     {"$GMRInstanceLayer":"","%Name":"attacks","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v1","%Name":"inst_390D8A76","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_390D8A76","objectId":{"name":"obj_floor","path":"objects/obj_floor/obj_floor.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":17.0,"scaleY":1.0,"x":1344.0,"y":1312.0,},
         {"$GMRInstance":"v1","%Name":"inst_5680CE29","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_5680CE29","objectId":{"name":"obj_recycler","path":"objects/obj_recycler/obj_recycler.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":1792.0,"y":352.0,},
-        {"$GMRInstance":"v1","%Name":"inst_4E06F906","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4E06F906","objectId":{"name":"obj_sorter_drone","path":"objects/obj_sorter_drone/obj_sorter_drone.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":1088.0,"y":704.0,},
       ],"layers":[],"name":"attacks","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRInstanceLayer":"","%Name":"Instances","depth":200,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v1","%Name":"inst_7F42BACB","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_7F42BACB","objectId":{"name":"obj_game_control","path":"objects/obj_game_control/obj_game_control.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":512.0,"y":256.0,},

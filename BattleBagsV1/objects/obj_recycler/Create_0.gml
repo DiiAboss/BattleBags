@@ -19,25 +19,8 @@ max_process_time = 1; // 1.5 seconds to process
 
 // Block generation properties
 success_chance = 0.5; // 70% chance to create a block
-block_weights = ds_map_create();
-ds_map_add(block_weights, BLOCK.RED, 5);
-ds_map_add(block_weights, BLOCK.YELLOW, 5);
-ds_map_add(block_weights, BLOCK.GREEN, 5);
-ds_map_add(block_weights, BLOCK.PINK, 5);
-ds_map_add(block_weights, BLOCK.PURPLE, 5);
-ds_map_add(block_weights, BLOCK.LIGHTBLUE, 5);
-ds_map_add(block_weights, BLOCK.ORANGE, 5);
-ds_map_add(block_weights, BLOCK.BLUE, 5);
-ds_map_add(block_weights, BLOCK.BLACK, 20);
-ds_map_add(block_weights, BLOCK.WILD, 0);
-
-upgrade_weights = ds_map_create();
-ds_map_add(upgrade_weights, 100, 5);
-ds_map_add(upgrade_weights, 101, 5);
-ds_map_add(upgrade_weights, 102, 5);
 
 // TODO: HAVE A DEPOSIT BLOCKS MANAGER
-
 deposit_blocks =
 {
     red:

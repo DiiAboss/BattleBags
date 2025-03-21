@@ -244,6 +244,11 @@ number_of_rows_spawned = 0;
 // RAVEN CLEARS IN ABOUT 7-8 mins avg
 victory_number_of_rows = 48;
 
+
+
+
+
+
 // ------------------------------------------------------
 // Global Variables & Game State
 // ------------------------------------------------------
@@ -261,6 +266,8 @@ global_shape_function_init();
 
 combo_timer     = 0;
 max_combo_timer = 60; // Half a second of grace
+
+
 
 // ✅ Initialize Global Upgrade System
 
