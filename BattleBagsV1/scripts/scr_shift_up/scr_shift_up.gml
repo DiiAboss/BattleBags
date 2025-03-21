@@ -108,7 +108,7 @@ if (gem.is_big) {
     // 3️⃣ Spawn a new random row at the **very bottom of the grid**
     for (var i = 0; i < width; i++) {
         // ✅ Ensure **only spawn new blocks in the last row**
-        _self.grid[i, height - 1] = create_block(BLOCK.RANDOM);
+        _self.grid[i, height - 1] = create_block(BLOCK.RANDOM, POWERUP.NONE);
     }
 
     // 4️⃣ Reset darken alpha so the new row fades in again

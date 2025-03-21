@@ -1,24 +1,4 @@
 /// @description
-tar_x = obj_game_control.board_x_offset + (obj_game_control.width * 64);
-my_target = instance_create_depth(tar_x, y, -1, obj_target);
-depth = -1;
-
-
-/// @description Initialize recycler
-// Visual properties
-sprite_index = spr_block_recycler;
-image_speed = 0.2;
-depth = 10;
-
-// Production properties
-cooldown = 0;
-max_cooldown = 1; // 2 seconds between processing
-processing = false;
-process_time = 0;
-max_process_time = 1; // 1.5 seconds to process
-
-// Block generation properties
-success_chance = 0.5; // 70% chance to create a block
 
 // TODO: HAVE A DEPOSIT BLOCKS MANAGER
 deposit_blocks =
@@ -30,6 +10,7 @@ deposit_blocks =
         value: BLOCK.RED,
         sprite: spr_red_gem,
         img: 0,
+        level: 0,
     },
     yellow:
     {
@@ -38,6 +19,7 @@ deposit_blocks =
         value: BLOCK.YELLOW,
         sprite: spr_yellow_gem,
         img: 0,
+        level: 0,
     },
     green:
     {
@@ -46,6 +28,7 @@ deposit_blocks =
         value: BLOCK.GREEN,
         sprite: spr_green_gem,
         img: 0,
+        level: 0,
     },
     pink:
     {
@@ -54,6 +37,7 @@ deposit_blocks =
         value: BLOCK.PINK,
         sprite: spr_pink_gem,
         img: 0,
+        level: 0,
     },
     purple:
     {
@@ -62,6 +46,7 @@ deposit_blocks =
         value: BLOCK.PURPLE,
         sprite: spr_purple_gem,
         img: 0,
+        level: 0,
     },
     lightblue:
     {
@@ -70,6 +55,7 @@ deposit_blocks =
         value: BLOCK.LIGHTBLUE,
         sprite: spr_lightblue_gem,
         img: 0,
+        level: 0,
     },
     orange:
     {
@@ -77,7 +63,8 @@ deposit_blocks =
          weight: 5,
          value: BLOCK.ORANGE,
          sprite: spr_orange_gem,
-        img: 0,
+         img: 0,
+        level: 0,
     },
     blue:
     {
@@ -86,6 +73,7 @@ deposit_blocks =
         value: BLOCK.BLUE,
         sprite: spr_blue_gem,
         img: 0,
+        level: 0,
     },
     black:
     {
@@ -94,6 +82,7 @@ deposit_blocks =
         value: BLOCK.BLACK,
         sprite: spr_gameOver,
         img: 0,
+        level: 0,
     },
     wild:
     {
@@ -102,6 +91,7 @@ deposit_blocks =
         value: BLOCK.WILD,
         sprite: spr_Oshki,
         img: 0,
+        level: 0,
     },
     arrow:
     {
@@ -110,6 +100,7 @@ deposit_blocks =
         value: POWERUP.BOW,
         sprite: spr_upgrades,
         img: 0,
+        level: 0,
     },
     heart:
     {
@@ -118,6 +109,7 @@ deposit_blocks =
         value: POWERUP.HEART,
          sprite: spr_upgrades,
          img: 4,
+        level: 0,
     },
     bomb:
     {
@@ -126,6 +118,7 @@ deposit_blocks =
         value: POWERUP.BOMB,
         sprite: spr_upgrades,
         img: 5,
+        level: 0,
     },
     timer:
     {
@@ -134,21 +127,34 @@ deposit_blocks =
         value: POWERUP.TIMER,
         sprite: spr_upgrades,
         img: 1,
+        level: 0,
     },
-    
 }
-// TODO: CHANGE BLOCK SPRITE LOADING AND OTHER DEPOSIT BLOCK FEATURES!
+
+/// @description Initialize recycler
+// Visual properties
+sprite_index = spr_block_recycler;
+image_speed = 0.2;
+
+tar_x = obj_game_control.board_x_offset + (obj_game_control.width * 64);
+my_target = instance_create_depth(tar_x, y, -1, obj_target);
+depth = -1;
+
+// Production properties
+cooldown = 0;
+max_cooldown = 1; // 2 seconds between processing
+processing = false;
+process_time = 0;
+max_process_time = 30; // 1.5 seconds to process
+
+// Block generation properties
+success_chance = 0.5; // 70% chance to create a block
 
 // Ejection parameters
 eject_speed_min = 4;
 eject_speed_max = 5;
-//eject_angle_min = 30;
-//eject_angle_max = 150;
 eject_point_x = x;
 eject_point_y = y - 32;
-
-
-
 
 rotation_speed = 0.1;
 rotation_direction = -1;
@@ -156,3 +162,6 @@ rotation = 0;
 max_rotation = -64;
 
 direction = 0;
+
+
+recycler_queue = 0;

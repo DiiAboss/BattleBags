@@ -8,7 +8,7 @@ enum UPGRADE {
     RANDOM = -99, NONE = -1, HEART = 0, ARROW = 1, BOMB = 2
 }
 
-function create_block(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()) {
+function create_block(_type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
 	
 	if (_type == BLOCK.RANDOM) { // If generating a new random gem
 		_type = weighted_random_block(self);
@@ -22,7 +22,7 @@ function create_block(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()
 	var _bomb_level = 1;
 	var _bomb_tracker = false;
 	
-	if (_powerup != -1) {
+	if (_powerup != POWERUP.NONE) {
 		_dir = _powerup.dir;
 		_bomb_level = _powerup.bomb_level;
 		_bomb_tracker = _powerup.bomb_tracker;

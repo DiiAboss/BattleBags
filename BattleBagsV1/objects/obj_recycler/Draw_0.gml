@@ -61,3 +61,6 @@ if (cooldown > 0) {
 draw_set_alpha(1);
 draw_rectangle_color(x, y, tar_x, y + 4, c_red, c_white, c_white, c_red, false);
 draw_self();
+
+
+draw_text_color(x, y, string(recycler_queue), c_black, c_black, c_black, c_black, 1);

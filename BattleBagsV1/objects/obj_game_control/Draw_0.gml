@@ -356,22 +356,9 @@ for (var i = 0; i < width; i++) {
 			    }
 			} 
 			else {
-                
-				if (j >= bottom_playable_row)
-				{
-				        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-				        var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
-					       
-						if (j == bottom_playable_row)
-						{		
-					        // Draw Normally but with Transparency
-					        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
-						}
-				}
-				else
-				{
+                    
                     draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
-				}
+				
 			}
 
                 //--------------------------------------------------------------------------------------
@@ -724,12 +711,14 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
             
             if grid[u, bottom_playable_row].type != BLOCK.NONE
             {
-                _scale = abs(obj_game_control.global_y_offset) / max_y_offset;
+                _scale = min(1, 1 - (abs(obj_game_control.global_y_offset) / max_y_offset) + 0.5);
             }
             
             draw_sprite_ext(powerup_slots[u].sprite, powerup_slots[u].img, current_x, draw_y, _scale, _scale, powerup_slots[u].angle, c_white, 1);
             draw_sprite_ext(spr_upgrades_overlay, 0, current_x, draw_y, _scale, _scale, 0, c_white, 1);
         }
+        
+        draw_sprite(spr_upgrade_tube, 0, board_x_offset + (u * gem_size) + offset, (bottom_playable_row * gem_size));
     }
 }
 

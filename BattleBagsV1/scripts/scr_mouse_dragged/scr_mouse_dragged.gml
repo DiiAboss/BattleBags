@@ -4,8 +4,8 @@ function block_dragged(_self, action_key_pressed = mouse_check_button_pressed(mb
 	
 	//var input = _self.input;
 	
-	var width = _self.width;
-	var height = _self.height;
+	var width = _self.board_width;
+	var height = _self.bottom_playable_row;
 	var board_x_offset = _self.board_x_offset;
 	var gem_size = _self.gem_size;
 	var global_y_offset = _self.global_y_offset;

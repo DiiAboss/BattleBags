@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"Sprite59",
-    "path":"sprites/Sprite59/Sprite59.yy",
+    "name":"spr_conveyor_tube",
+    "path":"sprites/spr_conveyor_tube/spr_conveyor_tube.yy",
   },
   "spriteMaskId":null,
   "visible":true,

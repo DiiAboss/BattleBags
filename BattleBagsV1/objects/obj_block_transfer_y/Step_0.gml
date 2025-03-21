@@ -13,7 +13,7 @@ if (y < target_y)
     t.my_image = my_image;
     t.my_size = my_size;
     t.my_value = my_value;
+    t.sprite = sprite;
     instance_destroy();
-    
 }
    

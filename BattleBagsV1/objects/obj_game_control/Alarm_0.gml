@@ -38,10 +38,5 @@ for (var i = 0; i < array_length(big_block_types_on_grid); i++) {
 // Reset the alarm
 //alarm[0] = room_speed; // Runs every 30 frames assuming 30 FPS
 
-
-
-
-
-
 alarm[0] = scan_board;
 

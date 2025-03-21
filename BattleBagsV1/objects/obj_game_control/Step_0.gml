@@ -65,9 +65,14 @@ if (global.paused) || global.in_upgrade_menu {
 	return;
 }
 
+
+
+//----------------------------------------------------------
+// DRONE CONTROLLER
+//----------------------------------------------------------
 for (var d = 0; d< number_of_drones; d++)
-{
-drone_array[d].update();
+{ 
+    drone_array[d].update();
 }
 
 
@@ -90,12 +95,12 @@ process_gameboard_speed(self, input.SpeedUpKey);
 if (input.InputType == INPUT.GAMEPAD)
 {
     control_mode = "legacy";
-    is_targeting_enemy = input.CycleSkillUp;
+    //is_targeting_enemy = input.CycleSkillUp;
 }
 else 
 {
     control_mode = "modern";
-    is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 256;    
+    //is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 256;    
 }
 
 process_inputs_and_delay(self, input);

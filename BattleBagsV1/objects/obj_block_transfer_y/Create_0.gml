@@ -14,3 +14,4 @@ if (instance_exists(obj_target))
 my_image = 0;
 my_size = 1;
 my_value = obj_game_control.combo;
+sprite = spr_transfer_block;
