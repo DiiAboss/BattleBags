@@ -712,15 +712,21 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
         
     }
 
-    for (var u = 0; u < array_length(upgrade_slots); u++)
+    for (var u = 0; u < array_length(powerup_slots); u++)
     {
-        if (upgrade_slots[u] != -1)
+        if (powerup_slots[u] != -1)
         {
             var draw_x = board_x_offset + (u * gem_size) + offset;
             var draw_y = (bottom_playable_row * gem_size);
-            var current_x = upgrade_slots[u].x_pos;
+            var current_x = powerup_slots[u].x_pos;
+            var _scale = 1;
             
-            draw_sprite_ext(upgrade_slots[u].sprite, upgrade_slots[u].img, current_x, draw_y, 1, 1, upgrade_slots[u].angle, c_white, 1);
+            if grid[u, bottom_playable_row].type != BLOCK.NONE
+            {
+                _scale = obj_game_control.global_y_offset > -32 ? 1 : 1.5 - (obj_game_control.global_y_offset / -64)
+            }
+            
+            draw_sprite_ext(powerup_slots[u].sprite, powerup_slots[u].img, current_x, draw_y, _scale, _scale, powerup_slots[u].angle, c_white, 1);
             draw_sprite(spr_upgrades_overlay, 0, current_x, draw_y);
         }
     }

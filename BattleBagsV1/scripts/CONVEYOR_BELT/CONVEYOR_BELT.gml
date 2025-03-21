@@ -76,13 +76,13 @@ function add_upgrades_to_bottom(block, position = -1)
 {
     var lane = position;
     var game_control = obj_game_control;
-    var upgrade_slots = game_control.upgrade_slots;
+    var powerup_slots = game_control.powerup_slots;
     if (position == -1)
     {
         var temp_array = [];
-        for (var slot = 0; slot < array_length(upgrade_slots); slot++)
+        for (var slot = 0; slot < array_length(powerup_slots) - 1; slot++)
         {
-            if (upgrade_slots[slot] == -1)
+            if (powerup_slots[slot] == -1)
             {
                 array_push(temp_array, slot);
             }
@@ -115,7 +115,7 @@ function add_upgrades_to_bottom(block, position = -1)
         angle: 0
     };
     
-    obj_game_control.upgrade_slots[lane] = block_data;
+    obj_game_control.powerup_slots[lane] = block_data;
 }
 
 

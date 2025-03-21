@@ -66,7 +66,7 @@ ds_map_add(global.powerup_weights, POWERUP.NONE, chance_none);
 
 
 
-function create_powerup(_powerup = -1, _chance = 25) {
+function create_powerup(_powerup = -1) {
 	
 	var _sprite = spr_powerup_1;
 	var _dir = choose(0, 90, 180, 270);
@@ -140,7 +140,7 @@ function create_powerup(_powerup = -1, _chance = 25) {
     return {
         powerup: _powerup, // Power-up type (e.g., 0 for bomb, 1 for rainbow, etc.)
 		sprite: _sprite,
-		chance: _chance,
+		//chance: _chance,
 		dir: _dir,
 		size: 1,
 		bomb_tracker: _bomb_tracker,

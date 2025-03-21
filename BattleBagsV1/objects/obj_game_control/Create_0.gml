@@ -88,7 +88,7 @@ board_height = 24;
 top_playable_row    = 4;
 bottom_playable_row = 20;
 
-upgrade_slots = array_create(board_width, -1);
+powerup_slots = array_create(board_width, -1);
 // ------------------------------------------------------
 // MUSIC
 // ------------------------------------------------------

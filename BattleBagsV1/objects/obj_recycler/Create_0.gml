@@ -124,7 +124,7 @@ deposit_blocks =
     {
         type: DEPOSIT_BLOCK.UPGRADE,
         weight: 5,
-        value: UPGRADE.ARROW,
+        value: POWERUP.BOW,
         sprite: spr_upgrades,
         img: 0,
     },
@@ -132,10 +132,26 @@ deposit_blocks =
     {
         type: DEPOSIT_BLOCK.UPGRADE,
         weight: 5,
-        value: UPGRADE.HEART,
+        value: POWERUP.HEART,
          sprite: spr_upgrades,
-         img: 1,
-    }
+         img: 4,
+    },
+    bomb:
+    {
+        type: DEPOSIT_BLOCK.UPGRADE,
+        weight: 5,
+        value: POWERUP.BOMB,
+        sprite: spr_upgrades,
+        img: 5,
+    },
+    timer:
+    {
+        type: DEPOSIT_BLOCK.UPGRADE,
+        weight: 5,
+        value: POWERUP.TIMER,
+        sprite: spr_upgrades,
+        img: 1,
+    },
     
 }
 // TODO: CHANGE BLOCK SPRITE LOADING AND OTHER DEPOSIT BLOCK FEATURES!
