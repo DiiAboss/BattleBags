@@ -1,9 +1,11 @@
 /// @description
+
+
+
 // Shop initialization
 shop_open = true;
 scroll_offset = 238;
 max_scroll = 0;
-scroll_speed = 20;
 max_scroll_default = 238;
 target_scroll      = 0;
 scroll_speed       = 0.2;   // Lower values = smoother scrolling
@@ -14,6 +16,17 @@ selected_item = -1;
 
 // Placeholder item list
 shop_items = array_create(0);
+
+create_new_upgrade =
+{
+    name: "Upgrade " + string(i+1),
+    desc: "Description for Upgrade " + string(i+1),
+    price: (i+1) * 100,
+    sprite: spr_none,
+    type: "upgrade", // Could be "upgrade", "drone", etc.
+    purchased: false,
+    hovered: false, 
+}
 
 // Example of populating the shop (temporary placeholders)
 for (var i = 0; i < 8; i++) {

@@ -205,6 +205,7 @@
     {"name":"Script93","order":19,"path":"scripts/Script93/Script93.yy",},
     {"name":"Script98","order":1,"path":"scripts/Script98/Script98.yy",},
     {"name":"SHIFT_UP_MP","order":5,"path":"scripts/SHIFT_UP_MP/SHIFT_UP_MP.yy",},
+    {"name":"SHOP","order":43,"path":"scripts/SHOP/SHOP.yy",},
     {"name":"SPAWN_WILD_BLOCK","order":11,"path":"scripts/SPAWN_WILD_BLOCK/SPAWN_WILD_BLOCK.yy",},
     {"name":"SWAPS","order":7,"path":"scripts/SWAPS/SWAPS.yy",},
     {"name":"TARGET_ENEMY","order":3,"path":"scripts/TARGET_ENEMY/TARGET_ENEMY.yy",},

@@ -31,7 +31,7 @@ total_blocks_destroyed = 0;
 total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
-
+in_shop = false;
 
 // These will be bound to keyboard keys and right clicks
 skills = [0,0,0,0];

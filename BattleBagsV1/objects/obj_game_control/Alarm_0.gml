@@ -18,7 +18,7 @@ for (var _y = 0; _y < bottom_playable_row; _y++) {
     for (var _x = 0; _x < board_width; _x++) {
         var block = grid[_x, _y];
         
-        if (block.type != BLOCK.NONE && block.is_big) {
+        if (block.type != BLOCK.NONE && block.type != BLOCK.MEGA && block.is_big) {
             // Add to big_blocks array if it's not already in there
             if (!array_contains(big_blocks, block.group_id)) {
                 array_push(big_blocks, block.group_id);

@@ -76,6 +76,7 @@ if (input.ActionPress) {
         return;
     }
     
+    
     selected_item = hover_index;
     var item = shop_items[selected_item];
     
@@ -92,4 +93,6 @@ if (input.ActionPress) {
         }
     are_you_sure = false;
 }
+
+
 

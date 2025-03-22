@@ -273,6 +273,7 @@
     {"id":{"name":"SEND_MAP_OVER_UDP","path":"scripts/SEND_MAP_OVER_UDP/SEND_MAP_OVER_UDP.yy",},},
     {"id":{"name":"SHADER_NEON_GLOW","path":"scripts/SHADER_NEON_GLOW/SHADER_NEON_GLOW.yy",},},
     {"id":{"name":"SHIFT_UP_MP","path":"scripts/SHIFT_UP_MP/SHIFT_UP_MP.yy",},},
+    {"id":{"name":"SHOP","path":"scripts/SHOP/SHOP.yy",},},
     {"id":{"name":"SPAWN_WILD_BLOCK","path":"scripts/SPAWN_WILD_BLOCK/SPAWN_WILD_BLOCK.yy",},},
     {"id":{"name":"SPRITE_FOR_BLOCK","path":"scripts/SPRITE_FOR_BLOCK/SPRITE_FOR_BLOCK.yy",},},
     {"id":{"name":"SWAP_FUNCTIONS","path":"scripts/SWAP_FUNCTIONS/SWAP_FUNCTIONS.yy",},},
