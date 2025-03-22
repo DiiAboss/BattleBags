@@ -128,6 +128,7 @@
     {"id":{"name":"obj_player_attack","path":"objects/obj_player_attack/obj_player_attack.yy",},},
     {"id":{"name":"obj_player_marker","path":"objects/obj_player_marker/obj_player_marker.yy",},},
     {"id":{"name":"obj_recycler","path":"objects/obj_recycler/obj_recycler.yy",},},
+    {"id":{"name":"obj_sequViewer","path":"objects/obj_sequViewer/obj_sequViewer.yy",},},
     {"id":{"name":"obj_server","path":"objects/obj_server/obj_server.yy",},},
     {"id":{"name":"obj_shop_controller","path":"objects/obj_shop_controller/obj_shop_controller.yy",},},
     {"id":{"name":"obj_sorter_drone","path":"objects/obj_sorter_drone/obj_sorter_drone.yy",},},
@@ -152,6 +153,7 @@
     {"id":{"name":"rm_online_game","path":"rooms/rm_online_game/rm_online_game.yy",},},
     {"id":{"name":"rm_online_lobby","path":"rooms/rm_online_lobby/rm_online_lobby.yy",},},
     {"id":{"name":"rm_online_multiplayer_menu","path":"rooms/rm_online_multiplayer_menu/rm_online_multiplayer_menu.yy",},},
+    {"id":{"name":"rm_sequenceViewer","path":"rooms/rm_sequenceViewer/rm_sequenceViewer.yy",},},
     {"id":{"name":"rm_stats","path":"rooms/rm_stats/rm_stats.yy",},},
     {"id":{"name":"ADD_NEW_COLUMN","path":"scripts/ADD_NEW_COLUMN/ADD_NEW_COLUMN.yy",},},
     {"id":{"name":"AI_2","path":"scripts/AI_2/AI_2.yy",},},
@@ -394,6 +396,7 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
+    {"roomId":{"name":"rm_sequenceViewer","path":"rooms/rm_sequenceViewer/rm_sequenceViewer.yy",},},
     {"roomId":{"name":"rm_init","path":"rooms/rm_init/rm_init.yy",},},
     {"roomId":{"name":"rm_map_room_test","path":"rooms/rm_map_room_test/rm_map_room_test.yy",},},
     {"roomId":{"name":"rm_gameRoom","path":"rooms/rm_gameRoom/rm_gameRoom.yy",},},
