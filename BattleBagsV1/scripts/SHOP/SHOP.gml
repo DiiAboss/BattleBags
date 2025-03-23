@@ -14,7 +14,14 @@ enum CURRENCY
 enum POLARITY
 {
     NEGATIVE,
-    POSITIVE    
+    POSITIVE,
+    NEUTRAL   
+}
+
+enum VALUE
+{
+    TRUE = 999,
+    FALSE = -999,
 }
 
 
@@ -31,34 +38,181 @@ global.Upgrades =
     recycler: 
     {
         name: "Recycler",
-
+        
         cooldown:
         {
             name: "Cooldown",
+            desc: "Recycler Cooldown Rate",
             increase:
             { 
                 name: "Increase",
                 desc: "Increase the speed of the recycler output",
-                value: 0.05,
+                value: 0.01,
                 pol: POLARITY.POSITIVE,
-                rarity: 10
+                rarity: 10,
+                target_var: "obj_recycler.max_cooldown",
+                requires: "",
             },
             
             decrease:
             {
                 name: "Decrease",
                 desc: "Reduce the speed of the recycler output",
-                value: 0.05,
-                pol: POLARITY.POSITIVE,
-                rarity: 10
+                value: -0.01,
+                pol: POLARITY.NEGATIVE,
+                rarity: 10,
+                target_var: "obj_recycler.max_cooldown",
+                requires: "",
             }
         },
-        
+
+        rotation:
+        {
+            name: "Rotation",
+            desc: "Recycler Rotation",
+
+            activate:
+            {
+                name: "Activate",
+                desc: "Recycler Rotation",
+                on:
+                { 
+                    name: "On",
+                    desc: "Activate Recycler Rotation",
+                    value: VALUE.TRUE,
+                    pol: POLARITY.NEUTRAL,
+                    rarity: 20,
+                    target_var: "obj_recycler.max_rotation",
+                    requires: "",
+                },
+                
+                off:
+                {
+                    name: "Off",
+                    desc: "Deactivate Recycler Rotation",
+                    value: VALUE.FALSE,
+                    pol: POLARITY.NEUTRAL,
+                    rarity: 20,
+                    target_var: "obj_recycler.max_rotation",
+                    requires: "",
+                }
+            },
+    
+
+            increase:
+            { 
+                name: "Increase",
+                desc: "Increase the Recycler Rotation",
+                value: 0.01,
+                pol: POLARITY.POSITIVE,
+                rarity: 20,
+                target_var: "obj_recycler.max_rotation",
+                requires: "",
+            },
+            
+            decrease:
+            {
+                name: "Decrease",
+                desc: "Reduce the Recycler Rotation",
+                value: -0.01,
+                pol: POLARITY.NEGATIVE,
+                rarity: 20,
+                target_var: "obj_recycler.max_rotation",
+                requires: "",
+            }
+        },
+
+
         bad_block:
         {
+            name: "Bad Block",
+
+            disable:
+            {
+                name: "Disable",
+                desc: "Disable Bad Blocks",
+                on:
+                { 
+                    name: "On",
+                    desc: "Activate Bad Block",
+                    value: VALUE.TRUE,
+                    pol: POLARITY.NEUTRAL,
+                    rarity: 20,
+                    target_var: "obj_recycler.max_rotation",
+                    requires: "",
+                },
+                
+                off:
+                {
+                    name: "Off",
+                    desc: "Deactivate Recycler Rotation",
+                    value: VALUE.FALSE,
+                    pol: POLARITY.NEUTRAL,
+                    rarity: 20,
+                    target_var: "obj_recycler.max_rotation",
+                    requires: "",
+                },
+
+                max_timer:
+                {
+                    name: "Timer",
+                    desc: "Recycler Bad Block Disable Timer",
+                    increase:
+                   { 
+                       name: "Increase",
+                       desc: "Increase the Recycler Bad Block Disable Timer",
+                       value: 0.01,
+                       pol: POLARITY.POSITIVE,
+                       rarity: 20,
+                       target_var: "obj_recycler.max_rotation",
+                       requires: "",
+                   },
+                   
+                   decrease:
+                   {
+                       name: "Decrease",
+                       desc: "Reduce the Recycler Bad Block Disable Timer",
+                       value: -0.01,
+                       pol: POLARITY.NEGATIVE,
+                       rarity: 20,
+                       target_var: "obj_recycler.max_rotation",
+                       requires: "",
+                   }
+                },
+
+                cooldown:
+                {
+                    name: "Cooldown",
+                    desc: "Recycler Cooldown Timer",
+                    increase:
+                    { 
+                        name: "Increase",
+                        desc: "Increase the Recycler Cooldown Timer",
+                        value: 0.01,
+                        pol: POLARITY.NEGATIVE,
+                        rarity: 20,
+                        target_var: "obj_recycler.max_rotation",
+                        requires: "",
+                    },
+                    
+                    decrease:
+                    {
+                        name: "Decrease",
+                        desc: "Reduce the Recycler Cooldown Timer",
+                        value: -0.01,
+                        pol: POLARITY.POSITIVE,
+                        rarity: 20,
+                        target_var: "obj_recycler.max_rotation",
+                        requires: "",
+                    }
+                },
+            }, 
+
+
             chance:
             {
                 name: "Chance",
+                desc: "Recycler Bad Block Spawn Rate",
                 increase: 
                 {
                     name: "Increase",
@@ -91,6 +245,14 @@ global.Upgrades =
                     value: 0.05,
                     pol: POLARITY.POSITIVE,
                     rarity: 10
+                },
+                decrease:
+                {
+                    name: "Decrease",
+                    desc: "Decrease chance to spawn copper blocks",
+                    value: -0.05,
+                    pol: POLARITY.NEGATIVE,
+                    rarity: 5
                 }
             }
         },
@@ -105,8 +267,16 @@ global.Upgrades =
                 {
                     name: "Increase",
                     desc: "Increase chance to spawn silver blocks",
-                    value: 0.04,
+                    value: 0.05,
                     pol: POLARITY.POSITIVE,
+                    rarity: 15
+                },
+                decrease:
+                {
+                    name: "Decrease",
+                    desc: "Decrease chance to spawn silver blocks",
+                    value: -0.05,
+                    pol: POLARITY.NEGATIVE,
                     rarity: 15
                 }
             }
@@ -122,10 +292,19 @@ global.Upgrades =
                 {
                     name: "Increase",
                     desc: "Increase chance to spawn gold blocks",
-                    value: 0.03,
+                    value: 0.05,
                     pol: POLARITY.POSITIVE,
                     rarity: 20
-                }
+                },
+                decrease:
+                {
+                    name: "Decrease",
+                    desc: "Decrease chance to spawn gold blocks",
+                    value: -0.05,
+                    pol: POLARITY.NEGATIVE,
+                    rarity: 15
+                },
+                
             }
         },
 
@@ -146,12 +325,42 @@ global.Upgrades =
                 {
                     name: "Decrease",
                     desc: "Reduce the chance of a block spawning from the recycler",
-                    value: 0.05,
+                    value: -0.05,
                     pol: POLARITY.NEGATIVE,
-                    rarity: 10
+                    rarity: 5
                 }
             }
         },
+        
+        powerup:
+        {
+            name: "Powerup",
+            spawn:
+            {
+                name: "Spawn",
+                rate: 
+                {
+                    name: "Rate",
+                    increase:
+                   {
+                       name: "Increase",
+                       desc: "Increase the chance of a block spawning from the recycler",
+                       value: 0.05,
+                       pol: POLARITY.POSITIVE,
+                       rarity: 10
+                   },
+                   decrease:
+                   {
+                       name: "Decrease",
+                       desc: "Reduce the chance of a block spawning from the recycler",
+                       value: -0.05,
+                       pol: POLARITY.POSITIVE,
+                       rarity: 10
+                   }
+                },
+            },
+        },
+
     },
 
     grid:
@@ -162,7 +371,24 @@ global.Upgrades =
             name: "Shift",
             rate:
             {
-                decrease: { name: "Decrease", desc: "Slow down the grid shift rate", value: 1.05, rarity: 10, pol: POLARITY.POSITIVE }
+                name: "Rate",
+                decrease: 
+                { 
+                    name: "Decrease", 
+                    desc: "Slow down the grid shift rate", 
+                    value: -0.05, 
+                    rarity: 10, 
+                    pol: POLARITY.POSITIVE 
+                },
+                increase: 
+                { 
+                    name: "Increase", 
+                    desc: "Speed up the grid shift rate", 
+                    value: 0.05, 
+                    rarity: 10, 
+                    pol: POLARITY.NEGATIVE
+                },
+                
             }
         }
     },
@@ -181,13 +407,28 @@ global.Upgrades =
 
     drones:
     {
+        name: "Drones",
         speed:
         {
             name: "Speed",
-            desc: "Increase drone movement speed",
-            value: 0.05,
-            pol: POLARITY.POSITIVE,
-            rarity: 10
+            increase: 
+            {
+                name: "Increase",
+              desc: "Increase drone movement speed",
+              value: 0.05,
+              pol: POLARITY.POSITIVE,
+              rarity: 10,
+            },
+            decrease: 
+            { 
+              name: "Decrease",
+              desc: "Decrease drone movement speed",
+              value: -0.05,
+              pol: POLARITY.POSITIVE,
+              rarity: 10,
+            },
+            
+
         },
         carry_capacity:
         {
@@ -231,16 +472,50 @@ global.Upgrades =
         }
     },
 
-    powerups:
+    powerup:
     {
-        spawn_chance:
+        name: "Powerup",
+        all_powerups:
         {
-            name: "Spawn Chance",
-            desc: "Increase powerup spawn chance",
-            value: 0.02,
-            pol: POLARITY.POSITIVE,
-            rarity: 15
-        }
+            name: "All",
+            spawn:
+            {
+                name: "Spawn",
+                desc: "All Unlocked Powerups Spawn ",
+                increase: 
+                {
+                    name: "Increase",
+                    desc: "All Unlocked Powerups Spawn ",
+                    value: 0.01,
+                    pol: POLARITY.POSITIVE,
+                    rarity: 20,
+                    target_var: "",
+                },
+                decrease: 
+                {
+                    name: "Increase",
+                    desc: "All Unlocked Powerups Spawn ",
+                    value: -0.01,
+                    pol: POLARITY.NEGATIVE,
+                    rarity: 18,
+                    target_var: "",
+                },
+            },
+        },
+        bow:
+        {
+            name: "Bow",
+           spawn_chance:
+           {
+               name: "Spawn Chance",
+
+               desc: "Increase powerup spawn chance",
+               value: 0.02,
+               pol: POLARITY.POSITIVE,
+               rarity: 15
+           }
+        },
+
     },
 
     skills:
@@ -576,86 +851,411 @@ function array_random(array)
     return (array[rand]);
 }
 
-function generate_upgrade() {
+// Global array to store paths during recursion
+var global._temp_paths = [];
 
-    // Start by randomly picking a system
-    var system_keys = variable_struct_get_names(global.Upgrades);
-    var attempts = 50; // avoid infinite loops
-    var final_struct = undefined;
-
-    while (attempts > 0) {
-        var path = []; // to store the keys we follow
-        var current_struct = global.Upgrades;
-
-        // Step downwards until we find a struct with a "value"
-        while (!variable_struct_exists(current_struct, "value")) {
-            var keys = variable_struct_get_names(current_struct);
-            var valid_keys = [];
-            for (var i = 0; i < array_length(keys); i++) {
-                if (keys[i] != "name" && keys[i] != "desc") {
-                    array_push(valid_keys, keys[i]);
-                }
-            }
-
-            if (array_length(valid_keys) == 0) break; // no further keys, invalid path
-            
-            var chosen_key = array_random(valid_keys);
-            array_push(path, chosen_key);
-            current_struct = variable_struct_get(current_struct, chosen_key);
-        }
-
-        // Found a valid struct with "value"
-        if (variable_struct_exists(current_struct, "value")) {
-            final_struct = current_struct;
-            break;
+// Recursive function to explore struct and find all paths
+function explore_struct_recursive(_struct, _path_so_far) {
+    if (variable_struct_exists(_struct, "value")) {
+        // Found a leaf node, save it
+        var _path_copy = [];
+        array_copy(_path_copy, 0, _path_so_far, 0, array_length(_path_so_far));
+        var _path_data = {
+            path: _path_copy,
+            data: _struct
+        };
+        array_push(global._temp_paths, _path_data);
+        return;
+    }
+    
+    // Get all keys in this struct
+    var _keys = variable_struct_get_names(_struct);
+    
+    // Explore each key
+    for (var _i = 0; _i < array_length(_keys); _i++) {
+        var _key = _keys[_i];
+        
+        // Skip metadata keys
+        if (_key == "name" || _key == "desc" || _key == "pol" || 
+            _key == "rarity" || _key == "target_var" || _key == "requires") {
+            continue;
         }
         
-        attempts--;
+        var _next_struct = variable_struct_get(_struct, _key);
+        
+        // Only process if it's a struct
+        if (is_struct(_next_struct)) {
+            // Add this key to the path
+            var _new_path = [];
+            array_copy(_new_path, 0, _path_so_far, 0, array_length(_path_so_far));
+            array_push(_new_path, _key);
+            
+            // Explore deeper
+            explore_struct_recursive(_next_struct, _new_path);
+        }
     }
+}
 
-    if (final_struct == undefined) {
+// Function to find all upgrade paths
+function find_all_upgrade_paths() {
+    // Clear the global paths array
+    global._temp_paths = [];
+    
+    // Start exploring from the root with empty path
+    explore_struct_recursive(global.Upgrades, []);
+    
+    // Copy the results
+    var _result = [];
+    array_copy(_result, 0, global._temp_paths, 0, array_length(global._temp_paths));
+    
+    // Clear the global array
+    global._temp_paths = [];
+    
+    // Return the collected paths
+    return _result;
+}
+
+// Generate a single upgrade
+function generate_upgrade() {
+    var _mod_list = [];
+    var _total_rarity = 0;
+    var _mod_attempts = irandom_range(1, 3); // Allow 1-3 mods per upgrade
+    var _attempts = 100;
+    
+    // Find all possible upgrade paths
+    var _all_paths = find_all_upgrade_paths();
+    
+    // If no paths found, return undefined
+    if (array_length(_all_paths) == 0) {
+        show_debug_message("No upgrade paths found!");
+        return undefined;
+    }
+    
+    // Try to find enough unique mods
+    while (_mod_attempts > 0 && _attempts > 0) {
+        _attempts--;
+        
+        // Pick a random upgrade path
+        var _path_index = irandom(array_length(_all_paths) - 1);
+        var _path_data = _all_paths[_path_index];
+        var _path = _path_data.path;
+        var _struct = _path_data.data;
+        
+        // Check if we already added this mod
+        var _already_added = false;
+        var _path_string = string_join(".", _path);
+        
+        for (var _j = 0; _j < array_length(_mod_list); _j++) {
+            if (_mod_list[_j].path_string == _path_string) {
+                _already_added = true;
+                break;
+            }
+        }
+        
+        if (_already_added) continue;
+        
+        // Build the mod object
+        var _system = _path[0];
+        var _property = (array_length(_path) > 1) ? _path[1] : "General";
+        var _modifier = (array_length(_path) > 2) ? _path[2] : "Default";
+        var _submodifier = (array_length(_path) > 3) ? _path[3] : "";
+        
+        // Determine value type
+        var _value_type = "numeric";
+        if (_struct.value == VALUE.TRUE || _struct.value == VALUE.FALSE) {
+            _value_type = "boolean";
+        }
+        
+        var _mod = {
+            system: _system,
+            property: _property,
+            modifier_key: _modifier,
+            submodifier: _submodifier,
+            name: _struct.name,
+            desc: _struct.desc,
+            value: _struct.value,
+            value_type: _value_type,
+            polarity: _struct.pol,
+            rarity: _struct.rarity,
+            path_string: _path_string,
+            path: _path
+        };
+        
+        // Add target_var if it exists
+        if (variable_struct_exists(_struct, "target_var")) {
+            _mod.target_var = _struct.target_var;
+        }
+        
+        // Add requires if it exists
+        if (variable_struct_exists(_struct, "requires")) {
+            _mod.requires = _struct.requires;
+        }
+        
+        // Add the mod to our list
+        array_push(_mod_list, _mod);
+        _total_rarity += _mod.rarity;
+        _mod_attempts--;
+    }
+    
+    // If we didn't find any mods, return undefined
+    if (array_length(_mod_list) == 0) {
         show_debug_message("Upgrade generation failed after multiple attempts.");
         return undefined;
     }
-
-    // Now build the upgrade data
-    var system = path[0]; // top-level system
-    var property = (array_length(path) > 1) ? path[1] : "General";
-    var modifier = (array_length(path) > 2) ? path[2] : "Default";
-
-    // Manufacturer fallback
-    var manufacturer_list = variable_struct_exists(global.Manufacturers, system)
-        ? variable_struct_get(global.Manufacturers, system)
+    
+    // Calculate rarity
+    var _average_rarity = _total_rarity / array_length(_mod_list);
+    var _upgrade_rarity = rarity_from_value(_average_rarity);
+    var _mod_color = rarity_to_color(_upgrade_rarity);
+    
+    // Find manufacturer
+    var _system_main = _mod_list[0].system;
+    var _manufacturer_list = variable_struct_exists(global.Manufacturers, _system_main)
+        ? variable_struct_get(global.Manufacturers, _system_main)
         : global.Manufacturers.alt;
-    var maker = array_random(manufacturer_list);
-
-    var upgrade_mod = {
-        system: system,
-        property: property,
-        modifier_key: modifier,
-        name: final_struct.name,
-        desc: final_struct.desc,
-        value: final_struct.value,
-        polarity: final_struct.pol,
-        rarity: final_struct.rarity
-    };
-
-    var rarity = rarity_from_value(upgrade_mod.rarity);
-    var mod_color = (upgrade_mod.polarity == POLARITY.NEGATIVE) ? c_red : rarity_to_color(rarity);
-
-    var full_name = maker + "'s " + upgrade_mod.name + " " + string_upper(property);
-
+    var _maker = array_random(_manufacturer_list);
+    
+    // Generate name
+    var _full_name = _maker + "'s " + _mod_list[0].name;
+    
+    // Add property to the name
+    if (_mod_list[0].property != "General") {
+        _full_name += " " + string_upper(_mod_list[0].property);
+    }
+    
+    // Add modifier for deeper paths
+    if (_mod_list[0].modifier_key != "Default" && _mod_list[0].modifier_key != "increase" && 
+        _mod_list[0].modifier_key != "decrease") {
+        _full_name += " " + string_upper(_mod_list[0].modifier_key);
+    }
+    
+    // Add submodifier for the deepest level
+    if (_mod_list[0].submodifier != "") {
+        _full_name += " " + string_upper(_mod_list[0].submodifier);
+    }
+    
+    // Return the completed upgrade
     return {
-        name: full_name,
-        mods: [upgrade_mod],
-        rarity: rarity,
-        color: mod_color,
-        manufacturer: maker,
-        system: system,
-        property: property,
-        desc: upgrade_mod.desc,
-        value: upgrade_mod.value
+        name: _full_name,
+        mods: _mod_list,
+        rarity: _upgrade_rarity,
+        color: _mod_color,
+        manufacturer: _maker,
+        system: _system_main,
     };
+}
+
+// Debug function to test the upgrade generation
+function generate_debug_upgrades() {
+    // Find all possible upgrade paths
+    var _all_paths = find_all_upgrade_paths();
+    show_debug_message("Total possible upgrade paths: " + string(array_length(_all_paths)));
+    
+    // Print a few sample paths
+    var _max_samples = min(5, array_length(_all_paths));
+    for (var _i = 0; _i < _max_samples; _i++) {
+        var _path = _all_paths[_i];
+        show_debug_message("Path " + string(_i+1) + ": " + string_join(".", _path.path) + 
+                        " → " + _path.data.desc);
+    }
+    
+    // Generate and display some upgrades
+    for (var _i = 0; _i < 10; _i++) {
+        var _upg = generate_upgrade();
+        if (_upg != undefined) {
+            show_debug_message("\nUpgrade: " + _upg.name + " [" + _upg.rarity + "]");
+            
+            for (var _m = 0; _m < array_length(_upg.mods); _m++) {
+                var _mod = _upg.mods[_m];
+                
+                // Get polarity text
+                var _polarity_text = "";
+                if (_mod.polarity == POLARITY.POSITIVE) {
+                    _polarity_text = "Positive";
+                } else if (_mod.polarity == POLARITY.NEGATIVE) {
+                    _polarity_text = "Negative";
+                } else {
+                    _polarity_text = "Neutral";
+                }
+                
+                // Format the effect text
+                var _effect_text = "";
+                if (_mod.value_type == "boolean") {
+                    if (_mod.value == VALUE.TRUE) {
+                        _effect_text = "Enable";
+                    } else {
+                        _effect_text = "Disable";
+                    }
+                } else {
+                    // For numeric values
+                    if (abs(_mod.value) < 1 && _mod.value != 0) {
+                        _effect_text = _mod.desc + " by " + string(abs(_mod.value) * 100) + "%";
+                    } else {
+                        _effect_text = _mod.desc + " by " + string(_mod.value);
+                    }
+                }
+                
+                show_debug_message(" - Mod: " + _mod.name 
+                    + ", Rarity: " + string(_mod.rarity) 
+                    + ", Polarity: " + _polarity_text
+                    + ", Effect: " + _effect_text
+                    + ", Path: " + _mod.path_string);
+            }
+        } else {
+            show_debug_message("Upgrade generation failed - struct not found or incomplete.");
+        }
+    }
+}
+
+//// Helper function to find all possible upgrade paths (for debugging)
+//function find_all_upgrade_paths() {
+    //var _all_paths = [];
+    //
+    //function explore_struct(_struct, _current_path) {
+        //var _keys = variable_struct_get_names(_struct);
+        //
+        //for (var _i = 0; _i < array_length(_keys); _i++) {
+            //var _key = _keys[_i];
+            //
+            //// Skip name and desc properties
+            //if (_key == "name" || _key == "desc") continue;
+            //
+            //var _next_struct = variable_struct_get(_struct, _key);
+            //var _new_path = [];
+            //array_copy(_new_path, 0, _current_path, 0, array_length(_current_path));
+            //array_push(_new_path, _key);
+            //
+            //if (variable_struct_exists(_next_struct, "value")) {
+                //// Found a leaf node with a value
+                //array_push(_all_paths, {
+                    //path: _new_path,
+                    //data: _next_struct
+                //});
+            //} else if (is_struct(_next_struct)) {
+                //// Continue exploring deeper
+                //explore_struct(_next_struct, _new_path);
+            //}
+        //}
+    //}
+    //
+    //explore_struct(global.Upgrades, []);
+    //return _all_paths;
+//}
+//
+// Function to count the total number of possible upgrade types
+function count_upgrade_types() {
+    var _paths = find_all_upgrade_paths();
+    show_debug_message("Total unique upgrade types: " + string(array_length(_paths)));
+    
+    // Count by systems
+    var _system_counts = {};
+    for (var _i = 0; _i < array_length(_paths); _i++) {
+        var _path = _paths[_i].path;
+        var _system = _path[0];
+        
+        if (!variable_struct_exists(_system_counts, _system)) {
+            variable_struct_set(_system_counts, _system, 0);
+        }
+        
+        var _current_count = variable_struct_get(_system_counts, _system);
+        variable_struct_set(_system_counts, _system, _current_count + 1);
+    }
+    
+    // Display counts by system
+    var _system_names = variable_struct_get_names(_system_counts);
+    for (var _j = 0; _j < array_length(_system_names); _j++) {
+        var _sys_name = _system_names[_j];
+        var _count = variable_struct_get(_system_counts, _sys_name);
+        show_debug_message("System '" + _sys_name + "' has " + string(_count) + " upgrade types");
+    }
+    
+    return _paths;
+}
+
+//// Enhanced function that applies the upgrade to the game
+//function apply_upgrade(_upgrade) {
+    //if (is_undefined(_upgrade)) return false;
+    //
+    //for (var _i = 0; _i < array_length(_upgrade.mods); _i++) {
+        //var _mod = _upgrade.mods[_i];
+        //
+        //// Check if the mod has a target variable
+        //if (variable_struct_exists(_mod, "target_var") && _mod.target_var != "") {
+            //var _target_var = _mod.target_var;
+            //var _current_value = variable_global_get(_target_var);
+            //var _new_value;
+            //
+            //// Handle different value types
+            //if (_mod.value_type == "boolean") {
+                //// For boolean values, set directly
+                //_new_value = (_mod.value == VALUE.TRUE);
+            //} else {
+                //// For numeric values, add to current
+                //_new_value = _current_value + _mod.value;
+            //}
+            //
+            //// Apply the new value
+            //variable_global_set(_target_var, _new_value);
+            //show_debug_message("Applied upgrade: " + _mod.desc + " to " + _target_var + 
+                              //" (Old: " + string(_current_value) + ", New: " + string(_new_value) + ")");
+        //} else {
+            //// Handle mods without specific target variables (generic effects)
+            //show_debug_message("Applied generic upgrade: " + _mod.desc);
+            //// You would add specific code here to handle different types of generic upgrades
+        //}
+    //}
+    //
+    //return true;
+//}
+//
+// Helper function to find all possible upgrade paths (for debugging)
+//function find_all_upgrade_paths() {
+    //var all_paths = [];
+    //
+    //function explore_struct(struct, current_path) {
+        //var keys = variable_struct_get_names(struct);
+        //
+        //for (var i = 0; i < array_length(keys); i++) {
+            //var key = keys[i];
+            //
+            //// Skip name and desc properties
+            //if (key == "name" || key == "desc") continue;
+            //
+            //var next_struct = variable_struct_get(struct, key);
+            //var new_path = [];
+            //array_copy(new_path, 0, current_path, 0, array_length(current_path));
+            //array_push(new_path, key);
+            //
+            //if (variable_struct_exists(next_struct, "value")) {
+                //// Found a leaf node with a value
+                //array_push(all_paths, {
+                    //path: new_path,
+                    //data: next_struct
+                //});
+            //} else if (is_struct(next_struct)) {
+                //// Continue exploring deeper
+                //explore_struct(next_struct, new_path);
+            //}
+        //}
+    //}
+    //
+    //explore_struct(global.Upgrades, []);
+    //return all_paths;
+//}
+
+// Enhanced function to generate an upgrade with debug information
+function debug_generate_upgrade() {
+    var result = generate_upgrade();
+    if (result != undefined) {
+        var all_paths = find_all_upgrade_paths();
+        show_debug_message("Total possible upgrade paths: " + string(array_length(all_paths)));
+        show_debug_message("Generated upgrade with " + string(array_length(result.mods)) + " mods");
+        
+        for (var i = 0; i < array_length(result.mods); i++) {
+            show_debug_message("Mod #" + string(i+1) + ": " + result.mods[i].path_string);
+        }
+    }
+    return result;
 }
 
 // Convert numeric rarity to named rarity
@@ -678,4 +1278,23 @@ function rarity_to_color(rarity) {
     }
 }
 
-
+function generate_debug_upgrades_old()
+{
+    for (var i = 0; i < 10; i++) {
+        var upg = generate_upgrade();
+        if (!is_undefined(upg)) {
+            show_debug_message("Upgrade: " + upg.name + " [" + upg.rarity + "]");
+            for (var m = 0; m < array_length(upg.mods); m++) {
+                var _mod = upg.mods[m];
+                var polarity_text = (_mod.polarity == POLARITY.POSITIVE) ? "Positive" : "Negative";
+                show_debug_message(" - Mod: " + _mod.name 
+                    + ", Rarity: " + string(_mod.rarity) 
+                    + ", Polarity: " + polarity_text
+                    + ", Effect: " + _mod.desc 
+                    + " by " + string(_mod.value * 100) + "%");
+            }
+        } else {
+            show_debug_message("Upgrade generation failed - struct not found or incomplete.");
+        }
+    } 
+}

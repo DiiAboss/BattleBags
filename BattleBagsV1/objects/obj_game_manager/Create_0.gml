@@ -24,24 +24,8 @@ console_height = 200;
 console_alpha = 0.75;
 
 randomize();
+generate_debug_upgrades();
 
-for (var i = 0; i < 10; i++) {
-    var upg = generate_upgrade();
-    if (!is_undefined(upg)) {
-        show_debug_message("Upgrade: " + upg.name + " [" + upg.rarity + "]");
-        for (var m = 0; m < array_length(upg.mods); m++) {
-            var _mod = upg.mods[m];
-            var polarity_text = (_mod.polarity == POLARITY.POSITIVE) ? "Positive" : "Negative";
-            show_debug_message(" - Mod: " + _mod.name 
-                + ", Rarity: " + string(_mod.rarity) 
-                + ", Polarity: " + polarity_text
-                + ", Effect: " + _mod.desc 
-                + " by " + string(_mod.value * 100) + "%");
-        }
-    } else {
-        show_debug_message("Upgrade generation failed - struct not found or incomplete.");
-    }
-}
 
 //show_debug_overlay(true);
 input = new Input();  // Controller support

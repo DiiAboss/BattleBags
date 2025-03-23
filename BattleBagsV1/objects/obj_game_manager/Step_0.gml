@@ -8,7 +8,8 @@ if (input_delay > 0)
 //-----------------------------------------------
 #region console
 if (keyboard_check_pressed(vk_f1)) { 
-    console_active = !console_active;
+    //console_active = !console_active;
+    generate_debug_upgrades();
 }
 
 process_console(self, console_active);
