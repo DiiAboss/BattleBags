@@ -138,21 +138,23 @@ if (!obj_game_manager.console_active)
     enable_debug_controls(self, hover_x, hover_y, true);	
 }
 
-process_swap(self, swap_info);
+
 
 
 // ------------------------------------------------------
 // SMOOTH UPWARD MOVEMENT + SHIFT
 // ------------------------------------------------------
-global_y_offset -= shift_speed;
-
 if (global_y_offset <= -gem_size) {
     global_y_offset = 0;
     
     shift_up(self);
     last_position[1] -= 1;
 }
-
+else
+{
+    global_y_offset -= shift_speed;
+}
+process_swap(self, swap_info);
 
 darken_bottom_row(self);
 

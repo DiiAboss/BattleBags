@@ -221,6 +221,7 @@ global.Upgrades =
                     pol: POLARITY.NEGATIVE,
                     rarity: 15
                 },
+
                 decrease:
                 {
                     name: "Decrease",
@@ -253,8 +254,8 @@ global.Upgrades =
                     value: -0.05,
                     pol: POLARITY.NEGATIVE,
                     rarity: 5
-                }
-            }
+                },
+            },
         },
 
         silver_block:
@@ -305,7 +306,7 @@ global.Upgrades =
                     rarity: 15
                 },
                 
-            }
+            },
         },
 
         block_spawn:
@@ -328,8 +329,8 @@ global.Upgrades =
                     value: -0.05,
                     pol: POLARITY.NEGATIVE,
                     rarity: 5
-                }
-            }
+                },
+            },
         },
         
         powerup:
@@ -356,7 +357,7 @@ global.Upgrades =
                        value: -0.05,
                        pol: POLARITY.POSITIVE,
                        rarity: 10
-                   }
+                   },
                 },
             },
         },
@@ -388,9 +389,8 @@ global.Upgrades =
                     rarity: 10, 
                     pol: POLARITY.NEGATIVE
                 },
-                
-            }
-        }
+            },
+        },
     },
 
     block:
@@ -402,7 +402,8 @@ global.Upgrades =
             value: 0.10,
             pol: POLARITY.POSITIVE,
             rarity: 15
-        }
+        },
+        
     },
 
     drones:
@@ -410,10 +411,10 @@ global.Upgrades =
         name: "Drones",
         speed:
         {
-            name: "Speed",
+            name: "Movement Speed",
             increase: 
-            {
-                name: "Increase",
+            { 
+              name: "Increase",
               desc: "Increase drone movement speed",
               value: 0.05,
               pol: POLARITY.POSITIVE,
@@ -427,17 +428,28 @@ global.Upgrades =
               pol: POLARITY.POSITIVE,
               rarity: 10,
             },
-            
-
         },
+
         carry_capacity:
         {
             name: "Carry Capacity",
-            desc: "Increase the amount drones can carry",
-            value: 1,
-            pol: POLARITY.POSITIVE,
-            rarity: 15
-        }
+            increase: 
+            {
+                name: "Increase",
+              desc: "Increase Drone Carry Capacity",
+              value: 1,
+              pol: POLARITY.POSITIVE,
+              rarity: 10,
+              },
+              decrease: 
+              { 
+              name: "Decrease",
+              desc: "Decrease Drone Carry Capacity",
+              value: -1,
+              pol: POLARITY.NEGATIVE,
+              rarity: 10,
+              },
+        },
     },
 
     drone_mods:
@@ -472,20 +484,45 @@ global.Upgrades =
         }
     },
 
+    conveyor:
+    {
+        name: "Conveyor",
+        speed:
+        { 
+            name: "Speed",
+            increase: 
+            {
+                name: "Increase",
+                desc: "Increase Conveyor Speed",
+                value: 0.01,
+                pol: POLARITY.POSITIVE,
+                rarity: 10, 
+            },
+            decrease: 
+            { 
+                name: "Decrease",
+                desc: "Decrease Conveyor Speed",
+                value: -0.01,
+                pol: POLARITY.NEGATIVE,
+                rarity: 10,
+            },
+        },
+    },
+
     powerup:
     {
         name: "Powerup",
         all_powerups:
         {
             name: "All",
-            spawn:
+            spawn_rate:
             {
                 name: "Spawn",
                 desc: "All Unlocked Powerups Spawn ",
                 increase: 
                 {
                     name: "Increase",
-                    desc: "All Unlocked Powerups Spawn ",
+                    desc: "Increase All Unlocked Powerups Spawn Rate",
                     value: 0.01,
                     pol: POLARITY.POSITIVE,
                     rarity: 20,
@@ -493,8 +530,8 @@ global.Upgrades =
                 },
                 decrease: 
                 {
-                    name: "Increase",
-                    desc: "All Unlocked Powerups Spawn ",
+                    name: "Decrease",
+                    desc: "Decrease All Unlocked Powerups Spawn Rate",
                     value: -0.01,
                     pol: POLARITY.NEGATIVE,
                     rarity: 18,
@@ -503,31 +540,128 @@ global.Upgrades =
             },
         },
         bow:
-        {
+        { 
             name: "Bow",
-           spawn_chance:
-           {
-               name: "Spawn Chance",
-
-               desc: "Increase powerup spawn chance",
-               value: 0.02,
-               pol: POLARITY.POSITIVE,
-               rarity: 15
-           }
+            spawn_rate:
+            {
+               name: "Spawn Rate",
+                increase: 
+                {
+                    name: "Increase",
+                    desc: "Increase Bow Powerup Spawn Rate",
+                    value: 0.01,
+                    pol: POLARITY.POSITIVE,
+                    rarity: 20,
+                    target_var: "",
+                },
+                decrease: 
+                {
+                    name: "Decrease",
+                    desc: "Decrease Bow Powerup Spawn Rate",
+                    value: -0.01,
+                    pol: POLARITY.NEGATIVE,
+                    rarity: 18,
+                    target_var: "",
+                },
+            },
+            distance:
+            {
+            name: "Distance",
+                increase: 
+                {
+                    name: "Increase",
+                    desc: "Increase Bow Powerup Distance",
+                    value: 0.01,
+                    pol: POLARITY.POSITIVE,
+                    rarity: 20,
+                    target_var: "",
+                },
+                decrease: 
+                {
+                    name: "Decrease",
+                    desc: "Decrease Bow Powerup Distance",
+                    value: -0.01,
+                    pol: POLARITY.NEGATIVE,
+                    rarity: 18,
+                    target_var: "",
+                },
+            },
         },
-
+        bomb:
+        { 
+            name: "Bomb",
+            spawn_rate:
+            {
+                name: "Spawn Chance",
+                increase: 
+                {
+                    name: "Increase",
+                    desc: "Increase Bomb Powerup Spawn Rate",
+                    value: 0.01,
+                    pol: POLARITY.POSITIVE,
+                    rarity: 20,
+                    target_var: "",
+                },
+                decrease: 
+                {
+                    name: "Decrease",
+                    desc: "Decrease Bomb Powerup Spawn Rate",
+                    value: -0.01,
+                    pol: POLARITY.NEGATIVE,
+                    rarity: 18,
+                    target_var: "",
+                },
+            },
+            size:
+            {
+                name: "Size",
+                increase: 
+                {
+                    name: "Increase",
+                    desc: "Increase Bomb Explosion Size",
+                    value: 0.01,
+                    pol: POLARITY.POSITIVE,
+                    rarity: 20,
+                    target_var: "",
+                },
+                decrease: 
+                {
+                    name: "Decrease",
+                    desc: "Decrease Bomb Explosion Size",
+                    value: -0.01,
+                    pol: POLARITY.NEGATIVE,
+                    rarity: 18,
+                    target_var: "",
+                },
+            },
+        },
     },
 
     skills:
     {
+        name: "Skills",
         cooldown_reduction:
         {
             name: "Cooldown Reduction",
-            desc: "Reduce cooldown of skills",
-            value: 0.05,
-            pol: POLARITY.POSITIVE,
-            rarity: 15
-        }
+            increase: 
+            {
+                name: "Increase",
+                desc: "Increase Cooldown Reduction Of All Active Skills",
+                value: 0.01,
+                pol: POLARITY.POSITIVE,
+                rarity: 20,
+                target_var: "",
+            },
+            decrease: 
+            {
+                name: "Decrease",
+                desc: "Decrease Cooldown Reduction Of All Active Skills",
+                value: -0.01,
+                pol: POLARITY.NEGATIVE,
+                rarity: 18,
+                target_var: "",
+            },
+        },
     },
 
     combo:
@@ -852,7 +986,7 @@ function array_random(array)
 }
 
 // Global array to store paths during recursion
-var global._temp_paths = [];
+var _temp_paths = [];
 
 // Recursive function to explore struct and find all paths
 function explore_struct_recursive(_struct, _path_so_far) {
@@ -864,7 +998,7 @@ function explore_struct_recursive(_struct, _path_so_far) {
             path: _path_copy,
             data: _struct
         };
-        array_push(global._temp_paths, _path_data);
+        array_push(_temp_paths, _path_data);
         return;
     }
     
@@ -899,17 +1033,17 @@ function explore_struct_recursive(_struct, _path_so_far) {
 // Function to find all upgrade paths
 function find_all_upgrade_paths() {
     // Clear the global paths array
-    global._temp_paths = [];
+    _temp_paths = [];
     
     // Start exploring from the root with empty path
     explore_struct_recursive(global.Upgrades, []);
     
     // Copy the results
     var _result = [];
-    array_copy(_result, 0, global._temp_paths, 0, array_length(global._temp_paths));
+    array_copy(_result, 0, _temp_paths, 0, array_length(_temp_paths));
     
     // Clear the global array
-    global._temp_paths = [];
+    _temp_paths = [];
     
     // Return the collected paths
     return _result;
