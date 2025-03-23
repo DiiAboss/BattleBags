@@ -256,6 +256,7 @@
     {"id":{"name":"scr_powerup_spawn","path":"scripts/scr_powerup_spawn/scr_powerup_spawn.yy",},},
     {"id":{"name":"scr_record_highest_combo","path":"scripts/scr_record_highest_combo/scr_record_highest_combo.yy",},},
     {"id":{"name":"scr_resolve_board","path":"scripts/scr_resolve_board/scr_resolve_board.yy",},},
+    {"id":{"name":"scr_scan_board_for_big_blocks","path":"scripts/scr_scan_board_for_big_blocks/scr_scan_board_for_big_blocks.yy",},},
     {"id":{"name":"scr_select_enemy_attack","path":"scripts/scr_select_enemy_attack/scr_select_enemy_attack.yy",},},
     {"id":{"name":"scr_shift_up","path":"scripts/scr_shift_up/scr_shift_up.yy",},},
     {"id":{"name":"scr_spawn_new_row","path":"scripts/scr_spawn_new_row/scr_spawn_new_row.yy",},},

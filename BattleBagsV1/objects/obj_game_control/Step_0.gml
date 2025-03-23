@@ -1,4 +1,4 @@
-
+topmost_row = global.topmost_row;
 
 uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .01);
 uInnerIntensity        = max(0, uInnerIntensity + (keyboard_check(ord("S")) - keyboard_check(ord("A"))) * .01);
@@ -149,6 +149,27 @@ if (global_y_offset <= -gem_size) {
     
     shift_up(self);
     last_position[1] -= 1;
+    var number_per_big_block = 2;
+    
+    //SCAN TOP TO BOTTOM
+    
+    big_block_types_on_grid = [];
+    scan_board_for_big_blocks(self);
+
+    show_debug_message("Big Block Array Len: "+ string(array_length(big_block_types_on_grid)));
+    // Apply bonuses based on detected big blocks
+    for (var i = 0; i < array_length(big_block_types_on_grid); i++) {
+        var block_type = big_block_types_on_grid[i];
+        show_debug_message("Block Type: "+ string(block_type));
+        var positions_excluding_big_block_types = return_bottom_row_positions_of_types_excluding(self, block_type);
+        
+        var _rand = irandom(array_length(positions_excluding_big_block_types) - 1);
+        show_debug_message("Rand Pos: "+ string(_rand));
+        grid[_rand, bottom_playable_row].type = block_type;
+        
+    }
+    
+    
 }
 else
 {
@@ -263,4 +284,4 @@ for (var u = 0; u < array_length(powerup_slots); u++)
         }
     }
 }
-
+alarm[0] = -global_y_offset;
