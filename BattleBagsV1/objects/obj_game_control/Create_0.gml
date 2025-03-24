@@ -115,7 +115,7 @@ game_speed_start   = game_speed_default;
 global.modifier = game_speed_default / game_speed_start;
 
 game_speed_combo_modifier = 0.5;
-game_speed_increase_modifier = 2;
+game_speed_increase_modifier = 3;
 game_speed_fight_for_your_life_modifier = 0;
 
 global.gameSpeed = game_speed_default;
@@ -133,10 +133,15 @@ scan_board = 5;
 //-----------------------------------------
 // DRONE MANAGEMENT
 //-----------------------------------------
-
-
-number_of_drones = 1;
-
+drone_speed = 1;
+number_of_drones = 2;
+drone_array = array_create(0);
+for (var d = 0; d < number_of_drones; d++)
+{
+    var rand_id = irandom(1280);
+    var drone = new Drone(rand_id, room_width + 100 + (64 * d), room_height - 128);
+    array_push(drone_array, drone);
+}
 
 
 
@@ -147,8 +152,6 @@ number_of_drones = 1;
 game_board_speed = 1;
 big_block_multi = 1;
 combo_multi = 1.1;
-drone_speed = 1;
-
 
 
 // Currency
@@ -166,14 +169,6 @@ silver_blocks = 0;
 gold_blocks = 0;
 
 factory_points = 0;
-number_of_drones = 2;
-drone_array = array_create(0);
-for (var d = 0; d < number_of_drones; d++)
-{
-    var rand_id = irandom(1280);
-    var drone = new Drone(rand_id, room_width + 100 + (64 * d), room_height - 128);
-    array_push(drone_array, drone);
-}
 
 
 //----------------------------------------
@@ -438,6 +433,11 @@ alarm[0] = scan_board;
 
 //show_debug_overlay(true);
 
-
 big_block_mod_list = ds_list_create();
 
+
+speed_up_delay_max = 60;
+speed_up_delay = 30;
+just_shifted = false;
+
+global.total_speed_modifier = 1;

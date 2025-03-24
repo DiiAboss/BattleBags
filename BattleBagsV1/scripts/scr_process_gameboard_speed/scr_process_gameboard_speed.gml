@@ -1,13 +1,27 @@
 function process_gameboard_speed(_self, speedUpKey)
 {
-    global.modifier = game_speed_default / game_speed_start;
-
-    if (speedUpKey) 
+    
+    if (speedUpKey) && (speed_up_delay >= speed_up_delay_max) 
     {
-        global.gameSpeed = _self.game_speed_default + _self.game_speed_increase_modifier;
-        global.enemy_timer_game_speed = global.gameSpeed;
+
+            if (just_shifted)
+            {
+                speed_up_delay = 0;
+            }
+        
+        var dist_to_shift = abs(_self.global_y_offset + _self.gem_size);
+        
+        
+        var norm_distance = clamp(dist_to_shift / _self.gem_size, 0, 1);
+        //global.enemy_timer_game_speed = global.gameSpeed;
+        var target_speed_modifier = lerp(3, 1, norm_distance);
+        var _game_speed_increase_modifier = lerp(game_speed_increase_modifier, target_speed_modifier, 0.15);
+        
+        global.gameSpeed = _self.game_speed_default + game_speed_increase_modifier * _game_speed_increase_modifier;
     } 
     else {
+        just_shifted = false;
+                        speed_up_delay++;
         if (_self.combo <= 1) 
         {
             global.gameSpeed = _self.game_speed_default;

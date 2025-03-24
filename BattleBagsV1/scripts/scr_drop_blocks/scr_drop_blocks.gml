@@ -1,161 +1,183 @@
 function drop_blocks(_self, fall_speed = 2) {
-    var width = _self.width;
-    var height = _self.height;
+    var width = _self.board_width;
+    var height = _self.board_height;
+    var bottom_row = _self.bottom_playable_row;
+    
     var has_fallen = false; // ✅ Track if any block has moved
-
+    
+    
     //  Process from **bottom-up** (ensures things fall properly)
     for (var j = height - 2; j >= 0; j--) {
         for (var i = 0; i < width; i++) {
-            var gem = _self.grid[i, j];
-			process_mega_blocks(_self, i, j);
-            if (gem.type != BLOCK.NONE) { // ✅ Only process valid blocks
-                var below = _self.grid[i, j + 1];
+            
+            var current_block = _self.grid[i, j];
+            process_mega_blocks(_self, i, j);
+            
+            // Skip invalid blocks.
+            if (current_block.type == BLOCK.NONE) continue;
+            
+            var below = _self.grid[i, j + 1];
 
-                //  **Frozen blocks never fall**
-                if (gem.frozen) {					
-                    gem.fall_delay = 0;
-                    gem.falling = false;
-                    continue;
-                }
-                
-                if gem.freeze_on_land
-                {
-                    if (gem.fall_delay == 0 && !gem.falling) 
-                    {
-                        gem.frozen = true;
-                        gem.freeze_on_land = false;
-                    }  
-                }
-                
-				
-                // 🔹 **Slime Block Falling**
-                if (gem.slime_hp > 0) { 
-                    if (below.type == BLOCK.NONE) {
-                        if (gem.fall_delay < gem.max_fall_delay) {
-                            gem.fall_delay++;
-                            continue;
-                        }
-
-                        // ✅ **Move block down**
-                        _self.grid[i, j + 1] = gem;
-                        _self.grid[i, j] = create_block(BLOCK.NONE);
-
-                        // 🔥 **Reduce Slime HP when moving**
-                        gem.slime_hp -= 1;
-
-                        // ✅ **If slime HP runs out, return to normal**
-                        if (gem.slime_hp <= 0) {
-                            gem.max_fall_delay = 5;  // ✅ Normal falling speed
-                            gem.swap_speed = 0.15;    // ✅ Normal swap speed
-                        }
-
-                        gem.fall_delay = 0;
-                        has_fallen = true;
-                    }
-                }
-
-                //  **Handle 2x2 Block Falling**
-                if (gem.is_big) {
-                    var parent_x = gem.big_parent[0];
-                    var parent_y = gem.big_parent[1];
-					var parent_block = _self.grid[parent_x, parent_y];
-					var big_block_width = parent_block.mega_width;
-					var big_block_height = parent_block.mega_height;
-					
-                    // ✅ Only process once for **parent block**
-                    if (i == parent_x && j == parent_y) {
-                    var bottom_left  = _self.grid[parent_x,     parent_y + 1];
-                    var bottom_right = _self.grid[parent_x + 1, parent_y + 1];
-					
-					var can_fall = true;
-					
-					for (var bbx = 0; bbx < big_block_width; bbx++)
-					{
-						var _block_x = parent_x + bbx;
-						var _block_y = parent_y + big_block_height;
-						
-						
-						if (_block_y < height){
-							if (_self.grid[_block_x, _block_y].type != BLOCK.NONE) {
-								can_fall = false;
-							}
-						}
-						else
-						{
-							break;
-						}
-					}
-
-					// ✅ Check if the **entire bottom row** of the block can fall
-                        if (can_fall) {
-                            // ✅ Apply **fall delay**
-                            if (gem.fall_delay < gem.max_fall_delay) {
-                                gem.fall_delay++;
-                                continue; // 🔹 Wait until delay finishes
-                            }
-							
-							// ✅ Move the entire Mega Block **down one row**
-                            for (var bbx = 0; bbx < big_block_width; bbx++) {
-                                for (var bby = big_block_height - 1; bby >= 0; bby--) {
-                                    var old_x = parent_x + bbx;
-                                    var old_y = parent_y + bby;
-                                    var new_x = old_x;
-                                    var new_y = old_y + 1; // ✅ **Move down using your logic**
-
-                                    _self.grid[new_x, new_y] = _self.grid[old_x, old_y]; // Move
-                                    _self.grid[old_x, old_y] = create_block(BLOCK.NONE); // Clear
-                                    _self.grid[new_x, new_y].big_parent = [parent_x, parent_y + 1]; // ✅ Update parent
-                                }
-                            }
-
-                            gem.fall_delay = 1;
-                            has_fallen = true;
-                        } else {
-							// ✅ **If it can’t fall, all blocks stop falling**
-                            for (var bx = 0; bx < big_block_width; bx++) {
-                                for (var by = 0; by < big_block_height; by++) {
-                                    var block_x = parent_x + bx;
-                                    var block_y = parent_y + by;
-                                    _self.grid[block_x, block_y].falling = false;
-									_self.grid[block_x, block_y].fall_delay = 0;
-									_self.grid[block_x, block_y].is_enemy_block = false;
-                                    
-									has_fallen = true;
-                                }
-                            }
-                        }
-                    }
-                } 
-                //  **Normal Single Block Falling**
-                else if (below.type == BLOCK.NONE) {
-                    // ✅ Apply **fall delay**
-                    if (gem.fall_delay < gem.max_fall_delay) {
-                        gem.fall_delay++;
-                        gem.falling = true;
-                        continue; //  Wait until delay finishes
-                    }
-
-                    _self.grid[i, j + 1] = gem;
-                    _self.grid[i, j] = create_block(BLOCK.NONE);
-                    gem.dist_without_touching += 1;
-                    gem.fall_delay = 0;
-                    has_fallen = true;
-                    if (gem.dist_without_touching) > 16
-                    {
-                    
-                        var draw_x = _self.board_x_offset + (i * _self.gem_size) + _self.offset + gem.offset_x;
-                        var draw_y = (j * _self.gem_size) + _self.global_y_offset + gem.offset_y + _self.offset + gem.draw_y;
-                        //effect_create_above(ef_smokeup, draw_x, draw_y, 1, c_red);
-                    }
-                }
-				else
-				{
-					gem.fall_delay = below.fall_delay;
-					gem.falling = below.falling;
-					gem.is_enemy_block = false;
-                    gem.dist_without_touching = 0;
-				}
+            //  skip frozen blocks
+            if (current_block.frozen) {					
+                current_block.fall_delay = 0;
+                current_block.falling = false;
+                continue;
             }
+            
+            if (below.popping)
+            {
+                current_block.fall_delay = below.fall_delay;
+                current_block.falling = below.falling;
+                current_block.is_enemy_block = false;
+                current_block.dist_without_touching = 0;
+            }
+            
+            if (current_block.freeze_on_land)
+            {
+                if (current_block.fall_delay == 0 && !current_block.falling) 
+                {
+                    current_block.frozen = true;
+                    current_block.freeze_on_land = false;
+                }  
+            }
+            
+            
+            // Slime Block Falling
+            if (current_block.slime_hp > 0) { 
+                if (below.type == BLOCK.NONE) {
+                    if (current_block.fall_delay < current_block.max_fall_delay) {
+                        current_block.fall_delay++;
+                        continue;
+                    }
+
+                    // ✅ **Move block down**
+                    _self.grid[i, j + 1] = current_block;
+                    
+                    // Set the blocks old position to empty (the loop will take care of this)
+                    _self.grid[i, j]     = create_block(BLOCK.NONE);
+
+                    // 🔥 **Reduce Slime HP when moving**
+                    current_block.slime_hp -= 1;
+
+                    // ✅ **If slime HP runs out, return to normal**
+                    if (current_block.slime_hp <= 0) {
+                        current_block.max_fall_delay = 5;  // ✅ Normal falling speed
+                        current_block.swap_speed = 0.15;    // ✅ Normal swap speed
+                    }
+
+                    current_block.fall_delay = 0;
+                    has_fallen = true;
+                }
+            }
+            
+            
+
+            //  **Handle 2x2 Block Falling**
+            if (current_block.is_big) {
+                var parent_x = current_block.big_parent[0];
+                var parent_y = current_block.big_parent[1];
+                var parent_block = _self.grid[parent_x, parent_y];
+                var big_block_width = parent_block.mega_width;
+                var big_block_height = parent_block.mega_height;
+                
+                // ✅ Only process once for **parent block**
+                if (i == parent_x && j == parent_y) {
+                var bottom_left  = _self.grid[parent_x,     parent_y + 1];
+                var bottom_right = _self.grid[parent_x + 1, parent_y + 1];
+                
+                var can_fall = true;
+                
+                for (var bbx = 0; bbx < big_block_width; bbx++)
+                {
+                    var _block_x = parent_x + bbx;
+                    var _block_y = parent_y + big_block_height;
+                    
+                    
+                    if (_block_y < height){
+                        if (_self.grid[_block_x, _block_y].type != BLOCK.NONE) {
+                            can_fall = false;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                // ✅ Check if the **entire bottom row** of the block can fall
+                    if (can_fall) {
+                        // ✅ Apply **fall delay**
+                        if (current_block.fall_delay < current_block.max_fall_delay) {
+                            current_block.fall_delay++;
+                            continue; // 🔹 Wait until delay finishes
+                        }
+                        
+                        // ✅ Move the entire Mega Block **down one row**
+                        for (var bbx = 0; bbx < big_block_width; bbx++) {
+                            for (var bby = big_block_height - 1; bby >= 0; bby--) {
+                                var old_x = parent_x + bbx;
+                                var old_y = parent_y + bby;
+                                var new_x = old_x;
+                                var new_y = old_y + 1; // ✅ **Move down using your logic**
+
+                                _self.grid[new_x, new_y] = _self.grid[old_x, old_y]; // Move
+                                _self.grid[old_x, old_y] = create_block(BLOCK.NONE); // Clear
+                                _self.grid[new_x, new_y].big_parent = [parent_x, parent_y + 1]; // ✅ Update parent
+                            }
+                        }
+
+                        current_block.fall_delay = 1;
+                        has_fallen = true;
+                    } else {
+                        // ✅ **If it can’t fall, all blocks stop falling**
+                        for (var bx = 0; bx < big_block_width; bx++) {
+                            for (var by = 0; by < big_block_height; by++) {
+                                var block_x = parent_x + bx;
+                                var block_y = parent_y + by;
+                                _self.grid[block_x, block_y].falling = false;
+                                _self.grid[block_x, block_y].fall_delay = 0;
+                                _self.grid[block_x, block_y].is_enemy_block = false;
+                                
+                                has_fallen = true;
+                            }
+                        }
+                    }
+                }
+            } 
+            
+            //  **Normal Single Block Falling**
+            else if (below.type == BLOCK.NONE) {
+                // ✅ Apply **fall delay**
+                if (current_block.fall_delay < current_block.max_fall_delay) {
+                    current_block.fall_delay++;
+                    current_block.falling = true;
+                    continue; //  Wait until delay finishes
+                }
+
+                _self.grid[i, j + 1] = current_block;
+                _self.grid[i, j] = create_block(BLOCK.NONE);
+                current_block.dist_without_touching += 1;
+                current_block.fall_delay = 0;
+                
+                has_fallen = true;
+                if (current_block.dist_without_touching) > 16
+                {
+                
+                    var draw_x = _self.board_x_offset + (i * _self.gem_size) + _self.offset + current_block.offset_x;
+                    var draw_y = (j * _self.gem_size) + _self.global_y_offset + current_block.offset_y + _self.offset + current_block.draw_y;
+                    //effect_create_above(ef_smokeup, draw_x, draw_y, 1, c_red);
+                }
+            }
+            else
+            {
+                
+                current_block.fall_delay = below.fall_delay;
+                current_block.falling = below.falling;
+                current_block.is_enemy_block = false;
+                current_block.dist_without_touching = 0;
+            }
+            
         }
     }
 

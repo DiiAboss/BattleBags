@@ -31,6 +31,22 @@ function Drone(_id, _x, _y) constructor {
         max_think_timer: 15,
     };
     
+    mod_stats = 
+    {
+        move_speed: 1,
+        carry_capacity: 1,
+        throw_distance: 1,
+        experience_gain: 1,
+        pickup_speed: 1,
+        throw_speed: 1,
+        max_pickup_timer: 1,
+        wait_to_return_max: 1,
+        max_throw_timer: 1,
+        max_think_timer: 15,
+    }
+    
+    total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
+    
     // State and targeting
     state = "idle";
     target = noone;
@@ -56,6 +72,12 @@ function Drone(_id, _x, _y) constructor {
     
     update = function()
     {
+        
+        
+        // this can move into a after upgrade check:
+        total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
+        
+        
         think_timer ++;
         
         coll_x_min = x - (coll_offset);
@@ -370,7 +392,7 @@ function Drone(_id, _x, _y) constructor {
                 walk_direction = target_dir;
                 
                 // Update position with collision avoidance (only with other seeking drones)
-                x += lengthdir_x(stats.move_speed, walk_direction);
+                x += lengthdir_x(total_speed, walk_direction);
                 if (conveyor != noone) y = conveyor.conveyor_start_y; // Stay on conveyor level
                 
                 // Check if we've reached the target
@@ -458,7 +480,7 @@ function Drone(_id, _x, _y) constructor {
                     walk_direction = target_dir;
                     
                     // Update position
-                    x += lengthdir_x(stats.move_speed, walk_direction);
+                    x += lengthdir_x(total_speed, walk_direction);
                     y = conveyor.conveyor_start_y; // Stay on conveyor level
                     
                     // Check if we're within throwing distance of conveyor belt
@@ -511,7 +533,7 @@ function Drone(_id, _x, _y) constructor {
         }
         
         // Move slower when idle but still avoid collisions
-        x += lengthdir_x(stats.move_speed * 0.5, walk_direction);
+        x += lengthdir_x(total_speed * 0.5, walk_direction);
         if (conveyor != noone) y = conveyor.conveyor_start_y; // Stay on conveyor level
         
         // Check if deposit blocks exist to resume work
@@ -552,11 +574,11 @@ function Drone(_id, _x, _y) constructor {
     
     // Update stats based on mods
     recalculate_stats = function() {
-        var base_speed = 4;
-        var base_capacity = 8;
+        var base_speed = stats.move_speed;
+        var base_capacity = stats.carry_capacity;
         
-        move_speed = base_speed;
-        carry_capacity = base_capacity;
+        var mod_speed     = mod_stats.move_speed;
+        var mod_carry_cap = mod_stats.carry_capacity;
 
         for (var m = 0; m < array_length(mods); m++) {
             move_speed += mods[m].speed_modifier;

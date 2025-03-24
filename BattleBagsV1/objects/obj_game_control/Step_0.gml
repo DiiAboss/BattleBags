@@ -29,6 +29,8 @@ if (game_over_state)
 //-----------------------------------------
 // VICTORY STATE
 //-----------------------------------------
+
+// This should only play after a battle.
 if (victory_state)
 {
     if (combo <= 0)
@@ -42,8 +44,6 @@ if (victory_state)
         else {
             victory_countdown = 0;
             
-            
-            
             if (input.ActionPress)
             {
                 room_restart();
@@ -51,6 +51,7 @@ if (victory_state)
         }
     }
 }
+
 
 //------------------------------------------------
 // Leveling and Upgrades
@@ -71,8 +72,9 @@ if (global.paused) || global.in_upgrade_menu {
 // DRONE CONTROLLER
 //----------------------------------------------------------
 for (var d = 0; d< number_of_drones; d++)
-{ 
+{
     drone_array[d].update();
+    
 }
 
 
@@ -86,7 +88,13 @@ update_time(self, _FPS);
 
 update_draw_time(self);
 
-process_gameboard_speed(self, input.SpeedUpKey);
+global.modifier = game_speed_default / game_speed_start;
+
+// Speed up gameboard with space bar
+
+        process_gameboard_speed(self, input.SpeedUpKey);
+
+
 
 //--------------------------------------------------------
 // CONTROLS
@@ -146,7 +154,8 @@ if (!obj_game_manager.console_active)
 // ------------------------------------------------------
 if (global_y_offset <= -gem_size) {
     global_y_offset = 0;
-    
+    just_shifted = true;
+    speed_up_delay = 0;
     shift_up(self);
     last_position[1] -= 1;
     var number_per_big_block = 2;
@@ -173,8 +182,11 @@ if (global_y_offset <= -gem_size) {
 }
 else
 {
+    //regular shift speeds
     global_y_offset -= shift_speed;
 }
+
+// process and swaps i nthe queue
 process_swap(self, swap_info);
 
 darken_bottom_row(self);
