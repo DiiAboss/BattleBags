@@ -36,6 +36,7 @@
   "HTile":false,
   "layers":[
     {"$GMImageLayer":"","%Name":"92f72b0e-c248-482e-af5c-fe0d1d8ae8fa","blendMode":0,"displayName":"default","isLocked":false,"name":"92f72b0e-c248-482e-af5c-fe0d1d8ae8fa","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"05add38a-1e46-482f-826c-ae512cba8e37","blendMode":0,"displayName":"Layer 1","isLocked":false,"name":"05add38a-1e46-482f-826c-ae512cba8e37","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"spr_triangle",
   "nineSlice":null,
