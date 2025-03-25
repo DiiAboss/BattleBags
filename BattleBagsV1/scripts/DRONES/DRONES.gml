@@ -156,7 +156,8 @@ function Drone(_id, _x, _y) constructor {
         x = clamp(x, 0, room_width);
         
         // Update facing direction (0-right, 180-left)
-        aim_direction = (walk_direction > 90 && walk_direction < 270) ? 180 : 0;
+        if (state != "hunting") aim_direction = (walk_direction > 90 && walk_direction < 270) ? 180 : 0;
+        
         
         // Handle selection logic
         if (mouse_check_button_pressed(mb_left)) {
@@ -185,7 +186,13 @@ function Drone(_id, _x, _y) constructor {
             return;
         }
         
-        aim_direction = point_direction(x, y, target.next_x, target.next_y);
+        throw_blocks_on_ground();
+
+        
+        var bullet_speed = 8;
+        
+        // Calculate new aim direction
+        aim_direction = get_predictive_direction(x, y, bullet_speed, target);
         
         if (attack_timer >= stats.attack_rate)
         {
@@ -202,16 +209,19 @@ function Drone(_id, _x, _y) constructor {
     
     draw = function()
     {
-        var _dir = (aim_direction == 0) ? 1 : -1;
+        var _dir = (aim_direction < 90 || aim_direction > 270) ? 1 : -1;
         var hover_amount = 8;
         var hover = hover_draw(hover_amount);
+        
+        var y_scale = _dir;
+        var x_scale = 1
         
         if (collision) color = c_red
             else color = c_white;
                 
         // Draw drone
         draw_sprite_ext(my_sprite, 0, x, y + hover, _dir, 1, 0, color, 1);
-        if (state == "hunt") draw_sprite_ext(spr_drone_gun, 0, x, y + hover, _dir, 1, aim_direction, color, 1);
+        if (state == "hunting") draw_sprite_ext(spr_drone_gun, 0, x, y + hover, x_scale, _dir, aim_direction, color, 1);
         // Draw state indicator (optional)
         var state_colors = {
             seeking: c_lime,
@@ -560,6 +570,39 @@ function Drone(_id, _x, _y) constructor {
                 state = "idle";
             }
         };
+    
+    throw_blocks_on_ground = function()
+    {
+        //if (!is_throwing) {
+        //    is_throwing = true;
+        //    throw_progress = 0;
+        //}
+        
+        //throw_progress++;
+        
+
+        //if (throw_progress >= throw_duration) {
+            // Actually deliver blocks now
+            if (blocks_carried > 0)
+            {
+                var _current_block = array_pop(carried_blocks);
+                var new_deposit_block = instance_create_depth(x, y + _current_block.offset_y, -y, obj_deposit_block, _current_block);
+                new_deposit_block.hspeed = irandom_range(2, -2);
+                new_deposit_block.vsp = irandom(-2);
+                blocks_carried -= 1;
+            }
+        //}
+    
+            // Clear blocks
+            //blocks_carried = 0;
+            //carried_blocks = array_create(0);
+    
+            // Reset state
+            //is_throwing = false;
+            //throw_progress = 0;
+            //state = "idle";
+        
+    }
 
     
     idle_behavior = function(conveyor, deposit_blocks) {
@@ -689,4 +732,23 @@ function calculate_arc(_start_x, _start_y, _end_x, _end_y, _progress) {
     var px = lerp(_start_x, _end_x, _progress);
     var py = lerp(_start_y, _end_y, _progress) + height * sin(pi * _progress);
     return [px, py];
+}
+
+
+function get_predictive_direction(start_x, start_y, bullet_speed, target) {
+    
+        var origin_x, origin_y,pspeed,dir,alpha,phi,beta;
+        origin_x = start_x;
+        origin_y = start_y;
+    
+        pspeed = bullet_speed;
+        dir = point_direction(origin_x,origin_y,target.x,target.y);
+        alpha = target.move_speed / pspeed;
+        phi = degtorad(target.target_direction - dir);
+        beta = alpha * sin(phi);
+        if (abs(beta) >= 1) {
+            return (-1);
+        }
+        dir += radtodeg(arcsin(beta));
+        return dir;
 }
