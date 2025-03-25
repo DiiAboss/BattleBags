@@ -1,9 +1,9 @@
 {
   "$GMSprite":"",
-  "%Name":"spr_enemy_fly",
+  "%Name":"spr_enemy_fly_1",
   "bboxMode":0,
   "bbox_bottom":63,
-  "bbox_left":0,
+  "bbox_left":4,
   "bbox_right":63,
   "bbox_top":0,
   "collisionKind":1,
@@ -21,7 +21,7 @@
   "layers":[
     {"$GMImageLayer":"","%Name":"1285c596-252d-4bb8-993e-f8ff024c887b","blendMode":0,"displayName":"default","isLocked":false,"name":"1285c596-252d-4bb8-993e-f8ff024c887b","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"spr_enemy_fly",
+  "name":"spr_enemy_fly_1",
   "nineSlice":null,
   "origin":4,
   "parent":{
@@ -69,7 +69,7 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"10b1bb85-22c3-459f-81b8-65fe0202a8b7","path":"sprites/spr_enemy_fly/spr_enemy_fly.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"10b1bb85-22c3-459f-81b8-65fe0202a8b7","path":"sprites/spr_enemy_fly_1/spr_enemy_fly_1.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
               },"Disabled":false,"id":"35454499-8252-4298-b3f0-5b19442144a4","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],

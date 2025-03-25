@@ -12,12 +12,14 @@ function shift_up(_self) {
     // 1️⃣ Shift from bottom to top (including buffer zones)
     for (var j = 0; j < height - 1; j++) { // ✅ Process all rows, including buffers
         for (var i = 0; i < width; i++) {
-            var gem = _self.grid[i, j];
-
+            var current_block = _self.grid[i, j];
+            
+            
+            
 // ✅ Process **Big Blocks** shifting upwards
-if (gem.is_big) {
-    var parent_x = gem.big_parent[0];
-    var parent_y = gem.big_parent[1];
+if (current_block.is_big) {
+    var parent_x = current_block.big_parent[0];
+    var parent_y = current_block.big_parent[1];
     var parent_block = _self.grid[parent_x, parent_y];
     var big_block_width = parent_block.mega_width;
     var big_block_height = parent_block.mega_height;
@@ -88,6 +90,28 @@ if (gem.is_big) {
 			{
 				// ✅ Normal gem movement
 			    _self.grid[i, j] = _self.grid[i, j + 1];
+                
+                var current_block = _self.grid[i, j];
+                
+                if (current_block.type == BLOCK.BUG)
+                {
+                    current_block.life_counter -= 1;
+                    show_debug_message("BUG[" +string(i) + ", " + string(j) + "] - " + string(current_block.life_counter));
+                    if (current_block.life_counter <= 0)
+                    {
+                        show_debug_message("BUG[" +string(i) + ", " + string(j) + "] - Targetted for destroy")
+    
+                        var spawn_x = _self.board_x_offset + (i * _self.gem_size) + _self.offset + current_block.offset_x;
+                        var spawn_y = (j * _self.gem_size) + _self.global_y_offset + current_block.offset_y + _self.offset + current_block.draw_y;
+                        var bug = instance_create_depth(spawn_x, spawn_y, _self.depth - 1, obj_bug);  
+                        bug.my_target = obj_recycler;
+                        destroy_block(self, i, j);
+                        _self.grid[i, j] = create_block(BLOCK.BLACK); 
+                        _self.grid[i, j].type = BLOCK.BLACK;
+                        continue; 
+                    }
+                }
+                
 			}
 
 

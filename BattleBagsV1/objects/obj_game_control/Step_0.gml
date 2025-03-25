@@ -160,6 +160,8 @@ if (global_y_offset <= -gem_size) {
     last_position[1] -= 1;
     var number_per_big_block = 2;
     
+    
+    
     //SCAN TOP TO BOTTOM
     
     big_block_types_on_grid = [];
@@ -177,8 +179,6 @@ if (global_y_offset <= -gem_size) {
         grid[_rand, bottom_playable_row].type = block_type;
         
     }
-    
-    
 }
 else
 {
@@ -297,3 +297,15 @@ for (var u = 0; u < array_length(powerup_slots); u++)
     }
 }
 alarm[0] = -global_y_offset;
+
+for (var _x = 0; _x < board_width - 1; _x++)
+{
+    for (var _y = board_height - 1; _y > 1; _y--)
+    {
+       if (grid[_x, _y].type == BLOCK.BUG)
+        {
+            
+        } 
+    }
+}
+

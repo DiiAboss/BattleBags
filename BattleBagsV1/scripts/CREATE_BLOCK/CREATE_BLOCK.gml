@@ -1,7 +1,25 @@
 
 enum BLOCK {
-    RANDOM = -99, GAME_OVER = -404, COLOR_BOMB = 14, CURSE = 13, PUZZLE_1 = 12, MEGA = -3, WILD = 11, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
-    LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
+    GAME_OVER   = -404,
+    RANDOM      = -99,
+    MEGA        = -3,
+    NONE        = -1,
+    RED         = 0,
+    YELLOW      = 1,
+    GREEN       = 2,
+    PINK        = 3,
+    PURPLE      = 4,
+    LIGHTBLUE   = 5,
+    ORANGE      = 6,
+    BLUE        = 7,
+    GREY        = 8,
+    WHITE       = 9,
+    BLACK       = 10,
+    WILD        = 11,
+    PUZZLE_1    = 12,
+    CURSE       = 13,
+    COLOR_BOMB  = 14,
+    BUG         = 15
 }
 
 enum UPGRADE {
@@ -88,6 +106,7 @@ function create_block(_type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
         dist_without_touching: 0,
         freeze_on_land: false,
         cb: BLOCK.NONE,
+        life_counter: 5,
     };
 }
 
