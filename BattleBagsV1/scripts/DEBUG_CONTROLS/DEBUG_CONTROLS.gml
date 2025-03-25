@@ -25,7 +25,9 @@ function enable_debug_controls(_self, hover_x, hover_y, debug_active = false)
     
     if (keyboard_check_pressed(ord("T")))
     {
-        destroy_rows_from_bottom(self, 1);
+        var bug = instance_create_depth(mouse_x, mouse_y, -room_height, obj_bug);
+        bug.target = obj_recycler;
+        //destroy_rows_from_bottom(self, 1);
     }
     
 	

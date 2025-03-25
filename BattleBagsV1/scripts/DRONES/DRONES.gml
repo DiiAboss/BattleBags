@@ -29,6 +29,10 @@ function Drone(_id, _x, _y) constructor {
         wait_to_return_max: 60,
         max_throw_timer: 1,
         max_think_timer: 15,
+        
+        attack: true,
+        attack_rate: 10,
+        
     };
     
     mod_stats = 
@@ -42,7 +46,9 @@ function Drone(_id, _x, _y) constructor {
         max_pickup_timer: 1,
         wait_to_return_max: 1,
         max_throw_timer: 1,
-        max_think_timer: 15,
+        max_think_timer: 1,
+    
+        attack_rate: 1,
     }
     
     total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
@@ -64,16 +70,14 @@ function Drone(_id, _x, _y) constructor {
     aim_direction = 0;
     walk_direction = 0;
     selected = false; 
-    
     think_timer = 0;
     
+    attack_timer = 0;
     // Modular Functions
     mods = [];
     
     update = function()
     {
-        
-        
         // this can move into a after upgrade check:
         total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
         
@@ -116,7 +120,11 @@ function Drone(_id, _x, _y) constructor {
                         }
                     }
         }
-        
+        if (stats.attack) && (instance_exists(obj_bug))
+        {
+            state = "hunting";
+            target = instance_nearest(x, y, obj_bug);
+        }
         
         switch(state) {
             case "seeking":
@@ -137,6 +145,10 @@ function Drone(_id, _x, _y) constructor {
         
             case "idle":
                 idle_behavior(conveyor, deposit_blocks);
+                break;
+            
+            case "hunting":
+                hunt(target);
                 break;
         }
         
@@ -165,6 +177,29 @@ function Drone(_id, _x, _y) constructor {
         }
     }
     
+    hunt = function(target)
+    {
+        if !(instance_exists(target))
+        {
+            state = "idle";
+            return;
+        }
+        
+        aim_direction = point_direction(x, y, target.next_x, target.next_y);
+        
+        if (attack_timer >= stats.attack_rate)
+        {
+          
+          var bull = instance_create_depth(x, y, -y, obj_bullet);  
+            bull.direction = aim_direction;
+            bull.speed = 8;
+            attack_timer = 0;
+        }
+        else {
+            attack_timer++;
+        }
+    }
+    
     draw = function()
     {
         var _dir = (aim_direction == 0) ? 1 : -1;
@@ -176,7 +211,7 @@ function Drone(_id, _x, _y) constructor {
                 
         // Draw drone
         draw_sprite_ext(my_sprite, 0, x, y + hover, _dir, 1, 0, color, 1);
-        
+        if (state == "hunt") draw_sprite_ext(spr_drone_gun, 0, x, y + hover, _dir, 1, aim_direction, color, 1);
         // Draw state indicator (optional)
         var state_colors = {
             seeking: c_lime,
@@ -315,6 +350,9 @@ function Drone(_id, _x, _y) constructor {
     
     
     seek_target = function(conveyor) {
+        
+        
+        
         
         var seek_distance = 16;
         throw_progress = 0;
