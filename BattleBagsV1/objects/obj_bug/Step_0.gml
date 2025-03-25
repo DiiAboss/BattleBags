@@ -12,6 +12,7 @@ if (distance_to_point(my_target.x, my_target.y) > 32)
 }
 
 else {
+    instance_destroy();
     
     switch(my_target)
     {
