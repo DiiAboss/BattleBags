@@ -1,11 +1,18 @@
-function all_pops_finished() 
+function all_pops_finished(player) 
 {
 	var pops_finished = false;
+	var pop_list      = player.pop_list;
+    var pop_list_size = ds_list_size(player.pop_list);
+    
+    if (pop_list_size == 0)
+    {   
+        pops_finished = true;
+        return;  
+    } 
 	
-    if (ds_list_size(global.pop_list) == 0) pops_finished = true;
-	
-	for (var i = 0; i < ds_list_size(global.pop_list); i++) {
-    var pop_data = ds_list_find_value(global.pop_list, i);
+	for (var i = 0; i < pop_list_size; i++) {
+        
+        var pop_data = ds_list_find_value(player.pop_list, i);
 		
 	    // Wait for start_delay
 	    if (pop_data.timer < pop_data.start_delay) {
@@ -92,13 +99,13 @@ function all_pops_finished()
                     // **Create visual effect**
 		            //effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
-					var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
-					var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
+					var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);
+					var _gain  = clamp(0.5 + (0.1 * player.combo), 0.5, 0.75);
 					
                 
 				audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
 				// Remove from pop_list
-	            ds_list_delete(global.pop_list, i);
+	            ds_list_delete(player.pop_list, i);
 	            i--; 
 	            continue;
 	        }
@@ -106,7 +113,7 @@ function all_pops_finished()
 		total_multiplier_next = 1;
 	    // Write back updated pop_data
 
-	    ds_list_replace(global.pop_list, i, pop_data);
+	    ds_list_replace(player.pop_list, i, pop_data);
 		
 		
 		if (pop_data.scale < 1.1) pops_finished = false; 
@@ -117,16 +124,17 @@ function all_pops_finished()
 
 function pop_block_in_queue(_self) 
 {
-    var gem_size = _self.gem_size;
-    var board_x_offset = _self.board_x_offset;
-    var offset = gem_size * 0.5;
-    var global_y_offset = _self.global_y_offset;
+    var gem_size         = _self.gem_size;
+    var board_x_offset   = _self.board_x_offset;
+    var offset           = gem_size * 0.5;
+    var global_y_offset  = _self.global_y_offset;
+    var pop_list         = _self.pop_list;
+    var pop_list_size    = ds_list_size(_self.pop_list);
     
+    if (pop_list_size == 0) pops_finished = true;
     
-    if (ds_list_size(global.pop_list) == 0) pops_finished = true;
-    
-    for (var i = 0; i < ds_list_size(global.pop_list); i++) {
-    var pop_data = ds_list_find_value(global.pop_list, i);
+    for (var i = 0; i < pop_list_size; i++) {
+    var pop_data = ds_list_find_value(_self.pop_list, i);
         
         // Wait for start_delay
         if (pop_data.timer < pop_data.start_delay) {
@@ -168,7 +176,7 @@ function pop_block_in_queue(_self)
                 //if (self.grid[_x, _y] != -1)
                 //{
                 
-                    var gem = self.grid[_x, _y];
+                    var gem = _self.grid[_x, _y];
                 //}
                 //else
                 //{
@@ -177,17 +185,17 @@ function pop_block_in_queue(_self)
                     
                 if (gem.type == BLOCK.MEGA)
                 {
-                    destroy_block(self, _x, _y);
+                    destroy_block(_self, _x, _y);
                     create_block(BLOCK.RANDOM, POWERUP.NONE);
                 }
                 else {
-                    destroy_block(self, _x, _y);
+                    destroy_block(_self, _x, _y);
                 }
                 
                     if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2
 
                     //Loop Through Multipliers
-                    process_powerup(self, _x, _y, gem, total_multiplier_next);
+                    process_powerup(_self, _x, _y, gem, total_multiplier_next);
                     
                     total_blocks_destroyed++;
                     // **Destroy the block**
@@ -197,28 +205,28 @@ function pop_block_in_queue(_self)
                     //effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
                     // ✅ Create Attack Object with Score
-                    var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
-                    attack.color = pop_data.color;
+                    var attack    = instance_create_depth(px, py, _self.depth - 1, obj_player_attack);
+                    attack.color  = pop_data.color;
                 
                     attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
 
                     // ✅ Add accumulated match points to total_points
                     total_points += attack.damage;
                     
-                    var _pitch = clamp(0.5 + (0.1 * combo), 0.5, 5);
-                    var _gain = clamp(0.5 + (0.1 * combo), 0.5, 0.75);
+                    var _pitch = clamp(0.5 + (0.1 * _self.combo), 0.5, 5);
+                    var _gain  = clamp(0.5 + (0.1 * _self.combo), 0.5, 0.75);
                     
                 
                 audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
                 // Remove from pop_list
-                ds_list_delete(global.pop_list, i);
+                ds_list_delete(_self.pop_list, i);
                 i--; 
                 continue;
             }
         }
         total_multiplier_next = 1;
         // Write back updated pop_data
-        ds_list_replace(global.pop_list, i, pop_data);
+        ds_list_replace(_self.pop_list, i, pop_data);
     }
 }
 

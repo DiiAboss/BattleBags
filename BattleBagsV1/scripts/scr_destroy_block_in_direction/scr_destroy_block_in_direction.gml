@@ -32,58 +32,58 @@ function destroy_blocks_in_direction_from_point(_self, start_x, start_y, _dir_x,
 		
 		
         // ✅ If it's a BIG BLOCK, transform it into separate blocks
-                    if (block.is_big) {
-                        
-                        var group_id = block.group_id;
-                        var dx = i - global.lastSwapX;
-                        var dy = j - global.lastSwapY;
-                        var dist = sqrt(dx * dx + dy * dy);
-                        
-                        for (var _i = 0; _i < self.width; _i++) {
-                            for (var _j = 0; _j <= bottom_row; _j++) {
-                                var other_block = grid[_i, _j];
-        
-                                if (other_block.group_id == group_id) {
-                                    // ✅ Convert each big block part into a small block of the same type
-                                    _self.grid[_i, _j] = create_block(block.type);						
-                                
-                                    // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
-                                    var pop_info = {
-                                        x: _i,
-                                        y: _j,
-                                        gem_type: block.type,
-                                        timer: 0,
-                                        start_delay: dist * 5, // Wave effect
-                                        scale: 1.0,
-                                        popping: true,
-                                        powerup: block.powerup,
-                                        dir: block.dir,
-                                        offset_x: block.offset_x,
-                                        offset_y: block.offset_y,
-                                        color: block.color,
-                                        y_offset_global: _self.global_y_offset,
-                                        match_size: max(block.mega_width * block.mega_height, 1), // ✅ Store the match size
-                                        match_points: max(block.mega_width * block.mega_height, 1) * 1.5,
-                                        bomb_tracker: false, // Flag to mark this pop as bomb‐generated
-                                        bomb_level: 0,
-                                        img_number: block.img_number,
-                                        is_big: false,
-                                    };
-                                
-                                    _self.grid[_i, _j].popping   = true;  // Start popping process
-                                    _self.grid[_i, _j].pop_timer = dist * 5;
-                                    var _pitch = clamp(0.75 + (0.2 * _self.combo), 0.5, 5);
-                                    if !(_self.game_over_state)
-                                    {
-                                        audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
-                                    }
-                                    
-                                    
-                                    ds_list_add(global.pop_list, pop_info);
-                                }
-                            }
+        if (block.is_big) {
+            
+            var group_id = block.group_id;
+            var dx = i - global.lastSwapX;
+            var dy = j - global.lastSwapY;
+            var dist = sqrt(dx * dx + dy * dy);
+            
+            for (var _i = 0; _i < self.width; _i++) {
+                for (var _j = 0; _j <= bottom_row; _j++) {
+                    var other_block = grid[_i, _j];
+
+                    if (other_block.group_id == group_id) {
+                        // ✅ Convert each big block part into a small block of the same type
+                        _self.grid[_i, _j] = create_block(block.type);						
+                    
+                        // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
+                        var pop_info = {
+                            x: _i,
+                            y: _j,
+                            gem_type: block.type,
+                            timer: 0,
+                            start_delay: dist * 5, // Wave effect
+                            scale: 1.0,
+                            popping: true,
+                            powerup: block.powerup,
+                            dir: block.dir,
+                            offset_x: block.offset_x,
+                            offset_y: block.offset_y,
+                            color: block.color,
+                            y_offset_global: _self.global_y_offset,
+                            match_size: max(block.mega_width * block.mega_height, 1), // ✅ Store the match size
+                            match_points: max(block.mega_width * block.mega_height, 1) * 1.5,
+                            bomb_tracker: false, // Flag to mark this pop as bomb‐generated
+                            bomb_level: 0,
+                            img_number: block.img_number,
+                            is_big: false,
+                        };
+                    
+                        _self.grid[_i, _j].popping   = true;  // Start popping process
+                        _self.grid[_i, _j].pop_timer = dist * 5;
+                        var _pitch = clamp(0.75 + (0.2 * _self.combo), 0.5, 5);
+                        if !(_self.game_over_state)
+                        {
+                            audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
                         }
+                        
+                        
+                        ds_list_add(_self.pop_list, pop_info);
                     }
+                }
+            }
+        }
         
         
         else if (block.type == BLOCK.BLACK)
@@ -95,7 +95,7 @@ function destroy_blocks_in_direction_from_point(_self, start_x, start_y, _dir_x,
 		
 		if (block.type != BLOCK.NONE)
 		{
-			ds_list_add(global.pop_list, pop_info);
+			ds_list_add(_self.pop_list, pop_info);
 		}
 
 	    // Move in the given direction

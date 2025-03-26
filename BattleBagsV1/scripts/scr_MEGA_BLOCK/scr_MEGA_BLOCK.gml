@@ -233,7 +233,7 @@ function process_mega_blocks(_self, _x, _y) {
                                             is_big: true,
 					                    };
 
-					                    ds_list_add(global.pop_list, pop_info);
+					                    ds_list_add(_self.pop_list, pop_info);
                     
 					                    // 🔥 **Create a pop effect**
                                         _self.grid[block_x, block_y].popping = true;

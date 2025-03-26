@@ -82,7 +82,7 @@ function start_swap(_self, ax, ay, bx, by) {
                         
                             _self.grid[j, i].popping   = true;
                             _self.grid[j, i].pop_timer = i * j;
-                            ds_list_add(global.pop_list, pop_info);
+                            ds_list_add(pop_list, pop_info);
                         }
                     }
                     destroy_block(_self, ax, ay);

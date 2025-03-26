@@ -39,7 +39,9 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
     var blocks_destroyed = 0;
     var total_match_points = 0;
     var black_blocks_to_transform = ds_list_create(); // ✅ Track black blocks hit by bomb
-
+    var width  = _self.board_width;
+    var height = _self.board_height;
+    
     var bomb_level = get_bomb_start_level();
     var coords = [];
 
@@ -67,7 +69,7 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
 		var bottom_row = _self.bottom_playable_row;
 
         if (cx >= 0 
-		 && cx < _self.width 
+		 && cx < width
 		 && cy >= 0 
 		 && cy <= bottom_row 
 		 && _self.grid[cx, cy].type != BLOCK.NONE) {
@@ -83,9 +85,9 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
                 var dy = cy - global.lastSwapY;
                 var dist = sqrt(dx * dx + dy * dy);
                 
-                for (var _i = 0; _i < self.width; _i++) {
+                for (var _i = 0; _i < width; _i++) {
                     for (var _j = 0; _j <= bottom_row; _j++) {
-                        var other_block = grid[_i, _j];
+                        var other_block = _self.grid[_i, _j];
 
                         if (other_block.group_id == group_id) {
                             // ✅ Convert each big block part into a small block of the same type
@@ -106,12 +108,12 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
                                 offset_y: block.offset_y,
                                 color: block.color,
                                 y_offset_global: _self.global_y_offset,
-                                match_size: max(block.mega_width * block.mega_height, 1), // ✅ Store the match size
+                                match_size:   max(block.mega_width * block.mega_height, 1), // ✅ Store the match size
                                 match_points: max(block.mega_width * block.mega_height, 1) * 1.5,
                                 bomb_tracker: false, // Flag to mark this pop as bomb‐generated
-                                bomb_level: 0,
-                                img_number: block.img_number,
-                                is_big: false,
+                                bomb_level:   0,
+                                img_number:   block.img_number,
+                                is_big:       false,
                             };
                         
                             _self.grid[_i, _j].popping   = true;  // Start popping process
@@ -123,7 +125,7 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
                             }
                             
                             
-                            ds_list_add(global.pop_list, pop_info);
+                            ds_list_add(_self.pop_list, pop_info);
                         }
                     }
                 }
@@ -146,7 +148,7 @@ function activate_bomb_gem(_self, _x, _y, _bomb_level = -1) {
 				{
 					var pop_info = create_bomb_pop_info(_self, cx, cy, _x, _y, blocks_destroyed, total_match_points, false, bomb_level);
 				}
-				ds_list_add(global.pop_list, pop_info);
+				ds_list_add(_self.pop_list, pop_info);
             }
         }
     }

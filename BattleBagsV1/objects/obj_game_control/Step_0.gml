@@ -210,7 +210,7 @@ if (reset)
 drop_blocks(self);
 
 // Have to find a way to drop blocks while locking in matches
-if (all_pops_finished() && !victory_state) {
+if (all_pops_finished(self) && !victory_state) {
     
 	// ✅ If a new match is found, **increase** combo instead of resetting
 	if find_and_destroy_matches(self) {

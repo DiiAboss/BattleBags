@@ -220,7 +220,7 @@ function find_and_destroy_matches(_self) {
                                     audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
                                 }
                                 
-								ds_list_add(global.pop_list, pop_info);
+								ds_list_add(pop_list, pop_info);
 	                        }
 	                    }
 	                }
@@ -232,14 +232,16 @@ function find_and_destroy_matches(_self) {
                 pop_info.match_size = m_size;
                 pop_info.match_points = total_match_points * 1.5;
 
+                
 	            _self.grid[i, j].popping   = true;
 	            _self.grid[i, j].pop_timer = dist * _start_delay;
-				var _pitch = clamp(1 + (0.2 * _self.combo), 0.5, 5);
+				
                 if !(_self.game_over_state)
                 {
+                    var _pitch = clamp(1 + (0.2 * _self.combo), 0.5, 5);
                     audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
                 }
-	            ds_list_add(global.pop_list, pop_info);
+	            ds_list_add(pop_list, pop_info);
 	        }
 	    }
 	}
@@ -250,3 +252,22 @@ function find_and_destroy_matches(_self) {
 }
 
 
+function send_pop_info_to_pop_list(_self, pop_info, x_pos, y_pos)
+{
+    if (_self.game_over_state) return;
+    
+    _self.grid[x_pos, y_pos].popping = true;
+    _self.grid[i, j].pop_timer = pop_info.pop_timer;
+    
+    var combo = _self.combo;
+    play_pitched_pop_sound(snd_pre_bubble_pop_test, combo);
+    
+    ds_list_add(pop_list, pop_info);
+}
+
+function play_pitched_pop_sound(sound, pitch_offset, pitch_gain_per_offset = 0.2, min_pitch = 1, max_pitch = 5)
+{
+    var current_pitch = (min_pitch + (pitch_gain_per_offset * pitch_offset))
+    var pitch = clamp(current_pitch, min_pitch, max_pitch);
+    audio_play_sound(sound, 10, false, 0.25, 0, pitch);
+}

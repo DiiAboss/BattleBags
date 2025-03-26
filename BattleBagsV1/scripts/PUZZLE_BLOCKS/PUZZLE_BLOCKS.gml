@@ -125,7 +125,7 @@ function handle_puzzle_match(_self, _x, _y) {
 
 	_self.grid[_x, _y].popping   = true;
 	_self.grid[_x, _y].pop_timer = dist * _start_delay;
-	ds_list_add(global.pop_list, pop_info);
+	ds_list_add(_self.pop_list, pop_info);
 	
 		var pop_info = {
 	    x: _x + 1,
@@ -150,7 +150,7 @@ function handle_puzzle_match(_self, _x, _y) {
 	};
 		_self.grid[_x + 1, _y].popping   = true;	
 	_self.grid[_x + 1, _y].pop_timer = dist * _start_delay;
-	ds_list_add(global.pop_list, pop_info);
+	ds_list_add(_self.pop_list, pop_info);
 	
 		var pop_info = {
 	    x: _x,
@@ -175,7 +175,7 @@ function handle_puzzle_match(_self, _x, _y) {
 	};
 		_self.grid[_x, _y + 1].popping   = true;
 	_self.grid[_x, _y + 1].pop_timer = dist * _start_delay;
-	ds_list_add(global.pop_list, pop_info);
+	ds_list_add(_self.pop_list, pop_info);
 	
 		var pop_info = {
 	    x: _x + 1,
@@ -200,12 +200,12 @@ function handle_puzzle_match(_self, _x, _y) {
 	};
 		_self.grid[_x + 1, _y + 1].popping   = true;	
 	_self.grid[_x + 1, _y + 1].pop_timer = dist * _start_delay;
-ds_list_add(global.pop_list, pop_info);
+ds_list_add(_self.pop_list, pop_info);
 
 
-	destroy_block(self, _x, + 1, _y + 1);
-	destroy_block(self, _x, _y);
-	destroy_block(self, _x, _y + 1);
-	destroy_block(self, _x + 1, _y);
+	destroy_block(_self, _x, + 1, _y + 1);
+	destroy_block(_self, _x, _y);
+	destroy_block(_self, _x, _y + 1);
+	destroy_block(_self, _x + 1, _y);
 }
 

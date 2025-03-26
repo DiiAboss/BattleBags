@@ -479,10 +479,10 @@ for (var i = 0; i < width; i++) {
 
 
    // ----------------------------------------------------------------------
-   // DRAW POPPING GEMS (from global.pop_list)
+   // DRAW POPPING GEMS (from pop_list)
    // ----------------------------------------------------------------------
-   for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
-       var pop_data = ds_list_find_value(global.pop_list, idx);
+   for (var idx = 0; idx < ds_list_size(pop_list); idx++) {
+       var pop_data = ds_list_find_value(pop_list, idx);
    
        // Base coords
        var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
@@ -530,8 +530,8 @@ for (var i = 0; i < width; i++) {
     //------------------------------------------------------------
     // DFAW BOMB OVERLAY ON POP
     //------------------------------------------------------------
-    for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
-        var pop_data = ds_list_find_value(global.pop_list, idx);
+    for (var idx = 0; idx < ds_list_size(pop_list); idx++) {
+        var pop_data = ds_list_find_value(pop_list, idx);
     	
     		if (pop_data.bomb_tracker)
     		{ 

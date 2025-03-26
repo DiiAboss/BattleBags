@@ -346,7 +346,7 @@ function process_big_block(_self, gem, width, bottom_row, dist, _start_delay, to
                     audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
                 }
                 
-                ds_list_add(global.pop_list, pop_info);
+                ds_list_add(_self.pop_list, pop_info);
             }
         }
     }
@@ -398,5 +398,5 @@ function add_block_to_pop_list(_self, i, j, gem, dist, _start_delay, total_match
         audio_play_sound(snd_pre_bubble_pop_test, 10, false, 0.25, 0, _pitch);
     }
     
-    ds_list_add(global.pop_list, pop_info);
+    ds_list_add(_self.pop_list, pop_info);
 }

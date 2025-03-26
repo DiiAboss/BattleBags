@@ -302,7 +302,9 @@ board_x_offset = 128 + left_column_ui_length;
 max_shake_timer = 30;
 
 global.topmost_row = height - 1;
-global.pop_list    = ds_list_create();
+
+
+pop_list    = ds_list_create();
 
 global.lastSwapX = -1;
 global.lastSwapY = -1;

@@ -94,7 +94,7 @@ function shift_up_mp(player) {
     
             }
         }
-        //// 2️⃣ Shift all popping gems in `global.pop_list`
+        //// 2️⃣ Shift all popping gems in `pop_list`
         for (var k = 0; k < ds_list_size(player.pop_list); k++) {
             var pop_data = ds_list_find_value(player.pop_list, k);
             
