@@ -164,16 +164,16 @@ function pop_block_in_queue(_self)
                 
                 //objective_progress(OBJECTIVE_TYPE.BREAK_COLOR, type);
                 
-                // ✅ Store Gem Object Before Destroying
-                if (self.grid[_x, _y] != -1)
-                {
+                //// ✅ Store Gem Object Before Destroying
+                //if (self.grid[_x, _y] != -1)
+                //{
                 
                     var gem = self.grid[_x, _y];
-                }
-                else
-                {
-                    return;
-                }
+                //}
+                //else
+                //{
+                    //return;
+                //}
                     
                 if (gem.type == BLOCK.MEGA)
                 {

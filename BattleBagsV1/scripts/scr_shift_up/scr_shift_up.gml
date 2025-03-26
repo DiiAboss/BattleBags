@@ -16,105 +16,17 @@ function shift_up(_self) {
             
             
             
-// ✅ Process **Big Blocks** shifting upwards
-if (current_block.is_big) {
-    var parent_x = current_block.big_parent[0];
-    var parent_y = current_block.big_parent[1];
-    var parent_block = _self.grid[parent_x, parent_y];
-    var big_block_width = parent_block.mega_width;
-    var big_block_height = parent_block.mega_height;
-
-    // ✅ Only process once for the **parent block**
-    if (i == parent_x && j == parent_y) {
-        var new_y = parent_y - 1; // 🔹 Move up one row
-        
-        // ✅ Create a list to store all block positions
-        var parts_to_move = ds_list_create();
-
-        // ✅ Loop through all parts of the shape & store their positions
-        for (var bx = 0; bx < big_block_width; bx++) {
-            for (var by = 0; by < big_block_height; by++) {
-                var old_x = parent_x + bx;
-                var old_y = parent_y + by;
-                var new_x = old_x;
-                var new_y_pos = old_y - 1; // 🔹 Shift Up
-
-                // ✅ Only add if it's part of the big block
-                if (_self.grid[old_x, old_y].big_parent[0] == parent_x && _self.grid[old_x, old_y].big_parent[1] == parent_y) {
-                    ds_list_add(parts_to_move, [old_x, old_y, new_x, new_y_pos]);
-                }
-            }
-        }
-
-        // ✅ Check if all parts can move up before proceeding
-        var can_move = true;
-        for (var k = 0; k < ds_list_size(parts_to_move); k++) {
-            var data = ds_list_find_value(parts_to_move, k);
-            var new_x = data[2];
-            var new_y_pos = data[3];
-        }
-
-        // ✅ If all parts can move, proceed with shifting
-        if (can_move) {
-            for (var k = 0; k < ds_list_size(parts_to_move); k++) {
-                var data = ds_list_find_value(parts_to_move, k);
-                var old_x = data[0];
-                var old_y = data[1];
-                var new_x = data[2];
-                var new_y_pos = data[3];
-				
-				if (new_y_pos < 0)
-				{
-					return;
-				}
-				
-                // ✅ Move block to new position
-                _self.grid[new_x, new_y_pos] = _self.grid[old_x, old_y];
-                
-                _self.grid[old_x, old_y] = _self.grid[old_x, old_y + 1]; // This actually worked (I used to create an empty block here...
-                
-                _self.grid[new_x, new_y_pos].big_parent = [parent_x, new_y]; // ✅ Update parent reference
-            }
-
-            // ✅ Ensure Mega Block remains properly referenced
-            _self.grid[parent_x, new_y].mega_width = big_block_width;
-            _self.grid[parent_x, new_y].mega_height = big_block_height;
-        }
-
-        // ✅ Clean up memory
-        ds_list_destroy(parts_to_move);
-    }
-}
+           // ✅ Process **Big Blocks** shifting upwards
+           if (current_block.is_big) {
+               shift_big_blocks(_self, i, j);
+           }
  
 			else
 			{
 				// ✅ Normal gem movement
 			    _self.grid[i, j] = _self.grid[i, j + 1];
-                
-                var current_block = _self.grid[i, j];
-                
-                if (current_block.type == BLOCK.BUG)
-                {
-                    current_block.life_counter -= 1;
-                    show_debug_message("BUG[" +string(i) + ", " + string(j) + "] - " + string(current_block.life_counter));
-                    if (current_block.life_counter <= 0)
-                    {
-                        show_debug_message("BUG[" +string(i) + ", " + string(j) + "] - Targetted for destroy")
-    
-                        var spawn_x = _self.board_x_offset + (i * _self.gem_size) + _self.offset + current_block.offset_x;
-                        var spawn_y = (j * _self.gem_size) + _self.global_y_offset + current_block.offset_y + _self.offset + current_block.draw_y;
-                        var bug = instance_create_depth(spawn_x, spawn_y, _self.depth - 1, obj_bug);  
-                        bug.my_target = obj_recycler;
-                        destroy_block(self, i, j);
-                        _self.grid[i, j] = create_block(BLOCK.BLACK); 
-                        _self.grid[i, j].type = BLOCK.BLACK;
-                        continue; 
-                    }
-                }
-                
+                process_bug_blocks(_self, i, j);
 			}
-
-
         }
     }
 
@@ -144,3 +56,102 @@ if (current_block.is_big) {
 }
 
 
+function process_bug_blocks(_self, block_x, block_y)
+{
+    var board_x_offset   = _self.board_x_offset;
+    var gem_size         = _self.gem_size;
+    var offset           = _self.offset;
+    var global_y_offset  = _self.global_y_offset;
+    var _depth           = _self.depth;
+    var current_block    = _self.grid[block_x, block_y];
+    
+    if (current_block.type == BLOCK.BUG)
+    {
+        _self.grid[block_x, block_y].life_counter -= 1;
+        //show_debug_message("BUG[" +string(i) + ", " + string(j) + "] - " + string(current_block.life_counter));
+        if (current_block.life_counter <= 0)
+        {
+            //show_debug_message("BUG[" +string(i) + ", " + string(j) + "] - Targetted for destroy")
+            var spawn_x = board_x_offset + (block_x * gem_size) + offset + current_block.offset_x;
+            var spawn_y = (block_y * gem_size) + global_y_offset + current_block.offset_y + offset + current_block.draw_y;
+            var bug = instance_create_depth(spawn_x, spawn_y, _depth - 1, obj_bug);  
+            bug.target = obj_recycler;
+            destroy_block(self, block_x, block_y);
+            //_self.grid[block_x, block_y] = create_block(BLOCK.BLACK); 
+            _self.grid[block_x, block_y].type = BLOCK.NONE;
+            //continue; 
+        }
+    }
+}
+
+
+function shift_big_blocks(_self, block_x, block_y)
+{
+    var current_block = _self.grid[block_x, block_y];
+    var parent_x = current_block.big_parent[0];
+    var parent_y = current_block.big_parent[1];
+    var parent_block = _self.grid[parent_x, parent_y];
+    var big_block_width = parent_block.mega_width;
+    var big_block_height = parent_block.mega_height;
+
+    // ✅ Only process once for the **parent block**
+    if (block_x == parent_x && block_y == parent_y) {
+        var new_y = parent_y - 1; // 🔹 Move up one row
+        
+        // ✅ Create a list to store all block positions
+        var parts_to_move = ds_list_create();
+    
+        // ✅ Loop through all parts of the shape & store their positions
+        for (var bx = 0; bx < big_block_width; bx++) {
+            for (var by = 0; by < big_block_height; by++) {
+                var old_x = parent_x + bx;
+                var old_y = parent_y + by;
+                var new_x = old_x;
+                var new_y_pos = old_y - 1; // 🔹 Shift Up
+    
+                // ✅ Only add if it's part of the big block
+                if (_self.grid[old_x, old_y].big_parent[0] == parent_x && _self.grid[old_x, old_y].big_parent[1] == parent_y) {
+                    ds_list_add(parts_to_move, [old_x, old_y, new_x, new_y_pos]);
+                }
+            }
+        }
+    
+        // ✅ Check if all parts can move up before proceeding
+        var can_move = true;
+        for (var k = 0; k < ds_list_size(parts_to_move); k++) {
+            var data = ds_list_find_value(parts_to_move, k);
+            var new_x = data[2];
+            var new_y_pos = data[3];
+        }
+    
+        // ✅ If all parts can move, proceed with shifting
+        if (can_move) {
+            for (var k = 0; k < ds_list_size(parts_to_move); k++) {
+                var data = ds_list_find_value(parts_to_move, k);
+                var old_x = data[0];
+                var old_y = data[1];
+                var new_x = data[2];
+                var new_y_pos = data[3];
+                
+                if (new_y_pos < 0)
+                {
+                    return;
+                }
+                
+                // ✅ Move block to new position
+                _self.grid[new_x, new_y_pos] = _self.grid[old_x, old_y];
+                
+                _self.grid[old_x, old_y] = _self.grid[old_x, old_y + 1]; // This actually worked (I used to create an empty block here...
+                
+                _self.grid[new_x, new_y_pos].big_parent = [parent_x, new_y]; // ✅ Update parent reference
+            }
+    
+            // ✅ Ensure Mega Block remains properly referenced
+            _self.grid[parent_x, new_y].mega_width = big_block_width;
+            _self.grid[parent_x, new_y].mega_height = big_block_height;
+        }
+    
+        // ✅ Clean up memory
+        ds_list_destroy(parts_to_move);
+    }
+}

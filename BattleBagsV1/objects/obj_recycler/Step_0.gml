@@ -70,8 +70,24 @@ if (processing) {
     }
 }
 
+function set_deposit_spawn_rate(_type, rate)
+{
+    var keys = variable_struct_get_names(deposit_blocks);
+    var len = array_length(keys);
+    // Build weighted list based on type
+    for (var i = 0; i < len; i++) {
+        var block = deposit_blocks[$ keys[i]];
+        var __type = _type;
+        if (block.value == __type) {
+            block.weight = rate;
+        }
+    }
+}
 
-
+if (keyboard_check_pressed(ord("V")))
+{
+    set_deposit_spawn_rate(BLOCK.BUG, 0);
+}
 
 
 

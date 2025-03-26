@@ -189,7 +189,7 @@ function find_and_destroy_matches(_self) {
                 else {
                     m_size = 1;
                 }                
-	            // ✅ If it's a BIG BLOCK, transform it into separate blocks
+	            
 	            if (gem.is_big) {
 	                var group_id = gem.group_id;
 
@@ -201,17 +201,18 @@ function find_and_destroy_matches(_self) {
 	                        if (other_gem.group_id == group_id) {
 	                            // ✅ Convert each big block part into a small block of the same type
 	                            _self.grid[_x, _y] = create_block(gem.type);
-							 
+                                
+                                
                                 // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
-					            var pop_info = create_pop_info(self, gem, _x, _y);
+					            var pop_info = create_pop_info(self, other_gem, _x, _y);
                                 pop_info.start_delay = dist * _start_delay;
                                 pop_info.match_size = m_size;
                                 pop_info.match_points = total_match_points * 1.5;
-                                pop_info.is_big = true;
+                                //pop_info.is_big = true;
 
 							
 	                            _self.grid[_x, _y].popping   = true;  // Start popping process
-	                            _self.grid[_x, _y].pop_timer = dist * _start_delay;
+	                            _self.grid[_x, _y].pop_timer = dist //* _start_delay;
 								var _pitch = clamp(0.75 + (0.2 * _self.combo), 0.5, 5);
                                 
                                 if !(_self.game_over_state)

@@ -84,6 +84,15 @@ deposit_blocks =
         img: 0,
         level: 0,
     },
+    bug:
+    {
+        type: DEPOSIT_BLOCK.BLOCK,
+        weight: 25,
+        value: BLOCK.BUG,
+        sprite: spr_enemy_fly,
+        img: 0,
+        level: 0,
+    },
     wild:
     {
         type: DEPOSIT_BLOCK.BLOCK,

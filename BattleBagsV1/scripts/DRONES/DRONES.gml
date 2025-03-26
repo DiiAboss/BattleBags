@@ -52,6 +52,9 @@ function Drone(_id, _x, _y) constructor {
     }
     
     total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
+    carry_capacity = (stats.carry_capacity * mod_stats.carry_capacity);
+    throw_distance = (stats.throw_distance * mod_stats.throw_distance);
+    attack_rate    = (stats.attack_rate    * mod_stats.attack_rate);
     
     // State and targeting
     state = "idle";
@@ -65,21 +68,32 @@ function Drone(_id, _x, _y) constructor {
     
     throw_progress = 0;
     throw_duration = 30; // frames it takes to throw
-    is_throwing = false;
+    is_throwing    = false;
     
-    aim_direction = 0;
+    aim_direction  = 0;
     walk_direction = 0;
-    selected = false; 
-    think_timer = 0;
+    selected       = false; 
+    think_timer    = 0;
     
-    attack_timer = 0;
+    attack_timer   = 0;
     // Modular Functions
     mods = [];
+    
+    priority = "collecting";
+    
+    update_stats = function()
+    {
+        total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
+        carry_capacity = (stats.carry_capacity * mod_stats.carry_capacity);
+        throw_distance = (stats.throw_distance * mod_stats.throw_distance);
+        attack_rate    = (stats.attack_rate    * mod_stats.attack_rate);
+    }
+    
     
     update = function()
     {
         // this can move into a after upgrade check:
-        total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
+        total_speed = (stats.move_speed * mod_stats.move_speed);// * global.gameSpeed;
         
         
         think_timer ++;
@@ -115,13 +129,21 @@ function Drone(_id, _x, _y) constructor {
                     {
                         if (point_distance(x, y, instance_nearest(x, y, obj_deposit_block).x, instance_nearest(x, y, obj_deposit_block).y) < 16)
                         {
-                            target = instance_nearest(x, y, obj_deposit_block);
-                            state = "collecting";
+                            if (blocks_carried > 0 && priority == "collecting")
+                            {
+                                
+                            }
+                            else {
+                                target = instance_nearest(x, y, obj_deposit_block);
+                                state = "collecting";
+                            }
+                            
                         }
                     }
         }
-        if (stats.attack) && (instance_exists(obj_bug))
+        if (stats.attack) && (instance_exists(obj_bug) && state != "throwing")
         {
+            
             state = "hunting";
             target = instance_nearest(x, y, obj_bug);
         }
@@ -186,7 +208,7 @@ function Drone(_id, _x, _y) constructor {
             return;
         }
         
-        throw_blocks_on_ground();
+        drop_blocks_on_ground();
 
         
         var bullet_speed = 8;
@@ -571,37 +593,16 @@ function Drone(_id, _x, _y) constructor {
             }
         };
     
-    throw_blocks_on_ground = function()
+    drop_blocks_on_ground = function()
     {
-        //if (!is_throwing) {
-        //    is_throwing = true;
-        //    throw_progress = 0;
-        //}
-        
-        //throw_progress++;
-        
-
-        //if (throw_progress >= throw_duration) {
-            // Actually deliver blocks now
-            if (blocks_carried > 0)
-            {
-                var _current_block = array_pop(carried_blocks);
-                var new_deposit_block = instance_create_depth(x, y + _current_block.offset_y, -y, obj_deposit_block, _current_block);
-                new_deposit_block.hspeed = irandom_range(2, -2);
-                new_deposit_block.vsp = irandom(-2);
-                blocks_carried -= 1;
-            }
-        //}
-    
-            // Clear blocks
-            //blocks_carried = 0;
-            //carried_blocks = array_create(0);
-    
-            // Reset state
-            //is_throwing = false;
-            //throw_progress = 0;
-            //state = "idle";
-        
+        if (blocks_carried > 0)
+        {
+            var _current_block = array_pop(carried_blocks);
+            var new_deposit_block = instance_create_depth(x, y + _current_block.offset_y, -y, obj_deposit_block, _current_block);
+            new_deposit_block.hspeed = irandom_range(2, -2);
+            new_deposit_block.vsp = irandom(-2);
+            blocks_carried -= 1;
+        }
     }
 
     

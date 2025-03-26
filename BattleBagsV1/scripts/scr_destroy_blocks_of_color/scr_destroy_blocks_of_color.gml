@@ -1,5 +1,5 @@
 /// @function destroy_blocks_of_color
-/// @param {BLOCK} block_color - The color to destroy
+/// @param {any} block_color - The color to destroy
 
 function destroy_blocks_of_color(block_color) {
 

@@ -1,3 +1,3 @@
 /// @description
 alarm[0] = 360;
-attack = 1;
+attack = 10;
