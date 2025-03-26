@@ -2,8 +2,6 @@
 function can_match(gem1, gem2) {
     if (!gem1 || !gem2) return false; // Ensure valid gems
     
-    
-    
     if (gem1.popping || gem2.popping) return false;
     
     // ❌ Black blocks can NEVER match (even with other black blocks)

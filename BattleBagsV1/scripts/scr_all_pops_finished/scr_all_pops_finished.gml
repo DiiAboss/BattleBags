@@ -4,16 +4,17 @@ function all_pops_finished(player)
 	var pop_list      = player.pop_list;
     var pop_list_size = ds_list_size(player.pop_list);
     
-    if (pop_list_size == 0)
+    if (pop_list_size <= 0)
     {   
         pops_finished = true;
-        return;  
+        return pops_finished;  
     } 
 	
 	for (var i = 0; i < pop_list_size; i++) {
         
-        var pop_data = ds_list_find_value(player.pop_list, i);
-		
+        var pop_data = ds_list_find_value(pop_list, i);
+		if !(pop_data) return true;
+        
 	    // Wait for start_delay
 	    if (pop_data.timer < pop_data.start_delay) {
 	        pop_data.timer++;
@@ -45,10 +46,10 @@ function all_pops_finished(player)
                 
                 if _x < 0 || _y < 0 return;
 	            // ✅ Store Gem Object Before Destroying
-				if (self.grid[_x, _y] != -1) && (pop_data != -1)
+				if (player.grid[_x, _y] != -1) && (pop_data != -1)
 				{
 				   
-					var gem = self.grid[_x, _y];
+					var gem = player.grid[_x, _y];
 				}
 				else
 				{
@@ -69,7 +70,7 @@ function all_pops_finished(player)
                     {
                         destroy_block(self, _x, _y);
                         // ✅ Create Attack Object with Score
-                        var attack = instance_create_depth(px, py, depth - 1, obj_player_attack);
+                        var attack = instance_create_depth(px, py, player.depth - 1, obj_player_attack);
                         attack.color = pop_data.color;
                         attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
                         // ✅ Add accumulated match points to total_points
@@ -78,7 +79,7 @@ function all_pops_finished(player)
                     
                 if (pop_data.match_size >= 5)
                 {
-                    self.grid[_x, _y] = create_block(BLOCK.COLOR_BOMB);
+                    player.grid[_x, _y] = create_block(BLOCK.COLOR_BOMB);
                 }
                 
                 else {

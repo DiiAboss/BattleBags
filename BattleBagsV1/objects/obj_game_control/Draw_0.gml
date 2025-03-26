@@ -134,6 +134,14 @@ else
                     var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
     
                     draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 1, 1, 0, gem.color, 1);
+                    
+                    if (gem.is_big)
+                    {
+                        if (gem.big_parent[0] == i && gem.big_parent[1] == j)
+                        {
+                          draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 0.5, 0.5, 0, c_white, 1);  
+                        }
+                    }
                 }
             }
         }
@@ -348,10 +356,12 @@ for (var i = 0; i < width; i++) {
 				}
 				else
 				{
+                    
 				    // Only draw if this is the top-left (actual) parent
 				    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
 				        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 					}
+                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
 					 
 			    }
 			} 

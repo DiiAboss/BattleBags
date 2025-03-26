@@ -159,11 +159,11 @@ function process_swap(_self, swap_info)
 
             if _self.grid[swap_info.from_x, swap_info.from_y].cb != BLOCK.NONE
             {
-                destroy_blocks_of_color(_self.grid[swap_info.from_x, swap_info.from_y].cb);
+                destroy_blocks_of_color(_self, _self.grid[swap_info.from_x, swap_info.from_y].cb);
             }
             if _self.grid[swap_info.to_x,   swap_info.to_y].cb != BLOCK.NONE
             {
-                destroy_blocks_of_color(_self.grid[swap_info.to_x,   swap_info.to_y].cb);
+                destroy_blocks_of_color(_self, _self.grid[swap_info.to_x,   swap_info.to_y].cb);
             }
 	        _self.swap_in_progress = false;
             
@@ -312,7 +312,7 @@ function execute_swap(_self, ax, ay, bx, by) {
     _self.grid[bx, by].falling = falling;
     
     // ✅ Prevent swapping if one of the gems is being destroyed
-    if (is_being_destroyed(ax, ay) || is_being_destroyed(bx, by)) return;
+    if (is_being_destroyed(self, ax, ay) || is_being_destroyed(self, bx, by)) return;
 
     // ✅ Prevent swapping frozen blocks
     if (_self.grid[ax, ay].frozen || _self.grid[bx, by].frozen) return;

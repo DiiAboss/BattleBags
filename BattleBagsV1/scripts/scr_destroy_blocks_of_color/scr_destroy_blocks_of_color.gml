@@ -3,9 +3,9 @@
 function destroy_blocks_of_color(player, block_color) {
 
     // Shortcuts
-    var grid_width  = player.width;
+    var grid_width  = player.board_width;
     var grid_height = player.bottom_playable_row;
-    var top_row = player.top_playable_row;
+    var top_row     = player.top_playable_row;
     var total_blocks_destroyed = 0;
     var blocks_to_pop = [];
     var number_of_block_types = player.numberOfGemTypes;
