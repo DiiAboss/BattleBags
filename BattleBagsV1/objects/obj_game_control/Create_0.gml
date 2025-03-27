@@ -327,7 +327,10 @@ global.in_upgrade_menu = false;
 // ------------------------------------------------------
 // Create The Grid
 // ------------------------------------------------------
-create_block_spawn_rates(self);
+//create_block_spawn_rates(self);
+
+block_spawn_rates = new block_spawn_weight_manager();
+
 initialize_game_board(self, width, height, spawn_rows);
 
 // ------------------------------------------------------

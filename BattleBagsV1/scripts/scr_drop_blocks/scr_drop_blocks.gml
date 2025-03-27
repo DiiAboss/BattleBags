@@ -28,8 +28,8 @@ function drop_blocks(player, fall_speed = 2) {
             
             if (below.popping)
             {
-                current_block.fall_delay = below.fall_delay;
-                current_block.falling = below.falling;
+                current_block.fall_delay = 0;
+                current_block.falling = false;
                 current_block.is_enemy_block = false;
                 current_block.dist_without_touching = 0;
             }

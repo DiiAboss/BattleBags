@@ -1,132 +1,114 @@
 // ------------------------------------------------------
 // Color Spawn Weight System
 // ------------------------------------------------------
+
+
+
+    //GAME_OVER   = -404,
+    //RANDOM      = -99,
+    //MEGA        = -3,
+    //NONE        = -1,
+    //RED         = 0,
+    //YELLOW      = 1,
+    //GREEN       = 2,
+    //PINK        = 3,
+    //PURPLE      = 4,
+    //LIGHTBLUE   = 5,
+    //ORANGE      = 6,
+    //BLUE        = 7,
+    //GREY        = 8,
+    //WHITE       = 9,
+    //BLACK       = 10,
+    //WILD        = 11,
+    //PUZZLE_1    = 12,
+    //CURSE       = 13,
+    //COLOR_BOMB  = 14,
+    //bUG         = 15
+
+
 function block_spawn_weight_manager() constructor 
 {
-    total = 0;
+    start_weight = 12.5;
     
-    red         = 0;
-    yellow      = 0;
-    green       = 0;
-    pink        = 0;
-    purple      = 0;
-    lightblue   = 0;
-    orange      = 0;
-    blue        = 0;
+    total_blocks = 16;
+    block_weight_array   = array_create(total_blocks, 0);
+    default_weight_array = array_create(total_blocks, 0);
+    mod_weight_array     = array_create(total_blocks, 0);
+    block_range_array    = array_create(total_blocks, 0);
     
-    grey        = 0;
-    white       = 0;
-    black       = 0;
-    wild        = 0;
-    puzzle_1    = 0;
+    block_weight_array[BLOCK.RED]       = start_weight;
+    block_weight_array[BLOCK.YELLOW]    = start_weight;
+    block_weight_array[BLOCK.GREEN]     = start_weight;
+    block_weight_array[BLOCK.PINK]      = start_weight;
+    block_weight_array[BLOCK.PURPLE]    = start_weight;
+    block_weight_array[BLOCK.LIGHTBLUE] = start_weight;
+    block_weight_array[BLOCK.ORANGE]    = start_weight;
+    block_weight_array[BLOCK.BLUE]      = start_weight;
+    block_weight_array[BLOCK.BUG]       = 2;
     
-    curse       = 0;
+    var _total = 0;
+    for (var i = 0; i < total_blocks; i++)
+    {
+        
+        mod_weight_array[i] = 1;
+        default_weight_array[i] = block_weight_array[i];
+        
+        block_range_array[i] = _total + block_weight_array[i];
+        
+        _total += block_weight_array[i];
+    } 
     
-    color_bomb  = 0;
-    bug         = 0;
+    total = _total;
     
-    total = red + yellow + green + pink + purple + lightblue + orange + blue + grey + white + black + wild + puzzle_1 + curse + color_bomb + bug;
     
+    get_block_spawn_rate = function(_type)
+    {
+        return default_weight_array[_type] * mod_weight_array[_type];
+    }
     
     get_block_spawn_percent = function(_type)
     {
-        switch (_type)
+        
+    }
+    
+    update_block_weights = function()
+    {
+        var _total = 0;
+        for (var i = 0; i < total_blocks; i++)
         {
-            case BLOCK.RED: return (red / total) * 100;
-            case BLOCK.YELLOW: return (yellow / total) * 100;
-            case BLOCK.GREEN: return (green / total) * 100;
-            case BLOCK.PINK: return (pink / total) * 100;
-            case BLOCK.PURPLE: return (purple / total) * 100;
-            case BLOCK.LIGHTBLUE: return (lightblue / total) * 100;
-            case BLOCK.ORANGE: return (orange / total) * 100;
-            case BLOCK.BLUE: return (blue / total) * 100;
-            case BLOCK.CURSE: return (curse / total) * 100;
-            case BLOCK.BUG: return (bug / total) * 100;
-            case BLOCK.PUZZLE_1: return (puzzle_1 / total) * 100;
-            default: 
-                show_debug_message("get_block_spawn_percent() -> BLOCK NOT FOUND!... ARE YOU USING BLOCK.<TYPE> to access? e.g. BLOCK.RED, BLOCK.CURSE, etc.");
-                return -404;
+            block_weight_array[i] = _total + (default_weight_array[i] * mod_weight_array[i]);
+            _total += block_weight_array[i];
         }
     }
     
-    
+    get_random_block = function()
+    {
+        var rand_num = irandom(total);
+        for (var i = 1; i < total_blocks; i++)
+        {
+            if (rand_num < block_range_array[i] && rand_num > block_range_array[i-1]) return i;
+        }
+        // If we get to none of the blocks above, goto block_range_array[0]
+        return BLOCK.RED;
+    }
     
     set_block_spawn_weight = function(_type, value)
     {
-        switch (_type)
-        {
-            case BLOCK.RED:
-                total -= red;
-                red = value;
-                total += red;
-            break;
-            case BLOCK.YELLOW:
-                total -= yellow;
-                red = value;
-                total += yellow;
-            break;
-            case BLOCK.GREEN:
-                total -= green;
-                red = value;
-                total += green;
-            break;
-            case BLOCK.PINK:
-                total -= pink;
-                red = value;
-                total += pink;
-            break;
-            case BLOCK.PURPLE:
-                total -= purple;
-                red = value;
-                total += purple;
-            break;
-            case BLOCK.LIGHTBLUE:
-                total -= lightblue;
-                red = value;
-                total += lightblue;
-            break;
-            case BLOCK.ORANGE:
-                total -= orange;
-                red = value;
-                total += orange;
-            break;
-            case BLOCK.BLUE:
-                total -= blue;
-                red = value;
-                total += blue;
-            break;
-            case BLOCK.CURSE:
-                total -= curse;
-                red = value;
-                total += curse;
-            break;
-            case BLOCK.BUG:
-                total -= bug;
-                red = value;
-                total += bug;
-            break;
-            case BLOCK.PUZZLE_1:
-                total -= puzzle_1;
-                red = value;
-                total += puzzle_1;
-            break;
-            default: 
-                show_debug_message("set_block_spawn_weight() -> BLOCK NOT FOUND!... ARE YOU USING BLOCK.<TYPE> to access? e.g. BLOCK.RED, BLOCK.CURSE, etc.")    
-            break;
-        }
+
     }
 }
 
-function create_spawn_rate(_type, _rate)
+function weighted_random_block(player) 
 {
-    return {
-        type: _type,
-        rate: _rate,
-        level: 1,
-    }
+    return player.block_spawn_rates.get_random_block();
 }
 
 
+
+
+
+
+// LEGACY for multi
 function create_block_spawn_rates(game_control_object, spawn_rate = 12)
 {
     var number_of_block_types = 8;
@@ -150,64 +132,5 @@ function create_block_spawn_rates(game_control_object, spawn_rate = 12)
         number_of_block_types = game_control_object.number_of_block_types;
         global.color_spawn_weight = array_create(number_of_block_types, spawn_rate);
     }
-	
-}
-
-function weighted_random_block(game_control_object) 
-{
-    game_control_object = obj_game_control;
-    var total_weight = 0;
-    var number_of_block_types = array_length(global.color_spawn_weight);
     
-    var single_player = instance_exists(obj_game_control);
-    var spawn_rates = 12.5;
-    
-    if (single_player)
-    {
-        number_of_block_types = game_control_object.number_of_block_types;
-        
-        var next_block = irandom(number_of_block_types + 4);
-        
-        if (next_block > number_of_block_types)
-        {
-            return BLOCK.BUG;
-        }
-        
-        // ✅ Calculate total weight
-        for (var i = 0; i < number_of_block_types; i++) {
-            total_weight += global.color_spawn_weight[i];
-        }
-    
-        // ✅ Select a random number within total weight
-        var rand = irandom(total_weight - 1);
-        var cumulative_weight = 0;
-    
-        for (var i = 0; i < number_of_block_types; i++) {
-            cumulative_weight += global.color_spawn_weight[i];
-    
-            if (rand < cumulative_weight) {
-                return i; // ✅ Return selected color type
-            }
-        }
-    }
-    
-    else 
-    {
-        total_weight = number_of_block_types * spawn_rates;
-        
-        // ✅ Select a random number within total weight
-        var rand = irandom(total_weight - 1);
-        var cumulative_weight = 0;
-        
-    
-        for (var i = 0; i < number_of_block_types; i++) {
-            cumulative_weight += spawn_rates;
-    
-            if (rand < cumulative_weight) {
-                return i; // ✅ Return selected color type
-            }
-       }
-    }
-    
-    return BLOCK.NONE; // Default to first color (should never happen)
 }

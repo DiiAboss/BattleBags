@@ -82,8 +82,8 @@ function process_bug_blocks(player, block_x, block_y)
             var spawn_y = (block_y * gem_size) + global_y_offset + current_block.offset_y + offset + current_block.draw_y;
             var bug = instance_create_depth(spawn_x, spawn_y, _depth - 1, obj_bug);  
             bug.target = obj_recycler;
-            destroy_block(self, block_x, block_y);
-            //_self.grid[block_x, block_y] = create_block(BLOCK.BLACK); 
+            //destroy_block(self, block_x, block_y);
+            player.grid[block_x, block_y] = create_block(BLOCK.BLACK); 
             player.grid[block_x, block_y].type = BLOCK.NONE;
             //continue; 
         }
