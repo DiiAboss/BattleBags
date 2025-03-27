@@ -135,7 +135,7 @@ function create_block_spawn_rates(game_control_object, spawn_rate = 12)
     array_push(global.block_spawn_rates, create_spawn_rate(BLOCK.RED, spawn_rate));
     if (single_player)
     {
-        number_of_block_types = game_control_object.numberOfGemTypes;
+        number_of_block_types = game_control_object.number_of_block_types;
         global.color_spawn_weight = array_create(number_of_block_types, spawn_rate);
         array_push(global.color_spawn_weight, 0);
         array_push(global.color_spawn_weight, 0);
@@ -147,7 +147,7 @@ function create_block_spawn_rates(game_control_object, spawn_rate = 12)
         array_push(global.color_spawn_weight, 25);
     }
     else {
-        number_of_block_types = game_control_object.numberOfGemTypes;
+        number_of_block_types = game_control_object.number_of_block_types;
         global.color_spawn_weight = array_create(number_of_block_types, spawn_rate);
     }
 	
@@ -164,7 +164,7 @@ function weighted_random_block(game_control_object)
     
     if (single_player)
     {
-        number_of_block_types = game_control_object.numberOfGemTypes;
+        number_of_block_types = game_control_object.number_of_block_types;
         
         var next_block = irandom(number_of_block_types + 4);
         

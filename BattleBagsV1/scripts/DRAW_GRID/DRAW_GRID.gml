@@ -5,42 +5,42 @@
 ///
 ///@return
 /// Function: Draw the grid
-function draw_grid(_self) {
+function draw_grid(player) {
 	
-	var width = _self.width;
-	var top_row = _self.top_playable_row;
-	var bottom_row = _self.bottom_playable_row;
-	var gem_size = _self.gem_size;
+	var width       = player.width;
+	var top_row     = player.top_playable_row;
+	var bottom_row  = player.bottom_playable_row;
+	var block_size  = player.gem_size;
 	
     for (var i = 0; i < width; i++) {
-        var shake_intensity = calculate_shake(_self, i);
+        var shake_intensity = calculate_shake(player, i);
 
         for (var j = top_row; j <= bottom_row; j++) {
-            var gem = _self.grid[i, j];
+            var block = player.grid[i, j];
 
-            if (gem.type == BLOCK.NONE) continue; // Skip empty slots
+            if (block.type == BLOCK.NONE) continue; // Skip empty slots
 
-            var draw_x = _self.board_x_offset + (i * gem_size) + _self.offset + gem.offset_x;
-            var draw_y = (j * gem_size) + _self.global_y_offset + gem.offset_y + _self.offset;
+            var draw_x = player.board_x_offset + (i * block_size) + player.offset + block.offset_x;
+            var draw_y = (j * block_size) + player.global_y_offset + block.offset_y + player.offset;
 
             // Apply shake and store the new values
-            var new_pos = apply_shake_effect(self, draw_x, draw_y, shake_intensity, i);
+            var new_pos = apply_shake_effect(player, draw_x, draw_y, shake_intensity, i);
             draw_x = new_pos[0];
             draw_y = new_pos[1];
 
-            draw_gem(gem, draw_x, draw_y);
+            draw_block(block, draw_x, draw_y);
         }
     }
 }
 /// Function: Calculate shake intensity for a column
-function calculate_shake(_self, i) {
+function calculate_shake(player, i) {
     var max_shake = 2;
     var shake_intensity = 0;
-	var top_row = _self.top_playable_row;
+	var top_row = player.top_playable_row;
 	
-    if (global.topmost_row <= top_row) {
+    if (player.topmost_row <= top_row) {
         for (var ii = 0; ii <= top_row; ii++) {
-            if (_self.grid[i, ii].type != BLOCK.NONE) {
+            if (player.grid[i, ii].type != BLOCK.NONE) {
                 return max_shake; // Apply full shake if danger row detected
             }
         }
@@ -67,41 +67,41 @@ function apply_shake_effect(_self, _x, _y, shake_intensity, i) {
 }
 
 /// Function: Draw a single gem
-function draw_gem(gem, draw_x, draw_y) {
-    var scale_x = gem.falling ? 0.95 : 1;
-    var scale_y = gem.falling ? 1.05 : 1;
+function draw_block(block, draw_x, draw_y) {
+    var scale_x = block.falling ? 0.95 : 1;
+    var scale_y = block.falling ? 1.05 : 1;
 
-    if (gem.is_big) {
-        if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
-            draw_sprite_ext(sprite_for_block(gem.type), 0, draw_x + 32, draw_y + 32, 2, 2, 0, c_white, 1);
+    if (block.is_big) {
+        if (block.big_parent[0] == i && block.big_parent[1] == j) {
+            draw_sprite_ext(sprite_for_block(block.type), 0, draw_x + 32, draw_y + 32, 2, 2, 0, c_white, 1);
         }
     } else {
-        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, scale_x, scale_y, 0, c_white, 1);
+        draw_sprite_ext(sprite_for_block(block.type), block.img_number, draw_x, draw_y, scale_x, scale_y, 0, c_white, 1);
     }
 
     // Special effects
-    if (gem.powerup != -1) draw_sprite(gem.powerup.sprite, 0, draw_x, draw_y);
-    if (gem.frozen) draw_sprite(spr_ice_cover, 0, draw_x, draw_y);
-    if (gem.is_enemy_block) draw_sprite(spr_enemy_gem_overlay, 0, draw_x, draw_y);
+    if (block.powerup != -1) draw_sprite(block.powerup.sprite, 0, draw_x, draw_y);
+    if (block.frozen) draw_sprite(spr_ice_cover, 0, draw_x, draw_y);
+    if (block.is_enemy_block) draw_sprite(spr_enemy_gem_overlay, 0, draw_x, draw_y);
 }
 
 /// Function: Draw hover effect on the selected block
-function draw_hover_effect(_self) {
-    if (_self.hovered_block[0] < 0 && _self.hovered_block[1] < 0) return;
+function draw_hover_effect(player) {
+    if (player.hovered_block[0] < 0 && player.hovered_block[1] < 0) return;
 
     var hover_i = hovered_block[0];
     var hover_j = hovered_block[1];
-	var width = _self.width;
-	var height = _self.height;
-	var gem_size = _self.gem_size;
+	var width = player.width;
+	var height = player.height;
+	var gem_size = player.gem_size;
 
     if (hover_i >= width || hover_j >= height) return;
 
-    var hover_gem = _self.grid[hover_i, hover_j];
+    var hover_gem = player.grid[hover_i, hover_j];
     if (hover_gem.type == BLOCK.NONE) return;
 
-    var rect_x1 = _self.board_x_offset + (hover_i * gem_size);
-    var rect_y1 = (hover_j * gem_size) + _self.global_y_offset;
+    var rect_x1 = player.board_x_offset + (hover_i * gem_size);
+    var rect_y1 = (hover_j * gem_size) + player.global_y_offset;
     var rect_x2 = rect_x1 + gem_size;
     var rect_y2 = rect_y1 + gem_size;
 

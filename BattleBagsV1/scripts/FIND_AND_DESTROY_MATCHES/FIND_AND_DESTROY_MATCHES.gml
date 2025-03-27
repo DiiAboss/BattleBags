@@ -50,8 +50,6 @@ function find_and_destroy_matches(_self) {
         for (var i = 1; i < width; i++) {
             if (can_match(_self.grid[i, j], _self.grid[i - 1, j])) {
                 if (match_count == 1) start_idx = i - 1;
-                //if (_self.grid[i, j].type >= 0) 
-                    
                 match_count++;
             } else {
                 if (match_count >= min_match) {
@@ -107,7 +105,7 @@ function find_and_destroy_matches(_self) {
             if (can_match(_self.grid[i, j], _self.grid[i, j - 1])) {
                 if (match_count == 1) start_idx = j - 1;
                     
-                if (_self.grid[i, j].type >= 0) match_count++;
+                match_count++;
                 
             } else {
                 if (match_count >= min_match) {
@@ -152,7 +150,6 @@ function find_and_destroy_matches(_self) {
         }
     }
 
-    
      //-------------------------
      //✅ DIAGONAL MATCHES (If enabled)
      //-------------------------
@@ -181,44 +178,12 @@ function find_and_destroy_matches(_self) {
                     first_match = true;
                     m_size = total_match_count;
                     
-                    
-                    
                     objective_progress(OBJECTIVE_TYPE.MATCH_SIZE, undefined, total_match_count);
-                    
-                    
                     
                 }
                 else {
                     m_size = 1;
                 }                
-	            
-	            //if (gem.is_big) {
-	                //var group_id = gem.group_id;
-//
-	                //for (var _x = 0; _x < width; _x++) {
-	                    //for (var _y = 0; _y <= bottom_row; _y++) {
-	                        //var other_gem = grid[_x, _y];
-                            //
-                            //
-	                        //if (other_gem.group_id == group_id) {
-	                            //// ✅ Convert each big block part into a small block of the same type
-	                            //_self.grid[_x, _y] = create_block(gem.type);
-                                //
-                                //
-                                //// ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
-					            //var pop_info = create_pop_info(self, other_gem, _x, _y);
-                                //pop_info.start_delay = dist * _start_delay;
-                                //pop_info.match_size = m_size;
-                                //pop_info.match_points = total_match_points * 1.5;
-                                ////pop_info.is_big = true;
-//
-                                //var combo = _self.combo;
-                                //play_pitched_pop_sound(snd_pre_bubble_pop_test, combo);
-                                //send_pop_info_to_pop_list(_self, pop_info, i, j);
-	                        //}
-	                    //}
-	                //}
-	            //}
                 var current_match_points = total_match_points * 1.5;
                 var delay = dist * _start_delay;
                 
@@ -241,6 +206,12 @@ function find_and_destroy_matches(_self) {
 	
     return found_any;
 }
+
+
+
+
+
+
 
 
 function send_pop_info_to_pop_list(player, pop_info, x_pos, y_pos)

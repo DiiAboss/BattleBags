@@ -1,5 +1,3 @@
-topmost_row = global.topmost_row;
-
 uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - keyboard_check(ord("Q"))) * .01);
 uInnerIntensity        = max(0, uInnerIntensity + (keyboard_check(ord("S")) - keyboard_check(ord("A"))) * .01);
 uInnerLengthMultiplier = max(0, uInnerLengthMultiplier + (keyboard_check(ord("C")) - keyboard_check(ord("X"))) * .01);
@@ -25,6 +23,30 @@ if (game_over_state)
     alarm[0] = scan_board;
     return;
 }
+
+function set_paused()
+{
+    if (after_menu_counter != after_menu_counter_max) || instance_exists(obj_upgrade_menu) || instance_exists(obj_shop_controller) 
+    {
+        global.paused = true;
+    }
+    else {
+        if (global.paused)
+        {
+            global.paused = false;
+        }
+        else {
+            global.paused = true;
+        }
+    }   
+}
+
+if (keyboard_check_pressed(vk_escape))
+{
+    set_paused();
+}
+
+
 
 //-----------------------------------------
 // VICTORY STATE
@@ -62,7 +84,7 @@ var in_menu = instance_exists(obj_upgrade_menu) || instance_exists(obj_shop_cont
 //------------------------------------------------------
 // PAUSE THE GAME
 //------------------------------------------------------
-if (global.paused) || global.in_upgrade_menu {
+if (global.paused){
 	return;
 }
 
@@ -92,7 +114,7 @@ global.modifier = game_speed_default / game_speed_start;
 
 // Speed up gameboard with space bar
 
-        process_gameboard_speed(self, input.SpeedUpKey);
+
 
 
 
@@ -111,7 +133,7 @@ else
     //is_targeting_enemy = mouse_x > board_x_offset + (gem_size * width) + 256;    
 }
 
-process_inputs_and_delay(self, input);
+
 
 // Enemy Targetting System
 //process_targetting_enemy(self, input, enemy_control, is_targeting_enemy);
@@ -124,6 +146,8 @@ if (control_mode == "modern") {
 }
 
 
+
+
 hover_x = floor((mouse_x - board_x_offset) / gem_size);
 hover_y = floor((mouse_y - global_y_offset) / gem_size);
 if (input.InputType == INPUT.GAMEPAD)
@@ -131,13 +155,12 @@ if (input.InputType == INPUT.GAMEPAD)
     hover_x = last_position[0];
     hover_y = last_position[1];
 }
+process_inputs_and_delay(self, input);
+process_gameboard_speed(self, input.SpeedUpKey);
 
-//----------------------------------------------------------
-// GRID SHAKE and GEM SHAKE
-//-----------------------------------------------------------
-process_grid_shake(fight_for_your_life);
 
-gem_shake(self);
+
+
 
 process_all_mega_blocks(self);
 
@@ -160,8 +183,6 @@ if (global_y_offset <= -gem_size) {
     last_position[1] -= 1;
     var number_per_big_block = 2;
     
-    
-    
     //SCAN TOP TO BOTTOM
     
     big_block_types_on_grid = [];
@@ -179,25 +200,26 @@ if (global_y_offset <= -gem_size) {
         grid[_rand, bottom_playable_row].type = block_type;
         
     }
+    // Update the topmost row tracking
+    update_topmost_row(self);
+    
 }
 else
 {
     //regular shift speeds
     global_y_offset -= shift_speed;
+    // process and swaps i nthe queue
+    drop_blocks(self);
+    process_swap(self, swap_info);
+    
 }
 
-// process and swaps i nthe queue
-process_swap(self, swap_info);
 
 darken_bottom_row(self);
 
-// Update the topmost row tracking
-update_topmost_row(self);
-
-
 var reset = true;
 
-if (global.topmost_row < top_playable_row) {
+if (topmost_row < top_playable_row) {
     check_game_over(self);
 	reset = false;
 }
@@ -207,11 +229,11 @@ if (reset)
 	lose_life_timer = 0;
 }
 
-drop_blocks(self);
+
 
 // Have to find a way to drop blocks while locking in matches
 if (all_pops_finished(self) && !victory_state) {
-    
+
 	// ✅ If a new match is found, **increase** combo instead of resetting
 	if find_and_destroy_matches(self) {
 		combo_timer = 0;
@@ -222,6 +244,9 @@ if (all_pops_finished(self) && !victory_state) {
             combo_points ++;
         }
 	}	
+    
+    // Update the topmost row tracking
+    update_topmost_row(self);
 }
 
 process_combo_timer_and_record_max(self);
@@ -247,16 +272,12 @@ apply_volume_settings();
 process_play_next_song(songs[current_song]);
 
 
-if (keyboard_check_pressed(vk_tab))
-{
-    if (effect < 3)
-    {
-        effect++;
-    }
-    else {
-        effect = 0;
-    }
-}
+//----------------------------------------------------------
+// GRID SHAKE and GEM SHAKE
+//-----------------------------------------------------------
+process_grid_shake(fight_for_your_life);
+
+gem_shake(self);
 
 
 var dist = -1;

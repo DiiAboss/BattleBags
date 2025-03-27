@@ -36,7 +36,7 @@ function shift_up(player) {
         
         // ✅ Move each popping gem up **one row**
         pop_data.y -= 1;
-        pop_data.y_offset_global = global_y_offset;
+        pop_data.y_offset_global = player.global_y_offset;
         
         ds_list_replace(player.pop_list, k, pop_data);
     }

@@ -205,9 +205,9 @@ for (var i = 0; i < width; i++) {
     var shake_intensity = 0; // Default no shake
 
     // **Check if column has any blocks above row 1**
-    var above_blocks = global.topmost_row <= top_playable_row;
+    var above_blocks = topmost_row <= top_playable_row;
 
-	draw_text(10, draw_y_start + 0, "TOPROW: " + string(global.topmost_row));
+	draw_text(10, draw_y_start + 0, "TOPROW: " + string(topmost_row));
 	draw_text(10, draw_y_start + 10, "above: " + string(above_blocks));
 	
 	var danger_row = 99;
@@ -361,8 +361,6 @@ for (var i = 0; i < width; i++) {
 				    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
 				        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 					}
-                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
-					 
 			    }
 			} 
 			else {
@@ -426,7 +424,7 @@ for (var i = 0; i < width; i++) {
             
             
             if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
-                            var rect_x1 = board_x_offset + (hover_i * gem_size);
+                            var rect_x1 = board_x_offset + (hover_i * gem_size) + hover_gem.offset_x;
                             var rect_y1 = (hover_j * gem_size) + global_y_offset + hover_gem.offset_y + hover_gem.draw_y;
                             var rect_x2 = rect_x1 + gem_size;
                             var rect_y2 = rect_y1 + gem_size;

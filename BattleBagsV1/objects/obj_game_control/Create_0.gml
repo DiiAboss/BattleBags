@@ -1,5 +1,8 @@
+
+// Randomize the game board (this can be turned on in game manager, as we may need to run on seeds)
 randomize();
 
+// image speed?
 image_speed = 0.1;
 image_alpha = 0.75;
 depth       = -1;
@@ -11,7 +14,6 @@ simple_draw = true;
 //--------------------------------------------------
 // Positioning Cursor
 //--------------------------------------------------
-selected_piece = [-1, -1];
 hovered_block  = [-1, -1];
 
 //--------------------------------------------------
@@ -31,6 +33,7 @@ total_blocks_destroyed = 0;
 total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
+
 in_shop = false;
 
 // These will be bound to keyboard keys and right clicks
@@ -283,7 +286,7 @@ global.enemy_attack_queue = ds_list_create();
 // ------------------------------------------------------
 swap_in_progress = false;
 swap_info = create_swap_info();
-global.swap_queue = { 
+swap_queue = { 
 	active: false, 
 	ax: -1, 
 	ay: -1, 
@@ -301,7 +304,7 @@ board_x_offset = 128 + left_column_ui_length;
 
 max_shake_timer = 30;
 
-global.topmost_row = height - 1;
+topmost_row = height - 1;
 
 
 pop_list    = ds_list_create();
@@ -310,7 +313,7 @@ global.lastSwapX = -1;
 global.lastSwapY = -1;
 player_level     = 0;
 combo            = 0;
-numberOfGemTypes = 8;
+number_of_block_types = 8;
 darken_alpha     = 0;
 
 gem_size        = 64;
@@ -369,13 +372,13 @@ inputDelay   = 10;
 devices      = [];
 
 is_targeting_enemy = true;
-enemy_target = -1;
+enemy_target       = -1;
 
 
 //------------------------------------------
 // COMBO POINTS SYSTEM
 //------------------------------------------
-combo_points = 0;
+combo_points     = 0;
 max_combo_points = 100;
 
 cp_per_match_3    = 1;
@@ -387,7 +390,7 @@ cp_per_combo      = 1;
 
 meteor_block      = -1;
 
-block_colors_destroyed = array_create(numberOfGemTypes, -1); //to show how much b
+block_colors_destroyed = array_create(number_of_block_types, -1); //to show how much b
 
 victory_state         = false;
 victory_alpha         = 0;

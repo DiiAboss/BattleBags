@@ -29,12 +29,12 @@ function gem_shake(_self, shake_amount = 8)
 	            gem.shake_timer--;
 
 	            // Apply shaking effect by setting offset_x and offset_y
-	            gem.offset_x = irandom_range(-shake_amount, shake_amount); // Shake horizontally
+	            //gem.offset_x = irandom_range(-shake_amount, shake_amount); // Shake horizontally
 	            gem.offset_y = irandom_range(-shake_amount, shake_amount); // Shake vertically
 	        } else {
 	            // Reset offset when not shaking
-	            gem.offset_x = 0;
-	            gem.offset_y = 0;
+	            //gem.offset_x = 0;
+	            //gem.offset_y = 0;
 	        }
 	    }
 	}

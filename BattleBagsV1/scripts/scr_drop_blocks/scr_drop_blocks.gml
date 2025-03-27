@@ -1,22 +1,23 @@
-function drop_blocks(_self, fall_speed = 2) {
-    var width = _self.board_width;
-    var height = _self.board_height;
-    var bottom_row = _self.bottom_playable_row;
+function drop_blocks(player, fall_speed = 2) {
+    var width        = player.board_width;
+    var height       = player.board_height;
+    var bottom_row   = player.bottom_playable_row;
     
-    var has_fallen = false; // ✅ Track if any block has moved
+    var has_fallen   = false; // ✅ Track if any block has moved
     
     
     //  Process from **bottom-up** (ensures things fall properly)
     for (var j = height - 2; j >= 0; j--) {
         for (var i = 0; i < width; i++) {
             
-            var current_block = _self.grid[i, j];
-            process_mega_blocks(_self, i, j);
+            var current_block = player.grid[i, j];
+            
+            process_mega_blocks(player, i, j);
             
             // Skip invalid blocks.
             if (current_block.type == BLOCK.NONE) continue;
             
-            var below = _self.grid[i, j + 1];
+            var below = player.grid[i, j + 1];
 
             //  skip frozen blocks
             if (current_block.frozen) {					
@@ -42,6 +43,7 @@ function drop_blocks(_self, fall_speed = 2) {
                 }  
             }
             
+            if (current_block.falling) current_block.offset_x = 0;
             
             // Slime Block Falling
             if (current_block.slime_hp > 0) { 
@@ -52,10 +54,9 @@ function drop_blocks(_self, fall_speed = 2) {
                     }
 
                     // ✅ **Move block down**
-                    _self.grid[i, j + 1] = current_block;
-                    
+                    player.grid[i, j + 1] = current_block;
                     // Set the blocks old position to empty (the loop will take care of this)
-                    _self.grid[i, j]     = create_block(BLOCK.NONE);
+                    player.grid[i, j]     = create_block(BLOCK.NONE);
 
                     // 🔥 **Reduce Slime HP when moving**
                     current_block.slime_hp -= 1;
@@ -77,14 +78,14 @@ function drop_blocks(_self, fall_speed = 2) {
             if (current_block.is_big) {
                 var parent_x = current_block.big_parent[0];
                 var parent_y = current_block.big_parent[1];
-                var parent_block = _self.grid[parent_x, parent_y];
+                var parent_block = player.grid[parent_x, parent_y];
                 var big_block_width = parent_block.mega_width;
                 var big_block_height = parent_block.mega_height;
                 
                 // ✅ Only process once for **parent block**
                 if (i == parent_x && j == parent_y) {
-                var bottom_left  = _self.grid[parent_x,     parent_y + 1];
-                var bottom_right = _self.grid[parent_x + 1, parent_y + 1];
+                var bottom_left  = player.grid[parent_x,     parent_y + 1];
+                var bottom_right = player.grid[parent_x + 1, parent_y + 1];
                 
                 var can_fall = true;
                 
@@ -95,7 +96,7 @@ function drop_blocks(_self, fall_speed = 2) {
                     
                     
                     if (_block_y < height){
-                        if (_self.grid[_block_x, _block_y].type != BLOCK.NONE) {
+                        if (player.grid[_block_x, _block_y].type != BLOCK.NONE) {
                             can_fall = false;
                         }
                     }
@@ -113,6 +114,8 @@ function drop_blocks(_self, fall_speed = 2) {
                             continue; // 🔹 Wait until delay finishes
                         }
                         
+                        
+                        
                         // ✅ Move the entire Mega Block **down one row**
                         for (var bbx = 0; bbx < big_block_width; bbx++) {
                             for (var bby = big_block_height - 1; bby >= 0; bby--) {
@@ -121,9 +124,9 @@ function drop_blocks(_self, fall_speed = 2) {
                                 var new_x = old_x;
                                 var new_y = old_y + 1; // ✅ **Move down using your logic**
 
-                                _self.grid[new_x, new_y] = _self.grid[old_x, old_y]; // Move
-                                _self.grid[old_x, old_y] = create_block(BLOCK.NONE); // Clear
-                                _self.grid[new_x, new_y].big_parent = [parent_x, parent_y + 1]; // ✅ Update parent
+                                player.grid[new_x, new_y] = player.grid[old_x, old_y]; // Move
+                                player.grid[old_x, old_y] = create_block(BLOCK.NONE); // Clear
+                                player.grid[new_x, new_y].big_parent = [parent_x, parent_y + 1]; // ✅ Update parent
                             }
                         }
 
@@ -135,9 +138,9 @@ function drop_blocks(_self, fall_speed = 2) {
                             for (var by = 0; by < big_block_height; by++) {
                                 var block_x = parent_x + bx;
                                 var block_y = parent_y + by;
-                                _self.grid[block_x, block_y].falling = false;
-                                _self.grid[block_x, block_y].fall_delay = 0;
-                                _self.grid[block_x, block_y].is_enemy_block = false;
+                                player.grid[block_x, block_y].falling = false;
+                                player.grid[block_x, block_y].fall_delay = 0;
+                                player.grid[block_x, block_y].is_enemy_block = false;
                                 
                                 has_fallen = true;
                             }
@@ -152,20 +155,24 @@ function drop_blocks(_self, fall_speed = 2) {
                 if (current_block.fall_delay < current_block.max_fall_delay) {
                     current_block.fall_delay++;
                     current_block.falling = true;
+                    current_block.offset_x = 0;
                     continue; //  Wait until delay finishes
                 }
+                
 
-                _self.grid[i, j + 1] = current_block;
-                _self.grid[i, j] = create_block(BLOCK.NONE);
+                player.grid[i, j + 1] = current_block;
+                player.grid[i, j] = create_block(BLOCK.NONE);
                 current_block.dist_without_touching += 1;
                 current_block.fall_delay = 0;
+                
+                
                 
                 has_fallen = true;
                 if (current_block.dist_without_touching) > 16
                 {
                 
-                    var draw_x = _self.board_x_offset + (i * _self.gem_size) + _self.offset + current_block.offset_x;
-                    var draw_y = (j * _self.gem_size) + _self.global_y_offset + current_block.offset_y + _self.offset + current_block.draw_y;
+                    var draw_x = player.board_x_offset + (i * player.gem_size) + player.offset + current_block.offset_x;
+                    var draw_y = (j * player.gem_size) + player.global_y_offset + current_block.offset_y + player.offset + current_block.draw_y;
                     //effect_create_above(ef_smokeup, draw_x, draw_y, 1, c_red);
                 }
             }
@@ -176,6 +183,7 @@ function drop_blocks(_self, fall_speed = 2) {
                 current_block.falling = below.falling;
                 current_block.is_enemy_block = false;
                 current_block.dist_without_touching = 0;
+                //player.grid[i, j].offset_x = 0;
             }
             
         }

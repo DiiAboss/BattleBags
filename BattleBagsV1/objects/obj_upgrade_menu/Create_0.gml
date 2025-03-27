@@ -17,7 +17,7 @@ draw_y_start = camera_get_view_y(view_get_camera(view_current));
 var x_start = (room_width / 2) - (384 * 1);
 var y_start = draw_y_start + 300;
 
-
+player = obj_game_control;
 
 
 delay = 60;
@@ -68,12 +68,12 @@ for (var i = 0; i < array_size; i++) {
 ds_list_destroy(available_upgrades);
 
 depth = -99;
-numberOfGemTypes = obj_game_control.numberOfGemTypes;
+number_of_block_types = player.number_of_block_types;
 
 selected = 1;
 
 
-obj_game_control.after_menu_counter = 0;
+player.after_menu_counter = 0;
 
 input_delay = 0;
 max_input_delay = 10;

@@ -8,7 +8,7 @@ function destroy_blocks_of_color(player, block_color) {
     var top_row     = player.top_playable_row;
     var total_blocks_destroyed = 0;
     var blocks_to_pop = [];
-    var number_of_block_types = player.numberOfGemTypes;
+    var number_of_block_types = player.number_of_block_types;
     
     // Loop through the entire grid
     for (var _x = 0; _x < grid_width; _x++) {

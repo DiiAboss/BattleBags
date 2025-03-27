@@ -35,7 +35,7 @@ function toss_down_shape(_self, shape_name, is_enemy_attack = true, is_freeze = 
                 // ✅ Decide Color (Fixed, Random Gem)
                 var gem_color = BLOCK.NONE;
                 if (block_type == BLOCK.RANDOM) {
-                    gem_color = irandom_range(0, _self.numberOfGemTypes - 1); // Random gem color
+                    gem_color = irandom_range(0, _self.number_of_block_types - 1); // Random gem color
                 } else {
                     gem_color = block_type; // Fixed color
                 }
