@@ -113,13 +113,14 @@ function start_swap(player, ax, ay, bx, by) {
 
 function process_swap(player)
 {
-    if (player.swap_queue.active) && !player.swap_in_progress//(player.global_y_offset - player.shift_speed > -player.gem_size)
+    if (player.swap_queue.active) && !player.swap_in_progress //(player.global_y_offset - player.shift_speed > -player.gem_size)
     {
-        // ✅ Execute the swap AFTER adjusting its position
         player.swap_in_progress = execute_swap(player, player.swap_queue.ax, player.swap_queue.ay, player.swap_queue.bx, player.swap_queue.by);
         player.swap_queue.active = false; // Clear the swap queue
         return;
     }
+    
+    
     
     
     
@@ -239,8 +240,9 @@ function execute_swap(player, ax, ay, bx, by) {
     
     if (block_a.offset_y != block_b.offset_y) return false;
     
-    var falling      = player.grid[ax, ay].falling || player.grid[bx, by].falling;
-    var fall_delay   = max(player.grid[ax, ay].fall_delay, player.grid[bx, by].fall_delay)
+    // set both blocks to not fall while swapping
+    var falling      = false; //player.grid[ax, ay].falling || player.grid[bx, by].falling; TODO: Find out why this didint work
+    var fall_delay   = 5;     //max(player.grid[ax, ay].fall_delay, player.grid[bx, by].fall_delay) TODO: Find out why this didnt work.
     
     player.grid[ax, ay].fall_delay   = fall_delay;
     player.grid[ax, ay].falling      = falling;

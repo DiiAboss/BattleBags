@@ -25,7 +25,7 @@ function block_spawn_weight_manager() constructor
     color_bomb  = 0;
     bug         = 0;
     
-    total = red+yellow+green+pink+purple+lightblue+orange+blue+grey+white+black+wild+puzzle_1+curse+color_bomb+bug;
+    total = red + yellow + green + pink + purple + lightblue + orange + blue + grey + white + black + wild + puzzle_1 + curse + color_bomb + bug;
     
     
     get_block_spawn_percent = function(_type)
@@ -143,8 +143,8 @@ function create_block_spawn_rates(game_control_object, spawn_rate = 12)
         array_push(global.color_spawn_weight, 0);
         array_push(global.color_spawn_weight, 0);
         array_push(global.color_spawn_weight, 0);
-        array_push(global.color_spawn_weight, 25);
-        array_push(global.color_spawn_weight, 25);
+        array_push(global.color_spawn_weight, 5);
+        array_push(global.color_spawn_weight, 5);
     }
     else {
         number_of_block_types = game_control_object.number_of_block_types;

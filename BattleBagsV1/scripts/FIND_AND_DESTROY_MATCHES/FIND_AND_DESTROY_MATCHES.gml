@@ -15,8 +15,13 @@ function find_and_destroy_matches(_self) {
     var first_found			 = false; // ✅ Track the first block in the combo
     var total_match_points	 = 0;     // ✅ Accumulates points for multiple matches
     var total_match_count    = 0;
-	
+	var last_swap_x          = global.lastSwapX;
+    var last_swap_y          = global.lastSwapY;
+    
+    var total_pop_timer      = 0;
 	var black_blocks_to_transform = ds_list_create(); // ✅ Store black blocks that will transform
+    
+    var pop_timer_per_block = 5;
     
 	global.black_blocks_to_transform = ds_list_create(); // ✅ Track black blocks to transform
 	
@@ -29,8 +34,9 @@ function find_and_destroy_matches(_self) {
             marked_for_removal[xx, yy] = false;
 			
             // TODO: This is a sketchy fail safe, let all blocks rely on the popping variable
-			if (_self.grid[xx, yy].shake_timer > 0)
+			if (_self.grid[xx, yy].pop_timer > 0)
 			{
+                _self.grid[xx, yy].pop_timer -= 1;
 				_self.grid[xx, yy].popping = true;
 			}
 			else
@@ -57,7 +63,10 @@ function find_and_destroy_matches(_self) {
                         var xx = start_idx + k;
                         if (xx >= 0 && xx < width) {
                             marked_for_removal[xx, j] = true;
-
+                            
+                            var dist = abs(last_swap_x - xx) + abs(last_swap_y - j);
+                            total_pop_timer      += pop_timer_per_block;
+                            
                             if (!first_found) {
                                 combo_x = xx;
                                 combo_y = j;
@@ -80,6 +89,9 @@ function find_and_destroy_matches(_self) {
                 if (xx >= 0 && xx < width) {
                     marked_for_removal[xx, j] = true;
 
+                    var dist = abs(last_swap_x - xx) + abs(last_swap_y - j);
+                    total_pop_timer      += pop_timer_per_block;
+                    
                     if (!first_found) {
                         combo_x = xx;
                         combo_y = j;
@@ -114,7 +126,10 @@ function find_and_destroy_matches(_self) {
 						
                         if (yy >= 0 && yy <= bottom_row) {
                             marked_for_removal[i, yy] = true;
-
+                            
+                            var dist = abs(last_swap_x - i) + abs(last_swap_y - yy);
+                            total_pop_timer      += pop_timer_per_block;
+                            
                             if (!first_found) {
                                 combo_x = i;
                                 combo_y = yy;
@@ -136,6 +151,9 @@ function find_and_destroy_matches(_self) {
                 if (yy >= 0 && yy <= bottom_row) {
                     marked_for_removal[i, yy] = true;
 
+                    var dist = abs(last_swap_x - i) + abs(last_swap_y - yy);
+                    total_pop_timer      += pop_timer_per_block;
+                    
                     if (!first_found) {
                         combo_x = i;
                         combo_y = yy;
@@ -150,54 +168,68 @@ function find_and_destroy_matches(_self) {
         }
     }
 
-     //-------------------------
+     //------------------------------
      //✅ DIAGONAL MATCHES (If enabled)
-     //-------------------------
+     //------------------------------
 	 diagonal_match_process(self, _self.diagonal_matches);
 	 
     // -------------------------
     // ✅ HANDLE MATCHED GEMS
     // -------------------------
-    var first_match = false;
+    var first_match     = false;
+    
+    show_debug_message("TOTAL_POP_TIMER: " + string(total_pop_timer));
+
+    
+    var current_match_count = total_match_count;
+    // This will go through the entire board, and remove any blocks that are morked for removal, we could isolate the blocks for removal to skip this for loop possibly.
 	for (var i = 0; i < width; i++) {
 	    for (var j = 0; j <= bottom_row; j++) {
-	        if (marked_for_removal[i, j]) {
+            var gem = _self.grid[i, j];
+            var big_block_match = handle_find_and_destroy_big_block(_self, gem, total_match_count, total_match_points);
+            total_pop_timer += big_block_match[0];
+            total_match_count += big_block_match[1];
+            if (marked_for_removal[i, j]) {
 	            found_any = true;
-	            _self.grid[i, j].shake_timer = _self.max_shake_timer; // Start shaking effect
-
+                
 	            var gem = _self.grid[i, j];
                 
-	            var dx = i - global.lastSwapX;
-	            var dy = j - global.lastSwapY;
-	            var dist = sqrt(dx * dx + dy * dy);
-	            var _start_delay = 5; // adjustable could be used as upgrade
-			     
                 var m_size = 1;
-                if !first_match
+                if !(first_match)
                 {
                     first_match = true;
                     m_size = total_match_count;
-                    
                     objective_progress(OBJECTIVE_TYPE.MATCH_SIZE, undefined, total_match_count);
                     
                 }
                 else {
                     m_size = 1;
                 }                
-                var current_match_points = total_match_points * 1.5;
-                var delay = dist * _start_delay;
                 
-                handle_find_and_destroy_big_block(_self, gem, m_size, current_match_points, delay);
+                var current_match_points = total_match_points * 1.5;
+                
+                _self.grid[i, j].shake_timer = 30;
+                var dx = i - last_swap_x;
+                var dy = j - last_swap_y;
+                
+                var per_block = total_pop_timer / total_match_count;
+                                
+                var delay = per_block * current_match_count;
+                //var dist = abs(dx) + abs(dy);
+                //var delay = dist * 5;
                 
 	            // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
 	            var pop_info = create_pop_info(self, gem, i, j);
-                pop_info.start_delay  = dist * _start_delay;
+                pop_info.start_delay  = delay;
                 pop_info.match_size   = m_size;
                 pop_info.match_points = current_match_points;
 
                 var combo = _self.combo;
                 play_pitched_pop_sound(snd_pre_bubble_pop_test, combo);
                 send_pop_info_to_pop_list(_self, pop_info, i, j);
+                
+                
+                current_match_count -= 1;
 	        }
 	    }
 	}
@@ -219,8 +251,8 @@ function send_pop_info_to_pop_list(player, pop_info, x_pos, y_pos)
     if (player.game_over_state) return;
     
     player.grid[x_pos, y_pos].popping = true;
-    player.grid[x_pos, y_pos].pop_timer = pop_info.start_delay;
-    player.grid[x_pos, y_pos].shake_timer = pop_info.start_delay;
+    player.grid[x_pos, y_pos].pop_timer = player.grid[x_pos, y_pos].shake_timer + pop_info.start_delay;
+    //player.grid[x_pos, y_pos].shake_timer = pop_info.start_delay;
     ds_list_add(player.pop_list, pop_info);
 }
 
@@ -231,9 +263,9 @@ function play_pitched_pop_sound(sound, pitch_offset, pitch_gain_per_offset = 0.2
     audio_play_sound(sound, 10, false, 0.25, 0, pitch);
 }
 
-function handle_find_and_destroy_big_block(player, block, current_match_size, current_total_points, delay = 5)
+function handle_find_and_destroy_big_block(player, block, current_match_size, current_total_points)
 {
-    if !(block.is_big) return;
+    if !(block.is_big) return [0, 0];
         
     var group_id     = block.group_id;
     var block_type   = block.type;
@@ -247,17 +279,19 @@ function handle_find_and_destroy_big_block(player, block, current_match_size, cu
     var max_x = parent_x + width;
     var max_y = parent_y + height;
     
-
-
-    
+    var last_swap_x = global.lastSwapX;
+    var last_swap_y = global.lastSwapY;
+    var total_dist  = 20;
+    var current_block = 4;
     show_debug_message("2x2 BLOCK Found: \n[" + string(parent_x) + ", " + string(parent_y) + "] WIDTH: " + string(width) + ", HEIGHT: " + string(height));
     
     for (var _x = parent_x; _x < max_x; _x++) {
         for (var _y = parent_y; _y < max_y; _y++) { 
             var other_gem = player.grid[_x, _y];
-            
             if (other_gem.group_id == group_id) {
                 
+                var delay = total_dist/current_block;
+                current_block -=1;
                 player.grid[_x, _y] = create_block(block.type);
                 
                 // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
@@ -273,4 +307,6 @@ function handle_find_and_destroy_big_block(player, block, current_match_size, cu
             }
         }
     }
+    
+    return [total_dist, 4];
 }

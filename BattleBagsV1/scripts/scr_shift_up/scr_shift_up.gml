@@ -29,6 +29,12 @@ function shift_up(player) {
 			}
         }
     }
+    
+    if (player.swap_in_progress)
+    {
+        player.swap_info.to_y   -= 1;
+        player.swap_info.from_y -= 1;
+    }
 
     // 2️⃣ Shift all popping gems in `_self.pop_list`
     for (var k = 0; k < ds_list_size(player.pop_list); k++) {

@@ -145,6 +145,7 @@ if (control_mode == "modern") {
     mouse_legacy_swap(self, input.ActionPress);
 }
 
+swap_queue_array = [];
 
 
 

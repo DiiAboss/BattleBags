@@ -25,7 +25,7 @@ function gem_shake(_self, shake_amount = 8)
 				gem.y_scale += 0.005;
 			}
 
-	        if (gem.type != -1 && gem.shake_timer > 0) {
+	        if (gem.shake_timer > 0) {
 	            gem.shake_timer--;
 
 	            // Apply shaking effect by setting offset_x and offset_y
