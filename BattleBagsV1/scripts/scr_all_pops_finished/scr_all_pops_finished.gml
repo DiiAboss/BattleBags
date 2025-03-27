@@ -15,6 +15,13 @@ function all_pops_finished(player)
         var pop_data = ds_list_find_value(pop_list, i);
 		if !(pop_data) return true;
         
+        if (player.grid[pop_data.x, pop_data.y].shake_timer) > 0
+        {
+            player.grid[pop_data.x, pop_data.y].shake_timer--;
+            continue;
+        }
+        else
+        
 	    // Wait for start_delay
 	    if (pop_data.timer < pop_data.start_delay) {
 	        pop_data.timer++;

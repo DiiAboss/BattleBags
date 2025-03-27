@@ -4,6 +4,7 @@ function create_player(_id)
         _id: _id,                              // Player ID
         input: new Input(),                   // Player input
         grid: create_grid_array(),            // Player grid
+        block_spawn_rates: new block_spawn_weight_manager(), // Block Spawn Rates Manager
         global_y_offset: 0,                   // Y Offset
         start_row: 12,
         shift_speed: 1,                        // Shift speed
@@ -46,6 +47,7 @@ function create_player(_id)
         max_combo_timer: 60,
         combo_timer: 60,
         dragged: false,
+        
         
     };
 }

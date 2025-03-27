@@ -33,10 +33,9 @@ function find_and_destroy_matches(_self) {
         for (var yy = 0; yy <= bottom_row; yy++) {
             marked_for_removal[xx, yy] = false;
 			
-            // TODO: This is a sketchy fail safe, let all blocks rely on the popping variable
 			if (_self.grid[xx, yy].pop_timer > 0)
 			{
-                _self.grid[xx, yy].pop_timer -= 1;
+                _self.grid[xx, yy].pop_timer --;
 				_self.grid[xx, yy].popping = true;
 			}
 			else
@@ -252,6 +251,7 @@ function send_pop_info_to_pop_list(player, pop_info, x_pos, y_pos)
     
     player.grid[x_pos, y_pos].popping = true;
     player.grid[x_pos, y_pos].pop_timer = player.grid[x_pos, y_pos].shake_timer + pop_info.start_delay;
+    pop_info.timer = 0;
     //player.grid[x_pos, y_pos].shake_timer = pop_info.start_delay;
     ds_list_add(player.pop_list, pop_info);
 }
