@@ -57,7 +57,7 @@ for (var i = 0; i < ds_list_size(conveyor_blocks); i++) {
     // Check if block has reached activation position
     if (block_data.y_pos <= conveyor_activation_y) {
         // Get the block value
-        block_type = block_data.value;
+        var block_type = block_data.value;
         
         // Activate the block (add to game board)
         activate_block(block_type, block_data.lane);
@@ -102,7 +102,7 @@ for (var i = 0; i < ds_list_size(conveyor_blocks); i++) {
     
             for (var j = 0; j < block_count; j++) {
                 var index = block_list[j];
-                var block_data = conveyor_blocks[| index];
+                block_data = conveyor_blocks[| index];
                 
                 if !(block_data) continue;
                 
@@ -119,7 +119,7 @@ for (var i = 0; i < ds_list_size(conveyor_blocks); i++) {
 }
 
 // Process the queue whenever called
-process_block_queue();
+process_block_queue(player_obj, self);
 
 // Pulsing animation for highlight effects
 pulsing_alpha = 0.3 + 0.2 * sin(current_time * 0.003);

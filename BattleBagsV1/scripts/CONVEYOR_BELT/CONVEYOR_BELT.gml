@@ -1,63 +1,67 @@
 /// @function add_block_to_conveyor
 /// @description Adds a block to the conveyor belt queue
+/// @param {real} player player_object 
+/// @param {real} conveyor conveyor_object 
 /// @param {enum} block The block to add
 /// @param {real} lane Optional lane number (defaults to 0)
 /// @param {real} speed_mult Optional speed multiplier (defaults to 1)
-function add_block_to_conveyor(block, lane = 0, speed_mult = 1) {
-    if !(block) return;
-        
-    if (block.type) == DEPOSIT_BLOCK.UPGRADE
+function add_block_to_conveyor(player, conveyor, block, lane = 0, speed_mult = 1) 
+{
+    if !(block)
     {
-        add_upgrades_to_bottom(block);
         return;
     }
+    
+    if (block.type == DEPOSIT_BLOCK.UPGRADE)
+    {
+        add_upgrades_to_bottom(player, block);
+        return;
+    }
+    
+    var lanes_unlocked   = conveyor.lanes_unlocked;
+    var conveyor_width   = conveyor.conveyor_width;
+    var lane_count       = conveyor.lane_count;
+    var conveyor_start_y = conveyor.conveyor_start_y;
+     
     // Make sure lane is valid
     lane = clamp(lane, 0, lanes_unlocked - 1);
     
     // Create block data structure
-    var block_data = {
-        type: block.type,
-        value: block.value,
-        sprite: block.sprite,
-        img: block.img,
+    var block_data = create_conveyor_block_data(conveyor, block, speed_mult)
+    
+    // Determine if this is a special block type
+    if (block_data.type == DEPOSIT_BLOCK.BLOCK)
+    {
+        // Add the block to the conveyor queue
+        ds_list_add(conveyor.conveyor_blocks, block_data);
+    }
+    
+    // Return the index of the newly added block in the queue
+    return ds_list_size(conveyor.conveyor_blocks) - 1;
+}
+
+
+function create_conveyor_block_data(conveyor, deposit_block, speed_mult = 1)
+{
+    var conveyor_start_y = conveyor.conveyor_start_y;
+    var conveyor_lane    = 0;
+    
+    var ret =
+    {
+        type: deposit_block.type,
+        value: deposit_block.value,
+        sprite: deposit_block.sprite,
+        img: deposit_block.img,
         y_pos: conveyor_start_y,
-        lane: lane,
+        lane: conveyor_lane,
         speed_multiplier: speed_mult,
         is_special: false,
         creation_time: current_time,
         x_pos: -1,
         angle: 0,
-    };
-    
-    // Determine if this is a special block type
-    if (block_data.type == DEPOSIT_BLOCK.BLOCK)
-    {
-        if (block.value == BLOCK.BLACK || block.value == BLOCK.WILD || 
-            block.value == BLOCK.MEGA || block.value == BLOCK.CURSE) {
-            block_data.is_special = true;
-            
-            // Special blocks might move slower on conveyor
-            block_data.speed_multiplier = 1;
-            
-            // Create visual effect for special blocks
-            var effect_x = x + (lane * (conveyor_width / lane_count));
-            var effect_y = conveyor_start_y;
-            //effect_create_above(ef_star, effect_x, effect_y, 1, c_yellow);
-        }
     }
-    // Add the block to the conveyor queue
-    ds_list_add(conveyor_blocks, block_data);
     
-    // Create visual effect for block addition
-    var effect_x = x + (lane * (conveyor_width / lane_count));
-    var effect_y = conveyor_start_y;
-    //effect_create_above(ef_smoke, effect_x, effect_y, 0, c_white);
-    
-    // Optionally play a sound
-    // audio_play_sound(snd_block_add, 1, false);
-    
-    // Return the index of the newly added block in the queue
-    return ds_list_size(conveyor_blocks) - 1;
+    return ret;
 }
 
 /// @function activate_block
@@ -72,11 +76,11 @@ function activate_block(block, lane) {
 }
 
 
-function add_upgrades_to_bottom(block, position = -1)
+function add_upgrades_to_bottom(player, block, position = -1)
 {
-    var lane = position;
-    var game_control = obj_game_control;
-    var powerup_slots = game_control.powerup_slots;
+    var lane          = position;
+    var powerup_slots = player.powerup_slots;
+    
     if (position == -1)
     {
         var temp_array = [];
@@ -96,7 +100,7 @@ function add_upgrades_to_bottom(block, position = -1)
     
    
     
-    var y_bottom = game_control.bottom_playable_row * 64;
+    var y_bottom = player.bottom_playable_row * 64;
     var speed_mult = 1; 
     
     
@@ -120,9 +124,10 @@ function add_upgrades_to_bottom(block, position = -1)
 
 
 /// Process the queued blocks and place them onto the board properly
-function process_block_queue() {
+function process_block_queue(player, conveyor) {
+    var block_queue  = conveyor.block_queue;
     var total_blocks = array_length(block_queue);
-    var board_width = obj_game_control.width;
+    var board_width = player.board_width;
     var blocks_processed = 0;
     var current_row = 0;
     
@@ -132,22 +137,23 @@ function process_block_queue() {
         for (var i = current_row; i > 0; i--)
         {
             // Determine number of blocks for this row
-            push_rows_down(i);
+            push_rows_down(player, i);
         }
         
-        place_blocks_in_row(0, blocks_this_row);
+        place_blocks_in_row(player, conveyor, 0, blocks_this_row);
         
         blocks_processed += blocks_this_row;
         current_row ++;
     }
 
     // Clear the queue after processing
-    block_queue = array_create(0);
+    conveyor.block_queue = array_create(0);
 }
 
 
-function place_blocks_in_row(row_index, blocks_to_place) {
-    var board_width = obj_game_control.width;
+function place_blocks_in_row(player, conveyor, row_index, blocks_to_place) {
+    var board_width = player.board_width;
+    var block_queue = conveyor.block_queue;
     
     if (array_length(block_queue) < board_width)
     {
@@ -159,47 +165,47 @@ function place_blocks_in_row(row_index, blocks_to_place) {
     }
     
     // Shuffle available columns to randomize placement
-    block_queue = array_shuffle(block_queue);
+    conveyor.block_queue = array_shuffle(block_queue);
     
     // Place blocks
     for (var i = 0; i < board_width; i++) {
-        var type_to_spawn = array_pop(block_queue);
+        var type_to_spawn = array_pop(conveyor.block_queue);
         if type_to_spawn != -1
         {
-            obj_game_control.grid[i, row_index].type = type_to_spawn;
-            obj_game_control.grid[i, row_index].falling = true; 
+            player.grid[i, row_index].type = type_to_spawn;
+            player.grid[i, row_index].falling = true; 
         }
     }
 }
 
 
 /// Helper function to push all rows down by one
-function push_rows_down(current_row) {
-    var board_width = obj_game_control.width;
-    var height = obj_game_control.top_playable_row;
+function push_rows_down(player, current_row) {
+    var board_width  = player.board_width;
+    var height       = player.top_playable_row;
 
     // Move blocks from top downwards, starting at the top
     if (current_row > 0)
     {
         for (var col = 0; col < board_width; col++) {
-            obj_game_control.grid[col, current_row].type = obj_game_control.grid[col, current_row - 1].type;
-            obj_game_control.grid[col, current_row].falling = obj_game_control.grid[col, current_row - 1].falling;
+            player.grid[col, current_row].type = player.grid[col, current_row - 1].type;
+            player.grid[col, current_row].falling = player.grid[col, current_row - 1].falling;
         }
         
         // Clear the top row after pushing down
         for (var col = 0; col < board_width; col++) {
-            obj_game_control.grid[col, current_row - 1].type = BLOCK.NONE;
-            obj_game_control.grid[col, current_row - 1].falling = false;
+            player.grid[col, current_row - 1].type    = BLOCK.NONE;
+            player.grid[col, current_row - 1].falling = false;
         }
     }
 }
 
 /// Check if any block exists in specified row
-function row_is_full(row_index) {
-    var board_width = obj_game_control.width;
+function row_is_full(player, row_index) {
+    var board_width = player.board_width;
     var full = false;
     for (var col = 0; col < board_width; col++) {
-        if (obj_game_control.grid[col, row_index].type == BLOCK.NONE) {
+        if (player.grid[col, row_index].type == BLOCK.NONE) {
             return false;
         }
     }

@@ -139,7 +139,7 @@ drone_array = array_create(0);
 for (var d = 0; d < number_of_drones; d++)
 {
     var rand_id = irandom(1280);
-    var drone = new Drone(rand_id, room_width + 100 + (64 * d), room_height - 128);
+    var drone = new Drone(self, rand_id, room_width + 100 + (64 * d), room_height - 128);
     array_push(drone_array, drone);
 }
 

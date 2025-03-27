@@ -1,8 +1,9 @@
-function Drone(_id, _x, _y) constructor {
+function Drone(_player, _id, _x, _y) constructor {
     x = _x;
     y = _y;
     id = _id;
     my_sprite = spr_drone;
+    player = _player;
     color = c_white;
     size = 32;
     coll_offset = size * 0.5;
@@ -577,9 +578,7 @@ function Drone(_id, _x, _y) constructor {
             if (throw_progress >= throw_duration) {
                 // Actually deliver blocks now
                 for (var i = 0; i < blocks_carried; i++) {
-                    with (conveyor) {
-                     add_block_to_conveyor(other.carried_blocks[i]);
-                    }
+                     add_block_to_conveyor(player, conveyor, other.carried_blocks[i]);
                 }
         
                 // Clear blocks
