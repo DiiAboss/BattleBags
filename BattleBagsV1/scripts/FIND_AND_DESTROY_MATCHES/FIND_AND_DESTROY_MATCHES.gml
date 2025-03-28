@@ -207,7 +207,6 @@ function find_and_destroy_matches(_self) {
                 
                 var current_match_points = total_match_points * 1.5;
                 
-                _self.grid[i, j].shake_timer = 30;
                 var dx = i - last_swap_x;
                 var dy = j - last_swap_y;
                 
@@ -249,6 +248,7 @@ function send_pop_info_to_pop_list(player, pop_info, x_pos, y_pos)
 {
     if (player.game_over_state) return;
     
+    player.grid[x_pos, y_pos].shake_timer = 30;
     player.grid[x_pos, y_pos].popping = true;
     player.grid[x_pos, y_pos].pop_timer = player.grid[x_pos, y_pos].shake_timer + pop_info.start_delay;
     pop_info.timer = 0;

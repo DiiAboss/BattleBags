@@ -107,6 +107,7 @@ function create_block(_type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
         freeze_on_land: false,
         cb: BLOCK.NONE,
         life_counter: 5,
+        is_meteor: false,
     };
 }
 

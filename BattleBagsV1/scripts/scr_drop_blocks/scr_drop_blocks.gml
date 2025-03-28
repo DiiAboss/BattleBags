@@ -5,7 +5,6 @@ function drop_blocks(player, fall_speed = 2) {
     
     var has_fallen   = false; // ✅ Track if any block has moved
     
-    
     //  Process from **bottom-up** (ensures things fall properly)
     for (var j = height - 2; j >= 0; j--) {
         for (var i = 0; i < width; i++) {
@@ -84,29 +83,29 @@ function drop_blocks(player, fall_speed = 2) {
                 
                 // ✅ Only process once for **parent block**
                 if (i == parent_x && j == parent_y) {
-                var bottom_left  = player.grid[parent_x,     parent_y + 1];
-                var bottom_right = player.grid[parent_x + 1, parent_y + 1];
-                
-                var can_fall = true;
-                
-                for (var bbx = 0; bbx < big_block_width; bbx++)
-                {
-                    var _block_x = parent_x + bbx;
-                    var _block_y = parent_y + big_block_height;
-                    
-                    
-                    if (_block_y < height){
-                        if (player.grid[_block_x, _block_y].type != BLOCK.NONE) {
-                            can_fall = false;
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                   var bottom_left  = player.grid[parent_x,     parent_y + 1];
+                   var bottom_right = player.grid[parent_x + 1, parent_y + 1];
+                   
+                   var can_fall = true;
+                   
+                   for (var bbx = 0; bbx < big_block_width; bbx++)
+                   {
+                       var _block_x = parent_x + bbx;
+                       var _block_y = parent_y + big_block_height;
+                       
+                       
+                       if (_block_y < height){
+                           if (player.grid[_block_x, _block_y].type != BLOCK.NONE) {
+                               can_fall = false;
+                           }
+                       }
+                       else
+                       {
+                           break;
+                       }
+                   }
 
-                // ✅ Check if the **entire bottom row** of the block can fall
+                    // ✅ Check if the **entire bottom row** of the block can fall
                     if (can_fall) {
                         // ✅ Apply **fall delay**
                         if (current_block.fall_delay < current_block.max_fall_delay) {
@@ -151,46 +150,45 @@ function drop_blocks(player, fall_speed = 2) {
             
             //  **Normal Single Block Falling**
             else if (below.type == BLOCK.NONE) {
-                // ✅ Apply **fall delay**
-                if (current_block.fall_delay < current_block.max_fall_delay) {
+                if (current_block.fall_delay < current_block.max_fall_delay) { // ✅ Apply **fall delay**
                     current_block.fall_delay++;
                     current_block.falling = true;
                     current_block.offset_x = 0;
                     continue; //  Wait until delay finishes
                 }
                 
-
                 player.grid[i, j + 1] = current_block;
                 player.grid[i, j] = create_block(BLOCK.NONE);
                 current_block.dist_without_touching += 1;
                 current_block.fall_delay = 0;
                 
-                
-                
                 has_fallen = true;
-                if (current_block.dist_without_touching) > 16
-                {
+                var meteor_dist = 16;
                 
-                    var draw_x = player.board_x_offset + (i * player.gem_size) + player.offset + current_block.offset_x;
-                    var draw_y = (j * player.gem_size) + player.global_y_offset + current_block.offset_y + player.offset + current_block.draw_y;
-                    //effect_create_above(ef_smokeup, draw_x, draw_y, 1, c_red);
+                if (current_block.dist_without_touching >= meteor_dist)
+                {
+                    current_block.is_meteor = true;
                 }
             }
             else
             {
-                
                 current_block.fall_delay = below.fall_delay;
                 current_block.falling = below.falling;
                 current_block.is_enemy_block = false;
                 current_block.dist_without_touching = 0;
-                //player.grid[i, j].offset_x = 0;
             }
-            
         }
     }
-
-    return has_fallen; // ✅ If anything fell, we need another update pass
+    return has_fallen;
 }
+
+function create_meteor_effect(player, current_block, x, y)
+{
+    var draw_x = (x * player.gem_size) + player.board_x_offset  + current_block.offset_x + player.offset;
+    var draw_y = (y * player.gem_size) + player.global_y_offset + current_block.offset_y + player.offset + current_block.draw_y;
+    effect_create_above(ef_smokeup, draw_x, draw_y, 1, current_block.color);   
+}
+
 
 function can_mega_block_fall(_self, _x, _y) {
     var parent_x = _self.grid[_x, _y].big_parent[0];
@@ -228,10 +226,8 @@ function sync_big_blocks(_self) {
                 var parent_y = gem.big_parent[1];
 
                 // ✅ Ensure all blocks have the correct parent
-                if (i != parent_x || j != parent_y) {
-                    _self.grid[i, j].big_parent = [parent_x, parent_y];
-                }
-
+                if (i != parent_x || j != parent_y) _self.grid[i, j].big_parent = [parent_x, parent_y];
+                
                 // ✅ If the bottom row of the block has landed, lock the top row to it
                 var bottom_left  = _self.grid[parent_x, parent_y + 1];
                 var bottom_right = _self.grid[parent_x + 1, parent_y + 1];
