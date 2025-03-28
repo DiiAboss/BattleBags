@@ -184,14 +184,15 @@ function find_and_destroy_matches(_self) {
     // This will go through the entire board, and remove any blocks that are morked for removal, we could isolate the blocks for removal to skip this for loop possibly.
 	for (var i = 0; i < width; i++) {
 	    for (var j = 0; j <= bottom_row; j++) {
-            var gem = _self.grid[i, j];
-            var big_block_match = handle_find_and_destroy_big_block(_self, gem, total_match_count, total_match_points);
-            total_pop_timer += big_block_match[0];
+            var block = _self.grid[i, j];
+            var big_block_match = handle_find_and_destroy_big_block(_self, block, total_match_count, total_match_points);
+            total_pop_timer   += big_block_match[0];
             total_match_count += big_block_match[1];
+            
             if (marked_for_removal[i, j]) {
 	            found_any = true;
                 
-	            var gem = _self.grid[i, j];
+	            //var gem = _self.grid[i, j];
                 
                 var m_size = 1;
                 if !(first_match)
@@ -217,7 +218,7 @@ function find_and_destroy_matches(_self) {
                 //var delay = dist * 5;
                 
 	            // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
-	            var pop_info = create_pop_info(self, gem, i, j);
+	            var pop_info = create_pop_info(self, block, i, j);
                 pop_info.start_delay  = delay;
                 pop_info.match_size   = m_size;
                 pop_info.match_points = current_match_points;
@@ -250,7 +251,7 @@ function send_pop_info_to_pop_list(player, pop_info, x_pos, y_pos)
     
     player.grid[x_pos, y_pos].shake_timer = 30;
     player.grid[x_pos, y_pos].popping = true;
-    player.grid[x_pos, y_pos].pop_timer = player.grid[x_pos, y_pos].shake_timer + pop_info.start_delay;
+    player.grid[x_pos, y_pos].pop_timer = pop_info.start_delay + player.grid[x_pos, y_pos].shake_timer;
     pop_info.timer = 0;
     //player.grid[x_pos, y_pos].shake_timer = pop_info.start_delay;
     ds_list_add(player.pop_list, pop_info);
@@ -274,7 +275,7 @@ function handle_find_and_destroy_big_block(player, block, current_match_size, cu
     
     var parent_x = block.big_parent[0];
     var parent_y = block.big_parent[1];
-    var width  = parent_block.mega_width; // 2x2 block
+    var width  = parent_block.mega_width;  // 2x2 block
     var height = parent_block.mega_height; // 2x2 block
     var max_x = parent_x + width;
     var max_y = parent_y + height;
@@ -308,5 +309,5 @@ function handle_find_and_destroy_big_block(player, block, current_match_size, cu
         }
     }
     
-    return [total_dist, 4];
+    return [total_dist, 2];
 }

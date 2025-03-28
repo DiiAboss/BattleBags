@@ -88,6 +88,7 @@ function create_block(_type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
 		explode_on_six: false,
 		popping: false,
 		pop_timer: 0,
+        pop_timer_max: 0,
 		group_id: -1,
 		dir: _dir,
 		is_enemy_block: false,

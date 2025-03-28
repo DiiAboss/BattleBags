@@ -15,9 +15,10 @@ function all_pops_finished(player)
         var pop_data = ds_list_find_value(pop_list, i);
 		if !(pop_data) return true;
         
-        if (player.grid[pop_data.x, pop_data.y].shake_timer) > 0
+        var block = player.grid[pop_data.x, pop_data.y];
+        if (block.shake_timer) > 0
         {
-            player.grid[pop_data.x, pop_data.y].shake_timer--;
+            block.shake_timer--;
             continue;
         }
         else
@@ -40,8 +41,8 @@ function all_pops_finished(player)
 			
 	    } else {
 	        // Grow effect
-	        pop_data.scale += 0.05;
-			
+            
+	        pop_data.scale += 00.5;
 			
 			
 	        // Once scale >= 1.1, pop is done
@@ -51,48 +52,44 @@ function all_pops_finished(player)
 	            var px = (_x * gem_size) + board_x_offset + offset;
 	            var py = (_y * gem_size) + offset + global_y_offset;// + gem_y_offsets[_x, _y];
                 
-                if _x < 0 || _y < 0 return;
-	            // ✅ Store Gem Object Before Destroying
-				if (player.grid[_x, _y] != -1) && (pop_data != -1)
-				{
-				   
-					var gem = player.grid[_x, _y];
-				}
-				else
-				{
-					return;
-				}
-                
-                
-
-					if (gem.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2
-
-		            //Loop Through Multipliers
-		            process_powerup(self, _x, _y, gem, total_multiplier_next);
-					
-					total_blocks_destroyed++;
-					// **Destroy the block**
-					//destroy_block(self, _x, _y);
-                    if !(pop_data.is_big)
-                    {
-                        destroy_block(self, _x, _y);
-                        // ✅ Create Attack Object with Score
-                        var attack = instance_create_depth(px, py, player.depth - 1, obj_player_attack);
-                        attack.color = pop_data.color;
-                        attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
-                        // ✅ Add accumulated match points to total_points
-                        total_points += attack.damage;
-                    }
+                if _x < 0 || _y < 0 return; 
                     
+                
+	            // ✅ Store Gem Object Before Destroying
+				if (block == -1) && (pop_data == -1) return;
+                
+                var block_pop_timer = block.pop_timer;
+                if (block.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2
+
+                //Loop Through Multipliers
+                process_powerup(self, _x, _y, block, total_multiplier_next);
+                
+                total_blocks_destroyed++;
+                // **Destroy the block**
+                //destroy_block(self, _x, _y);
+                if !(pop_data.is_big)
+                {
+                    var new_block = destroy_block(self, _x, _y);
+                    //new_block.pop_timer = block_pop_timer;
+                    new_block.popping = true;
+                    
+                    // ✅ Create Attack Object with Score
+                    var attack = instance_create_depth(px, py, player.depth - 1, obj_player_attack);
+                    attack.color = pop_data.color;
+                    attack.damage = (pop_data.match_points / pop_data.match_size) * total_multiplier_next; // 🔥 **Apply multiplier to damage!**
+                    // ✅ Add accumulated match points to total_points
+                    total_points += attack.damage;
+                }
+                
                 if (pop_data.match_size >= 5)
                 {
                     player.grid[_x, _y] = create_block(BLOCK.COLOR_BOMB);
                 }
-                
+              
                 else {
-                    //destroy_block(self, _x, _y);
+                  //destroy_block(self, _x, _y);
                 }
-					
+                  
                 objective_progress(OBJECTIVE_TYPE.BREAK_COLOR, pop_data.gem_type);
                 
                 //for (var _o = 0; _o < array_length(obj_objective_manager.objectives); _o++)
@@ -107,8 +104,8 @@ function all_pops_finished(player)
                     // **Create visual effect**
 		            //effect_create_depth(depth, ef_firework, px, py - 4, 0.5, pop_data.color);
 
-					var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);
-					var _gain  = clamp(0.5 + (0.1 * player.combo), 0.5, 0.75);
+                var _pitch = clamp(0.5 + (0.1 * player.combo), 0.5, 5);
+                var _gain  = clamp(0.5 + (0.1 * player.combo), 0.5, 0.75);
 					
                 
 				audio_play_sound(snd_pop_test_1, 10, false, _gain, 0, _pitch);
