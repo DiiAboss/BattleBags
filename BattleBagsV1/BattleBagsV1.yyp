@@ -170,6 +170,7 @@
     {"id":{"name":"BLOCK_POOL","path":"scripts/BLOCK_POOL/BLOCK_POOL.yy",},},
     {"id":{"name":"BLOCK_SYSTEM","path":"scripts/BLOCK_SYSTEM/BLOCK_SYSTEM.yy",},},
     {"id":{"name":"CHECK_AND_APPLY_UPGRADES","path":"scripts/CHECK_AND_APPLY_UPGRADES/CHECK_AND_APPLY_UPGRADES.yy",},},
+    {"id":{"name":"COMBO_BAR","path":"scripts/COMBO_BAR/COMBO_BAR.yy",},},
     {"id":{"name":"CONSOLE","path":"scripts/CONSOLE/CONSOLE.yy",},},
     {"id":{"name":"CONTROLS","path":"scripts/CONTROLS/CONTROLS.yy",},},
     {"id":{"name":"CONVEYOR_BELT","path":"scripts/CONVEYOR_BELT/CONVEYOR_BELT.yy",},},
