@@ -20,10 +20,10 @@ function update_topmost_row(player) {
 }
 
 
-function update_topmost_row_mp(_self, player) {
+function update_topmost_row_mp(player) {
     
-    var width = _self.board_width;
-    var height = _self.board_height;
+    var width = player.board_width;
+    var height = player.board_height;
     
     player.topmost_row = height - 1; // Start at the bottom
 

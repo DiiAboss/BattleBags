@@ -31,7 +31,7 @@ function destroy_blocks_of_color(player, block_color) {
         var block = player.grid[cx, cy];
         
         if (block.type == BLOCK.BLACK) {
-                 player.grid[cx, cy] = create_block(BLOCK.RANDOM, POWERUP.NONE);//.type = irandom(number_of_block_types - 1); //0 - 7 == 8 block types
+                 player.grid[cx, cy] = create_block(player, BLOCK.RANDOM, POWERUP.NONE);//.type = irandom(number_of_block_types - 1); //0 - 7 == 8 block types
                 //ds_list_add(global.black_blocks_to_transform, [cx, cy]);
             }
         

@@ -293,7 +293,7 @@ function handle_find_and_destroy_big_block(player, block, current_match_size, cu
                 
                 var delay = total_dist/current_block;
                 current_block -=1;
-                player.grid[_x, _y] = create_block(block.type);
+                player.grid[_x, _y] = create_block(player, block.type);
                 
                 // ✅ Send the block to pop_list (Now applies to normal and transformed blocks)
                 var pop_info          = create_pop_info(player, block, _x, _y);

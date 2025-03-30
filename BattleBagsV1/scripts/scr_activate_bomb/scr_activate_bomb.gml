@@ -2,7 +2,7 @@
 function create_bomb_pop_info(player, cell_x, cell_y, origin_x, origin_y, blocks_destroyed, _match_points, _bomb_tracker, _bomb_level) {
     var wave_multiplier = 15;
     var block = player.grid[cell_x, cell_y];
-    var bomb_struct = create_block(block.type, block.powerup);
+    var bomb_struct = create_block(player, block.type, block.powerup);
     bomb_struct.start_delay = 45;
     bomb_struct.bomb_level = _bomb_level;
     bomb_struct.match_size = blocks_destroyed;

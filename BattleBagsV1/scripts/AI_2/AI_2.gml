@@ -171,8 +171,8 @@ function setup_ai_players_from_lobby(_self) {
             // Make sure the AI player's grid is properly initialized
             random_set_seed(_self.random_seed + i);
             if (!is_array(player.grid) || array_length(player.grid) < 1) {
-                player.grid = create_grid_array();
-                spawn_random_blocks_in_array(player.grid, player.start_row);
+                player.grid = create_grid_array(player);
+                spawn_random_blocks_in_array(player, player.grid, player.start_row);
             }
             
             player.random_seed = _self.random_seed;

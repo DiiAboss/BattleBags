@@ -55,7 +55,7 @@ function drop_blocks(player, fall_speed = 2) {
                     // ✅ **Move block down**
                     player.grid[i, j + 1] = current_block;
                     // Set the blocks old position to empty (the loop will take care of this)
-                    player.grid[i, j]     = create_block(BLOCK.NONE);
+                    player.grid[i, j]     = create_block(player, BLOCK.NONE);
 
                     // 🔥 **Reduce Slime HP when moving**
                     current_block.slime_hp -= 1;
@@ -124,7 +124,7 @@ function drop_blocks(player, fall_speed = 2) {
                                 var new_y = old_y + 1; // ✅ **Move down using your logic**
 
                                 player.grid[new_x, new_y] = player.grid[old_x, old_y]; // Move
-                                player.grid[old_x, old_y] = create_block(BLOCK.NONE); // Clear
+                                player.grid[old_x, old_y] = create_block(player, BLOCK.NONE); // Clear
                                 player.grid[new_x, new_y].big_parent = [parent_x, parent_y + 1]; // ✅ Update parent
                             }
                         }
@@ -158,7 +158,7 @@ function drop_blocks(player, fall_speed = 2) {
                 }
                 
                 player.grid[i, j + 1] = current_block;
-                player.grid[i, j] = create_block(BLOCK.NONE);
+                player.grid[i, j] = create_block(player, BLOCK.NONE);
                 current_block.dist_without_touching += 1;
                 current_block.fall_delay = 0;
                 

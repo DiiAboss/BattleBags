@@ -1,7 +1,7 @@
-function toss_down_shape(_self, shape_name, is_enemy_attack = true, is_freeze = true, _start_x = -1) {
-    var width = _self.width;
-    var height = _self.height;
-    var gem_size = _self.gem_size;
+function toss_down_shape(player, shape_name, is_enemy_attack = true, is_freeze = true, _start_x = -1) {
+    var width = player.board_width;
+    var height = player.board_height;
+    var gem_size = player.gem_size;
     
     // ✅ Retrieve shape template from map
     var shape = ds_map_find_value(global.shape_templates, shape_name);
@@ -35,26 +35,26 @@ function toss_down_shape(_self, shape_name, is_enemy_attack = true, is_freeze = 
                 // ✅ Decide Color (Fixed, Random Gem)
                 var gem_color = BLOCK.NONE;
                 if (block_type == BLOCK.RANDOM) {
-                    gem_color = irandom_range(0, _self.number_of_block_types - 1); // Random gem color
+                    gem_color = irandom_range(0, player.number_of_block_types - 1); // Random gem color
                 } else {
                     gem_color = block_type; // Fixed color
                 }
 
                 // ✅ Create the gem with the assigned color
-                var new_gem = create_block(gem_color, POWERUP.NONE);
-                _self.grid[gem_x, gem_y] = new_gem;
+                var new_gem = create_block(player, gem_color, POWERUP.NONE);
+                player.grid[gem_x, gem_y] = new_gem;
 
 				// 🔥 **Mark as an enemy block**
                 if (is_enemy_attack) {
-                    _self.grid[gem_x, gem_y].is_enemy_block = true;
-                    _self.grid[gem_x, gem_y].falling = true;
-                    _self.grid[gem_x, gem_y].fall_delay = 0;
+                    player.grid[gem_x, gem_y].is_enemy_block = true;
+                    player.grid[gem_x, gem_y].falling = true;
+                    player.grid[gem_x, gem_y].fall_delay = 0;
                 }
                 
                 if (is_freeze)
                 {
-                    _self.grid[gem_x, gem_y].freeze_on_land = true;
-                    _self.grid[gem_x, gem_y].freeze_timer = 600;
+                    player.grid[gem_x, gem_y].freeze_on_land = true;
+                    player.grid[gem_x, gem_y].freeze_timer = 600;
                 }
             }
         }
@@ -64,7 +64,7 @@ function toss_down_shape(_self, shape_name, is_enemy_attack = true, is_freeze = 
     
     // ✅ Force a secondary drop pass **to process falling blocks**
     //for (var i = 0; i < 3; i++) { 
-        drop_blocks(_self);
+        drop_blocks(player);
     //}
 }
 

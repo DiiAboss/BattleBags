@@ -7,7 +7,7 @@
 /// Function: Draw the grid
 function draw_grid(player) {
 	
-	var width       = player.width;
+	var width       = player.board_width;
 	var top_row     = player.top_playable_row;
 	var bottom_row  = player.bottom_playable_row;
 	var block_size  = player.gem_size;
@@ -91,8 +91,8 @@ function draw_hover_effect(player) {
 
     var hover_i = hovered_block[0];
     var hover_j = hovered_block[1];
-	var width = player.width;
-	var height = player.height;
+	var width = player.board_width;
+	var height = player.board_height;
 	var gem_size = player.gem_size;
 
     if (hover_i >= width || hover_j >= height) return;

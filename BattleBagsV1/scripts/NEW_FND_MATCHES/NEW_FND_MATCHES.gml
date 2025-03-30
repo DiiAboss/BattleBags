@@ -311,7 +311,7 @@ function process_big_block(_self, gem, width, bottom_row, dist, _start_delay, to
             
             if (other_gem.group_id == group_id) {
                 // Convert each big block part into a small block of the same type
-                _self.grid[_x, _y] = create_block(gem.type);
+                _self.grid[_x, _y] = create_block(_self, gem.type);
                 
                 // Create pop info for this part
                 var pop_info = {

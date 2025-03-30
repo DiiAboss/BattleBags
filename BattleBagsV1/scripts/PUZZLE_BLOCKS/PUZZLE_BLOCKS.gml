@@ -1,13 +1,13 @@
-function create_puzzle_gem(_type, _group_id, _img_number) {
-    var gem = create_block(_type);
+function create_puzzle_gem(player, _type, _group_id, _img_number) {
+    var gem = create_block(player, _type);
     gem.group_id = _group_id;
     gem.img_number = _img_number;
     return gem;
 }
 	
-function spawn_puzzle_blocks(_self) {
-    var width = _self.width;
-    var height = _self.height;
+function spawn_puzzle_blocks(player) {
+    var width = player.board_width;
+    var height = player.board_height;
     
     // ✅ Store 4 unique positions
     var random_pos_array = [];
@@ -26,7 +26,7 @@ function spawn_puzzle_blocks(_self) {
             }
         }
 
-        if (!is_duplicate && _self.grid[start_x, start_y].type != BLOCK.PUZZLE_1) {
+        if (!is_duplicate && player.grid[start_x, start_y].type != BLOCK.PUZZLE_1) {
             array_push(random_pos_array, position);
         }
     }
@@ -39,21 +39,21 @@ function spawn_puzzle_blocks(_self) {
         var _x = random_pos_array[i][0];
         var _y = random_pos_array[i][1];
 
-        _self.grid[_x, _y] = create_puzzle_gem(BLOCK.PUZZLE_1, group_id, i);
+        player.grid[_x, _y] = create_puzzle_gem(player, BLOCK.PUZZLE_1, group_id, i);
     }
 
     return true;
 }
 
-function check_puzzle_match(_self, _x, _y) {
+function check_puzzle_match(player, _x, _y) {
     // ✅ Bounds check (to avoid out-of-grid errors)
-    if (_x < 0 || _x >= _self.width - 1 || _y < 0 || _y >= _self.height - 1) return false;
+    if (_x < 0 || _x >= player.board_width - 1 || _y < 0 || _y >= player.board_height - 1) return false;
 
     // ✅ Retrieve 4 adjacent blocks
-    var gem_0 = _self.grid[_x, _y];         // Top-left
-    var gem_1 = _self.grid[_x + 1, _y];     // Top-right
-    var gem_2 = _self.grid[_x, _y + 1];     // Bottom-left
-    var gem_3 = _self.grid[_x + 1, _y + 1]; // Bottom-right
+    var gem_0 = player.grid[_x, _y];         // Top-left
+    var gem_1 = player.grid[_x + 1, _y];     // Top-right
+    var gem_2 = player.grid[_x, _y + 1];     // Bottom-left
+    var gem_3 = player.grid[_x + 1, _y + 1]; // Bottom-right
 
     // ✅ Check if all blocks are `BLOCK.PUZZLE_1`
     if (gem_0.type != BLOCK.PUZZLE_1 || gem_1.type != BLOCK.PUZZLE_1 ||
@@ -71,12 +71,12 @@ function check_puzzle_match(_self, _x, _y) {
     return false; // ❌ No match
 }
 
-function find_all_puzzle_matches(_self) {
-    for (var _x = 0; _x < _self.width - 1; _x++) {
-        for (var _y = 0; _y < _self.height - 1; _y++) {
-            if (check_puzzle_match(_self, _x, _y)) {
+function find_all_puzzle_matches(player) {
+    for (var _x = 0; _x < player.board_width - 1; _x++) {
+        for (var _y = 0; _y < player.board_height - 1; _y++) {
+            if (check_puzzle_match(player, _x, _y)) {
                 // ✅ Trigger match event (Destroy, transform, etc.)
-                handle_puzzle_match(_self, _x, _y);
+                handle_puzzle_match(player, _x, _y);
             }
         }
     }

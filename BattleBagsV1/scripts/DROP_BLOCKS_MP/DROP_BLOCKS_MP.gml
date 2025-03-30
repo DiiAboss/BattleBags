@@ -26,7 +26,7 @@ function drop_blocks_mp(mp_control, player, fall_speed = 2) {
                         process_falling_slime_block(gem);
                         
                         player.grid[i, j + 1] = gem;
-                        player.grid[i, j] = create_block(BLOCK.NONE);
+                        player.grid[i, j] = create_block(player, BLOCK.NONE);
                         gem.fall_delay = 0;
                     }
                 }

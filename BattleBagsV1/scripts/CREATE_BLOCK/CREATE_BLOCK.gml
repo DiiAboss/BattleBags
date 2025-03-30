@@ -26,10 +26,10 @@ enum UPGRADE {
     RANDOM = -99, NONE = -1, HEART = 0, ARROW = 1, BOMB = 2
 }
 
-function create_block(_type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
+function create_block(player, _type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
 	
 	if (_type == BLOCK.RANDOM) { // If generating a new random gem
-		_type = weighted_random_block(self);
+		_type = weighted_random_block(player);
     }
 	
    if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {

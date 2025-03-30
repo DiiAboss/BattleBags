@@ -62,14 +62,14 @@ function all_pops_finished(player)
                 if (block.powerup == POWERUP.MULTI_2X) total_multiplier_next *= 2
 
                 //Loop Through Multipliers
-                process_powerup(self, _x, _y, block, total_multiplier_next);
+                process_powerup(player, _x, _y, block, total_multiplier_next);
                 
                 total_blocks_destroyed++;
                 // **Destroy the block**
                 //destroy_block(self, _x, _y);
                 if !(pop_data.is_big)
                 {
-                    var new_block = destroy_block(self, _x, _y);
+                    var new_block = destroy_block(player, _x, _y);
                     //new_block.pop_timer = block_pop_timer;
                     new_block.popping = true;
                     
@@ -83,7 +83,7 @@ function all_pops_finished(player)
                 
                 if (pop_data.match_size >= 5)
                 {
-                    player.grid[_x, _y] = create_block(BLOCK.COLOR_BOMB);
+                    player.grid[_x, _y] = create_block(player, BLOCK.COLOR_BOMB);
                 }
               
                 else {
@@ -191,7 +191,7 @@ function pop_block_in_queue(_self)
                 if (gem.type == BLOCK.MEGA)
                 {
                     destroy_block(_self, _x, _y);
-                    create_block(BLOCK.RANDOM, POWERUP.NONE);
+                    create_block(_self, BLOCK.RANDOM, POWERUP.NONE);
                 }
                 else {
                     destroy_block(_self, _x, _y);

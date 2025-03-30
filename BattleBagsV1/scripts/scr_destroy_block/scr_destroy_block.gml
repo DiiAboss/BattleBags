@@ -12,7 +12,7 @@ function destroy_block(player, _x, _y) {
     }
 	
     // ✅ Otherwise, process the destruction normally
-    player.grid[_x, _y] = create_block(BLOCK.NONE); // Remove block from grid"
+    player.grid[_x, _y] = create_block(player, BLOCK.NONE); // Remove block from grid"
     
     return player.grid[_x, _y];
 }

@@ -50,7 +50,7 @@ function shift_up(player) {
     // 3️⃣ Spawn a new random row at the **very bottom of the grid**
     for (var i = 0; i < width; i++) {
         // ✅ Ensure **only spawn new blocks in the last row**
-        player.grid[i, height - 1] = create_block(BLOCK.RANDOM, POWERUP.NONE);
+        player.grid[i, height - 1] = create_block(player, BLOCK.RANDOM, POWERUP.NONE);
     }
 
     // 4️⃣ Reset darken alpha so the new row fades in again
@@ -83,7 +83,7 @@ function process_bug_blocks(player, block_x, block_y)
             var bug = instance_create_depth(spawn_x, spawn_y, _depth - 1, obj_bug);  
             bug.target = obj_recycler;
             //destroy_block(self, block_x, block_y);
-            player.grid[block_x, block_y] = create_block(BLOCK.BLACK); 
+            player.grid[block_x, block_y] = create_block(player, BLOCK.BLACK); 
             player.grid[block_x, block_y].type = BLOCK.NONE;
             //continue; 
         }

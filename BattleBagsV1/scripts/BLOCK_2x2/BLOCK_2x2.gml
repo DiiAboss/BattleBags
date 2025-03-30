@@ -24,17 +24,17 @@ function spawn_2x2_block(player, _x, _y, _type) {
     var block_height = 2;
 
     // ✅ Clear the 2x2 space **before** placing the big block
-    player.grid[_x, _y]         = create_block(BLOCK.NONE);
-    player.grid[_x + 1, _y]     = create_block(BLOCK.NONE);
-    player.grid[_x, _y + 1]     = create_block(BLOCK.NONE);
-    player.grid[_x + 1, _y + 1] = create_block(BLOCK.NONE);
+    player.grid[_x, _y]         = create_block(player, BLOCK.NONE);
+    player.grid[_x + 1, _y]     = create_block(player, BLOCK.NONE);
+    player.grid[_x, _y + 1]     = create_block(player, BLOCK.NONE);
+    player.grid[_x + 1, _y + 1] = create_block(player, BLOCK.NONE);
     
     // ✅ Generate unique, non-zero group_id
     // TODO: Create a function to generate ids 
     var group_id = irandom_range(1, 999999); // ✅ No -1 or 0
 
     // ✅ Create and assign the **big parent block**
-    var big_gem         = create_block(_type);
+    var big_gem         = create_block(player, _type);
     big_gem.is_big      = true;
     big_gem.group_id    = group_id;
     big_gem.big_parent  = [_x, _y];
@@ -49,7 +49,7 @@ function spawn_2x2_block(player, _x, _y, _type) {
         for (var _dy = 0; _dy < block_height; _dy++) {
             if (_dx == 0 && _dy == 0) continue; // **Skip parent block**
 
-            var child_gem = create_block(_type);
+            var child_gem = create_block(player, _type);
             child_gem.is_big     = true;
             child_gem.group_id   = group_id;
             child_gem.big_parent = [_x, _y];

@@ -155,7 +155,7 @@ if (room == rm_local_multiplayer_game)
         }
         
         
-        update_topmost_row_mp(self, player);
+        update_topmost_row_mp(player);
         
         // Drop the blocks
         drop_blocks_mp(self, player);

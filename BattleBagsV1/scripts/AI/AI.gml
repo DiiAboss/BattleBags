@@ -65,8 +65,8 @@ function create_ai_player(_id) {
     
     // Make sure grid is properly initialized and filled
     if (player.grid == undefined) {
-        player.grid = create_grid_array();
-        spawn_random_blocks_in_array(player.grid, player.start_row);
+        player.grid = create_grid_array(player);
+        spawn_random_blocks_in_array(player, player.grid, player.start_row);
     }
     
     // Make sure other required properties are set
