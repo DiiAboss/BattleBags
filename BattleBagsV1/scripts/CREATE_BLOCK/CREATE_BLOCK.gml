@@ -33,7 +33,7 @@ function create_block(player, _type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
     }
 	
    if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
-       _powerup = create_powerup(POWERUP.NONE, 0);
+       _powerup = create_powerup(POWERUP.NONE);
    }
 	
 	var _dir = choose(0, 90, 180, 270);
@@ -47,7 +47,7 @@ function create_block(player, _type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
 	}
 	else
 	{
-		_powerup = create_powerup(POWERUP.NONE, 0);
+		_powerup = create_powerup(POWERUP.NONE);
 	}
 	
 	var _color = c_white;

@@ -1,7 +1,7 @@
 function block_dragged_mp(mp_control, player) {
         var input = player.input;
-        var width = mp_control.width;
-        var height = mp_control.height;
+        var width = mp_control.board_width;
+        var height = mp_control.board_height;
         var board_x_offset = player.board_x_offset;
         var gem_size = mp_control.gem_size;
         var global_y_offset = player.global_y_offset;
@@ -71,10 +71,11 @@ function block_dragged_mp(mp_control, player) {
         }
     }
     
+
     function block_legacy_swap(mp_control, player) {
         var input = player.input;
-        var width = mp_control.width;
-        var height = mp_control.height;
+        var width = player.board_width;
+        var height = player.board_height;
         var board_x_offset = player.board_x_offset;
         var gem_size = mp_control.gem_size;
         var global_y_offset = player.global_y_offset;
@@ -95,7 +96,7 @@ function block_dragged_mp(mp_control, player) {
     
                 // ✅ Check if the right-side block is valid for swapping
                 if (!player.grid[target_x, target_y].is_big) {
-                    start_swap_mp(self, player, hover_x, hover_y, target_x, target_y);
+                    start_swap_mp(mp_control, player, hover_x, hover_y, target_x, target_y);
                 }
             }
         }

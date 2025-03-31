@@ -99,6 +99,7 @@
     {"id":{"name":"fnt_basic","path":"fonts/fnt_basic/fnt_basic.yy",},},
     {"id":{"name":"fnt_heading1","path":"fonts/fnt_heading1/fnt_heading1.yy",},},
     {"id":{"name":"fnt_textFont","path":"fonts/fnt_textFont/fnt_textFont.yy",},},
+    {"id":{"name":"obj_battle_manager","path":"objects/obj_battle_manager/obj_battle_manager.yy",},},
     {"id":{"name":"obj_block_stack","path":"objects/obj_block_stack/obj_block_stack.yy",},},
     {"id":{"name":"obj_block_transfer_y","path":"objects/obj_block_transfer_y/obj_block_transfer_y.yy",},},
     {"id":{"name":"obj_block_transfer","path":"objects/obj_block_transfer/obj_block_transfer.yy",},},
