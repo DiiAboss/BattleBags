@@ -4,6 +4,8 @@ depth = 10;
 
 rand = irandom_range(-99999, 99999);
 
+level = 1;
+
 // Block state management
 state = "ready";
 regen_timer = 0;

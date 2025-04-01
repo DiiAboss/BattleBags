@@ -68,7 +68,7 @@ if (player.is_ai)
         
         // Find any matches on the board and add them to the pop queue
         find_matches_and_add_to_pop_list(self, player);
-    }
+    
 
 
         var max_input_delay = 8;
@@ -128,6 +128,15 @@ if (player.is_ai)
             }
         }
 
+function start_battle()
+{
+    for (var i = 0; i < total_enemies; i++)
+    {
+         player = enemy_list[i];
+         random_set_seed(random_seed);
+         player.grid = spawn_random_blocks_in_array(player, player.grid, 6);
+    }
+}
 
 
 

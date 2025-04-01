@@ -68,7 +68,8 @@ function create_block(player, _type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
 	
     return {
         type: _type,       
-        powerup: _powerup, 
+        powerup: _powerup,
+        level: 1,
         locked: false,     
         offset_x: 0,       
         offset_y: 0,       
