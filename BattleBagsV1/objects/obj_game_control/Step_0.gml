@@ -329,3 +329,15 @@ for (var _x = 0; _x < board_width - 1; _x++)
     }
 }
 
+
+if (next_event_timer < next_event_timer_max)
+{
+   next_event_timer += 1; 
+    
+    time_till_next_event = (next_event_timer / fps);
+}
+else {
+    next_event_timer = 0;
+}
+
+

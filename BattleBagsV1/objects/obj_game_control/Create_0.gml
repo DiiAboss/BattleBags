@@ -9,7 +9,8 @@ depth       = -1;
 
 simple_draw = false;
 
-
+energy_points = 0; //Temporary Currency
+gold = 0;
 
 //--------------------------------------------------
 // Positioning Cursor
@@ -27,7 +28,7 @@ gold_pickup_mod   = 0;
 exp_pick_mod      = 0;
 crit_chance_mod   = 0;
 crit_multi_mod    = 0;
-gold = 0;
+
 
 total_blocks_destroyed = 0;
 total_combo_counter    = 0;
@@ -48,8 +49,6 @@ iType = "click_and_drag";
 
 
 objective_manager = instance_create_depth(x, y, -room_height, obj_objective_manager);
-
-
 
 
 big_blocks_on_board =
@@ -453,3 +452,9 @@ global.total_speed_modifier = 1;
 audio_stop_sound(songs[current_song]);
 audio_stop_sound(global.music_fight);
 audio_stop_sound(global.music_regular);
+
+time_in_seconds = (total_time / fps);
+
+next_event_timer = 0;
+next_event_timer_max = fps * 120
+

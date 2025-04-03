@@ -8,6 +8,7 @@ var transfer_block = instance_place(x, y, obj_block_transfer);
 if (transfer_block != noone) {
     // Start processing
     recycler_queue += 1;
+    player_object.energy_points += 1;
     // Destroy the transfer block
     with (transfer_block) {
         instance_destroy();

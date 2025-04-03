@@ -1,97 +1,89 @@
+// STEP EVENT
 /// @description
 var input = obj_game_manager.input;
 
-if (input.Escape) || keyboard_check_pressed(ord("U"))
-{
+// Exit shop
+if (input.Escape) || keyboard_check_pressed(ord("U")) {
     instance_destroy();
 }
 
-var t_scroll = -1;
+// Mouse position
+var mx = device_mouse_x_to_gui(0);
+var my = device_mouse_y_to_gui(0);
 
-// Mouse scroll (smooth snapping)
-if (input.ScrollUp) {
-    hover_index = max(hover_index - 1, 0);
-    t_scroll = max_scroll_default + (hover_index * (item_height + item_padding));
+// Handle horizontal scrolling with buttons
+left_btn_hover = point_in_circle(mx, my, left_scroll_btn_x, scroll_btn_y, scroll_btn_size);
+right_btn_hover = point_in_circle(mx, my, right_scroll_btn_x, scroll_btn_y, scroll_btn_size);
+
+if (input.ActionPress) {
+    if (left_btn_hover && horizontal_scroll > 0) {
+        target_scroll = max(0, horizontal_scroll - (item_width + item_padding));
+    }
+    
+    if (right_btn_hover && horizontal_scroll < max_scroll) {
+        target_scroll = min(max_scroll, horizontal_scroll + (item_width + item_padding));
+    }
 }
-if (input.ScrollDown) {
-    hover_index = min(hover_index + 1, array_length(shop_items) - 1);
-    t_scroll = max_scroll_default + (hover_index * (item_height + item_padding));
-}
 
+// Smooth scrolling
+horizontal_scroll = lerp(horizontal_scroll, target_scroll, scroll_speed);
 
-scroll_offset = lerp(scroll_offset, target_scroll, scroll_speed);
-// Smoothly interpolate toward the target scroll position
+// Check item hover
+var item_hovered = false;
+var item_start_x = display_area_x - horizontal_scroll;
 
-
-// Clamp scroll_offset
-scroll_offset = clamp(scroll_offset, max_scroll_default, 880);
-
-// Update hovered item based on hover_index
 for (var i = 0; i < array_length(shop_items); i++) {
-    shop_items[i].hovered = (i == hover_index);
-}
-
-
-//// Mouse input for direct selection
-if (input.InputType == INPUT.KEYBOARD) {
-    var mx = mouse_x;
-    var my = mouse_y;
-    if (point_in_rectangle(mx, my, scroll_area_x, scroll_area_y, scroll_area_x + scroll_area_width, scroll_area_y + scroll_area_height)) {
-        var relative_y = my - scroll_area_y + scroll_offset - max_scroll_default;
-        var clicked_index = floor(relative_y / (item_height + item_padding));
-        if (input.ActionPress)
-        {
-            if (clicked_index >= 0 && clicked_index < array_length(shop_items)) {
-                hover_index = clicked_index;
-                t_scroll = hover_index * (item_height + item_padding);
-                target_scroll = t_scroll;
+    var item_x = item_start_x + (i * (item_width + item_padding));
+    
+    // Only process items that would be visible on screen
+    if (item_x + item_width >= display_area_x && item_x <= display_area_x + (max_items_visible * (item_width + item_padding))) {
+        var is_hovering = point_in_rectangle(mx, my, 
+                                            item_x, display_area_y, 
+                                            item_x + item_width, display_area_y + item_height);
+        
+        shop_items[i].hovered = is_hovering;
+        
+        if (is_hovering) {
+            hover_index = i;
+            item_hovered = true;
+            
+            if (input.ActionPress) {
+                selected_item = i;
+                dialogue_text = shop_items[i].desc;
+                are_you_sure = false;
             }
         }
-
+    } else {
+        shop_items[i].hovered = false;
     }
 }
 
-if (input_delay <= 0)
-{
-    if (t_scroll != -1)
-    {
-       target_scroll = t_scroll; 
-        if (scroll_offset == target_scroll)
-        {
-                    input_delay = input_delay_max;
-                    are_you_sure = false;
-        }
-
-    }
+// Reset hover index if no item is being hovered
+if (!item_hovered && input.ActionPress) {
+    // Check if clicked on buy button
+    buy_button_hover = point_in_rectangle(mx, my, buy_button_x, buy_button_y, 
+                                        buy_button_x + buy_button_width, buy_button_y + buy_button_height);
     
-}
-input_delay--;
-
-// Confirm selection and attempt purchase
-if (input.ActionPress) {
-    
-    if !(are_you_sure)
-    {
-        are_you_sure = true;
-        return;
-    }
-    
-    
-    selected_item = hover_index;
-    var item = shop_items[selected_item];
-    
-    dialogue_text = item.desc + " (Cost: " + string(item.price) + " gold)";
-        if (!item.purchased && player_currency >= item.price) {
-            player_currency -= item.price;
-            item.purchased = true;
-            dialogue_text = "Purchased: " + item.name;
-            // TODO: Apply upgrade or give drone to player here
-        } else if (item.purchased) {
-            dialogue_text = "You already purchased " + item.name + ".";
+    if (buy_button_hover && selected_item != -1) {
+        var item = shop_items[selected_item];
+        
+        if (!are_you_sure) {
+            dialogue_text = "Are you sure you want to buy " + item.name + " for " + string(item.price) + " gold?";
+            are_you_sure = true;
         } else {
-            dialogue_text = "You don't have enough gold!";
+            if (!item.purchased && player_currency >= item.price) {
+                player_currency -= item.price;
+                item.purchased = true;
+                dialogue_text = "Excellent choice! You've purchased " + item.name + ". This will greatly boost your factory's performance!";
+                // TODO: Apply upgrade effect to player here
+            } else if (item.purchased) {
+                dialogue_text = "You've already purchased " + item.name + ". Perhaps you'd like something else?";
+            } else {
+                dialogue_text = "I'm afraid you don't have enough gold for that. Come back when you've earned some more!";
+            }
+            are_you_sure = false;
         }
-    are_you_sure = false;
+    }
 }
 
 

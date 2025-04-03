@@ -145,7 +145,9 @@ deposit_blocks =
 sprite_index = spr_block_recycler;
 image_speed = 0.2;
 
-tar_x = obj_game_control.board_x_offset + (obj_game_control.width * 64);
+player_object = obj_game_control;
+
+tar_x = player_object.board_x_offset + (player_object.board_width * 64);
 my_target = instance_create_depth(tar_x, y, -1, obj_target);
 depth = -1;
 

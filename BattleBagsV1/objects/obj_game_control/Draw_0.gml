@@ -550,39 +550,6 @@ for (var i = 0; i < width; i++) {
     //---------------------------------------------------------
     //draw_spawn_rates(self);
     
-        
-    //--------------------------------------
-    // DRAW HEARTS
-    //--------------------------------------
-    //var heart_sprite = spr_health_new;
-    //var hearts_y_pos = draw_y_start + grid_height - 34;
-    //draw_player_hearts(self, 
-                        //player_health, 
-                        //max_player_health, 
-                        //board_x_offset, 
-                        //hearts_y_pos, 
-                        //width, 
-                        //heart_sprite, 
-                        //gem_size);
-    
-    if (enemy_target != noone)
-    {
-        with (enemy_target)
-        { 
-            var scale = 1.1; // Slightly enlarged
-            var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
-            //draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
-            
-            draw_sprite_ext(spr_crosshair, 0, x, y, scale, scale, rotation, c_red, 1);
-        }
-    }
-    else {
-        if input.InputType == INPUT.KEYBOARD
-        {
-            draw_sprite(spr_crosshair, 0, mouse_x, mouse_y);
-        }
-    }
-    
 
 if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instance_exists(obj_upgrade_menu) && !instance_exists(obj_shop_controller) {
 
@@ -668,3 +635,8 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
     }
 }
 
+
+
+var ep_pos_x = room_width * 0.5;
+
+//663 Energy Points

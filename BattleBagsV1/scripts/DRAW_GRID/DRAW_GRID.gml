@@ -113,7 +113,12 @@ function draw_hover_effect(player) {
 }
 
 /// Function: Draw UI elements
-function draw_ui_elements() {
+function draw_ui_elements(player, draw_y_start) {
+    var draw_time = player.draw_time;
+    var game_speed_default = player.game_speed_default;
+    var level = player.level;
+    var combo = player.combo;
+    var combo_timer = player.combo_timer;
     draw_text(10, draw_y_start + 40, "TIME: " + string(draw_time));
     draw_text(10, draw_y_start + 60, "SPEED: " + string(game_speed_default));
     draw_text(10, draw_y_start + 100, "LEVEL: " + string(level));
