@@ -17,9 +17,7 @@ game_over_screen(self, game_over_state);
 if (game_over_state)
 {
     // This is very crude and will be updated with all audio functions later on.
-    audio_stop_sound(songs[current_song]);
-    audio_stop_sound(global.music_fight);
-    audio_stop_sound(global.music_regular);
+
     alarm[0] = scan_board;
     return;
 }
@@ -259,24 +257,24 @@ find_all_puzzle_matches(self);
 fight_for_your_life = process_fight_for_your_life(self, top_playable_row + 1);
 
 
-if (fight_for_your_life)
-{
-	transition_to_fast_song();	
-}
-else
-{
-	transition_to_regular_song(songs[current_song]);  
-}
+//if (fight_for_your_life)
+//{
+	//transition_to_fast_song();	
+//}
+//else
+//{
+	//transition_to_regular_song(songs[current_song]);  
+//}
 
 // Apply volume settings
-apply_volume_settings();
-process_play_next_song(songs[current_song]);
+//apply_volume_settings();
+//process_play_next_song(songs[current_song]);
 
 
 //----------------------------------------------------------
 // GRID SHAKE and GEM SHAKE
 //-----------------------------------------------------------
-process_grid_shake(fight_for_your_life);
+process_grid_shake(fight_for_your_life, grid_shake_amount);
 
 gem_shake(self);
 

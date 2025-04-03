@@ -7,7 +7,7 @@ image_speed = 0.1;
 image_alpha = 0.75;
 depth       = -1;
 
-simple_draw = true;
+simple_draw = false;
 
 
 
@@ -255,7 +255,7 @@ combo_y = -1;
 global.paused = false;
 
 
-global.grid_shake_amount = 0; // Grid shake intensity
+grid_shake_amount = 0; // Grid shake intensity
 
 // ------------------------------------------------------
 // Block Types
@@ -449,3 +449,7 @@ speed_up_delay = 30;
 just_shifted = false;
 
 global.total_speed_modifier = 1;
+
+audio_stop_sound(songs[current_song]);
+audio_stop_sound(global.music_fight);
+audio_stop_sound(global.music_regular);

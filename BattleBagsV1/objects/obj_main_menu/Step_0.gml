@@ -52,7 +52,7 @@ if (input.ActionPress || input.Enter) {
     if (last_hovered_option == -1 || last_hovered_option == selected_option) {
         switch (selected_option) {
             case 0: // Start Game
-                room_goto(rm_gameRoom);
+                room_goto(rm_pre_game_screen);
                 break;
 
             case 1: // Multiplayer Mode

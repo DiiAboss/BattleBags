@@ -25,10 +25,10 @@ drone_x = 0;
     // Timers and counters
     pickup_timer = 0;
     max_pickup_timer = 15;
-    throw_timer = 0;
+    throw_timer  = 0;
     max_throw_timer = 15;
-    drone_x = room_width * 0.6 + irandom(room_width * 0.3);
-    drone_y = room_height - 256;
+    drone_x      = room_width * 0.6 + irandom(room_width * 0.3);
+    drone_y      = room_height - 256;
     game_control = obj_game_control;
 
     target = noone;

@@ -7,62 +7,11 @@ drone_array[d].draw();
 }
 
 //// Horizontal pass
-if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) { 
+if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) {
     
     if (game_over_state)
     {
-        // ✅ Draw Left Panel
-        draw_set_alpha(0.85);
-        draw_set_color(c_black);
-        draw_rectangle(game_over_ui_x, game_over_ui_y, game_over_ui_x + game_over_ui_width, game_over_ui_y + game_over_ui_height, false);
-        draw_set_alpha(1);
-    
-        // ✅ Draw "You Lose" Title
-        var you_lose_x = game_over_ui_x + game_over_ui_width / 2;
-        var you_lose_y = game_over_ui_y + 600;
-        var you_lose_str = "YOU LOSE";
-        
-        draw_text_heading_font(you_lose_x, you_lose_y, you_lose_str);
-    
-        // ✅ Draw Popping Blocks
-        for (var i = 0; i < ds_list_size(game_over_popping); i++) {
-            var pop_data = ds_list_find_value(game_over_popping, i);
-            var _x = pop_data.x;
-            var _y = pop_data.y;
-    
-            draw_sprite(spr_gameOver, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
-            draw_sprite(spr_enemy_gem_overlay, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
-        }
-    
-        // ✅ Draw Options After Blocks Have Popped
-        if (game_over_show_options) {
-            var restart_x = game_over_ui_x + 50;
-            var restart_y = game_over_ui_y + 350;
-            var menu_x = game_over_ui_x + 50;
-            var menu_y = game_over_ui_y + 420;
-            var button_width = 300;
-            var button_height = 50;
-
-            
-            // ✅ Highlight button on hover
-            if (game_over_option_selected == 0) draw_set_color(c_white);
-            else draw_set_color(c_grey); 
-                
-            var rest_x = restart_x + button_width / 2;
-            var rest_y = restart_y + button_height / 2;
-            var restart_str = "RESTART";
-            
-            draw_text_text_font(rest_x, rest_y, restart_str);
-                
-            if (game_over_option_selected == 1) draw_set_color(c_white);
-            else draw_set_color(c_grey);
-                
-            var mmenu_x = menu_x + button_width / 2;
-            var mmenu_y = menu_y + button_height / 2;
-            var mmenu_str = "MAIN MENU";
-            
-            draw_text_text_font(mmenu_x, mmenu_y, mmenu_str);
-        }
+        draw_game_over_state(self);
     }
     
     draw_set_color(c_white);
@@ -81,17 +30,14 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
         // ✅ Draw "You Lose" Title
         draw_text_heading_font(game_over_text_x, game_over_text_y, victory_string);
     }
-    
 }
-
-
 else
 {
    // ----------------------------------
    //  APPLY GRID SHAKE WHEN DAMAGED
    // ----------------------------------
-    var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
-    var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
+    var shake_x = irandom_range(-grid_shake_amount, grid_shake_amount);
+    var shake_y = irandom_range(-grid_shake_amount, grid_shake_amount);
     
     var draw_y_start = camera_get_view_y(view_get_camera(view_current));
     
@@ -133,13 +79,14 @@ else
                     var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
                     var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
     
-                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 1, 1, 0, gem.color, 1);
-                    
+                    //draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 1, 1, 0, gem.color, 1);
+                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 0.5 + (0.5 * gem.level), 0.5 + (0.5 * gem.level), 0, gem.color, 1);
                     if (gem.is_big)
                     {
                         if (gem.big_parent[0] == i && gem.big_parent[1] == j)
                         {
-                          draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 0.5, 0.5, 0, c_white, 1);  
+                          //draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 0.5, 0.5, 0, c_white, 1); 
+                            draw_sprite_ext(sprite_for_block(gem.type), gem.level, draw_x, draw_y, 0.5 * gem.level, 0.5 * gem.level, 0, gem.color, 1);
                         }
                     }
                 }
@@ -172,6 +119,9 @@ else
                 //// Vertical pass + final adjustments, add on top
                 gpu_set_blendmode(bm_add);
                 
+        
+                //
+        
                 shader_set(shd_blur_vertical);
                 shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
                 shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
@@ -365,8 +315,12 @@ for (var i = 0; i < width; i++) {
 			} 
 			else {
                     
+                
+                    // DRAW BLOCKS  
                     draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
-				
+				    
+                    // DRAW LEVEL FRAME
+                    draw_sprite_ext(spr_level_frames, gem.level, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, gem.color, 1);
 			}
 
                 //--------------------------------------------------------------------------------------
@@ -415,13 +369,6 @@ for (var i = 0; i < width; i++) {
     			scale = 1;
     		}
             
-            if (is_targeting_enemy)
-            {
-                draw_text(hovered_block[0], hovered_block[1], string(combo_points));
-            }
-            
-            
-            
             
             if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
                             var rect_x1 = board_x_offset + (hover_i * gem_size) + hover_gem.offset_x;
@@ -443,22 +390,12 @@ for (var i = 0; i < width; i++) {
                             }
                             draw_set_color(c_white);
                             draw_set_alpha(1.0);
-                
+                            
                             // ✅ OPTIONAL: Show gem info in the corner
-                            draw_text(10, room_height - 64,
-                                "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-                                ") | Type: " + string(hover_gem.type) + 
-                                " | Powerup: " + string(hover_gem.powerup)
-                            );
-                        }
-                        else
-                        {
-                            // ✅ OPTIONAL: Show gem info in the corner
-                            draw_text(10, room_height - 64,
-                                "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-                                ") | Type: " + string(hover_gem.type) + 
-                                " | Powerup: " + string(hover_gem.powerup)
-                            );
+                            show_hovered_block_data(true, hover_gem, hover_i, hover_j);
+                            
+
+
                         }
             
     		
@@ -503,7 +440,7 @@ for (var i = 0; i < width; i++) {
    
        var final_x = draw_x + center_offset - scaled_offset;
        var final_y = draw_y + center_offset - scaled_offset;
-   	
+    
    	
        draw_sprite_ext(
            sprite_for_block(pop_data.gem_type),
@@ -516,7 +453,7 @@ for (var i = 0; i < width; i++) {
            c_white,
            1.0
    		);
-   	
+        
    	if (pop_data.powerup != -1) {
            draw_sprite_ext(pop_data.powerup.sprite,
    		0,
@@ -536,7 +473,7 @@ for (var i = 0; i < width; i++) {
    }
 
     //------------------------------------------------------------
-    // DFAW BOMB OVERLAY ON POP
+    // DRAW BOMB OVERLAY ON POP
     //------------------------------------------------------------
     for (var idx = 0; idx < ds_list_size(pop_list); idx++) {
         var pop_data = ds_list_find_value(pop_list, idx);
@@ -628,7 +565,6 @@ for (var i = 0; i < width; i++) {
                         //heart_sprite, 
                         //gem_size);
     
-    
     if (enemy_target != noone)
     {
         with (enemy_target)
@@ -705,6 +641,8 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
         }
         
     }
+    
+    
 
     for (var u = 0; u < array_length(powerup_slots); u++)
     {

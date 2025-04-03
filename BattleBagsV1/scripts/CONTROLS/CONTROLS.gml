@@ -1,7 +1,7 @@
 function block_dragged_mp(mp_control, player) {
         var input = player.input;
-        var width = mp_control.board_width;
-        var height = mp_control.board_height;
+        var width = player.board_width;
+        var height = player.board_height;
         var board_x_offset = player.board_x_offset;
         var gem_size = mp_control.gem_size;
         var global_y_offset = player.global_y_offset;
