@@ -51,7 +51,7 @@ Overworld_Upgrades =
     
     BugRepel:
     {
-        name: "Bug Repellent",
+        name: "Bug Repel",
         desc: "No bugs will spawn for 30 seconds after use.",
         price: 100,
         sprite: spr_coolant,
@@ -61,7 +61,7 @@ Overworld_Upgrades =
     
     DigitalSpinach:
     {
-        name: "Digital Spinach Gem",
+        name: "DigiSpinach",
         desc: "Increase the carry capacity of all drones by 25%",
         price: 100,
         sprite: spr_none,
@@ -71,7 +71,7 @@ Overworld_Upgrades =
     
     DigitalSpinach:
     {
-        name: "Digital NRG Drink Gem",
+        name: "DigiNRGDrink",
         desc: "Increase the drone speed by 5%",
         price: 100,
         sprite: spr_none,
@@ -81,7 +81,7 @@ Overworld_Upgrades =
     
     RecyclerEfficiency:
     {
-        name: "Recycler Efficiency Gem",
+        name: "RecGem",
         desc: "Increase the deposit chance by 2.5%",
         price: 100,
         sprite: spr_none,
@@ -91,7 +91,7 @@ Overworld_Upgrades =
     
     UpgradeDepositChance:
     {
-        name: "Upgrade Deposit Chance",
+        name: "UpgDepoUp",
         desc: "Increase the spawn rate of all Upgrade Deposit Spheres by 1% (Decreases the block spawn chance)",
         price: 100,
         sprite: spr_none,
@@ -101,7 +101,7 @@ Overworld_Upgrades =
     
     UpgradeDepositChance:
     {
-        name: "Block Deposit Chance",
+        name: "BlkDepoUp",
         desc: "Increase the spawn rate of Deposit Blocks by 5% (Decreases the upgrades chance)",
         price: 100,
         sprite: spr_none,
@@ -111,7 +111,7 @@ Overworld_Upgrades =
     
     BadBlockDepositChance:
     {
-        name: "Bad Block Deposit Chance",
+        name: "BadDepoDown",
         desc: "Decrease the spawn rate of BAD Deposit Blocks by 5%",
         price: 100,
         sprite: spr_none,
@@ -121,7 +121,7 @@ Overworld_Upgrades =
     
     BigBlockAttractor:
     {
-        name: "Big Block Attractor",
+        name: "BBlockAttract",
         desc: "Any big blocks on board guarentee a block of the same color to spawn on the bottom row",
         price: 100,
         sprite: spr_none,
@@ -131,7 +131,7 @@ Overworld_Upgrades =
     
     EP_Gainer:
     {
-        name: "Energy Points Gainer",
+        name: "EP Gainer",
         desc: "Increase the amount of Energy Points gained per block (+10%)",
         price: 100,
         sprite: spr_none,
@@ -141,7 +141,7 @@ Overworld_Upgrades =
     
     Combo_Specialist:
     {
-        name: "Combo Specialist",
+        name: "Combo Spec",
         desc: "Greatly Increase the amount of Energy Points gained per combo (+25%), but decrease the amount gained if no combo in progress (-50%)",
         price: 100,
         sprite: spr_none,
