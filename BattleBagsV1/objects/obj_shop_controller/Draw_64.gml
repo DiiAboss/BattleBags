@@ -6,18 +6,18 @@ draw_set_color(c_white);
 
 // Draw background panel
 draw_set_alpha(0.9);
-draw_rectangle_color(0, 0, room_width, room_height, c_black, c_black, c_black, c_black, false);
+draw_rectangle_color(0, 0, window_get_width(), window_get_height(), c_black, c_black, c_black, c_black, false);
 draw_set_alpha(1);
 
 // Draw title
 draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
-draw_text(room_width * 0.5, room_height * 0.1, "Factory Shop");
+draw_text(window_get_width() * 0.5, window_get_height() * 0.1, "Factory Shop");
 
 // Draw player currency
 draw_set_halign(fa_right);
 draw_set_valign(fa_top);
-draw_text(room_width - 20, 20, "Gold: " + string(player_currency));
+draw_text(window_get_width() - 20, 20, "Gold: " + string(player_currency));
 
 // Draw upgrade items
 draw_set_halign(fa_center);
@@ -124,6 +124,20 @@ draw_set_valign(fa_top);
 var text_x = shop_owner_box_x + shop_owner_box_width + 20;
 var text_width = text_box_width - shop_owner_box_width - buy_button_width - 60;
 draw_text_ext(text_x, shop_owner_box_y + 10, dialogue_text, 20, text_width);
+
+// Draw item type category (if an item is selected)
+if (selected_item != -1) {
+    var item = shop_items[selected_item];
+    var type_text = "Category: " + string_upper(item.type);
+    
+    // Display requirements if there are any
+    if (item.req != "none") {
+        type_text += " (Requires: " + string_upper(item.req) + ")";
+    }
+    
+    draw_set_color(c_yellow);
+    draw_text(text_x, shop_owner_box_y + 80, type_text);
+}
 
 // Draw buy button if an item is selected
 if (selected_item != -1) {

@@ -49,7 +49,8 @@ for (var i = 0; i < array_length(shop_items); i++) {
             
             if (input.ActionPress) {
                 selected_item = i;
-                dialogue_text = shop_items[i].desc;
+                var item = shop_items[i];
+                dialogue_text = "\"" + item.desc + "\" " + item.shopkeeper_comment;
                 are_you_sure = false;
             }
         }
@@ -72,12 +73,52 @@ if (!item_hovered && input.ActionPress) {
             are_you_sure = true;
         } else {
             if (!item.purchased && player_currency >= item.price) {
-                player_currency -= item.price;
-                item.purchased = true;
-                dialogue_text = "Excellent choice! You've purchased " + item.name + ". This will greatly boost your factory's performance!";
-                // TODO: Apply upgrade effect to player here
+                // Check if requirement is met
+                var req_met = true;
+                if (item.req != "none") {
+                    // TODO: Add code to check if requirement is met
+                    // For now, we'll assume all requirements are met
+                    // Example code:
+                    // req_met = global.unlocked_features[$ item.req] ?? false;
+                }
+                
+                if (req_met) {
+                    player_currency -= item.price;
+                    item.purchased = true;
+                    
+                    // Apply effects based on type
+                    switch (item.type) {
+                        case "consumable":
+                            // Add to inventory instead of applying immediately
+                            dialogue_text = "Excellent! I've added " + item.name + " to your inventory. Use it wisely!";
+                            // TODO: Add to player's inventory
+                            break;
+                            
+                        case "drone":
+                            dialogue_text = "Your drones will appreciate this upgrade! They'll perform much better now.";
+                            // TODO: Apply drone upgrade effect
+                            break;
+                            
+                        case "recycler":
+                            dialogue_text = "Your recycler system has been upgraded. You'll see better results right away!";
+                            // TODO: Apply recycler upgrade effect
+                            break;
+                            
+                        case "engine":
+                            dialogue_text = "I've upgraded your engine components. Your factory will run more efficiently now!";
+                            // TODO: Apply engine upgrade effect
+                            break;
+                            
+                        default:
+                            dialogue_text = "Excellent choice! You've purchased " + item.name + ". This will greatly boost your factory's performance!";
+                            // TODO: Apply generic upgrade effect
+                            break;
+                    }
+                } else {
+                    dialogue_text = "I'm afraid you need to unlock " + item.req + " first before you can purchase this upgrade.";
+                }
             } else if (item.purchased) {
-                dialogue_text = "You've already purchased " + item.name + ". Perhaps you'd like something else?";
+                dialogue_text = "You've already purchased " + item.name + ". Perhaps you'd like something else from my collection?";
             } else {
                 dialogue_text = "I'm afraid you don't have enough gold for that. Come back when you've earned some more!";
             }
