@@ -75,7 +75,7 @@ function Drone(_player, _id, _x, _y) constructor {
     walk_direction = 0;
     selected       = false; 
     think_timer    = 0;
-    
+    img_ind = 0;
     attack_timer   = 0;
     // Modular Functions
     mods = [];
@@ -96,7 +96,7 @@ function Drone(_player, _id, _x, _y) constructor {
         // this can move into a after upgrade check:
         total_speed = (stats.move_speed * mod_stats.move_speed);// * global.gameSpeed;
         
-        
+        img_ind += 0.1;
         think_timer ++;
         
         coll_x_min = x - (coll_offset);
@@ -243,7 +243,8 @@ function Drone(_player, _id, _x, _y) constructor {
             else color = c_white;
                 
         // Draw drone
-        draw_sprite_ext(my_sprite, 0, x, y + hover, _dir, 1, 0, color, 1);
+        
+        draw_sprite_ext(my_sprite, img_ind, x, y + hover, _dir, 1, 0, color, 1);
         if (state == "hunting") draw_sprite_ext(spr_drone_gun, 0, x, y + hover, x_scale, _dir, aim_direction, color, 1);
         // Draw state indicator (optional)
         var state_colors = {

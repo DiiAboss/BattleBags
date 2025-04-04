@@ -15,6 +15,17 @@ selected_item = -1;
 // Placeholder item list
 shop_items = array_create(0);
 
+Overworld_Upgrades =
+{
+    Coolant:
+    {
+        name: "Coolant",
+        desc: "Coolsdown the engine, causing the speed to be reduces by 25% (increase rate will still apply)",
+        price: 100,
+        sprite: spr_coolant
+    }
+}
+
 // Example of populating the shop (temporary placeholders)
 for (var i = 0; i < 12; i++) {
     array_push(shop_items, {

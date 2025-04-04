@@ -65,4 +65,4 @@ if (keyboard_check(vk_tab)) {
             "Special blocks: " + string(special_blocks_processed));
 }
 
-draw_sprite(spr_sorter, 0, x, conveyor_start_y);
+draw_sprite(spr_sorter, image_index, x, conveyor_start_y);

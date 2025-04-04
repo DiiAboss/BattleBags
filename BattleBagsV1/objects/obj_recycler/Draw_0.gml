@@ -30,7 +30,7 @@ if (processing) {
     var anim_offset = sin(current_time * 0.01) * 5;
     draw_sprite_ext(
         spr_block_recycler, // Assuming you have an active state sprite
-        0,
+        image_index,
         x, y + anim_offset,
         1, 1, 0, c_white, 0.7
     );
