@@ -12,6 +12,9 @@ simple_draw = false;
 energy_points = 0; //Temporary Currency
 gold = 0;
 
+
+// over 650 EP in run
+
 //--------------------------------------------------
 // Positioning Cursor
 //--------------------------------------------------

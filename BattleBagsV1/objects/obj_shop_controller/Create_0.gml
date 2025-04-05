@@ -54,7 +54,7 @@ Overworld_Upgrades =
         name: "Bug Repel",
         desc: "No bugs will spawn for 30 seconds after use.",
         price: 100,
-        sprite: spr_coolant,
+        sprite: spr_bug_repel,
         type: "consumable",
         req: "none"
     },
@@ -64,17 +64,17 @@ Overworld_Upgrades =
         name: "DigiSpinach",
         desc: "Increase the carry capacity of all drones by 25%",
         price: 100,
-        sprite: spr_none,
+        sprite: spr_digital_spinach,
         type: "drone",
         req: "none"
     },
     
-    DigitalSpinach:
+    DigitalNRGDrink:
     {
         name: "DigiNRGDrink",
         desc: "Increase the drone speed by 5%",
         price: 100,
-        sprite: spr_none,
+        sprite: spr_nrg_drink,
         type: "drone",
         req: "none"
     },
@@ -94,7 +94,7 @@ Overworld_Upgrades =
         name: "UpgDepoUp",
         desc: "Increase the spawn rate of all Upgrade Deposit Spheres by 1% (Decreases the block spawn chance)",
         price: 100,
-        sprite: spr_none,
+        sprite: spr_powerup_up,
         type: "recycler",
         req: "none"
     },
@@ -104,7 +104,7 @@ Overworld_Upgrades =
         name: "BlkDepoUp",
         desc: "Increase the spawn rate of Deposit Blocks by 5% (Decreases the upgrades chance)",
         price: 100,
-        sprite: spr_none,
+        sprite: spr_depo_up,
         type: "recycler",
         req: "none"
     },
@@ -114,7 +114,7 @@ Overworld_Upgrades =
         name: "BadDepoDown",
         desc: "Decrease the spawn rate of BAD Deposit Blocks by 5%",
         price: 100,
-        sprite: spr_none,
+        sprite: spr_depo_bad_down,
         type: "upgrade",
         req: "none"
     },
@@ -226,7 +226,7 @@ buy_button_hover = false;
 
 // Scroll buttons
 left_scroll_btn_x = display_area_x - 40;
-right_scroll_btn_x = display_area_x + (max_items_visible * (item_width + item_padding)) + 10;
+right_scroll_btn_x = display_area_x + (max_items_visible * (item_width + item_padding)) + 132;
 scroll_btn_y = display_area_y + (item_height * 0.5);
 scroll_btn_size = 30;
 left_btn_hover = false;
