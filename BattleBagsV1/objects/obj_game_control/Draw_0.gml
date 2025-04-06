@@ -548,7 +548,7 @@ for (var i = 0; i < width; i++) {
     //---------------------------------------------------------
     // DRAW SPAWN RATES
     //---------------------------------------------------------
-    //draw_spawn_rates(self);
+    
     
 
 if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instance_exists(obj_upgrade_menu) && !instance_exists(obj_shop_controller) {
@@ -639,4 +639,18 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
 
 var ep_pos_x = room_width * 0.5;
 
+//Draw the top of engine
+for (var by = 0; by < top_playable_row; by++)
+    for (var bx = 0; bx < board_width; bx++)
+{
+    var draw_x = board_x_offset + (bx * gem_size) + offset;
+    var draw_y = (by * gem_size) + offset;
+        
+    var col = fight_for_your_life ? c_red : c_white;
+        
+    draw_sprite_ext(spr_exclaim_block, 0, draw_x, draw_y, 1, 1, 0, col, 0.5);
+}
+
 //663 Energy Points
+
+block_spawn_rates.draw_spawn_rates(1000, 500);

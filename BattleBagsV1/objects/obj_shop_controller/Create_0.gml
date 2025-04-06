@@ -37,125 +37,22 @@ shopkeeper_phrases = {
     ]
 };
 
-Overworld_Upgrades =
-{
-    Coolant:
-    {
-        name: "Coolant",
-        desc: "Cools down the engine, causing the speed to be reduces by 25% (increase rate will still apply)",
-        price: 100,
-        sprite: spr_coolant,
-        type: "consumable",
-        req: "none"
-    },
-    
-    BugRepel:
-    {
-        name: "Bug Repel",
-        desc: "No bugs will spawn for 30 seconds after use.",
-        price: 100,
-        sprite: spr_bug_repel,
-        type: "consumable",
-        req: "none"
-    },
-    
-    DigitalSpinach:
-    {
-        name: "DigiSpinach",
-        desc: "Increase the carry capacity of all drones by 25%",
-        price: 100,
-        sprite: spr_digital_spinach,
-        type: "drone",
-        req: "none"
-    },
-    
-    DigitalNRGDrink:
-    {
-        name: "DigiNRGDrink",
-        desc: "Increase the drone speed by 5%",
-        price: 100,
-        sprite: spr_nrg_drink,
-        type: "drone",
-        req: "none"
-    },
-    
-    RecyclerEfficiency:
-    {
-        name: "RecGem",
-        desc: "Increase the deposit chance by 2.5%",
-        price: 100,
-        sprite: spr_none,
-        type: "recycler",
-        req: "none"
-    },
-    
-    UpgradeDepositChance:
-    {
-        name: "UpgDepoUp",
-        desc: "Increase the spawn rate of all Upgrade Deposit Spheres by 1% (Decreases the block spawn chance)",
-        price: 100,
-        sprite: spr_powerup_up,
-        type: "recycler",
-        req: "none"
-    },
-    
-    UpgradeDepositChance:
-    {
-        name: "BlkDepoUp",
-        desc: "Increase the spawn rate of Deposit Blocks by 5% (Decreases the upgrades chance)",
-        price: 100,
-        sprite: spr_depo_up,
-        type: "recycler",
-        req: "none"
-    },
-    
-    BadBlockDepositChance:
-    {
-        name: "BadDepoDown",
-        desc: "Decrease the spawn rate of BAD Deposit Blocks by 5%",
-        price: 100,
-        sprite: spr_depo_bad_down,
-        type: "upgrade",
-        req: "none"
-    },
-    
-    BigBlockAttractor:
-    {
-        name: "BBlockAttract",
-        desc: "Any big blocks on board guarentee a block of the same color to spawn on the bottom row",
-        price: 100,
-        sprite: spr_none,
-        type: "engine",
-        req: "bigblock"
-    },
-    
-    EP_Gainer:
-    {
-        name: "EP Gainer",
-        desc: "Increase the amount of Energy Points gained per block (+10%)",
-        price: 100,
-        sprite: spr_none,
-        type: "engine",
-        req: "none"
-    },
-    
-    Combo_Specialist:
-    {
-        name: "Combo Spec",
-        desc: "Greatly Increase the amount of Energy Points gained per combo (+25%), but decrease the amount gained if no combo in progress (-50%)",
-        price: 100,
-        sprite: spr_none,
-        type: "engine",
-        req: "none"
-    },
+// Merge color block upgrades into global.Overworld_Upgrades
+var color_upgrades = generate_color_block_upgrades();
+var color_upgrade_names = variable_struct_get_names(color_upgrades);
+
+for (var i = 0; i < array_length(color_upgrade_names); i++) {
+    var upgrade_name = color_upgrade_names[i];
+    var color = color_upgrades[$ upgrade_name].color_key;
+    global.Overworld_Upgrades[$ upgrade_name] = color_upgrades[$ upgrade_name];
 }
 
-// Populate shop from Overworld_Upgrades structure
+// Populate shop from global.Overworld_Upgrades structure
 // This creates a fresh copy of each upgrade for this shop instance
-var upgrade_names = variable_struct_get_names(Overworld_Upgrades);
+var upgrade_names = variable_struct_get_names(global.Overworld_Upgrades);
 for (var i = 0; i < array_length(upgrade_names); i++) {
     var upgrade_name = upgrade_names[i];
-    var upgrade_data = Overworld_Upgrades[$ upgrade_name];
+    var upgrade_data = global.Overworld_Upgrades[$ upgrade_name];
     
     // Create a fresh shop item instance from the upgrade data
     var shop_item = {
@@ -167,7 +64,8 @@ for (var i = 0; i < array_length(upgrade_names); i++) {
         type: upgrade_data.type,
         req: upgrade_data.req,
         purchased: false,
-        hovered: false
+        hovered: false,
+        upgrade_id: upgrade_name,
     };
     
     array_push(shop_items, shop_item);
@@ -188,6 +86,7 @@ for (var i = 0; i < array_length(shop_items); i++) {
     }
     array_push(grouped_items[$ item_type], shop_items[i]);
 }
+
 
 // Flatten the grouped items back into shop_items
 shop_items = [];
@@ -225,7 +124,7 @@ buy_button_y = text_box_y + text_box_height - buy_button_height - 20;
 buy_button_hover = false;
 
 // Scroll buttons
-left_scroll_btn_x = display_area_x - 40;
+left_scroll_btn_x = display_area_x - 132;
 right_scroll_btn_x = display_area_x + (max_items_visible * (item_width + item_padding)) + 132;
 scroll_btn_y = display_area_y + (item_height * 0.5);
 scroll_btn_size = 30;

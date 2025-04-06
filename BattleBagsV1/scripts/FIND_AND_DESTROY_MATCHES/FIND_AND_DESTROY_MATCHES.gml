@@ -30,7 +30,7 @@ function find_and_destroy_matches(_self) {
     
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
-        for (var yy = 0; yy <= bottom_row; yy++) {
+        for (var yy = 0; yy < bottom_row; yy++) {
             marked_for_removal[xx, yy] = false;
 			
 			if (_self.grid[xx, yy].pop_timer > 0)
@@ -48,7 +48,7 @@ function find_and_destroy_matches(_self) {
     // -------------------------
     // ✅ HORIZONTAL MATCHES
     // -------------------------
-    for (var j = 0; j <= bottom_row; j++) {
+    for (var j = 0; j < bottom_row; j++) {
         var match_count = 1;
         var start_idx = 0;
         
@@ -112,7 +112,7 @@ function find_and_destroy_matches(_self) {
         var match_count = 1;
         var start_idx = 0;
 
-        for (var j = 1; j <= bottom_row; j++) {
+        for (var j = 1; j < bottom_row; j++) {
             if (can_match(_self.grid[i, j], _self.grid[i, j - 1])) {
                 if (match_count == 1) start_idx = j - 1;
                     
@@ -123,7 +123,7 @@ function find_and_destroy_matches(_self) {
                     for (var k = 0; k < match_count; k++) {
                         var yy = start_idx + k;
 						
-                        if (yy >= 0 && yy <= bottom_row) {
+                        if (yy >= 0 && yy < bottom_row) {
                             marked_for_removal[i, yy] = true;
                             
                             var dist = abs(last_swap_x - i) + abs(last_swap_y - yy);
@@ -147,7 +147,7 @@ function find_and_destroy_matches(_self) {
         if (match_count >= min_match) {
             for (var k = 0; k < match_count; k++) {
                 var yy = start_idx + k;
-                if (yy >= 0 && yy <= bottom_row) {
+                if (yy >= 0 && yy < bottom_row) {
                     marked_for_removal[i, yy] = true;
 
                     var dist = abs(last_swap_x - i) + abs(last_swap_y - yy);
@@ -183,7 +183,7 @@ function find_and_destroy_matches(_self) {
     var current_match_count = total_match_count;
     // This will go through the entire board, and remove any blocks that are morked for removal, we could isolate the blocks for removal to skip this for loop possibly.
 	for (var i = 0; i < width; i++) {
-	    for (var j = 0; j <= bottom_row; j++) {
+	    for (var j = 0; j < bottom_row; j++) {
             var block = _self.grid[i, j];
             var big_block_match = handle_find_and_destroy_big_block(_self, block, total_match_count, total_match_points);
             total_pop_timer   += big_block_match[0];

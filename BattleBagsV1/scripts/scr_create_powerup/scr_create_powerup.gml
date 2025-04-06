@@ -47,7 +47,7 @@ ds_map_add(global.powerup_weights, POWERUP.HEART, 2);
 ds_map_add(global.powerup_weights, POWERUP.MONEY, 2);
 ds_map_add(global.powerup_weights, POWERUP.POISON, 0);
 ds_map_add(global.powerup_weights, POWERUP.FIRE, 0);
-ds_map_add(global.powerup_weights, POWERUP.ICE, 0);
+ds_map_add(global.powerup_weights, POWERUP.ICE, 2);
 ds_map_add(global.powerup_weights, POWERUP.TIMER, 0);
 ds_map_add(global.powerup_weights, POWERUP.FEATHER, 0);
 ds_map_add(global.powerup_weights, POWERUP.WILD_POTION, 2); // Very rare
@@ -120,7 +120,7 @@ function create_powerup(_powerup = -1) {
 			_sprite = spr_powerup_fire;
 		break;
 		case POWERUP.ICE:
-			_sprite = spr_powerup_ice;
+			_sprite = spr_ice_cube;
 		break;
 		case POWERUP.TIMER:
 			_sprite = spr_powerup_timer;

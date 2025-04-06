@@ -30,7 +30,7 @@ function block_spawn_weight_manager() constructor
 {
     start_weight = 12.5;
     
-    total_blocks = 16;
+    total_blocks = 17;
     block_weight_array   = array_create(total_blocks, 0);
     default_weight_array = array_create(total_blocks, 0);
     mod_weight_array     = array_create(total_blocks, 0);
@@ -44,6 +44,7 @@ function block_spawn_weight_manager() constructor
     block_weight_array[BLOCK.LIGHTBLUE] = start_weight;
     block_weight_array[BLOCK.ORANGE]    = start_weight;
     block_weight_array[BLOCK.BLUE]      = start_weight;
+    block_weight_array[BLOCK.COIN]      = start_weight;
     block_weight_array[BLOCK.BUG]       = 2;
     
     var _total = 0;
@@ -96,6 +97,97 @@ function block_spawn_weight_manager() constructor
     {
 
     }
+    
+    
+    draw_spawn_rates = function(_x = 20, _y = 20, _width = 300, _height = 20, _spacing = 25, _draw_text = true)
+    {
+        // Block names array for display labels
+        var block_names = [
+            "RED", "YELLOW", "GREEN", "PINK", "PURPLE", 
+            "LIGHTBLUE", "ORANGE", "BLUE", "COIN", "BUG"
+        ];
+        
+        // Block colors array for visual representation
+        var block_colors = [
+            c_red, c_yellow, c_lime, c_fuchsia, c_purple, 
+            c_aqua, c_orange, c_blue, c_yellow, c_black
+        ];
+        
+        // Calculate total weight for percentages
+        var _total_weight = 0;
+        for (var i = 0; i < total_blocks; i++) {
+            _total_weight += default_weight_array[i] * mod_weight_array[i];
+        }
+        
+        // Save current drawing settings
+        var _orig_color = draw_get_color();
+        var _orig_alpha = draw_get_alpha();
+        var _orig_halign = draw_get_halign();
+        var _orig_valign = draw_get_valign();
+        
+        // Set text alignment
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_middle);
+        
+        // Draw title
+        draw_set_color(c_white);
+        draw_text(_x, _y - _spacing, "Block Spawn Rates:");
+        
+        // Draw each block's spawn rate
+        for (var i = 0; i < total_blocks; i++) {
+            if (default_weight_array[i] <= 0) continue; // Skip blocks with no weight
+            
+            var _current_y = _y + (i * _spacing);
+            var _current_weight = default_weight_array[i] * mod_weight_array[i];
+            var _percent = (_current_weight / _total_weight) * 100;
+            
+            // Draw block color indicator
+            var _color = (i < array_length(block_colors)) ? block_colors[i] : c_gray;
+            draw_set_color(_color);
+            draw_rectangle(_x, _current_y - 8, _x + 16, _current_y + 8, false);
+            draw_set_color(c_black);
+            draw_rectangle(_x, _current_y - 8, _x + 16, _current_y + 8, true);
+            
+            // Draw block name
+            draw_set_color(c_white);
+            var _name = (i < array_length(block_names)) ? block_names[i] : "BLOCK " + string(i);
+            draw_text(_x + 24, _current_y, _name);
+            
+            // Draw weight bar
+            var _bar_width = (_current_weight / start_weight) * (_width * 0.5);
+            draw_set_color(_color);
+            draw_set_alpha(0.7);
+            draw_rectangle(_x + 100, _current_y - 6, _x + 100 + _bar_width, _current_y + 6, false);
+            draw_set_alpha(1.0);
+            draw_set_color(c_white);
+            draw_rectangle(_x + 100, _current_y - 6, _x + 100 + _width * 0.5, _current_y + 6, true);
+            
+            // Draw percentage and actual weight
+            if (_draw_text) {
+                draw_set_halign(fa_right);
+                draw_text(_x + 100 + _width * 0.5 + 50, _current_y, string_format(_percent, 1, 1) + "%");
+                draw_text(_x + 100 + _width * 0.5 + 120, _current_y, "(" + string(_current_weight) + ")");
+                draw_set_halign(fa_left);
+            }
+        }
+        
+        // Draw modifier indicators for blocks with modifiers
+        draw_set_color(c_yellow);
+        for (var i = 0; i < total_blocks; i++) {
+            if (mod_weight_array[i] != 1) {
+                var _current_y = _y + (i * _spacing);
+                var _mod_text = "x" + string(mod_weight_array[i]);
+                draw_text(_x + 100 + _width * 0.5 + 150, _current_y, _mod_text);
+            }
+        }
+        
+        // Restore original drawing settings
+        draw_set_color(_orig_color);
+        draw_set_alpha(_orig_alpha);
+        draw_set_halign(_orig_halign);
+        draw_set_valign(_orig_valign);
+    }
+    
 }
 
 function weighted_random_block(player) 

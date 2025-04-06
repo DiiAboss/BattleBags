@@ -67,7 +67,7 @@ function trigger_final_game_over(_self) {
     var top_row = _self.top_playable_row;
 
     // ✅ Add all blocks to the pop queue in order (top-left to bottom-right)
-    for (var _y = top_row; _y <= bottom_row; _y++) {
+    for (var _y = top_row; _y < bottom_row; _y++) {
         for (var _x = 0; _x < width; _x++) {
             var block = _self.grid[_x, _y];
 

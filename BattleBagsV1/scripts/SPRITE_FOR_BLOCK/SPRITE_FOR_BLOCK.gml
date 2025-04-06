@@ -17,6 +17,7 @@ function sprite_for_block(gem_type) {
             
         case BLOCK.BUG:         return spr_enemy_fly;
             
+        case BLOCK.COIN:        return spr_gold_coin;
         case BLOCK.COLOR_BOMB:  return spr_wild_gem;
         default:
             return spr_enemy_gem_overlay;    // Default gem (in case of an invalid value)

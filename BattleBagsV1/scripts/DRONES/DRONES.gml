@@ -126,7 +126,7 @@ function Drone(_player, _id, _x, _y) constructor {
         
         if (deposit_blocks != noone)
         {
-            if (blocks_carried < stats.carry_capacity)
+            if (blocks_carried < carry_capacity)
                     {
                         if (point_distance(x, y, instance_nearest(x, y, obj_deposit_block).x, instance_nearest(x, y, obj_deposit_block).y) < 16)
                         {
@@ -348,9 +348,9 @@ function Drone(_player, _id, _x, _y) constructor {
                     
                     draw_text(text_x, text_y, "Level: " + string(stats.level) + "/" + string(stats.max_level));
                     draw_text(text_x, text_y + line_height, "Experience: " + string(stats.experience) + "/" + string(stats.max_experience));
-                    draw_text(text_x, text_y + line_height*2, "Carry Capacity: " + string(stats.carry_capacity));
-                    draw_text(text_x, text_y + line_height*3, "Throw Distance: " + string(stats.throw_distance));
-                    draw_text(text_x, text_y + line_height*4, "Speed: " + string(stats.move_speed));
+                    draw_text(text_x, text_y + line_height*2, "Carry Capacity: " + string(carry_capacity));
+                    draw_text(text_x, text_y + line_height*3, "Throw Distance: " + string(throw_distance));
+                    draw_text(text_x, text_y + line_height*4, "Speed: " + string(total_speed));
                     draw_text(text_x, text_y + line_height*5, "State: " + string(state));
                     
                     // Reset text alignment

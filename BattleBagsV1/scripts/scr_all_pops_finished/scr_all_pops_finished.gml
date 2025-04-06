@@ -71,7 +71,7 @@ function all_pops_finished(player)
                 {
                     var new_block = destroy_block(player, _x, _y);
                     //new_block.pop_timer = block_pop_timer;
-                    if (new_block == noone) return;
+                    if !(new_block) return;
                     new_block.popping = true;
                     
                     // ✅ Create Attack Object with Score

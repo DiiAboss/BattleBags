@@ -27,7 +27,7 @@ function draw_game_over_state(game_control)
             var game_over_popping        = game_control.game_over_popping;
             var game_over_block_sprite   = spr_gameOver;
             var game_over_overlay_sprite = spr_enemy_gem_overlay;
-            var gem_size                 = game_control.game_size;
+            var gem_size                 = game_control.gem_size;
             var board_x_offset           = game_control.board_x_offset;
             
         // ✅ Draw Popping Blocks

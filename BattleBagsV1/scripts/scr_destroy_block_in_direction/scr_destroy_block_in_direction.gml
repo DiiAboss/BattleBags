@@ -40,7 +40,7 @@ function destroy_blocks_in_direction_from_point(player, start_x, start_y, _dir_x
             var dist = sqrt(dx * dx + dy * dy);
             
             for (var _i = 0; _i < self.width; _i++) {
-                for (var _j = 0; _j <= bottom_row; _j++) {
+                for (var _j = 0; _j < bottom_row; _j++) {
                     var other_block = player.grid[_i, _j];
 
                     if (other_block.group_id == group_id) {

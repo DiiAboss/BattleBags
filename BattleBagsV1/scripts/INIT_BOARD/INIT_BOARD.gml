@@ -40,7 +40,7 @@ function initialize_game_board(player, width = 8, height = 24, spawn_row = 6)
     }
 
     // ✅ New Spawning Logic (Inside Playable Area: Rows 4 to 16)
-    player.spawn_rows += player.top_playable_row;
+    //player.spawn_rows += player.top_playable_row;
     for (var i = 0; i < width; i++) {
         for (var j = player.bottom_playable_row - player.spawn_rows; j < height; j++) {
             player.grid[i][j] = create_block(player, BLOCK.RANDOM);

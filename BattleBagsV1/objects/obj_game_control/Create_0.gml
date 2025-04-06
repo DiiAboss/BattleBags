@@ -76,22 +76,24 @@ combo_tier_level = 0;
 black_block_spawn_rate_per_tier = [50, 40, 30, 20, 10, 0];
 
 block_life_outside_of_grid = 360;
-
+game_over_show_option = false;
 
 //----------------------------------------------------
 // Board Creation
 //----------------------------------------------------
 big_block_enabled = true;
 
-spawn_rows   = 6; // Number of initial rows to spawn
-width	     = 8;
+
+width	     = 6;
 height	     = 24;
 
-board_width  = 8;
+board_width  = 6;
 board_height = 24;
 
-top_playable_row    = 4;
+top_playable_row    = 8;
 bottom_playable_row = 20;
+
+spawn_rows   = 0; // Number of initial rows to spawn
 
 powerup_slots = array_create(board_width, -1);
 // ------------------------------------------------------
@@ -132,7 +134,7 @@ global.player_level = 1;
 
 
 scan_board = 5;
-
+repel_bugs_timer = 0;
 
 
 //-----------------------------------------
@@ -149,6 +151,9 @@ for (var d = 0; d < number_of_drones; d++)
 }
 
 
+consumable_array = [];
+
+upgrade_array    = [];
 
 //-----------------------------------------
 // ADJUSTABLE STATS

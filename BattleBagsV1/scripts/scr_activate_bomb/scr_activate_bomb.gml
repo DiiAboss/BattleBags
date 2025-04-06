@@ -61,7 +61,7 @@ function activate_bomb_gem(player, _x, _y, _bomb_level = -1) {
         if (cx >= 0 
 		 && cx < width
 		 && cy >= 0 
-		 && cy <= bottom_row
+		 && cy < bottom_row
 		 && player.grid[cx, cy].type != BLOCK.NONE){ 
             
             

@@ -1,10 +1,60 @@
 // STEP EVENT
 /// @description
 var input = obj_game_manager.input;
+var player = obj_game_control;
+
+
+// 6. Function to apply upgrade effects
+function apply_upgrade_effects(player) {
+    var Overworld_Upgrades = global.Overworld_Upgrades;
+    with (player) {
+        var upg_array = array_length(upgrade_array);
+        if (upg_array > 0) {
+            for (var c = 0; c < upg_array; c++) {
+                var upgrade = upgrade_array[c];
+                // Check if there's an apply_effect method
+                if (variable_struct_exists(upgrade, "apply_effect") && is_method(upgrade.apply_effect)) {
+                    // Call the effect function in the context of the player
+                    var run = upgrade.apply_effect(self);
+                    show_debug_message("Applied effect for " + upgrade.name + " - " + string(run));
+                } else {
+                    show_debug_message("WARNING: Upgrade " + upgrade_id + " has no apply_effect method");
+                }
+            }
+        }
+    }
+}
+
+
 
 // Exit shop
 if (input.Escape) || keyboard_check_pressed(ord("U")) {
+    apply_upgrade_effects(player);
     instance_destroy();
+}
+
+// 5. Function to add an upgrade to the player properly
+function add_upgrade_to_player(player, upgrade_id) {
+    // Validate the upgrade exists
+    var Overworld_Upgrades = global.Overworld_Upgrades;
+    
+    if (!variable_struct_exists(Overworld_Upgrades, upgrade_id)) {
+        show_debug_message("ERROR: Tried to add non-existent upgrade: " + string(upgrade_id));
+        return false;
+    }
+    
+    var upgrade = Overworld_Upgrades[$ upgrade_id];
+    
+    // Add to the appropriate array based on type
+    if (upgrade.type == "consumable") {
+        array_push(player.consumable_array, upgrade);
+    } else {
+        array_push(player.upgrade_array, upgrade);
+    }
+    
+    show_debug_message("Added " + upgrade.name + " to player");
+    show_debug_message(string(upgrade));
+    return true;
 }
 
 // Mouse position
@@ -36,7 +86,7 @@ for (var i = 0; i < array_length(shop_items); i++) {
     var item_x = item_start_x + (i * (item_width + item_padding));
     
     // Only process items that would be visible on screen
-    if (item_x + item_width >= display_area_x && item_x <= display_area_x + (max_items_visible * (item_width + item_padding))) {
+    if (item_x + item_width > display_area_x && item_x < display_area_x + (max_items_visible * (item_width + item_padding))) {
         var is_hovering = point_in_rectangle(mx, my, 
                                             item_x, display_area_y, 
                                             item_x + item_width, display_area_y + item_height);
@@ -85,7 +135,8 @@ if (!item_hovered && input.ActionPress) {
                 if (req_met) {
                     player_currency -= item.price;
                     item.purchased = true;
-                    
+                    var upgrade_id = item.upgrade_id;
+                    add_upgrade_to_player(player, upgrade_id);
                     // Apply effects based on type
                     switch (item.type) {
                         case "consumable":

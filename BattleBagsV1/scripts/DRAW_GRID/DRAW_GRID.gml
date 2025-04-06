@@ -15,7 +15,7 @@ function draw_grid(player) {
     for (var i = 0; i < width; i++) {
         var shake_intensity = calculate_shake(player, i);
 
-        for (var j = top_row; j <= bottom_row; j++) {
+        for (var j = top_row; j < bottom_row; j++) {
             var block = player.grid[i, j];
 
             if (block.type == BLOCK.NONE) continue; // Skip empty slots

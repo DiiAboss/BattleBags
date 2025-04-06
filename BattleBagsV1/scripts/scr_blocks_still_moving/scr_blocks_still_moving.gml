@@ -8,7 +8,7 @@ function are_playable_blocks_settled(_self){
 
     for (var i = 0; i < width; i++) 
 	{	
-        for (var j = 0; j <= bottom_row; j++) 
+        for (var j = 0; j < bottom_row; j++) 
 		{
 	        
 			var gem = _self.grid[i, j];

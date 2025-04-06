@@ -19,11 +19,12 @@ enum BLOCK {
     PUZZLE_1    = 12,
     CURSE       = 13,
     COLOR_BOMB  = 14,
-    BUG         = 15
+    BUG         = 15,
+    COIN        = 16,
 }
 
 enum UPGRADE {
-    RANDOM = -99, NONE = -1, HEART = 0, ARROW = 1, BOMB = 2
+    RANDOM = -99, NONE = -1, HEART = 0, ARROW = 1, BOMB = 2, ICE = 3
 }
 
 function create_block(player, _type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {

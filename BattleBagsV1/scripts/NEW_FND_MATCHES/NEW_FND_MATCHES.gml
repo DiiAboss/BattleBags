@@ -64,7 +64,7 @@ function initialize_removal_grid(_self, width, bottom_row) {
     var marked_for_removal = array_create(width, bottom_row);
     
     for (var xx = 0; xx < width; xx++) {
-        for (var yy = 0; yy <= bottom_row; yy++) {
+        for (var yy = 0; yy < bottom_row; yy++) {
             marked_for_removal[xx, yy] = false;
             
             // Handle shake timer and popping state
@@ -97,7 +97,7 @@ function find_horizontal_matches(_self, width, bottom_row, marked_grid) {
     var first_match_y = 0;
     var black_blocks_to_transform = ds_list_create();
     
-    for (var j = 0; j <= bottom_row; j++) {
+    for (var j = 0; j < bottom_row; j++) {
         var match_count = 1;
         var start_idx = 0;
 
@@ -183,7 +183,7 @@ function find_vertical_matches(_self, width, bottom_row, marked_grid) {
         var match_count = 1;
         var start_idx = 0;
 
-        for (var j = 1; j <= bottom_row; j++) {
+        for (var j = 1; j < bottom_row; j++) {
             if (can_match(_self.grid[i, j], _self.grid[i, j - 1])) {
                 if (match_count == 1) start_idx = j - 1;
                 match_count++;
@@ -192,7 +192,7 @@ function find_vertical_matches(_self, width, bottom_row, marked_grid) {
                     for (var k = 0; k < match_count; k++) {
                         var yy = start_idx + k;
                         
-                        if (yy >= 0 && yy <= bottom_row) {
+                        if (yy >= 0 && yy < bottom_row) {
                             marked_grid[i, yy] = true;
 
                             if (!found_match) {
@@ -215,7 +215,7 @@ function find_vertical_matches(_self, width, bottom_row, marked_grid) {
         if (match_count >= 3) {
             for (var k = 0; k < match_count; k++) {
                 var yy = start_idx + k;
-                if (yy >= 0 && yy <= bottom_row) {
+                if (yy >= 0 && yy < bottom_row) {
                     marked_grid[i, yy] = true;
 
                     if (!found_match) {
@@ -259,7 +259,7 @@ function process_matched_blocks(_self, width, bottom_row, marked_for_removal, to
     var found_any = false;
     
     for (var i = 0; i < width; i++) {
-        for (var j = 0; j <= bottom_row; j++) {
+        for (var j = 0; j < bottom_row; j++) {
             if (marked_for_removal[i, j]) {
                 found_any = true;
                 
@@ -306,7 +306,7 @@ function process_big_block(_self, gem, width, bottom_row, dist, _start_delay, to
     var group_id = gem.group_id;
     
     for (var _x = 0; _x < width; _x++) {
-        for (var _y = 0; _y <= bottom_row; _y++) {
+        for (var _y = 0; _y < bottom_row; _y++) {
             var other_gem = _self.grid[_x, _y];
             
             if (other_gem.group_id == group_id) {
