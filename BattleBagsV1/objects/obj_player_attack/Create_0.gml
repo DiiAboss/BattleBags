@@ -10,6 +10,12 @@ color = c_white;
 spd = 8;
 damage = obj_game_control.combo + 1;
 
+
+
+size = damage * 0.05;
+
+rotation_speed = size;
+
 alarm[0] = 600;
 
 if (instance_exists(obj_target))

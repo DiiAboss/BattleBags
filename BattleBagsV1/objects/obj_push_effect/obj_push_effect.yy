@@ -1,17 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"obj_block_transfer_y",
+  "%Name":"obj_push_effect",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_block_transfer_y",
+  "name":"obj_push_effect",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"InGAME",
+    "path":"folders/Objects/InGAME.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -31,10 +31,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_transfer_block",
-    "path":"sprites/spr_transfer_block/spr_transfer_block.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

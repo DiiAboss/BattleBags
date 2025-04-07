@@ -211,7 +211,7 @@ switch(state) {
                 // Add blocks to conveyor
                 for (var i = 0; i < blocks_carried; i++) {
                     with (conveyor) {
-                        add_block_to_conveyor(other.carried_blocks[i]);
+                        add_block_to_conveyor(player, other.carried_blocks[i]);
                     }
                 }
                 

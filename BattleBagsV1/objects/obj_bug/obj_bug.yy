@@ -9,8 +9,8 @@
   "name":"obj_bug",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"InGAME",
+    "path":"folders/Objects/InGAME.yy",
   },
   "parentObjectId":null,
   "persistent":false,

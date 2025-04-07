@@ -38,12 +38,15 @@ function choose_weighted_block_type(deposit_blocks, _type = DEPOSIT_BLOCK.RANDOM
     return deposit_blocks[$ chosen_key];
 }
 
-function create_deposit_block(_self, _x, _y, deposit_block_struct)
+function create_deposit_block(recycler_object, _x, _y, deposit_block_struct)
 {
     var deposit_blocks = deposit_block_struct;
     
-    var upgrade_chance = irandom(50);
-    var block_chance   = irandom(50);
+    var max_block_chance = recycler_object.block_chance;
+    var max_upgrade_chance = recycler_object.upgrade_chance;
+    
+    var upgrade_chance = irandom(max_block_chance);
+    var block_chance   = irandom(max_upgrade_chance);
     
     var __type = block_chance >= upgrade_chance ? DEPOSIT_BLOCK.BLOCK : DEPOSIT_BLOCK.UPGRADE;
     

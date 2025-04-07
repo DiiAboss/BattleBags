@@ -1,5 +1,17 @@
 /// @description Update deposit block state
 
+// This function creates the push effect
+function create_push_effect(_x, _y, _strength) {
+    // Create an invisible object that will handle the push effect
+    var push_obj = instance_create_depth(_x, _y, depth-10, obj_push_effect);
+    
+    // Set properties based on strength (number of blocks destroyed)
+    push_obj.radius = 32;  // 32 pixel range as you specified
+    push_obj.push_strength = min(5, 1 + (_strength - 3) * 0.5);  // Scale strength based on blocks destroyed
+    push_obj.push_duration = 10;  // Effect lasts for 10 frames
+}
+
+
 if (global.paused)
 {
     x = xprevious;

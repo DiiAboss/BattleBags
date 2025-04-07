@@ -140,6 +140,74 @@ deposit_blocks =
     },
 }
 
+// Base stats that define default values
+stats = {
+    // Production properties
+    cooldown_time: 1,            // Seconds between processing attempts
+    process_time: 30,            // Frames to process a block
+    
+    // Block generation properties
+    success_chance: 0.50,        // 50% chance to create a block
+    block_chance: 70,            // Weight for regular blocks
+    upgrade_chance: 30,          // Weight for upgrades
+    
+    // Bad block properties
+    bad_block_weight: 25,        // Default weight for bad blocks
+    bug_block_spawn_weight: 0,
+    
+    // Ejection parameters
+    eject_speed_min: 4,
+    eject_speed_max: 5,
+    
+    // Energy gain
+    energy_gain: 1              // Energy points per block processed
+};
+
+// Modifier stats that can be adjusted by upgrades
+mod_stats = {
+    // Production modifiers
+    cooldown_time: 1.0,         // Modifier for cooldown (lower is faster)
+    process_time: 1.0,          // Modifier for processing time (lower is faster)
+    
+    // Chance modifiers
+    success_chance: 1.0,        // Modifier for success chance (higher is better)
+    block_chance: 1.0,          // Modifier for block spawn chance
+    upgrade_chance: 1.0,        // Modifier for upgrade spawn chance
+    bad_block_chance: 1.0,      // Modifier for bad block spawn chance
+    bug_block_spawn_weight: 0,
+    
+    // Special types modifiers
+    bomb_chance: 1.0,           // Modifier for bomb spawn chance
+    bow_chance: 1.0,            // Modifier for bow spawn chance
+    color_bomb_chance: 0.0,     // Chance for color bomb (wild) to spawn
+    
+    // Ejection modifiers
+    eject_speed: 1.0,           // Modifier for ejection speed
+    
+    // Energy gain modifiers
+    energy_gain: 1.0            // Modifier for energy gain
+};
+
+// Special states
+special_states = {
+    repel_bugs: false,            // Whether bug blocks are suppressed
+    repel_bugs_timer: 0,          // Timer for bug repelling
+    big_block_attractor: false,   // Whether big blocks attract matching blocks
+    spawn_color_bomb_counter: -1,
+};
+
+
+// Block generation properties
+success_chance   = stats.success_chance   * mod_stats.success_chance; // 50% chance to create a block
+max_process_time = stats.process_time     * mod_stats.process_time; // 1.5 seconds to process
+cooldown_time    = stats.cooldown_time    * mod_stats.cooldown_time;
+block_chance     = stats.block_chance     * mod_stats.block_chance;
+upgrade_chance   = stats.upgrade_chance   * mod_stats.upgrade_chance;
+bad_block_chance = stats.bad_block_weight * mod_stats.bad_block_chance;
+energy_gain      = stats.energy_gain      * mod_stats.energy_gain;
+
+
+
 /// @description Initialize recycler
 // Visual properties
 sprite_index = spr_block_recycler;
@@ -156,12 +224,10 @@ cooldown = 0;
 max_cooldown = 1; // 2 seconds between processing
 processing = false;
 process_time = 0;
-max_process_time = 30; // 1.5 seconds to process
 
-// Block generation properties
-success_chance = 0.50; // 50% chance to create a block
 
-success_chance_mod = 1;
+
+
 
 // Ejection parameters
 eject_speed_min = 4;

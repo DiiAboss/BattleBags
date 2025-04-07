@@ -27,7 +27,27 @@ max_width = 99;
 default_size = 64;
 size_mod = 0.75;
 
-scale = default_size * size_mod;
+stats =
+{
+    scale: 64,
+    value: 1,
+}
+
+mod_stats = 
+{
+    scale: 0.75,
+    value: 1,
+}
+
+special_stats =
+{
+    destroy_blocks: false,
+}
+
+
+scale = stats.scale * mod_stats.scale;
+value = stats.value * mod_stats.value;
+
 image_xscale = size_mod;
 image_yscale = size_mod;
 

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"find_and_destroy_deposit_blocks",
+  "%Name":"DESTROY_DEPOSIT_BLOCKS",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"find_and_destroy_deposit_blocks",
+  "name":"DESTROY_DEPOSIT_BLOCKS",
   "parent":{
     "name":"DEPOSIT_BLOCKS",
     "path":"folders/Scripts/DEPOSIT_BLOCKS.yy",

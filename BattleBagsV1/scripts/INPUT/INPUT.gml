@@ -41,7 +41,7 @@ function Input() constructor {
 
 	// Speed Up (Spacebar & Controller Left Trigger)
 	SpeedUpKey      = false;
-
+    RunKey          = false;
 	// Skill Cycling (Bumpers & Mouse Wheel)
 	CycleSkillUp    = false;
 	CycleSkillDown  = false;
@@ -101,7 +101,7 @@ function Input() constructor {
 
 				// Speed Up Key
 				SpeedUpKey      = keyboard_check(InputMap.SpeedUpKey);
-
+                RunKey      = keyboard_check(InputMap.RunKey);
 				// Skill Cycling (Mouse Wheel)
 				if (cycleSkillDelay <= 0) {
 					CycleSkillUp   = mouse_wheel_up();
@@ -150,6 +150,7 @@ function Input() constructor {
 
 				// Speed Up (Left Trigger)
 				SpeedUpKey      = gamepad_button_check(Device, ControllerMap.SpeedUpKey);
+                RunKey      = gamepad_button_check(Device, ControllerMap.RunKey);
                 
                 ScrollUp        = gamepad_button_check(Device, gp_shoulderr) || gamepad_button_check(Device, gp_shoulderrb);
                 ScrollDown      = gamepad_button_check(Device, gp_shoulderl) || gamepad_button_check(Device, gp_shoulderlb);
@@ -198,6 +199,7 @@ global.InputType = {
 		ActionKey:     mb_left,  // Left Mouse Click
 		AltKey:        mb_right, // Right Mouse Click
 		SpeedUpKey:    vk_space, // Spacebar (Speed Up)
+        RunKey:        vk_shift,        
 
 		// Skill Cycling
 		CycleSkillUp:   -1, // Mouse Wheel Up
@@ -224,9 +226,10 @@ global.InputType = {
         ActionPress:    gp_face1,  // A Button
         ActionRelease:  gp_face1,  // A Button
 		AltKey:        gp_face2,  // B Button
-
+    
 		SpeedUpKey:   gp_shoulderrb, // Left Trigger (Speed Up)
-
+        RunKey:        gp_face3,   
+    
 		// Skill Cycling (Bumpers)
 		CycleSkillUp:   gp_shoulderr, // Right Bumper
 		CycleSkillDown: gp_shoulderlb, // Left Bumper

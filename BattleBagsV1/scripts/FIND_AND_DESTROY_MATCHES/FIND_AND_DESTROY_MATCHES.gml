@@ -8,7 +8,7 @@
 ///@return {bool} - Returns `true` if any matches were found.
 function find_and_destroy_matches(_self) {
     var width				 = _self.board_width;
-	var bottom_row		     = _self.bottom_playable_row - 1;
+	var bottom_row		     = _self.bottom_playable_row + 1;
     var min_match            = 3;
     var marked_for_removal	 = array_create(width, bottom_row);
     var found_any			 = false; 
@@ -177,7 +177,7 @@ function find_and_destroy_matches(_self) {
     // -------------------------
     var first_match     = false;
     
-    show_debug_message("TOTAL_POP_TIMER: " + string(total_pop_timer));
+    //show_debug_message("TOTAL_POP_TIMER: " + string(total_pop_timer));
 
     
     var current_match_count = total_match_count;
@@ -185,13 +185,23 @@ function find_and_destroy_matches(_self) {
 	for (var i = 0; i < width; i++) {
 	    for (var j = 0; j < bottom_row; j++) {
             var block = _self.grid[i, j];
-            var big_block_match = handle_find_and_destroy_big_block(_self, block, total_match_count, total_match_points);
-            total_pop_timer   += big_block_match[0];
-            total_match_count += big_block_match[1];
+            
+            if !(_self.big_block_enabled)
+            {
+               var big_block_match = handle_find_and_destroy_big_block(_self, block, total_match_count, total_match_points); 
+            }
             
             if (marked_for_removal[i, j]) {
 	            found_any = true;
                 
+                if (_self.big_block_enabled)
+                {
+                    var big_block_match = handle_find_and_destroy_big_block(_self, block, total_match_count, total_match_points);
+                }
+                
+                            
+                total_pop_timer   += big_block_match[0];
+                total_match_count += big_block_match[1];
 	            //var gem = _self.grid[i, j];
                 
                 var m_size = 1;

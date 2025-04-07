@@ -8,17 +8,21 @@ var transfer_block = instance_place(x, y, obj_block_transfer);
 if (transfer_block != noone) {
     // Start processing
     recycler_queue += 1;
-    player_object.energy_points += 1;
+    player_object.energy_points += player_object.ep_gain;
     // Destroy the transfer block
     with (transfer_block) {
         instance_destroy();
     }
 }
 
+
+
 if (rotation < max_rotation)
 {
     rotation_direction = 1;
 }
+
+
 
 if (rotation > 0)
 {
@@ -28,10 +32,14 @@ if (rotation > 0)
 rotation = 0;
 direction = rotation;
 
+
+
 // Update cooldown
 if (cooldown > 0) {
     cooldown--;
 }
+
+
 
 if (recycler_queue > 0)
 {
@@ -42,6 +50,8 @@ else
     processing = false;
 }
 
+
+
 // Process animation if processing
 if (processing) {
     process_time++;
@@ -51,7 +61,7 @@ if (processing) {
         process_time = 0;
         cooldown = max_cooldown;
         
-        var chance = success_chance * success_chance_mod;
+        var chance = success_chance;
         
         // Determine if a block is created
         if (random(1) < chance) { // TODO: 50/50 chance to creat block, this can be modifiable.
@@ -73,6 +83,8 @@ if (processing) {
     }
 }
 
+
+
 function set_deposit_spawn_rate(_type, rate)
 {
     var keys = variable_struct_get_names(deposit_blocks);
@@ -87,11 +99,26 @@ function set_deposit_spawn_rate(_type, rate)
     }
 }
 
+
+
 if (keyboard_check_pressed(ord("V")))
 {
-    set_deposit_spawn_rate(BLOCK.BUG, 0);
+    set_deposit_spawn_rate(BLOCK.BUG, 100);
 }
 
+
+
+function update_recycler_stats()
+{
+    // Block generation properties
+    success_chance   = stats.success_chance   * mod_stats.success_chance; // 50% chance to create a block
+    max_process_time = stats.process_time     * mod_stats.process_time; // 1.5 seconds to process
+    cooldown_time    = stats.cooldown_time    * mod_stats.cooldown_time;
+    block_chance     = stats.block_chance     * mod_stats.block_chance;
+    upgrade_chance   = stats.upgrade_chance   * mod_stats.upgrade_chance;
+    bad_block_chance = stats.bad_block_weight * mod_stats.bad_block_chance;
+    energy_gain      = stats.energy_gain      * mod_stats.energy_gain; 
+}
 
 
  

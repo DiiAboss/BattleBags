@@ -9,8 +9,7 @@ depth       = -1;
 
 simple_draw = false;
 
-energy_points = 0; //Temporary Currency
-gold = 0;
+
 
 
 // over 650 EP in run
@@ -23,6 +22,27 @@ hovered_block  = [-1, -1];
 //--------------------------------------------------
 // Player Stats
 //--------------------------------------------------
+stats =
+{
+    ep_gain:        1,
+    ep_combo_multi: 1,
+    gold_per_coin:  1,
+}
+
+mod_stats = 
+{
+    ep_gain:        1,
+    ep_combo_multi: 1,
+    gold_per_coin:  1,
+}
+
+ep_gain = stats.ep_gain * mod_stats.ep_gain;
+
+
+energy_points = 0; //Temporary Currency
+gold          = 0;
+
+
 global.gold       = 10000;
 luck              = 0;
 damage_mod        = 0;
@@ -56,14 +76,14 @@ objective_manager = instance_create_depth(x, y, -room_height, obj_objective_mana
 
 big_blocks_on_board =
 {
-    red: 0,
-    yellow: 0,
-    green: 0,
-    blue: 0,
-    lightblue: 0,
-    orange: 0,
-    pink: 0,
-    purple: 0,
+    red:        0,
+    yellow:     0,
+    green:      0,
+    blue:       0,
+    lightblue:  0,
+    orange:     0,
+    pink:       0,
+    purple:     0,
 }
 
 black_blocks_on_board = 0;
@@ -216,11 +236,12 @@ lose_life_timer     = 0;
 blocks_in_danger = false;
 
 
-health_per_heart = 4; // Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
-total_hearts = 3;
-max_hearts = total_hearts * health_per_heart;
+health_per_heart  = 4; // Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
+total_hearts      = 3;
+max_hearts        = total_hearts * health_per_heart;
 max_player_health = max_hearts;
 player_health     = max_player_health;
+
 
 
 highest_points = 0;
@@ -402,6 +423,9 @@ cp_per_match_plus = 3;
 cp_per_big_block  = 3;
 cp_per_combo      = 1;
 
+
+
+
 meteor_block      = -1;
 
 block_colors_destroyed = array_create(number_of_block_types, -1); //to show how much b
@@ -454,6 +478,7 @@ alarm[0] = scan_board;
 
 big_block_mod_list = ds_list_create();
 
+big_block_enabled = false;
 
 speed_up_delay_max = 60;
 speed_up_delay = 30;
@@ -469,4 +494,5 @@ time_in_seconds = (total_time / fps);
 
 next_event_timer = 0;
 next_event_timer_max = fps * 120
+
 

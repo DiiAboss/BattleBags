@@ -2,6 +2,8 @@
 // You can write your code in this editor
 	// ✅ Stop everything except the pause check
 
+rotation_speed += size;
+
 if (x > obj_target.x)
 {
     destroy_flag = true;
@@ -30,6 +32,9 @@ if (destroy_flag)
 {
     obj_target.c_timer = 0;
     //effect_create_depth(depth, ef_firework, x, y, 1, color);
-    instance_create_depth(obj_target.x, y, -1, obj_block_transfer_y);
+    var t_block = instance_create_depth(obj_target.x, y, -1, obj_block_transfer);
+    t_block.size += size;
+    t_block.rotation_speed = rotation_speed * (choose( 1, -1));
+    t_block.color = color;
     instance_destroy();
 }

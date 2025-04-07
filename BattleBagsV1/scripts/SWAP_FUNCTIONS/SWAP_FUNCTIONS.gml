@@ -128,8 +128,8 @@ function process_swap(player)
 	if (player.swap_in_progress) {
 	    player.swap_info.progress += player.swap_info.speed;
         
-        show_debug_message("swap_info progress: " + string(swap_info.progress));
-        show_debug_message("player.swap_info progress: " + string(player.swap_info.progress));
+        //show_debug_message("swap_info progress: " + string(swap_info.progress));
+        //show_debug_message("player.swap_info progress: " + string(player.swap_info.progress));
 	    if (swap_info.progress >= 1) {
 	        swap_info.progress = 1;
             player.swap_info.progress = 1;
@@ -157,7 +157,7 @@ function process_swap(player)
 	        player.swap_in_progress = false;
 	    } else {
 	        // Animate the swap
-            show_debug_message("else swap_info progress: " + string(swap_info.progress));
+            //show_debug_message("else swap_info progress: " + string(swap_info.progress));
 	        var distance = player.gem_size * swap_info.progress;
             
 	        if (swap_info.from_x < swap_info.to_x) {
@@ -174,8 +174,8 @@ function process_swap(player)
 	            player.grid[swap_info.from_x, swap_info.from_y].offset_y = -distance;
 	            player.grid[swap_info.to_x,   swap_info.to_y].offset_y   =  distance;
 	        }
-            show_debug_message("blockA offset: " + string(player.grid[swap_info.from_x, swap_info.from_y].offset_x));
-            show_debug_message("blockB offset: " + string(player.grid[swap_info.to_x,     swap_info.to_y].offset_x));
+            //show_debug_message("blockA offset: " + string(player.grid[swap_info.from_x, swap_info.from_y].offset_x));
+            //show_debug_message("blockB offset: " + string(player.grid[swap_info.to_x,     swap_info.to_y].offset_x));
 	    }
         //player.swap_info = swap_info;
 	}

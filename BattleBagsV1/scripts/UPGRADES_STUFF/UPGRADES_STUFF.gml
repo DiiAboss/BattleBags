@@ -91,7 +91,7 @@ global.Overworld_Upgrades =
         apply_effect: function(player)
         {
             var recycler = player.recycler;
-            player.recycler.success_chance_mod += 0.1;      
+            player.recycler.mod_stats.success_chance += 0.1;      
         }
     },
     
@@ -132,7 +132,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_none,
         type: "engine",
-        req: "bigblock"
+        req: "bigblock",
+        apply_effect: function(player){
+
+        }
     },
     
     EP_Gainer:
@@ -142,7 +145,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_none,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     Combo_Specialist:
@@ -152,8 +158,23 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_none,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+            
+        }
     },
+    Combo_Specialist_2:
+        {
+            name: "Combo Spec 2",
+            desc: "Combo Timer is increased by 50%",
+            price: 100,
+            sprite: spr_none,
+            type: "engine",
+            req: "none",
+            apply_effect: function(player){
+    
+            }
+        },
     
     Color_Bomb_Spawn:
     {
@@ -162,7 +183,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_wild_gem,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     More_Bows:
@@ -172,7 +196,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_arrow,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     More_Bombs:
@@ -182,7 +209,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_powerup_bomb,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     More_Ice:
@@ -192,7 +222,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_ice_cube,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     More_Gold_Blocks:
@@ -202,7 +235,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_gold_coin,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     Bad_Blocks_Give_EP:
@@ -212,7 +248,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_gameOver,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     Big_Block:
@@ -222,7 +261,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_none,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+            player.big_block_enabled = true;
+        }
     },
     
     Shield_Block:
@@ -232,7 +274,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_shield_gem,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     Oshki_Block:
@@ -242,7 +287,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_Oshki,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     Heavy_Blocks:
@@ -252,7 +300,10 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_powerup_destroy_to_down,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
     
     Feather_Blocks:
@@ -262,6 +313,9 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_powerup_feather,
         type: "engine",
-        req: "none"
+        req: "none",
+        apply_effect: function(player){
+
+        }
     },
 }
