@@ -1,12 +1,12 @@
 function drop_blocks(player, fall_speed = 2) {
     var width        = player.board_width;
     var height       = player.board_height;
-    var bottom_row   = player.bottom_playable_row;
+    var bottom_row   = player.bottom_playable_row + 1;
     
     var has_fallen   = false; // ✅ Track if any block has moved
     
     //  Process from **bottom-up** (ensures things fall properly)
-    for (var j = height - 2; j >= 0; j--) {
+    for (var j = bottom_row; j >= 0; j--) {
         for (var i = 0; i < width; i++) {
             
             var current_block = player.grid[i, j];

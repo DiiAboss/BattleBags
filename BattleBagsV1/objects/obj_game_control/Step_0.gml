@@ -2,6 +2,12 @@ uOuterIntensity        = max(0, uOuterIntensity + (keyboard_check(ord("W")) - ke
 uInnerIntensity        = max(0, uInnerIntensity + (keyboard_check(ord("S")) - keyboard_check(ord("A"))) * .01);
 uInnerLengthMultiplier = max(0, uInnerLengthMultiplier + (keyboard_check(ord("C")) - keyboard_check(ord("X"))) * .01);
 
+if (instance_exists(obj_recycler))
+{
+    recycler = obj_recycler;
+}
+
+
 //------------------------------------------
 // INPUT MANAGER (GAME_MANAGER CONTROLLED)
 //------------------------------------------

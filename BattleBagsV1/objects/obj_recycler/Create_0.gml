@@ -159,7 +159,9 @@ process_time = 0;
 max_process_time = 30; // 1.5 seconds to process
 
 // Block generation properties
-success_chance = 0.5; // 70% chance to create a block
+success_chance = 0.50; // 50% chance to create a block
+
+success_chance_mod = 1;
 
 // Ejection parameters
 eject_speed_min = 4;

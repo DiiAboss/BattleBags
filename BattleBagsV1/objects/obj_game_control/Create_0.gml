@@ -113,6 +113,10 @@ global.music_fight_volume = 0;
 global.music_fade_speed = 0.02;
 
 
+
+
+recycler = noone;
+
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------

@@ -68,11 +68,16 @@ global.Overworld_Upgrades =
     RecyclerEfficiency:
     {
         name: "RecGem",
-        desc: "Increase the deposit chance by 2.5%",
+        desc: "Increase the deposit chance by 10%",
         price: 100,
         sprite: spr_none,
         type: "recycler",
-        req: "none"
+        req: "none",
+        apply_effect: function(player)
+        {
+            var recycler = player.recycler;
+            player.recycler.success_chance_mod += 0.1;      
+        }
     },
     
     UpgradeDepositChance:
@@ -82,7 +87,12 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_powerup_up,
         type: "recycler",
-        req: "none"
+        req: "none",
+        apply_effect: function(player)
+        {
+            var recycler = player.recycler;
+            player.recycler.success_chance_mod += 0.1;      
+        }
     },
     
     UpgradeDepositChance:
@@ -92,7 +102,12 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_depo_up,
         type: "recycler",
-        req: "none"
+        req: "none",
+        apply_effect: function(player)
+        {
+            var recycler = player.recycler;
+            player.recycler.success_chance_mod += 0.1;      
+        }
     },
     
     BadBlockDepositChance:
@@ -102,7 +117,12 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_depo_bad_down,
         type: "upgrade",
-        req: "none"
+        req: "none",
+        apply_effect: function(player)
+        {
+            var recycler = player.recycler;
+            player.recycler.success_chance_mod += 0.1;      
+        }
     },
     
     BigBlockAttractor:

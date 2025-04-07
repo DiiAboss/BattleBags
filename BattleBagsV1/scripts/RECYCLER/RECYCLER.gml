@@ -11,7 +11,7 @@ function choose_weighted_block_type(deposit_blocks, _type = DEPOSIT_BLOCK.RANDOM
     // Loop through each block in deposit_blocks
     var keys = variable_struct_get_names(deposit_blocks);
     var len = array_length(keys);
-
+    
     // Build weighted list based on type
     for (var i = 0; i < len; i++) {
         var block = deposit_blocks[$ keys[i]];
@@ -41,9 +41,14 @@ function choose_weighted_block_type(deposit_blocks, _type = DEPOSIT_BLOCK.RANDOM
 function create_deposit_block(_self, _x, _y, deposit_block_struct)
 {
     var deposit_blocks = deposit_block_struct;
-
+    
+    var upgrade_chance = irandom(50);
+    var block_chance   = irandom(50);
+    
+    var __type = block_chance >= upgrade_chance ? DEPOSIT_BLOCK.BLOCK : DEPOSIT_BLOCK.UPGRADE;
+    
     // Choose a block type
-    var block_type = choose_weighted_block_type(deposit_blocks);
+    var block_type = choose_weighted_block_type(deposit_blocks, __type);
     if !(block_type) return noone;
     
     // Create deposit block

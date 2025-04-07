@@ -4,7 +4,7 @@ function are_playable_blocks_settled(_self){
 	var width = _self.width;
     var height = _self.height;
     var settled = false;
-	var bottom_row = _self.bottom_playable_row;
+	var bottom_row = _self.bottom_playable_row + 1;
 
     for (var i = 0; i < width; i++) 
 	{	
