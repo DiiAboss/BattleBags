@@ -21,6 +21,7 @@ enum BLOCK {
     COLOR_BOMB  = 14,
     BUG         = 15,
     COIN        = 16,
+    ICE         = -999,
 }
 
 enum UPGRADE {

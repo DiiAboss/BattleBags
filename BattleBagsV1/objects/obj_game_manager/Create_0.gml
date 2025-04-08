@@ -12,13 +12,22 @@ player_stats =
     player_inventory:   [],
 }
 
-
+depth = -99;
 
 current_run =
 {
-    overworld_x: 0,
-    overworld_y: 0
+    overworld_x: 960,
+    overworld_y: 560,
+    dir: 0,
+    start_x: 960,
+    start_y: 560,
+    target_x: 1152,
+    target_y: 512,
+    travel_speed: 0.05,
+    total_time: 0,
+    travel_progress: 0,
 }
+
 
 //  Console State
 console_active = false;

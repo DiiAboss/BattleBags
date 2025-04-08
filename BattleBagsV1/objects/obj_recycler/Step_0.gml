@@ -64,7 +64,7 @@ if (processing) {
         var chance = success_chance;
         
         // Determine if a block is created
-        if (random(1) < chance) { // TODO: 50/50 chance to creat block, this can be modifiable.
+        if (irandom(100) < chance) {
             var spawn_x = x + lengthdir_x(96, 270 + irandom_range(-2, 2));
             var spawn_y = y + lengthdir_y(96, 270 + irandom_range(-2, 2));
             

@@ -31,5 +31,3 @@ else {
     // Optional: Slightly nudge the other block too
     other.x -= (dcos(angle) * push_distance);
 }
-
-

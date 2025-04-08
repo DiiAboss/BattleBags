@@ -99,7 +99,7 @@ if (global.paused){
 //----------------------------------------------------------
 for (var d = 0; d< number_of_drones; d++)
 {
-    drone_array[d].update();
+    drone_array[d].update(self);
     
 }
 
@@ -236,25 +236,24 @@ if (reset)
 	lose_life_timer = 0;
 }
 
-
-
-// Have to find a way to drop blocks while locking in matches
 if (all_pops_finished(self) && !victory_state) {
 
-	// ✅ If a new match is found, **increase** combo instead of resetting
-	if find_and_destroy_matches(self) {
-		combo_timer = 0;
-		combo += 1;
+    // ✅ If a new match is found, **increase** combo instead of resetting
+    if find_and_destroy_matches(self) {
+        combo_timer = 0;
+        combo += 1;
         
         if (combo_points < max_combo_points)
         {
             combo_points ++;
         }
-	}	
+    }	
     
     // Update the topmost row tracking
     update_topmost_row(self);
 }
+
+
 
 process_combo_timer_and_record_max(self);
 

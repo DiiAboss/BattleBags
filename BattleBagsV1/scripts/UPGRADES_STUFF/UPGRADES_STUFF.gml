@@ -27,6 +27,32 @@ global.Overworld_Upgrades =
         }
     },
     
+    NegativeBooster:
+    {
+        name: "Negative Boost",
+        desc: "When applied to an upgrade, reduce all effects by 25%",
+        price: 100,
+        sprite: spr_bug_repel,
+        type: "consumable",
+        req: "none",
+        effect: function(player){
+            player.repel_bugs_timer = 30 * room_speed;
+        }
+    },
+    
+    PositiveBooster:
+    {
+        name: "Positive Boost",
+        desc: "When applied to an upgrade, increase all effects by 25%",
+        price: 100,
+        sprite: spr_bug_repel,
+        type: "consumable",
+        req: "none",
+        effect: function(player){
+            player.repel_bugs_timer = 30 * room_speed;
+        }
+    },
+    
     DigitalSpinach:
     {
         name: "DigiSpinach",
@@ -52,6 +78,44 @@ global.Overworld_Upgrades =
         desc: "Increase the drone speed by 5%",
         price: 100,
         sprite: spr_nrg_drink,
+        type: "drone",
+        req: "none",
+        apply_effect: function(player)
+        {
+            var num_drone = player.number_of_drones;
+                for (var d = 0; d < num_drone; d++) {
+                    //show_debug_message(string(player.drone_array[d]))
+                    player.drone_array[d].mod_stats.move_speed += 0.25;
+                }
+                return "Drone speed increased by 25%!";
+        }
+    },
+    
+    DroneMagnet:
+    {
+        name: "Drone Magnet",
+        desc: "Drones attract nearby deposit blocks",
+        price: 100,
+        sprite: spr_none,
+        type: "drone",
+        req: "none",
+        apply_effect: function(player)
+        {
+            var num_drone = player.number_of_drones;
+                for (var d = 0; d < num_drone; d++) {
+                    //show_debug_message(string(player.drone_array[d]))
+                    player.drone_array[d].mod_stats.move_speed += 0.25;
+                }
+                return "Drone speed increased by 25%!";
+        }
+    },
+    
+    DroneStomache:
+    {
+        name: "Drone Stomache",
+        desc: "Drones will eat a bad block every 30 seconds, granting 25% in all areas, if drone goes hungry -25% all stats",
+        price: 100,
+        sprite: spr_none,
         type: "drone",
         req: "none",
         apply_effect: function(player)
@@ -151,6 +215,19 @@ global.Overworld_Upgrades =
         }
     },
     
+    Match_Specialist:
+    {
+        name: "Match Spec",
+        desc: "Increase the amount of Energy Points gained per match greater than 3 (+100%)",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+
+        }
+    },
+    
     Combo_Specialist:
     {
         name: "Combo Spec",
@@ -163,18 +240,58 @@ global.Overworld_Upgrades =
             
         }
     },
-    Combo_Specialist_2:
-        {
-            name: "Combo Spec 2",
-            desc: "Combo Timer is increased by 50%",
-            price: 100,
-            sprite: spr_none,
-            type: "engine",
-            req: "none",
-            apply_effect: function(player){
     
-            }
-        },
+    Combo_Specialist_2:
+    {
+        name: "Combo Spec 2",
+        desc: "Combo Timer is increased by 50%",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+
+        }
+    },
+    
+    Combo_Explosion:
+    {
+        name: "Combo Explosion",
+        desc: "Every multiple of 10x combo causes a guarenteed explosion",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+
+        }
+    },
+    
+    Explosive_Master:
+    {
+        name: "Explosive Master",
+        desc: "Source of explosions have a 25% chance to clear all blocks of that same type",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+
+        }
+    },
+    
+    Color_Combo:
+    {
+        name: "Color Combo",
+        desc: "Matches that consist of the same type as the first block in a combo are worth 25% more",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+
+        }
+    },
     
     Color_Bomb_Spawn:
     {
@@ -358,6 +475,19 @@ global.Overworld_Upgrades =
         }
     },
     
+    Prism_Block:
+    {
+        name: "Prism Block",
+        desc: "Prism blocks converts the whole row into the swapped color",
+        price: 100,
+        sprite: spr_prism_gem,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+
+        }
+    },
+    
     Heavy_Blocks:
     {
         name: "Heavy Blocks",
@@ -397,5 +527,147 @@ global.Overworld_Upgrades =
         }
     },
     
+    Frequent_Shopper:
+    {
+        name: "Freq. Shopper",
+        desc: "Future Shop Upgrades cost 10% less",
+        price: 100,
+        sprite: spr_none,
+        type: "conveyor",
+        req: "none",
+        apply_effect: function(player){
+            player.mod_stats.shop_price -= 0.10;
+        }
+    },
     
+    Less_More:
+    {
+        name: "Less = More",
+        desc: "The most uncommon block give 2x of all rewards",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    Resource_Conservation:
+    {
+        name: "ResourceSave",
+        desc: "10% chance not to consume item when used",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    Depo_Block_Match:
+    {
+        name: "Deposit Match",
+        desc: "Deposit Blocks can now match, giving EP for each block destroyed",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    Depo_Block_Combo:
+    {
+        name: "Deposit Combo",
+        desc: "Deposit Blocks Matches give +1 to combo counter",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    Color_Resonance:
+    {
+        name: "Color Resonance",
+        desc: "Consecutive Matches of the same color increases all rewards gained by 50% per match",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    Momentum_Engine:
+    {
+        name: "Momentum Engine",
+        desc: "Every Move Reduces Momentum by 1, match give 3 momentum. gain 10% rewards per momentum point",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    Memory_Engine:
+    {
+        name: "Memory Engine",
+        desc: "The engine remembers the last 3 types of blocks matched and increases their spawn rate by 5%",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    Critical_Match:
+    {
+        name: "Critical Match",
+        desc: "Critical Match chance 5%, if triggered, will give 100% rewards",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    
+    Expire_Block:
+    {
+        name: "Block_Expiry",
+        desc: "Expire Blocks will now appear, these block will give 200% rewards when fresh, but will spawn flies if left untouched too long",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    Diagonal_Matches:
+    {
+        name: "Diagonal_Matches",
+        desc: "Diagonal Matches Enabled",
+        price: 100,
+        sprite: spr_none,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
 }

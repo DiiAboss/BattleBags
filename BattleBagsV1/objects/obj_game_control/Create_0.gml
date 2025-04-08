@@ -27,6 +27,7 @@ stats =
     ep_gain:        1,
     ep_combo_multi: 1,
     gold_per_coin:  1,
+    shop_price:     1,
 }
 
 mod_stats = 
@@ -34,9 +35,11 @@ mod_stats =
     ep_gain:        1,
     ep_combo_multi: 1,
     gold_per_coin:  1,
+    shop_price:     1,
 }
 
-ep_gain = stats.ep_gain * mod_stats.ep_gain;
+ep_gain    = stats.ep_gain * mod_stats.ep_gain;
+shop_price = stats.shop_price * mod_stats.shop_price;
 
 
 energy_points = 0; //Temporary Currency
@@ -494,5 +497,3 @@ time_in_seconds = (total_time / fps);
 
 next_event_timer = 0;
 next_event_timer_max = fps * 120
-
-

@@ -140,6 +140,9 @@ deposit_blocks =
     },
 }
 
+
+deposit_blocks_manager = instance_create_depth(x, y, depth, obj_deposit_blocks_manager);
+
 // Base stats that define default values
 stats = {
     // Production properties
@@ -147,7 +150,7 @@ stats = {
     process_time: 30,            // Frames to process a block
     
     // Block generation properties
-    success_chance: 0.50,        // 50% chance to create a block
+    success_chance: 50,        // 50% chance to create a block
     block_chance: 70,            // Weight for regular blocks
     upgrade_chance: 30,          // Weight for upgrades
     

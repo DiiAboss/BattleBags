@@ -52,7 +52,7 @@ function Drone(_player, _id, _x, _y) constructor {
         attack_rate: 1,
     }
     
-    total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
+    total_speed    = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
     carry_capacity = (stats.carry_capacity * mod_stats.carry_capacity);
     throw_distance = (stats.throw_distance * mod_stats.throw_distance);
     attack_rate    = (stats.attack_rate    * mod_stats.attack_rate);
@@ -63,9 +63,9 @@ function Drone(_player, _id, _x, _y) constructor {
     blocks_carried = 0;
     carried_blocks = array_create(0); // Stores info about carried blocks
     
-    pickup_timer = stats.max_pickup_timer;
+    pickup_timer   = stats.max_pickup_timer;
     wait_to_return = stats.wait_to_return_max;
-    throw_timer = stats.max_throw_timer;
+    throw_timer    = stats.max_throw_timer;
     
     throw_progress = 0;
     throw_duration = 30; // frames it takes to throw
@@ -84,14 +84,14 @@ function Drone(_player, _id, _x, _y) constructor {
     
     update_stats = function()
     {
-        total_speed = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
+        total_speed    = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
         carry_capacity = (stats.carry_capacity * mod_stats.carry_capacity);
         throw_distance = (stats.throw_distance * mod_stats.throw_distance);
         attack_rate    = (stats.attack_rate    * mod_stats.attack_rate);
     }
     
     
-    update = function()
+    update = function(player)
     {
         // this can move into a after upgrade check:
         total_speed = (stats.move_speed * mod_stats.move_speed);// * global.gameSpeed;
@@ -188,11 +188,11 @@ function Drone(_player, _id, _x, _y) constructor {
                 // Click on this drone, select it
                 
                 // Deselect all other drones
-                var all_drones = instance_number(obj_drone_1);
-                for (var i = 0; i < all_drones; i++) {
-                    var drone_inst = instance_find(obj_drone_1, i);
+                var all_drones = player.drone_array;
+                for (var i = 0; i < player.number_of_drones; i++) {
+                    var drone_inst = all_drones[i];
                     if (drone_inst.id != id) {
-                        drone_inst.drone.selected = false;
+                        drone_inst.selected = false;
                     }
                 }
                 
@@ -408,7 +408,7 @@ function Drone(_player, _id, _x, _y) constructor {
         }
             
         
-            if (blocks_carried > ceil(0.5 * stats.carry_capacity) && wait_to_return < stats.wait_to_return_max)
+            if (blocks_carried > ceil(0.5 * carry_capacity) && wait_to_return < stats.wait_to_return_max)
             {
                 wait_to_return ++;
             }
