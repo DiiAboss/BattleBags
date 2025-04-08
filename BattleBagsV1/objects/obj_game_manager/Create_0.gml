@@ -2,13 +2,23 @@
 
 player_stats = 
 {
-	highest_combo: 0,
-	enemies_defeated: 0,
-	blocks_destroyed: 0,
-	longest_run: 0,
-    highest_score: 0,
+    player_name:        0,
+    player_level:       0,
+	highest_combo:      0,
+	enemies_defeated:   0,
+	blocks_destroyed:   0,
+	longest_run:        0,
+    highest_score:      0,
+    player_inventory:   [],
 }
 
+
+
+current_run =
+{
+    overworld_x: 0,
+    overworld_y: 0
+}
 
 //  Console State
 console_active = false;

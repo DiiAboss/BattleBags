@@ -1,15 +1,13 @@
 {
   "$GMObject":"",
-  "%Name":"obj_deposit_blocks_manager",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"obj_map_mark",
+  "eventList":[],
   "managed":true,
-  "name":"obj_deposit_blocks_manager",
+  "name":"obj_map_mark",
   "overriddenProperties":[],
   "parent":{
-    "name":"InGAME",
-    "path":"folders/Objects/InGAME.yy",
+    "name":"GAME_MAP_OBJECTS",
+    "path":"folders/Objects/GAME_MAP_OBJECTS.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -29,7 +27,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_map_mark",
+    "path":"sprites/spr_map_mark/spr_map_mark.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }

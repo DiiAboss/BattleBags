@@ -4,7 +4,20 @@
 
 player_obj = obj_game_control;
 
-conveyor_speed = 2;  // Speed of blocks moving upward
+
+
+stats = 
+{
+    default_speed: 2,
+}
+
+mod_stats = 
+{
+    mod_speed : 1,
+}
+
+conveyor_speed = stats.default_speed * mod_stats.mod_speed;  // Speed of blocks moving upward
+
 
 conveyor_start_y = room_height - 96;  // Bottom position where blocks spawn
 conveyor_activation_y = conveyor_start_y - ((player_obj.bottom_playable_row - 4) * 64) + 64;  // Y position where blocks activate

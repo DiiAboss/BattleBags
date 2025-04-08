@@ -1,13 +1,15 @@
 /// @description Update Conveyor Movement
-/// 
-/// 
+
+
 
 if (global.paused) return;
 
 if loading_blocks_timer > 0
 {
     loading_blocks_timer --;
+    
 }
+conveyor_speed = stats.default_speed * mod_stats.mod_speed;
 
 function group_blocks_step(conveyor_blocks) {
     y_positions = [];

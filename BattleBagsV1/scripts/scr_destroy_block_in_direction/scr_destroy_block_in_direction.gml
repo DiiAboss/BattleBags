@@ -3,7 +3,7 @@ function destroy_blocks_in_direction_from_point(player, start_x, start_y, _dir_x
     var height = player.board_height;
     var blocks_destroyed = 0;
     var points_awarded = 0;
-    var bottom_row = player.bottom_playable_row;
+    var bottom_row = player.bottom_playable_row + 1;
     
     // ✅ Start at the given position
     var i = start_x;
@@ -12,7 +12,7 @@ function destroy_blocks_in_direction_from_point(player, start_x, start_y, _dir_x
 
 	
 	// ✅ Move in the given direction
-	while (_steps < steps && i >= 0 && i < width && j >= 1 && j < height) {
+	while (_steps < steps && i >= 0 && i < width && j >= 1 && j < bottom_row) {
 	    var block = player.grid[i, j];
 
 	    if (i < 0 || i > width) {

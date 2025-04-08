@@ -156,7 +156,7 @@ switch(state) {
         // Check if depletion recovery is complete
         if (depletion_timer >= max_depletion_time) {
             state = "ready";
-            current_block_type = obj_recycler.choose_weighted_block_type(obj_recycler.deposit_blocks);
+            current_block_type = choose_weighted_block_type(obj_recycler.deposit_blocks);
             
             // Create effect to show source is active again
             repeat(5) {

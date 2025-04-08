@@ -202,6 +202,19 @@ global.Overworld_Upgrades =
         }
     },
     
+    ComBows:
+    {
+        name: "ComBows",
+        desc: "Bows Contribute to the total combo count",
+        price: 100,
+        sprite: spr_arrow,
+        type: "engine",
+        req: "none",
+        apply_effect: function(player){
+
+        }
+    },
+    
     More_Bombs:
     {
         name: "More Bombs",
@@ -209,7 +222,59 @@ global.Overworld_Upgrades =
         price: 100,
         sprite: spr_powerup_bomb,
         type: "engine",
+        req: "Bombs",
+        apply_effect: function(player){
+
+        }
+    },
+    
+    EP_Bombs:
+    {
+        name: "More Bombs",
+        desc: "Bomb Powerup Spawn Chance (+5%)",
+        price: 100,
+        sprite: spr_powerup_bomb,
+        type: "engine",
+        req: "More Bombs",
+        apply_effect: function(player){
+
+        }
+    },
+    
+    Bombs:
+    {
+        name: "Bombs Unlocked",
+        desc: "Bomb Powerup Spawn Chance (+5%)",
+        price: 100,
+        sprite: spr_powerup_bomb,
+        type: "engine",
         req: "none",
+        apply_effect: function(player){
+
+        }
+    },
+    
+    Combo_Bombs:
+    {
+        name: "Combo Bombs",
+        desc: "Bombs Contribute to the total combo count",
+        price: 100,
+        sprite: spr_powerup_bomb,
+        type: "engine",
+        req: "Combo Bombs",
+        apply_effect: function(player){
+
+        }
+    },
+    
+    Money_Bombs:
+    {
+        name: "Combo Bombs",
+        desc: "Bombs Contribute to the total combo count",
+        price: 100,
+        sprite: spr_powerup_bomb,
+        type: "engine",
+        req: "Combo Bombs",
         apply_effect: function(player){
 
         }
@@ -318,4 +383,19 @@ global.Overworld_Upgrades =
 
         }
     },
+    
+    Faster_Conveyor:
+    {
+        name: "Faster Belt",
+        desc: "Conveyor Belt move blocks 50% faster",
+        price: 100,
+        sprite: spr_conveyor_tube,
+        type: "conveyor",
+        req: "none",
+        apply_effect: function(player){
+            player.conveyor.mod_stats.mod_speed += 0.5;
+        }
+    },
+    
+    
 }

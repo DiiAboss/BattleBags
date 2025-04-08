@@ -5,7 +5,8 @@ function destroy_deposit_matches(_block) {
     var result = {
         matched_types: {},      // Tracks count and details by block type
         total_destroyed: 0,     // Total blocks destroyed
-        total_value: 0,         // Sum of all block values
+        block_type: -1,
+        value_type: -1,          // Type Of Type
         special_blocks: []      // Any special blocks that were destroyed
     };
     
@@ -21,29 +22,28 @@ function destroy_deposit_matches(_block) {
                 if (!variable_struct_exists(result.matched_types, block_type_key)) {
                     result.matched_types[$ block_type_key] = {
                         count: 1,
-                        value: match_block.value,
-                        level: match_block.level,
-                        total_value: match_block.value,
-                        type_enum: block_type_val
+                        value_type: match_block.value,
+                        level:      match_block.level,
+                        block_type: match_block.type,
+                        type_enum:  block_type_val
                     };
                 } else {
                     result.matched_types[$ block_type_key].count++;
-                    result.matched_types[$ block_type_key].total_value += match_block.value;
                 }
                 
                 // Track special blocks
                 if (variable_struct_exists(match_block.special_stats, "destroy_blocks") && 
                     match_block.special_stats.destroy_blocks) {
                     array_push(result.special_blocks, {
-                        type: block_type_val,
-                        level: match_block.level,
-                        value: match_block.value
+                        type:   block_type_val,
+                        level:  match_block.level,
+                        value:  match_block.value
                     });
                 }
                 
                 // Update totals
                 result.total_destroyed++;
-                result.total_value += match_block.value;
+                result.value_type = match_block.value;
                 
                 // Destroy the block
                 instance_destroy(match_block);

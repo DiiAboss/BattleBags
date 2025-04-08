@@ -30,23 +30,21 @@ size_mod = 0.75;
 stats =
 {
     scale: 64,
-    value: 1,
 }
 
 mod_stats = 
 {
     scale: 0.75,
-    value: 1,
 }
 
 special_stats =
 {
-    destroy_blocks: false,
+    destroy_matches: false,
+    create_upgrade_block_on_destroy: false,
 }
 
 
 scale = stats.scale * mod_stats.scale;
-value = stats.value * mod_stats.value;
 
 image_xscale = size_mod;
 image_yscale = size_mod;

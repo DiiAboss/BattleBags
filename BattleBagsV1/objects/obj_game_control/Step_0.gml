@@ -174,6 +174,8 @@ if (!obj_game_manager.console_active)
     enable_debug_controls(self, hover_x, hover_y, true);	
 }
 
+player_collectable_inventory = [];
+
 
 
 

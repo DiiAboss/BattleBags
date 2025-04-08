@@ -15,11 +15,6 @@ function choose_weighted_block_type(deposit_blocks, _type = DEPOSIT_BLOCK.RANDOM
     // Build weighted list based on type
     for (var i = 0; i < len; i++) {
         var block = deposit_blocks[$ keys[i]];
-        var __type = _type;
-        if (_type) == DEPOSIT_BLOCK.RANDOM
-        {
-            __type = choose(DEPOSIT_BLOCK.BLOCK, DEPOSIT_BLOCK.UPGRADE);
-        }
         if (block.type == __type && block.weight > 0) {
             repeat(block.weight) {
                 array_push(weighted_list, keys[i]);

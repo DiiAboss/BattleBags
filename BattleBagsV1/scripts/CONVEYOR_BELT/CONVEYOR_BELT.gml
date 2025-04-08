@@ -12,6 +12,7 @@ function add_block_to_conveyor(player, conveyor, block, lane = 0, speed_mult = 1
         return;
     }
     
+    
     if (block.type == DEPOSIT_BLOCK.UPGRADE)
     {
         add_upgrades_to_bottom(player, block);
