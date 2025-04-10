@@ -9,9 +9,6 @@ depth       = -1;
 
 simple_draw = false;
 
-
-
-
 // over 650 EP in run
 
 //--------------------------------------------------
@@ -28,6 +25,8 @@ stats =
     ep_combo_multi: 1,
     gold_per_coin:  1,
     shop_price:     1,
+    objective_ep_gain: 1,
+    overworld_speed: 0.05,
 }
 
 mod_stats = 
@@ -36,11 +35,20 @@ mod_stats =
     ep_combo_multi: 1,
     gold_per_coin:  1,
     shop_price:     1,
+    objective_ep_gain: 1,
+    overworld_speed: 1,
+    
 }
 
-ep_gain    = stats.ep_gain * mod_stats.ep_gain;
-shop_price = stats.shop_price * mod_stats.shop_price;
+ep_gain       = stats.ep_gain       * mod_stats.ep_gain;
+shop_price    = stats.shop_price    * mod_stats.shop_price;
+gold_per_coin = stats.gold_per_coin * mod_stats.gold_per_coin;
+shop_price    = stats.shop_price    * mod_stats.shop_price;
+objective_ep_gain = stats.objective_ep_gain * mod_stats.objective_ep_gain;
+overworld_speed = stats.overworld_speed * mod_stats.overworld_speed;
 
+
+objective_manager = instance_create_depth(x, y, -room_height, obj_objective_manager);
 
 energy_points = 0; //Temporary Currency
 gold          = 0;
@@ -74,7 +82,7 @@ control_mode = "modern";
 iType = "click_and_drag";
 
 
-objective_manager = instance_create_depth(x, y, -room_height, obj_objective_manager);
+
 
 
 big_blocks_on_board =

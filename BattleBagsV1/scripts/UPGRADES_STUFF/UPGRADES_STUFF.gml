@@ -140,7 +140,7 @@ global.Overworld_Upgrades =
         apply_effect: function(player)
         {
             var recycler = player.recycler;
-            player.recycler.success_chance_mod += 0.1;      
+            player.recycler.mod_stats.success_chance += 0.1;      
         }
     },
     
@@ -170,7 +170,7 @@ global.Overworld_Upgrades =
         apply_effect: function(player)
         {
             var recycler = player.recycler;
-            player.recycler.success_chance_mod += 0.1;      
+            player.recycler.mod_stats.success_chance += 0.1;      
         }
     },
     
@@ -185,7 +185,7 @@ global.Overworld_Upgrades =
         apply_effect: function(player)
         {
             var recycler = player.recycler;
-            player.recycler.success_chance_mod += 0.1;      
+            player.recycler.mod_stats.success_chance += 0.1;      
         }
     },
     

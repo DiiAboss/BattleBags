@@ -289,6 +289,7 @@
     {"name":"spr_gold_coin","order":10,"path":"sprites/spr_gold_coin/spr_gold_coin.yy",},
     {"name":"spr_goo_cover","order":1,"path":"sprites/spr_goo_cover/spr_goo_cover.yy",},
     {"name":"spr_green_gem_1","order":18,"path":"sprites/spr_green_gem_1/spr_green_gem_1.yy",},
+    {"name":"spr_green_gem_2","order":29,"path":"sprites/spr_green_gem_2/spr_green_gem_2.yy",},
     {"name":"spr_health_new","order":4,"path":"sprites/spr_health_new/spr_health_new.yy",},
     {"name":"spr_hearts_old","order":6,"path":"sprites/spr_hearts_old/spr_hearts_old.yy",},
     {"name":"spr_hearts","order":5,"path":"sprites/spr_hearts/spr_hearts.yy",},

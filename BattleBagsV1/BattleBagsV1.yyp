@@ -374,6 +374,7 @@
     {"id":{"name":"spr_gold_coin","path":"sprites/spr_gold_coin/spr_gold_coin.yy",},},
     {"id":{"name":"spr_goo_cover","path":"sprites/spr_goo_cover/spr_goo_cover.yy",},},
     {"id":{"name":"spr_green_gem_1","path":"sprites/spr_green_gem_1/spr_green_gem_1.yy",},},
+    {"id":{"name":"spr_green_gem_2","path":"sprites/spr_green_gem_2/spr_green_gem_2.yy",},},
     {"id":{"name":"spr_green_gem","path":"sprites/spr_green_gem/spr_green_gem.yy",},},
     {"id":{"name":"spr_health_new","path":"sprites/spr_health_new/spr_health_new.yy",},},
     {"id":{"name":"spr_hearts_old","path":"sprites/spr_hearts_old/spr_hearts_old.yy",},},
