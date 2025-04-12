@@ -78,7 +78,7 @@ deposit_blocks =
     black:
     {
         type: DEPOSIT_BLOCK.BLOCK,
-        weight: 25,
+        weight: 0,
         value: BLOCK.BLACK,
         sprite: spr_gameOver,
         img: 0,
@@ -87,7 +87,7 @@ deposit_blocks =
     bug:
     {
         type: DEPOSIT_BLOCK.BLOCK,
-        weight: 25,
+        weight: 0,
         value: BLOCK.BUG,
         sprite: spr_enemy_fly,
         img: 0,
@@ -114,7 +114,7 @@ deposit_blocks =
     heart:
     {
         type: DEPOSIT_BLOCK.UPGRADE,
-        weight: 5,
+        weight: 0,
         value: POWERUP.HEART,
          sprite: spr_upgrades,
          img: 4,
@@ -161,6 +161,8 @@ stats = {
     // Ejection parameters
     eject_speed_min: 4,
     eject_speed_max: 5,
+	
+	range: 0,
     
     // Energy gain
     energy_gain: 1              // Energy points per block processed
@@ -208,6 +210,7 @@ block_chance     = stats.block_chance     * mod_stats.block_chance;
 upgrade_chance   = stats.upgrade_chance   * mod_stats.upgrade_chance;
 bad_block_chance = stats.bad_block_weight * mod_stats.bad_block_chance;
 energy_gain      = stats.energy_gain      * mod_stats.energy_gain;
+bug_block_chance = stats.bug_block_spawn_weight * mod_stats.bug_block_spawn_weight;
 
 
 

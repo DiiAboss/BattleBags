@@ -93,7 +93,7 @@ function is_2x2_match(player, _x, _y) {
     var gem_2 = player.grid[_x, _y + 1];     // Bottom-left
     var gem_3 = player.grid[_x + 1, _y + 1]; // Bottom-right
 	
-	if (gem_0.type == BLOCK.PUZZLE_1 || gem_0.type == BLOCK.BLACK || gem_0.type == BLOCK.CURSE) return false;
+	if (gem_0.type == BLOCK.PUZZLE_1 || gem_0.type == BLOCK.BLACK || gem_0.type == BLOCK.CURSE || gem_0.type == BLOCK.MEGA) return false;
 	
     // ✅ Ensure all blocks match **type** & are NOT already big
     if (gem_0.type != BLOCK.NONE && 

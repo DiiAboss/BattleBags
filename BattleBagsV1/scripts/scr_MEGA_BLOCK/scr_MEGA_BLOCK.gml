@@ -1,7 +1,7 @@
 function create_mega_block(_width, _height) {
     return {
-        x: -1, // Grid X position (top-left)
-        y: -1, // Grid Y position (top-left)
+        x: 0, // Grid X position (top-left)
+        y: 0, // Grid Y position (top-left)
         width: _width,
         height: _height,
         type: BLOCK.MEGA,
@@ -161,6 +161,8 @@ function process_mega_blocks(player, _x, _y) {
     if (gem.type == BLOCK.MEGA) {
         var parent_x = gem.big_parent[0];
         var parent_y = gem.big_parent[1];
+		if (parent_x < 0) return;
+			
         if (parent_x == -1) || (parent_y == -1) gem = create_block(player, BLOCK.NONE);
         
         var parent_block = player.grid[parent_x, parent_y];
@@ -198,13 +200,16 @@ function process_mega_blocks(player, _x, _y) {
 						{
 							if target_block.group_id != parent_block.group_id
 							{
+								var total_dist  = 20;
+    							var current_block = (big_block_width * big_block_height);
 								//  Loop through each part of the Mega Block
 					            for (var bx = 0; bx < big_block_width; bx++) {
 					                for (var by = 0; by < big_block_height; by++) {
 					                    var block_x = parent_x + bx;
 					                    var block_y = parent_y + by;
-                                        var _start_delay = 10;
-                                        var dist = 20 * (clamp(point_distance(block_x, block_y, room_width, room_height) / distance_to_point(room_width, room_height), 0, 1));
+
+                                        var _start_delay = total_dist/current_block;
+                                        current_block -=1;
 					                    
                                         // ✅ Transform each piece individually into a new random block
                                         player.grid[block_x, block_y] = create_block(player, BLOCK.RANDOM);
@@ -216,7 +221,7 @@ function process_mega_blocks(player, _x, _y) {
 					                        y: block_y,
 					                        gem_type: player.grid[block_x, block_y].type,
 					                        timer: 0,
-					                        start_delay: dist, // 🔥 Give a small delay so we see the effect
+					                        start_delay: _start_delay, // 🔥 Give a small delay so we see the effect
 					                        scale: 1.1,
 					                        popping: true,
 					                        powerup: -1,
@@ -237,7 +242,7 @@ function process_mega_blocks(player, _x, _y) {
                     
 					                    // 🔥 **Create a pop effect**
                                         player.grid[block_x, block_y].popping = true;
-                                        player.grid[block_x, block_y].pop_timer = dist * _start_delay + _start_delay;
+                                        player.grid[block_x, block_y].pop_timer = _start_delay;
 					                    var draw_x = (block_x * 64) + player.board_x_offset + 32;
 					                    var draw_y = (block_y * 64) + player.global_y_offset + 32;
 					                    //effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);

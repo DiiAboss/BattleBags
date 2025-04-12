@@ -40,6 +40,8 @@ function create_deposit_block(recycler_object, _x, _y, deposit_block_struct)
     var max_block_chance     = recycler_object.block_chance;
     var max_upgrade_chance   = recycler_object.upgrade_chance;
     
+    var max_bug_chance = recycler_object.bug_block_chance;
+    
     var upgrade_chance = irandom(max_upgrade_chance);
     var block_chance   = irandom(max_block_chance);
     

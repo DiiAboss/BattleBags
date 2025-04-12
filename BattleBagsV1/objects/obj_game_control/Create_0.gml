@@ -19,40 +19,74 @@ hovered_block  = [-1, -1];
 //--------------------------------------------------
 // Player Stats
 //--------------------------------------------------
+
+can_2x2 = false;
+color_bomb_enabled = -1;
+
+board_width  = 8;
+board_height = 24;
+
+top_playable_row    = 7;
+bottom_playable_row = 20;
+
+number_of_drones = obj_game_manager.number_of_drones;
+
+//-----------------------------------------
+// DRONE MANAGEMENT
+//-----------------------------------------
+drone_speed = 1;
+
+drone_array = obj_game_manager.drone_array;
+for (var d = 0; d < number_of_drones; d++)
+{
+    drone_array[d].player = self;
+	
+	drone_array[d].x -= 260 + (32*d);
+}
+
+
+diagonal_matches = false;
+
+big_block_multi = 1;
+
+
 stats =
 {
     ep_gain:        1,
-    ep_combo_multi: 1,
+    ep_combo_multi: 1.1,
     gold_per_coin:  1,
     shop_price:     1,
     objective_ep_gain: 1,
     overworld_speed: 0.05,
+	overheat_rate: 1,
+	overheat_cooldown: 0.25,
+	conveyor_speed: 1,
+	shift_speed: 1,
+	max_combo_timer: 60,
 }
 
-mod_stats = 
-{
-    ep_gain:        1,
-    ep_combo_multi: 1,
-    gold_per_coin:  1,
-    shop_price:     1,
-    objective_ep_gain: 1,
-    overworld_speed: 1,
-    
-}
+mod_stats = obj_game_manager.mod_stats;
 
-ep_gain       = stats.ep_gain       * mod_stats.ep_gain;
-shop_price    = stats.shop_price    * mod_stats.shop_price;
-gold_per_coin = stats.gold_per_coin * mod_stats.gold_per_coin;
-shop_price    = stats.shop_price    * mod_stats.shop_price;
-objective_ep_gain = stats.objective_ep_gain * mod_stats.objective_ep_gain;
-overworld_speed = stats.overworld_speed * mod_stats.overworld_speed;
+combo_multi 	   = stats.ep_combo_multi	 * mod_stats.ep_combo_multi;
+max_combo_timer    = stats.max_combo_timer	 * mod_stats.max_combo_timer;
+game_speed_default = stats.shift_speed		 * mod_stats.shift_speed;
+ep_gain            = stats.ep_gain           * mod_stats.ep_gain;
+shop_price         = stats.shop_price        * mod_stats.shop_price;
+gold_per_coin      = stats.gold_per_coin     * mod_stats.gold_per_coin;
+shop_price         = stats.shop_price        * mod_stats.shop_price;
+objective_ep_gain  = stats.objective_ep_gain * mod_stats.objective_ep_gain;
+overworld_speed    = stats.overworld_speed   * mod_stats.overworld_speed;
 
 
 objective_manager = instance_create_depth(x, y, -room_height, obj_objective_manager);
 
+special_event = false;
+special_event_completed = false;
+special_event_type = EVENT_TYPE.NONE;
+ 
 energy_points = 0; //Temporary Currency
 gold          = 0;
-
+game_board_speed = 1;
 
 global.gold       = 10000;
 luck              = 0;
@@ -68,6 +102,9 @@ total_blocks_destroyed = 0;
 total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
+
+width	     = board_width;
+height	     = board_height;
 
 in_shop = false;
 
@@ -115,16 +152,9 @@ game_over_show_option = false;
 big_block_enabled = true;
 
 
-width	     = 6;
-height	     = 24;
 
-board_width  = 6;
-board_height = 24;
 
-top_playable_row    = 8;
-bottom_playable_row = 20;
-
-spawn_rows   = 0; // Number of initial rows to spawn
+spawn_rows   = 4; // Number of initial rows to spawn
 
 powerup_slots = array_create(board_width, -1);
 // ------------------------------------------------------
@@ -151,7 +181,7 @@ recycler = noone;
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------
-game_speed_default = 1;
+
 game_speed_start   = game_speed_default;
 
 global.modifier = game_speed_default / game_speed_start;
@@ -172,18 +202,6 @@ scan_board = 5;
 repel_bugs_timer = 0;
 
 
-//-----------------------------------------
-// DRONE MANAGEMENT
-//-----------------------------------------
-drone_speed = 1;
-number_of_drones = 2;
-drone_array = array_create(0);
-for (var d = 0; d < number_of_drones; d++)
-{
-    var rand_id = irandom(1280);
-    var drone = new Drone(self, rand_id, room_width + 100 + (64 * d), room_height - 128);
-    array_push(drone_array, drone);
-}
 
 
 consumable_array = [];
@@ -194,9 +212,7 @@ upgrade_array    = [];
 // ADJUSTABLE STATS
 //-----------------------------------------
 
-game_board_speed = 1;
-big_block_multi = 1;
-combo_multi = 1.1;
+
 
 
 // Currency
@@ -273,7 +289,7 @@ time_in_minutes = floor(time_in_seconds / 60);
 
 draw_time = string(time_in_minutes) + ":" + string(floor(time_in_seconds % 60));
 
-diagonal_matches = false;
+
 
 after_menu_counter_max = 2 * _FPS;
 after_menu_counter = after_menu_counter_max;
@@ -306,7 +322,7 @@ grid_shake_amount = 0; // Grid shake intensity
 global_shape_function_init();
 
 combo_timer     = 0;
-max_combo_timer = 60; // Half a second of grace
+
 
 
 

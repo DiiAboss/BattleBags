@@ -2527,10 +2527,7 @@
   "sdfSpread":8,
   "size":64.0,
   "styleName":"Regular",
-  "textureGroupId":{
-    "name":"Default",
-    "path":"texturegroups/Default",
-  },
+  "textureGroupId":null,
   "TTFName":"/Users/homepro/Documents/GMTK Jam 24/Untitled/BattleBags/BattleBagsV1/fonts/fnt_heading1/Infinite.ttf",
   "usesSDF":true,
 }

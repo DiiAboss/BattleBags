@@ -25,7 +25,8 @@ function find_and_destroy_matches(_self) {
     
 	global.black_blocks_to_transform = ds_list_create(); // ✅ Track black blocks to transform
 	
-	check_2x2_match(self);
+	if (_self.can_2x2) check_2x2_match(_self);
+	
     
     
     // Initialize the marked_for_removal array
@@ -186,7 +187,7 @@ function find_and_destroy_matches(_self) {
 	    for (var j = 0; j < bottom_row; j++) {
             var block = _self.grid[i, j];
             
-            if !(_self.big_block_enabled)
+            if !(_self.big_block_enabled && _self.can_2x2)
             {
                var big_block_match = handle_find_and_destroy_big_block(_self, block, total_match_count, total_match_points); 
             }
@@ -194,7 +195,7 @@ function find_and_destroy_matches(_self) {
             if (marked_for_removal[i, j]) {
 	            found_any = true;
                 
-                if (_self.big_block_enabled)
+                if (_self.big_block_enabled && _self.can_2x2)
                 {
                     var big_block_match = handle_find_and_destroy_big_block(_self, block, total_match_count, total_match_points);
                 }
@@ -276,7 +277,7 @@ function play_pitched_pop_sound(sound, pitch_offset, pitch_gain_per_offset = 0.2
 
 function handle_find_and_destroy_big_block(player, block, current_match_size, current_total_points)
 {
-    if !(block.is_big) return [0, 0];
+    if (!block.is_big || block.type == BLOCK.MEGA) return [0, 0];
         
     var group_id     = block.group_id;
     var block_type   = block.type;

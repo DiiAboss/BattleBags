@@ -1,10 +1,14 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
-for (var d = 0; d< number_of_drones; d++)
+if (number_of_drones > 0)
 {
-drone_array[d].draw();
+	for (var d = 0; d< number_of_drones; d++)
+	{
+	drone_array[d].draw();
+	}
 }
+
 
 //// Horizontal pass
 if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) {
@@ -653,4 +657,4 @@ for (var by = 0; by < top_playable_row; by++)
 
 //663 Energy Points
 
-block_spawn_rates.draw_spawn_rates(1000, 500);
+block_spawn_rates._draw_spawn_rates(1000, 500);

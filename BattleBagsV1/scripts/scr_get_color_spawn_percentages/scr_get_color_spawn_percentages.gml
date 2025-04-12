@@ -41,10 +41,10 @@ function draw_spawn_rates(_self) {
 				color_name = "GREEN";
 			break;
 			case BLOCK.PINK:
-				color_name = "PINK";
+				color_name = "PURPLE";
 			break;
 			case BLOCK.PURPLE:
-				color_name = "PURPLE";
+				color_name = "BEIGE";
 			break;
 			case BLOCK.LIGHTBLUE:
 				color_name = "LIGHT BLUE";

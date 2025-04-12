@@ -1,5 +1,9 @@
 
 
+if keyboard_check_pressed(vk_shift) && !instance_exists(obj_event_start)
+{
+	instance_create_depth(x, y,depth, obj_event_start);
+}
 
 
 if (input_delay > 0)
@@ -91,11 +95,7 @@ if (room == rm_gameRoom)
     
     var overspeed = current_run.travel_speed;
     
-    var time_left = distance_to_go / overspeed;
-    
-    var t_time    = t_distance / overspeed;
-    
-    show_debug_message("Time Left: " + string(time_left) + " / Total Time: " + string(t_time));
+
     
     
     
@@ -103,6 +103,22 @@ if (room == rm_gameRoom)
     {
         room_set_persistent(rm_gameRoom, true);
         room_goto(rm_map_room_test);
+    }
+    
+    
+    if (time_left) <= 1 && event == false
+    {
+        add_priority_objective(0);
+        event = true;
+    }
+    
+    else {
+    	
+        time_left = distance_to_go / overspeed;
+        
+        var t_time    = t_distance / overspeed;
+    
+        show_debug_message("Time Left: " + string(time_left) + " / Total Time: " + string(t_time));
     }
     
 }

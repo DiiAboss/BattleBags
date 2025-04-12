@@ -157,6 +157,16 @@ function objective_progress(type, data = undefined, amount = 1) {
             // Skip if not matching type or already completed
             if (obj.type != type || obj.completed) continue;
             
+            // Check if this is a bug swarm objective
+            var is_bug_swarm = (obj.type == OBJECTIVE_TYPE.DESTROY_SPECIAL || obj.type == OBJECTIVE_TYPE.MATCH_SPECIAL) && 
+                              (!is_undefined(obj.data) && obj.data == BLOCK.BUG);
+            
+            // If it's a bug swarm objective, set the special_event flag
+            if (is_bug_swarm && !obj_game_control.special_event) {
+                obj_game_control.special_event = true;
+                obj_game_control.special_event_type = EVENT_TYPE.BUG_SWARM;
+            }
+            
             // Type-specific progress updates
             switch (type) {
                 case OBJECTIVE_TYPE.GET_COMBO:
@@ -204,6 +214,11 @@ function objective_progress(type, data = undefined, amount = 1) {
             // Check if objective is completed
             obj.check_completion();
             
+            // If it's completed and it's a bug swarm objective, set the completed flag
+            if (obj.completed && is_bug_swarm) {
+                obj_game_control.special_event_finished = true;
+            }
+            
             // If it's completed, mark it for removal (will be processed in step event)
             if (obj.completed) {
                 stack_needs_update[s] = true;
@@ -212,12 +227,22 @@ function objective_progress(type, data = undefined, amount = 1) {
         }
         
         // Also process event objectives if active
-        if (current_event != EVENT_TYPE.NONE && event_stack_index != -1) {
+        if (current_event != EVENT_TYPE.NONE) {
             for (var i = 0; i < array_length(event_objectives); i++) {
                 var obj = event_objectives[i];
                 
                 // Skip if not matching type or already completed
                 if (obj.type != type || obj.completed) continue;
+                
+                // Check if this is a bug swarm objective
+                var is_bug_swarm = (obj.type == OBJECTIVE_TYPE.DESTROY_SPECIAL || obj.type == OBJECTIVE_TYPE.MATCH_SPECIAL) && 
+                                  (!is_undefined(obj.data) && obj.data == BLOCK.BUG);
+                
+                // If it's a bug swarm objective, set the special_event flag
+                if (is_bug_swarm && !obj_game_control.special_event) {
+                    obj_game_control.special_event = true;
+                    obj_game_control.special_event_type = EVENT_TYPE.BUG_SWARM;
+                }
                 
                 // Type-specific progress updates (same as above)
                 switch (type) {
@@ -259,10 +284,16 @@ function objective_progress(type, data = undefined, amount = 1) {
                 
                 // Check if objective is completed
                 obj.check_completion();
+                
+                // If it's completed and it's a bug swarm objective, set the completed flag
+                if (obj.completed && is_bug_swarm) {
+                    obj_game_control.special_event_finished = true;
+                }
             }
         }
     }
 }
+
 
 // ========= HELPER FUNCTIONS =========
 function block_name(block_type) {
@@ -747,4 +778,51 @@ function advance_stack_objective(_stack_index) {
             active_objectives[_stack_index] = -1;
         }
     }
+}
+
+// Function to add a priority objective to a stack (inserting at position 0)
+function add_priority_objective(_stack_index, _event_type = EVENT_TYPE.BUG_SWARM) {
+    with (obj_objective_manager) {
+        if (_stack_index < 0 || _stack_index >= array_length(objective_stacks)) return;
+        
+        // Generate a special event objective
+        var priority_obj = generate_objective(current_difficulty, _event_type);
+        
+        // Mark it as a special priority objective
+        priority_obj.extra.priority = true;
+        
+        // Insert the new objective at the beginning of the stack (position 0)
+        array_insert(objective_stacks[_stack_index], 0, priority_obj);
+        
+        // Set the new objective as active
+        active_objectives[_stack_index] = 0;
+        
+        // Add animation effects to highlight the change
+        stack_x_offsets[_stack_index] = random_range(-5, 5);
+        stack_y_offsets[_stack_index] = random_range(-5, 5);
+        current_shake = 3;
+    }
+}
+
+
+function trigger_bug_swarm() {
+    // First trigger the event itself
+    trigger_event(EVENT_TYPE.BUG_SWARM);
+    
+    // Then add a priority objective to the first active stack
+    for (var s = 0; s < array_length(obj_objective_manager.stack_unlocked); s++) {
+        if (obj_objective_manager.stack_unlocked[s]) {
+            add_priority_objective(s, EVENT_TYPE.BUG_SWARM);
+            break; // Just add to the first unlocked stack we find
+        }
+    }
+    
+    // Apply any gameplay effects for bug swarm event
+    with (obj_game_control) {
+        bug_swarm_active = true;
+        bug_spawn_rate = 0.2; // 20% chance per new block
+    }
+    
+    // Show notification to player
+    // show_notification("Bug Swarm!", "Bugs are infesting your factory!");
 }

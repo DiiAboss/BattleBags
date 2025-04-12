@@ -82,7 +82,7 @@ function all_pops_finished(player)
                     total_points += attack.damage;
                 }
                 
-                if (pop_data.match_size >= 5)
+                if (player.color_bomb_enabled > -1 && pop_data.match_size >= 5)
                 {
                     player.grid[_x, _y] = create_block(player, BLOCK.COLOR_BOMB);
                 }

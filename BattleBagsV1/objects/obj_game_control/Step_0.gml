@@ -8,6 +8,7 @@ if (instance_exists(obj_recycler))
 }
 
 
+
 //------------------------------------------
 // INPUT MANAGER (GAME_MANAGER CONTROLLED)
 //------------------------------------------
@@ -97,16 +98,25 @@ if (global.paused){
 //----------------------------------------------------------
 // DRONE CONTROLLER
 //----------------------------------------------------------
-for (var d = 0; d< number_of_drones; d++)
+if (number_of_drones > 0)
 {
-    drone_array[d].update(self);
-    
+	for (var d = 0; d< number_of_drones; d++)
+	{
+	    drone_array[d].update(self);
+	    
+	}
 }
+
 
 
 // ------------------------------------------------------
 // TIMERS AND SPEEDS
 // ------------------------------------------------------
+if (obj_game_manager.event_start)
+{
+	global.gameSpeed = 0.1;
+}
+
 spawn_timer = 60 / global.gameSpeed;
 shift_speed = 0.1 * global.gameSpeed;
 

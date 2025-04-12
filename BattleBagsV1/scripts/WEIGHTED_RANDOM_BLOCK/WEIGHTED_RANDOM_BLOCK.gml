@@ -44,8 +44,8 @@ function block_spawn_weight_manager() constructor
     block_weight_array[BLOCK.LIGHTBLUE] = start_weight;
     block_weight_array[BLOCK.ORANGE]    = start_weight;
     block_weight_array[BLOCK.BLUE]      = start_weight;
-    block_weight_array[BLOCK.COIN]      = start_weight;
-    block_weight_array[BLOCK.BUG]       = 2;
+    block_weight_array[BLOCK.COIN]      = 0;
+    block_weight_array[BLOCK.BUG]       = 0;
     
     var _total = 0;
     for (var i = 0; i < total_blocks; i++)
@@ -99,7 +99,7 @@ function block_spawn_weight_manager() constructor
     }
     
     
-    draw_spawn_rates = function(_x = 20, _y = 20, _width = 300, _height = 20, _spacing = 25, _draw_text = true)
+    _draw_spawn_rates = function(_x = 20, _y = 20, _width = 300, _height = 20, _spacing = 25, _draw_text = true)
     {
         // Block names array for display labels
         var block_names = [

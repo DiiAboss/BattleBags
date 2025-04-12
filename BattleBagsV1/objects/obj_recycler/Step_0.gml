@@ -65,8 +65,8 @@ if (processing) {
         
         // Determine if a block is created
         if (irandom(100) < chance) {
-            var spawn_x = x + lengthdir_x(96, 270 + irandom_range(-2, 2));
-            var spawn_y = y + lengthdir_y(96, 270 + irandom_range(-2, 2));
+            var spawn_x = x + lengthdir_x(96, 270 + irandom_range(-stats.range, stats.range));
+            var spawn_y = y + lengthdir_y(96, 270 + irandom_range(-stats.range, stats.range));
             
             var new_deposit_block = create_deposit_block(self, spawn_x, spawn_y, deposit_blocks);
             
@@ -74,7 +74,7 @@ if (processing) {
                 
             new_deposit_block.speed = random_range(eject_speed_min, eject_speed_max);
             new_deposit_block.direction = 270;
-            new_deposit_block.hspeed = random_range(-2, 1);
+            new_deposit_block.hspeed = random_range(-stats.range, stats.range * 0.5);
             new_deposit_block.gravity = 0.2;
             
         }

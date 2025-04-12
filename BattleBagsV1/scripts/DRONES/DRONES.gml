@@ -18,7 +18,7 @@ function Drone(_player, _id, _x, _y) constructor {
     // Basic Stats
     stats = {
         move_speed: 2,
-        carry_capacity: 4,
+        carry_capacity: 1,
         throw_distance: 128,
         experience: 0,
         max_experience: 100,
@@ -52,7 +52,7 @@ function Drone(_player, _id, _x, _y) constructor {
         attack_rate: 1,
     }
     
-    total_speed    = (stats.move_speed * mod_stats.move_speed) * global.gameSpeed;
+    total_speed    = (stats.move_speed * mod_stats.move_speed);// * global.gameSpeed;
     carry_capacity = (stats.carry_capacity * mod_stats.carry_capacity);
     throw_distance = (stats.throw_distance * mod_stats.throw_distance);
     attack_rate    = (stats.attack_rate    * mod_stats.attack_rate);

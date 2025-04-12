@@ -83,7 +83,7 @@ base = default_base;
 rotation = irandom(360);
 rotation_speed = 1 + irandom(2);
 
-
+color = c_red;
 check_for_match = 30;
 
 alarm[0] = check_for_match;

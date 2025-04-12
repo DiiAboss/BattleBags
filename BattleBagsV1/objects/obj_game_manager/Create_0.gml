@@ -1,5 +1,23 @@
 /// @description
 
+
+// TODO: Research Room where players can just play normally and gain gold for completing objectives.
+
+// TODO: Players Lounge: Room where players can play gambling minigames for gold.
+
+// TODO: Game Loop : Player picks a location on map, 
+
+// Player moves to that location, 
+// Completes the objective at the location, 
+// Players gets an upgrade, 
+// Then chooses a new spot to goto until the player feels like the game is getting to hard (the engine is constantly speeding up), 
+// Then returns home, player converts their EP for gold and surrenders all their upgrades aquiared during the run.
+// Player upgrades factory to allow for easier progression on overworld map.
+
+// TODO: Create the general that will give some orders as a tutorial
+
+// TODO: EVENTS: BATTLES, COLLECTS, SWARMS, 
+
 player_stats = 
 {
     player_name:        0,
@@ -12,7 +30,45 @@ player_stats =
     player_inventory:   [],
 }
 
+
+stats =
+{
+    ep_gain:        1,
+    ep_combo_multi: 1.1,
+    gold_per_coin:  1,
+    shop_price:     1,
+    objective_ep_gain: 1,
+    overworld_speed: 0.05,
+	overheat_rate: 1,
+	overheat_cooldown: 0.25,
+	conveyor_speed: 1,
+	shift_speed: 1,
+	max_combo_timer: 60,
+}
+
+number_of_drones = 0;
+drone_array = [];
+mod_stats = 
+{
+    ep_gain:        1,
+    ep_combo_multi: 1,
+    gold_per_coin:  1,
+    shop_price:     1,
+    objective_ep_gain: 1,
+    overworld_speed: 1,
+	overheat_rate: 1,
+	overheat_cooldown: 0.25,
+	conveyor_speed: 1,
+	shift_speed: 1,
+	max_combo_timer: 1,
+    
+}
+can_2x2 = true;
+diagonal_matches = false;
+
 depth = -99;
+
+town_pos = [960, 560];
 
 current_run =
 {
@@ -23,10 +79,13 @@ current_run =
     start_y: 560,
     target_x: 1152,
     target_y: 512,
-    travel_speed: 0.05,
+    travel_speed: 0.25,
     total_time: 0,
     travel_progress: 0,
 }
+
+event = noone;
+event_start = false;
 
 
 //  Console State
@@ -92,3 +151,5 @@ player_controls = [INPUT.KEYBOARD, INPUT.NONE];
 devices = array_create(12, -1);
 
 randomize();
+
+time_left = 999;

@@ -21,6 +21,8 @@ enum BLOCK {
     COLOR_BOMB  = 14,
     BUG         = 15,
     COIN        = 16,
+	MULTI       = 17,
+	
     ICE         = -999,
 }
 
