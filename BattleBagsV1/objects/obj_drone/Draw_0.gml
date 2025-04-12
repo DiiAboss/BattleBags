@@ -29,7 +29,7 @@ for (var i = 0; i < blocks_carried; i++) {
     
     // Draw sprite for the block type
     var block_sprite = block.sprite;
-    var img          = block.img;
+    var img          = 1;
     draw_sprite_ext(block_sprite, img, block_x, block_y, 0.5, 0.5, 0, c_white, 1);
 }
 

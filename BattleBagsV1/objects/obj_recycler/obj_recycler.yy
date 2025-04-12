@@ -32,8 +32,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_block_recycler",
-    "path":"sprites/spr_block_recycler/spr_block_recycler.yy",
+    "name":"spr_clay_recycler",
+    "path":"sprites/spr_clay_recycler/spr_clay_recycler.yy",
   },
   "spriteMaskId":null,
   "visible":true,

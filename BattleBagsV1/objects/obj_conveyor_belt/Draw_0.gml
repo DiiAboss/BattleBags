@@ -1,31 +1,31 @@
 
 /// @description Draw Conveyor Belt with enhanced visuals
 
-// Draw conveyor background
-draw_set_alpha(0.7);
-draw_rectangle_color(
-    x - conveyor_width/2, conveyor_activation_y,
-    x + conveyor_width/2, conveyor_start_y,
-    c_navy, c_navy, c_black, c_black, false
-);
-draw_set_alpha(1.0);
+//// Draw conveyor background
+//draw_set_alpha(0.7);
+////draw_rectangle_color(
+    ////x - conveyor_width/2, conveyor_activation_y,
+    ////x + conveyor_width/2, conveyor_start_y,
+    ////c_navy, c_navy, c_black, c_black, false
+////);
+//draw_set_alpha(1.0);
 
-// Draw lane separators
-if (show_grid_overlay) {
-    var lane_width = conveyor_width / lane_count;
-    for (var i = 0; i <= lane_count; i++) {
-        var lane_x = x - conveyor_width/2 + (i * lane_width);
-        
-        // Highlight unlocked lanes
-        var line_color = (i <= lanes_unlocked) ? c_white : c_dkgray;
-        
-        draw_line_width_color(
-            lane_x, conveyor_activation_y,
-            lane_x, conveyor_start_y,
-            1, line_color, line_color
-        );
-    }
-}
+//// Draw lane separators
+//if (show_grid_overlay) {
+    //var lane_width = conveyor_width / lane_count;
+    //for (var i = 0; i <= lane_count; i++) {
+        //var lane_x = x - conveyor_width/2 + (i * lane_width);
+        //
+        //// Highlight unlocked lanes
+        //var line_color = (i <= lanes_unlocked) ? c_white : c_dkgray;
+        //
+        //draw_line_width_color(
+            //lane_x, conveyor_activation_y,
+            //lane_x, conveyor_start_y,
+            //1, line_color, line_color
+        //);
+    //}
+//}
 
 // Draw activation line with animated effect
 var time_offset = (current_time / 300) mod 360;
@@ -65,4 +65,4 @@ if (keyboard_check(vk_tab)) {
             "Special blocks: " + string(special_blocks_processed));
 }
 
-draw_sprite(spr_sorter, image_index, x, conveyor_start_y);
+draw_sprite(spr_clay_sorter, image_index, x, conveyor_start_y);

@@ -10,6 +10,8 @@ if (number_of_drones > 0)
 }
 
 
+
+
 //// Horizontal pass
 if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) {
     
@@ -150,7 +152,14 @@ else
                 draw_set_color(c_lime);
     }
        draw_set_color(c_white); 
-    
+ 
+	
+	
+	
+	
+		draw_sprite(spr_clay_pipe_left, -1, obj_game_control.draw_right_side, room_width * 0.5);
+	draw_sprite(spr_clay_pipe_left, -1, obj_game_control.board_x_offset, room_width * 0.5);
+	draw_sprite(spr_clay_pipe_top, -1, recycler.x - 500, recycler.y);
 //----------------------------------------------------------------
 // DRAW COLUMN SHAKE
 //----------------------------------------------------------------
@@ -521,7 +530,7 @@ for (var i = 0; i < width; i++) {
     //---------------------------------------------------------
     // DRAW STATS
     //---------------------------------------------------------
-    draw_text_stats(self, 10, draw_y_start, true);
+    //draw_text_stats(self, 10, draw_y_start, true);
     
     
     //---------------------------------------------------------
@@ -541,10 +550,12 @@ for (var i = 0; i < width; i++) {
     // Draw thick outline around the grid
     draw_rectangle(board_x_offset - thickness, view_diff - thickness,
                     board_x_offset + grid_width + thickness, view_diff + thickness, false); // Top
-    draw_rectangle(board_x_offset - thickness,view_diff - thickness,
-                    board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
-    draw_rectangle(board_x_offset + grid_width, view_diff - thickness,
-                    board_x_offset + grid_width + thickness, view_diff + grid_height - thickness, false); // Right
+    //draw_rectangle(board_x_offset - thickness,view_diff - thickness,
+                    //board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
+    //draw_rectangle(board_x_offset + grid_width, view_diff - thickness,
+                    //board_x_offset + grid_width + thickness, view_diff + grid_height - thickness, false); // Right
+	
+
     draw_rectangle(board_x_offset - thickness, view_diff + grid_height,
                     board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, false); // Bottom
     
@@ -657,4 +668,4 @@ for (var by = 0; by < top_playable_row; by++)
 
 //663 Energy Points
 
-block_spawn_rates._draw_spawn_rates(1000, 500);
+//block_spawn_rates._draw_spawn_rates(1000, 500);

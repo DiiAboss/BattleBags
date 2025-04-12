@@ -20,7 +20,7 @@ hovered_block  = [-1, -1];
 // Player Stats
 //--------------------------------------------------
 
-can_2x2 = false;
+can_2x2 = true;
 color_bomb_enabled = -1;
 
 board_width  = 8;
@@ -37,6 +37,7 @@ number_of_drones = obj_game_manager.number_of_drones;
 drone_speed = 1;
 
 drone_array = obj_game_manager.drone_array;
+
 for (var d = 0; d < number_of_drones; d++)
 {
     drone_array[d].player = self;
@@ -521,3 +522,6 @@ time_in_seconds = (total_time / fps);
 
 next_event_timer = 0;
 next_event_timer_max = fps * 120
+
+
+draw_right_side = board_x_offset + (board_width * gem_size);

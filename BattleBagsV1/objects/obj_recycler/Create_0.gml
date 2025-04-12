@@ -8,7 +8,7 @@ deposit_blocks =
         type: DEPOSIT_BLOCK.BLOCK, 
         weight: 5,
         value: BLOCK.RED,
-        sprite: spr_red_gem,
+        sprite: spr_red_clay_block,
         img: 0,
         level: 0,
     },
@@ -17,7 +17,7 @@ deposit_blocks =
         type: DEPOSIT_BLOCK.BLOCK, 
         weight: 5,
         value: BLOCK.YELLOW,
-        sprite: spr_yellow_gem,
+        sprite: spr_yellow_clay_block,
         img: 0,
         level: 0,
     },
@@ -26,7 +26,7 @@ deposit_blocks =
         type: DEPOSIT_BLOCK.BLOCK,
         weight: 5,
         value: BLOCK.GREEN,
-        sprite: spr_green_gem,
+        sprite: spr_green_clay_block,
         img: 0,
         level: 0,
     },
@@ -35,7 +35,7 @@ deposit_blocks =
         type: DEPOSIT_BLOCK.BLOCK,
         weight: 5,
         value: BLOCK.PINK,
-        sprite: spr_pink_gem,
+        sprite: spr_pink_moon_block,
         img: 0,
         level: 0,
     },
@@ -44,7 +44,7 @@ deposit_blocks =
         type: DEPOSIT_BLOCK.BLOCK,
         weight: 5,
         value: BLOCK.PURPLE,
-        sprite: spr_purple_gem,
+        sprite: spr_purple_clay_block,
         img: 0,
         level: 0,
     },
@@ -53,7 +53,7 @@ deposit_blocks =
         type: DEPOSIT_BLOCK.BLOCK,
         weight: 5,
         value: BLOCK.LIGHTBLUE,
-        sprite: spr_lightblue_gem,
+        sprite: spr_lightblue_clay_block,
         img: 0,
         level: 0,
     },
@@ -62,7 +62,7 @@ deposit_blocks =
          type: DEPOSIT_BLOCK.BLOCK,
          weight: 5,
          value: BLOCK.ORANGE,
-         sprite: spr_orange_gem,
+         sprite: spr_orange_clay_block,
          img: 0,
         level: 0,
     },
@@ -71,7 +71,7 @@ deposit_blocks =
         type: DEPOSIT_BLOCK.BLOCK,
         weight: 5,
         value: BLOCK.BLUE,
-        sprite: spr_blue_gem,
+        sprite: spr_blue_clay_block,
         img: 0,
         level: 0,
     },
@@ -216,8 +216,8 @@ bug_block_chance = stats.bug_block_spawn_weight * mod_stats.bug_block_spawn_weig
 
 /// @description Initialize recycler
 // Visual properties
-sprite_index = spr_block_recycler;
-image_speed = 0.2;
+sprite_index = spr_clay_recycler;
+image_speed = 0.1;
 
 player_object = obj_game_control;
 

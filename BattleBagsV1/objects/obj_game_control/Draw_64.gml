@@ -16,6 +16,8 @@ var d_time_max = draw_next_event_timer(self, next_event_timer_max);
 draw_text_heading_font(browser_width * 0.33, 64, "NEXT EVENT: " + string(d_time) + " /// " + string(d_time_max), 0.33);
 
 var draw_y_start = 600;
+
+
 draw_ui_elements(self, draw_y_start);
 
 

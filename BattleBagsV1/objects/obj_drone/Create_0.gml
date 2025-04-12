@@ -1,6 +1,6 @@
 drone_x = 0;
     drone_y = 0;
-    my_sprite = spr_drone;
+    my_sprite = spr_clay_drone;
     experience = 0;
     max_experience = 100;
     level = 1;

@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_sorter",
-    "path":"sprites/spr_sorter/spr_sorter.yy",
+    "name":"spr_clay_sorter",
+    "path":"sprites/spr_clay_sorter/spr_clay_sorter.yy",
   },
   "spriteMaskId":null,
   "visible":true,

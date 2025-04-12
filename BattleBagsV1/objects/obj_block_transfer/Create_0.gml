@@ -17,3 +17,4 @@ my_value = size;
 sprite = spr_transfer_block;
 rotation_speed = 0;
 color = c_white;
+rot = 90;

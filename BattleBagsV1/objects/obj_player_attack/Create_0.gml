@@ -7,7 +7,7 @@ max_ef_timer = ef_timer;
 type = -1;
 powerup = -1;
 color = c_white;
-spd = 8;
+spd = 12;
 damage = obj_game_control.combo + 1;
 
 
@@ -29,5 +29,5 @@ else
 }
 
 destroy_flag = false;
-
+sprite = spr_clay_bullet;
 

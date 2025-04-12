@@ -2,7 +2,7 @@ function Drone(_player, _id, _x, _y) constructor {
     x = _x;
     y = _y;
     id = _id;
-    my_sprite = spr_drone;
+    my_sprite = spr_clay_drone;
     player = _player;
     color = c_white;
     size = 32;
@@ -18,7 +18,7 @@ function Drone(_player, _id, _x, _y) constructor {
     // Basic Stats
     stats = {
         move_speed: 2,
-        carry_capacity: 1,
+        carry_capacity: 4,
         throw_distance: 128,
         experience: 0,
         max_experience: 100,
@@ -271,7 +271,7 @@ function Drone(_player, _id, _x, _y) constructor {
                     var block_x = x + block.offset_x;
                     var block_y = y + block.offset_y;
                     var block_sprite = block.sprite;
-                    var img = block.img;
+                    var img = 1;
                     draw_sprite_ext(block_sprite, img, block_x, block_y + hover, 0.75, 0.75, 0, c_white, 1);
                 }
             }
@@ -608,14 +608,19 @@ function Drone(_player, _id, _x, _y) constructor {
     
     idle_behavior = function(conveyor, deposit_blocks) {
         // Move with collision avoidance
-        if (x > room_width - 50) {
+        if (x > obj_recycler.x + 128) {
             walk_direction = 180; // Move left
-        } else if (x < room_width * 0.5) {
+        } else if (x < obj_recycler.x - 128) {
             walk_direction = 0; // Move right
         }
         
+		var spd = total_speed;
         // Move slower when idle but still avoid collisions
-        x += lengthdir_x(total_speed * 0.5, walk_direction);
+		if (obj_recycler.processing == false)
+		{
+			spd = total_speed * 0.5;
+		}
+        x += lengthdir_x(spd, walk_direction);
         if (conveyor != noone) y = conveyor.conveyor_start_y; // Stay on conveyor level
         
         // Check if deposit blocks exist to resume work

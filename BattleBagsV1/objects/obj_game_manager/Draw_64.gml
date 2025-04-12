@@ -9,7 +9,7 @@ if (room == rm_gameRoom)
 
 // Set these values to position your tracker on screen
 var tracker_x = 32;                 // X position of the tracker
-var tracker_y = display_get_gui_height() - 40; // Position near bottom of screen
+var tracker_y = 40; // Position near bottom of screen
 var tracker_width = display_get_gui_width() - 64; // Full width minus margins
 var tracker_height = 16;            // Height of tracker bar
 var border_thickness = 2;           // Border thickness

@@ -31,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_disposal",
-    "path":"sprites/spr_disposal/spr_disposal.yy",
+    "name":"spr_clay_pool",
+    "path":"sprites/spr_clay_pool/spr_clay_pool.yy",
   },
   "spriteMaskId":null,
   "visible":true,

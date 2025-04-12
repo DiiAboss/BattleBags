@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_player_attack",
-    "path":"sprites/spr_player_attack/spr_player_attack.yy",
+    "name":"spr_clay_bullet",
+    "path":"sprites/spr_clay_bullet/spr_clay_bullet.yy",
   },
   "spriteMaskId":null,
   "visible":true,

@@ -145,7 +145,7 @@ upgrades = {
         base_cost: 300,
         cost_multiplier: 1,
         effects: [1], // unlock drone
-        sprite: spr_drone
+        sprite: spr_clay_drone
     },
     
     attacker_drone: {
@@ -237,7 +237,7 @@ create_drone = function(drone_type) {
     
     var drone_properties = {
         collector_drone: {
-            sprite: spr_drone,
+            sprite: spr_clay_drone,
             priority: "collecting",
             mods: [
                 {

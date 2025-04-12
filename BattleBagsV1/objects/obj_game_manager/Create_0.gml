@@ -46,8 +46,17 @@ stats =
 	max_combo_timer: 60,
 }
 
-number_of_drones = 0;
+number_of_drones = 2;
 drone_array = [];
+
+for (var d = 0; d < number_of_drones; d++)
+{
+	array_push(drone_array, new Drone(self, d, -1, -1));
+    drone_array[d].player = noone;
+	
+	drone_array[d].x += (room_width * 0.75) + (128*d);
+}
+
 mod_stats = 
 {
     ep_gain:        1,

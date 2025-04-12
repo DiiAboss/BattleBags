@@ -28,12 +28,10 @@ if (processing) {
     
     // Processing animation
     var anim_offset = sin(current_time * 0.01) * 5;
-    draw_sprite_ext(
-        spr_block_recycler, // Assuming you have an active state sprite
-        image_index,
-        x, y + anim_offset,
-        1, 1, 0, c_white, 0.7
-    );
+    image_speed = 1;
+}
+else {
+	image_speed = 0.1;
 }
 
 // Draw cooldown indicator
@@ -59,7 +57,9 @@ if (cooldown > 0) {
 
 // Reset alpha
 draw_set_alpha(1);
-draw_rectangle_color(x, y, tar_x, y + 4, c_red, c_white, c_white, c_red, false);
+
+//draw_rectangle_color(x, y, tar_x, y + 4, c_red, c_white, c_white, c_red, false);
+
 draw_self();
 
 
