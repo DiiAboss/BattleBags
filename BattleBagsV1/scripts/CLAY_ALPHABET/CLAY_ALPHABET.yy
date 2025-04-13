@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"CLAY_ALPHABET",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"CLAY_ALPHABET",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

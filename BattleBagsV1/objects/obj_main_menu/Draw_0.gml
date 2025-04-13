@@ -15,11 +15,13 @@ for (var i = 0; i < array_length(menu_options); i++) {
 
     if (i == selected_option) {
         draw_set_color(c_white);
-        draw_text_text_font(menu_x - 5, menu_y, "- " + menu_options[i] + " -");
+        //draw_text_text_font(menu_x - 5, menu_y, "- " + menu_options[i] + " -");
         //draw_text(menu_x - 5, menu_y, "- " + menu_options[i] + " -");
+		draw_clay_text( "- " + menu_options[i] + " -", menu_x - 5, menu_y);
     } else {
-        draw_set_color($29c8f0);
-        draw_text_text_font(menu_x, menu_y, menu_options[i]);
+        //draw_set_color($29c8f0);
+        //draw_text_text_font(menu_x, menu_y, menu_options[i]);
+		draw_clay_text(menu_options[i], menu_x, menu_y);
         //draw_text(menu_x, menu_y, menu_options[i]);
     }
 }
