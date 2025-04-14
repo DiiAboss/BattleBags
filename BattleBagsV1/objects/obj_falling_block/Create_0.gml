@@ -6,5 +6,5 @@ rotation_speed = 0;
 has_rotation = false;
 fade_out = false;
 alpha = 1;
-
+temp_alpha = 1;
 depth = 99;

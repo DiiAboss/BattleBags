@@ -5,7 +5,7 @@
 /// @param {real} max_scale Maximum scale of the block (optional)
 /// @param {real} spawn_chance Chance to spawn a block (0-1) (optional)
 /// @param {real} max_blocks Maximum blocks on screen (optional)
-function create_falling_block(min_speed, max_speed, min_scale = 0.8, max_scale = 1.2, spawn_chance = 0.1, max_blocks = 20) {
+function create_falling_block(min_speed, max_speed, min_scale = 0.25, max_scale = 1.5, spawn_chance = 0.5, max_blocks = 50) {
     // Check if we should spawn a block this frame
     if (random(1) > spawn_chance) return;
     
@@ -20,13 +20,16 @@ function create_falling_block(min_speed, max_speed, min_scale = 0.8, max_scale =
         // Randomize block type
         block_type = irandom(7); // Assuming 8 block types (0-7)
         
-        // Set movement speed
-        fall_speed = random_range(min_speed, max_speed);
-        
         // Set scale
         var block_scale = random_range(min_scale, max_scale);
         image_xscale = block_scale;
         image_yscale = block_scale;
+        depth += block_scale;
+        // Calculate speed based on scale
+        // Bigger blocks fall faster, smaller blocks fall slower
+        // Map the scale to a speed value within our min_speed and max_speed range
+        var scale_factor = (block_scale - min_scale) / (max_scale - min_scale); // 0 to 1 range
+        fall_speed = min_speed + scale_factor * (max_speed - min_speed);
         
         // Randomize rotation
         has_rotation = irandom(1); // 50% chance to have rotation

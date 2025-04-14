@@ -21,7 +21,7 @@ hovered_block  = [-1, -1];
 //--------------------------------------------------
 
 can_2x2 = true;
-color_bomb_enabled = -1;
+color_bomb_enabled = 5;
 
 board_width  = 8;
 board_height = 24;
