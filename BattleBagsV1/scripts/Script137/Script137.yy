@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Script137",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Script137",
+  "parent":{
+    "name":"MIDI",
+    "path":"folders/Scripts/MIDI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
