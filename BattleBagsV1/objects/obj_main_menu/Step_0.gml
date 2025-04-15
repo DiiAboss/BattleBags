@@ -1,3 +1,4 @@
+
 /// @description Handle menu navigation and selection.
 var input = obj_game_manager.input;
 //if layer_sequence_is_finished(start_seq)
@@ -46,6 +47,10 @@ if (input_delay > 0)
         }
     }
 
+if (keyboard_check_pressed(vk_tab))
+{
+	room_goto(rm_midi_test)
+}
 
 // ✅ Handle menu selection (keyboard OR mouse click)
 if (input.ActionPress || input.Enter) {

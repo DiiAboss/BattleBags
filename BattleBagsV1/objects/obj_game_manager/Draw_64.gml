@@ -4,7 +4,7 @@
 if (room == rm_gameRoom)
 {
 	draw_rectangle(0, 0, window_get_width(), 128, false);
-}
+
 
 
 // Set these values to position your tracker on screen
@@ -174,3 +174,4 @@ draw_set_halign(fa_left);
 draw_set_valign(fa_top);
 draw_set_color(c_white);
 draw_set_alpha(1.0);
+}
