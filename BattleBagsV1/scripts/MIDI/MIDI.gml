@@ -1,20 +1,22 @@
-/// @description MIDI Player Constructor
-/// A constructor-based MIDI player that can be instanced multiple times
+/// @description Enhanced MIDI Player Constructor
+/// A constructor-based MIDI player that supports multiple instrument sounds
 
-/// @function Midi_Player(base_sound, x, y, width, height)
+/// @function Midi_Player(base_sounds, x, y, width, height)
 /// @description Creates a new MIDI player instance
-/// @param {asset.gmSound} base_sound - The sound resource to use as the base sound
+/// @param {array<asset.gmSound>} base_sounds - Array of sound resources for each track type
 /// @param {real} x - The x position for the player UI
 /// @param {real} y - The y position for the player UI
 /// @param {real} width - The width of the player UI
 /// @param {real} height - The height of the player UI
-function Midi_Player(base_sound, x, y, width, height) constructor {
+function Midi_Player(base_sounds, x, y, width, height) constructor {
     // Initialize properties
-    self.base_sound = base_sound;
+    self.base_sounds = base_sounds; // Array of sounds for different tracks
     self.base_note = 60; // Middle C (MIDI note 60)
     self.midi_files = []; // Array to store multiple MIDI files
     self.active_file = -1; // Index of the currently active file
     self.muted_files = []; // Array to track which files are muted
+    self.track_types = []; // Track types (0=bass, 1=vocals, 2=leads, 3=drums)
+    self.game_track = 0; // Track that the player needs to play (default to first track)
     
     // UI properties
     self.x = x;
@@ -24,15 +26,20 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
     self.show_player = true;
     self.is_open = false; // Track if the player UI is expanded
     
+    // Difficulty settings
+    self.difficulty = 1; // 0=Easy, 1=Medium, 2=Hard, 3=Expert
+    self.difficulty_names = ["Easy", "Medium", "Hard", "Expert"];
+    
     // Button dimensions
     self.btn_size = 40;
     self.btn_spacing = 10;
     
-    /// @function AddMidiFile(filename)
+    /// @function AddMidiFile(filename, track_type)
     /// @description Loads a MIDI file and adds it to this player
     /// @param {string} filename - The name of the JSON file to load
+    /// @param {real} track_type - The type of track (0=bass, 1=vocals, 2=leads, 3=drums)
     /// @returns {real} The index of the loaded file or -1 if failed
-    static AddMidiFile = function(filename) {
+    static AddMidiFile = function(filename, track_type = 0) {
         // Load the JSON file
         var json_string = "";
         
@@ -99,12 +106,35 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
             var start_time = note_data[time_index];
             var duration = note_data[duration_index];
             
+            // Calculate beat position for difficulty filtering
+            var beats_per_second = midi_data.meta.bpm / 60;
+            var beat_position = start_time * beats_per_second;
+            var beat_fraction = beat_position - floor(beat_position);
+            
+            // Add this info to note for difficulty filtering
+            var note_type = 3; // Default to expert/16th note
+            
+            // Determine note type based on position
+            // Whole notes are on integer beats (0, 1, 2, 3)
+            if (beat_fraction < 0.05 || beat_fraction > 0.95) {
+                note_type = 0; // Whole note - Easy
+            }
+            // Half notes are on integer and half beats (0, 0.5, 1, 1.5, 2, etc)
+            else if (abs(beat_fraction - 0.5) < 0.05) {
+                note_type = 1; // Half note - Medium
+            }
+            // Quarter notes are on quarter beats (0, 0.25, 0.5, 0.75, 1, etc)
+            else if (abs(beat_fraction - 0.25) < 0.05 || abs(beat_fraction - 0.75) < 0.05) {
+                note_type = 2; // Quarter note - Hard
+            }
+            
             // Add the note to our array
             array_push(midi_file.notes, {
                 time: start_time,       // Time in seconds when the note should play
                 midi: midi_note,        // MIDI note number
                 duration: duration,     // Duration in seconds
-                velocity: 0.8           // Default velocity (0-1) since it might not be in the data
+                velocity: 0.8,          // Default velocity (0-1) since it might not be in the data
+                note_type: note_type    // Note type for difficulty filtering
             });
         }
         
@@ -151,6 +181,7 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
         var file_index = array_length(self.midi_files);
         array_push(self.midi_files, midi_file);
         array_push(self.muted_files, false); // Not muted by default
+        array_push(self.track_types, track_type); // Store the track type
         
         // Set as active file if it's the first one
         if (file_index == 0) {
@@ -161,6 +192,32 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
         show_debug_message("BPM: " + string(midi_file.bpm) + ", Duration: " + string(midi_file.duration) + " seconds");
         
         return file_index;
+    }
+    
+    /// @function SetGameTrack(track_index)
+    /// @description Sets which track the player should play in the rhythm game
+    /// @param {real} track_index - The index of the track to play
+    static SetGameTrack = function(track_index) {
+        if (track_index >= 0 && track_index < array_length(self.midi_files)) {
+            self.game_track = track_index;
+            show_debug_message("Set game track to: " + string(track_index));
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /// @function SetDifficulty(difficulty)
+    /// @description Sets the game difficulty level
+    /// @param {real} difficulty - Difficulty level (0=Easy, 1=Medium, 2=Hard, 3=Expert)
+    static SetDifficulty = function(difficulty) {
+        if (difficulty >= 0 && difficulty <= 3) {
+            self.difficulty = difficulty;
+            show_debug_message("Set difficulty to: " + self.difficulty_names[difficulty]);
+            return true;
+        }
+        
+        return false;
     }
     
     /// @function PlayFile(file_index)
@@ -344,12 +401,17 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
                         note.time + dt > midi_file.current_time - dt) {
                         
                         // Only play if not muted
-                        if (!self.muted_files[file_index]) {
+                        if (!self.muted_files[file_index]) { // Always play all notes regardless of difficulty
+                            
+                            // Get the appropriate sound for this track
+                            var track_type = self.track_types[file_index];
+                            var sound_to_use = self.base_sounds[track_type];
+                            
                             // Calculate pitch shift based on the difference from our base note
                             var pitch_shift = power(2, (note.midi - self.base_note) / 12);
                             
                             // Play the note with adjusted pitch and volume
-                            var sound_instance = audio_play_sound(self.base_sound, 10, false);
+                            var sound_instance = audio_play_sound(sound_to_use, 10, false);
                             audio_sound_pitch(sound_instance, pitch_shift);
                             
                             // Use default velocity or the one provided in the data
@@ -369,7 +431,8 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
                             show_debug_message("Playing note: " + string(note.midi) + 
                                 " at time: " + string(midi_file.current_time) + 
                                 " with pitch: " + string(pitch_shift) + 
-                                " in file: " + string(file_index));
+                                " in file: " + string(file_index) +
+                                " using sound index: " + string(track_type));
                         }
                     }
                 }
@@ -420,6 +483,23 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
                         self.SeekFile(self.active_file, seek_time);
                     }
                     
+                    // Set game track button
+                    if (point_in_rectangle(mouse_x, mouse_y,
+                                          self.x + 10 + self.btn_size * 2 + self.btn_spacing * 2, self.y + 40,
+                                          self.x + 10 + self.btn_size * 3 + self.btn_spacing * 2, self.y + 40 + self.btn_size)) {
+                        self.SetGameTrack(self.active_file);
+                    }
+                    
+                    // Difficulty buttons
+                    var diff_btn_width = (self.width - 20) / 4;
+                    for (var d = 0; d < 4; d++) {
+                        if (point_in_rectangle(mouse_x, mouse_y,
+                                              self.x + 10 + (diff_btn_width * d), self.y + 40 + self.btn_size + 50,
+                                              self.x + 10 + (diff_btn_width * (d + 1)), self.y + 40 + self.btn_size + 70)) {
+                            self.SetDifficulty(d);
+                        }
+                    }
+                    
                     // File selection buttons - show previous files
                     if (self.active_file > 0 && point_in_rectangle(mouse_x, mouse_y,
                                                                  self.x + 10, self.y + 40 + self.btn_size + 30,
@@ -456,7 +536,8 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
         draw_set_valign(fa_middle);
         draw_text(self.x + 10, self.y + 15, "MIDI Player - " + 
                                            string(array_length(self.midi_files)) + 
-                                           " file(s) loaded");
+                                           " file(s) loaded - " +
+                                           self.difficulty_names[self.difficulty]);
         
         // Draw expand/collapse indicator
         draw_text(self.x + self.width - 20, self.y + 15, self.is_open ? "▼" : "►");
@@ -464,7 +545,7 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
         // If expanded, draw the full player
         if (self.is_open) {
             // Calculate height based on content
-            var player_height = 120; // Basic height
+            var player_height = 160; // Increased height for difficulty buttons
             
             // Draw expanded background
             draw_set_color(c_black);
@@ -476,10 +557,14 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
             if (self.active_file >= 0 && self.active_file < array_length(self.midi_files)) {
                 var file = self.midi_files[self.active_file];
                 
-                // Draw file name
+                // Draw file name and whether it's the game track
                 draw_set_color(c_white);
-                draw_text(self.x + 10, self.y + 30 + 15, "File " + string(self.active_file + 1) + ": " + 
-                                                       file.filename);
+                var track_info = "File " + string(self.active_file + 1) + ": " + file.filename;
+                if (self.active_file == self.game_track) {
+                    track_info += " (GAME TRACK)";
+                    draw_set_color(c_lime);
+                }
+                draw_text(self.x + 10, self.y + 30 + 15, track_info);
                 
                 // Draw play/pause button
                 draw_set_color(file.is_playing ? c_lime : c_gray);
@@ -498,6 +583,13 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
                 draw_set_color(c_white);
                 draw_text(self.x + 10 + self.btn_size * 1.5 + self.btn_spacing, self.y + 40 + self.btn_size / 2, 
                           self.muted_files[self.active_file] ? "🔇" : "🔊");
+                
+                // Draw set as game track button
+                draw_set_color(self.active_file == self.game_track ? c_lime : c_gray);
+                draw_rectangle(self.x + 10 + (self.btn_size + self.btn_spacing) * 2, self.y + 40, 
+                               self.x + 10 + (self.btn_size + self.btn_spacing) * 2 + self.btn_size, self.y + 40 + self.btn_size, false);
+                draw_set_color(c_white);
+                draw_text(self.x + 10 + (self.btn_size + self.btn_spacing) * 2 + self.btn_size / 2, self.y + 40 + self.btn_size / 2, "♫");
                 
                 // Draw progress bar
                 draw_set_color(c_dkgray);
@@ -526,6 +618,31 @@ function Midi_Player(base_sound, x, y, width, height) constructor {
                 var current_bpm = self.GetCurrentBpm(self.active_file);
                 draw_text(self.x + self.width - 80, self.y + 40 + self.btn_size + 25, 
                           "BPM: " + string(current_bpm));
+                
+                // Draw difficulty selection buttons
+                var diff_btn_width = (self.width - 20) / 4;
+                draw_set_halign(fa_center);
+                draw_set_valign(fa_middle);
+                
+                for (var d = 0; d < 4; d++) {
+                    // Draw the button
+                    draw_set_color(self.difficulty == d ? c_lime : c_gray);
+                    draw_rectangle(
+                        self.x + 10 + (diff_btn_width * d), 
+                        self.y + 40 + self.btn_size + 50,
+                        self.x + 10 + (diff_btn_width * (d + 1)) - 2, 
+                        self.y + 40 + self.btn_size + 70, 
+                        false
+                    );
+                    
+                    // Draw the text
+                    draw_set_color(c_white);
+                    draw_text(
+                        self.x + 10 + (diff_btn_width * d) + (diff_btn_width / 2),
+                        self.y + 40 + self.btn_size + 60,
+                        self.difficulty_names[d]
+                    );
+                }
                 
                 // Draw file selection buttons
                 draw_set_color(c_gray);

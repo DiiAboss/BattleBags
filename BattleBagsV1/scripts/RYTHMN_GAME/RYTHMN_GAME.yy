@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"Script137",
+  "%Name":"RYTHMN_GAME",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"Script137",
+  "name":"RYTHMN_GAME",
   "parent":{
     "name":"MIDI",
     "path":"folders/Scripts/MIDI.yy",

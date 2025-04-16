@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "totalNotes": 0,
+    "duration": 0,
+    "bpm": 0
+  },
+  "format": [
+    "midi",
+    "time",
+    "duration"
+  ],
+  "notes": []
+}
