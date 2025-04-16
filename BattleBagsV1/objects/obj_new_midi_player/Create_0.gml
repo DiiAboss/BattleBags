@@ -14,12 +14,12 @@ var sounds = [
 midi_player = new Midi_Player(sounds, 10, 10, 400, 200);
 
 // Add MIDI files with track type parameter
-file1 = midi_player.AddMidiFile("ITB_Bass.json", 0);    // Bass - track type 0
+file1 = midi_player.AddMidiFile("Amore_Bass.json", 0);    // Bass - track type 0
 file2 = midi_player.AddMidiFile("mario.json", 1);  // Vocals - track type 1
-file3 = midi_player.AddMidiFile("ITB_Instro.json", 2);   // Leads - track type 2
-file4 = midi_player.AddMidiFile("ITB_Kick.json", 3);   // Drums Kick - track type 3
-file5 = midi_player.AddMidiFile("ITB_Snare.json", 4);  // Drums Snare - track type 4
-file6 = midi_player.AddMidiFile("ITB_Cymbals.json", 5); // Drums Cymbals - track type 5
+file3 = midi_player.AddMidiFile("Amore_Instro.json", 2);   // Leads - track type 2
+file4 = midi_player.AddMidiFile("Amore_Kick.json", 3);   // Drums Kick - track type 3
+file5 = midi_player.AddMidiFile("Amore_Snare.json", 4);  // Drums Snare - track type 4
+file6 = midi_player.AddMidiFile("Amore_Cymbals.json", 5); // Drums Cymbals - track type 5
 
 // Set default active file
 midi_player.SetActiveFile(0);
