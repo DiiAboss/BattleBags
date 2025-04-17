@@ -18,7 +18,7 @@ var d_time_max = draw_next_event_timer(self, next_event_timer_max);
 var draw_y_start = 600;
 
 
-draw_ui_elements(self, draw_y_start);
+//draw_ui_elements(self, draw_y_start);
 
 
 var con_len = array_length(consumable_array);

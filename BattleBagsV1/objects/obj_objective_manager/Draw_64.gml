@@ -24,7 +24,7 @@ for (var s = 0; s < array_length(objective_stacks); s++) {
         var scaled_y = stack_y + (panel_height - scaled_height) / 2;
         
         // Draw background for panel
-        draw_set_alpha(0.95);
+        draw_set_alpha(0.65);
         
         // Determine panel color based on objective level
         var panel_color1, panel_color2;

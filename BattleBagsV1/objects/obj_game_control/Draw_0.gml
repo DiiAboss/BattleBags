@@ -665,7 +665,7 @@ for (var by = 0; by < top_playable_row; by++)
         
     var col = fight_for_your_life ? c_red : c_white;
         
-    draw_sprite_ext(spr_exclaim_block, 0, draw_x, draw_y, 1, 1, 0, col, 0.5);
+    draw_sprite_ext(spr_exclaim_block, -1, draw_x, draw_y, 1, 1, 0, col, 0.5);
 }
 
 //663 Energy Points
