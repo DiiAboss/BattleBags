@@ -63,11 +63,12 @@ else
     var grid_width = width * gem_size;
     var grid_height = camera_get_view_height(view_get_camera(view_current));
     var view_diff = room_height - grid_height;
-
-    draw_set_alpha(0.4);
-    draw_rectangle_color(board_x_offset, view_diff - thickness, 
-                            board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, c_black, c_black, c_black, c_black, false);
-    draw_set_alpha(1);
+    
+    // Grid backgound drawn
+    //draw_set_alpha(0);
+    //draw_rectangle_color(board_x_offset, view_diff - thickness, 
+                            //board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, c_black, c_black, c_black, c_black, false);
+    //draw_set_alpha(1);
     
     
     if !simple_draw
@@ -169,9 +170,9 @@ for (var i = 0; i < width; i++) {
 
     // **Check if column has any blocks above row 1**
     var above_blocks = topmost_row <= top_playable_row;
-
-	draw_text(10, draw_y_start + 0, "TOPROW: " + string(topmost_row));
-	draw_text(10, draw_y_start + 10, "above: " + string(above_blocks));
+//
+	//draw_text(10, draw_y_start + 0, "TOPROW: " + string(topmost_row));
+	//draw_text(10, draw_y_start + 10, "above: " + string(above_blocks));
 	
 	var danger_row = 99;
 	
@@ -608,6 +609,7 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
     } 
 }
     
+    //Victory row drawn
     if (number_of_rows_spawned >= victory_number_of_rows)
     {
         

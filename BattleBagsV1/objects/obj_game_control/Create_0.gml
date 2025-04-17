@@ -7,7 +7,7 @@ image_speed = 0.1;
 image_alpha = 0.75;
 depth       = -1;
 
-simple_draw = false;
+simple_draw = true;
 
 // over 650 EP in run
 

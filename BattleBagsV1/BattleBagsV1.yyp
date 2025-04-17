@@ -548,9 +548,9 @@
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
     {"roomId":{"name":"rm_init","path":"rooms/rm_init/rm_init.yy",},},
+    {"roomId":{"name":"rm_gameRoom","path":"rooms/rm_gameRoom/rm_gameRoom.yy",},},
     {"roomId":{"name":"rm_pre_game_screen","path":"rooms/rm_pre_game_screen/rm_pre_game_screen.yy",},},
     {"roomId":{"name":"rm_map_room_test","path":"rooms/rm_map_room_test/rm_map_room_test.yy",},},
-    {"roomId":{"name":"rm_gameRoom","path":"rooms/rm_gameRoom/rm_gameRoom.yy",},},
     {"roomId":{"name":"rm_main_menu","path":"rooms/rm_main_menu/rm_main_menu.yy",},},
     {"roomId":{"name":"rm_stats","path":"rooms/rm_stats/rm_stats.yy",},},
     {"roomId":{"name":"rm_local_multiplayer_lobby","path":"rooms/rm_local_multiplayer_lobby/rm_local_multiplayer_lobby.yy",},},
