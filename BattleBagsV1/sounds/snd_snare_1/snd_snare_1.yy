@@ -21,5 +21,5 @@
   "sampleRate":44100,
   "soundFile":"snd_snare_1.wav",
   "type":0,
-  "volume":0.82,
+  "volume":0.1,
 }

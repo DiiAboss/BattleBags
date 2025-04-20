@@ -4,22 +4,27 @@
 var sounds = [
     snd_ta_note_C,  // Bass sound
     snd_ta_note_C,  // Vocals sound
-    snd_ta_note_C, // Leads sound 
-    snd_kick_2,     // Drums_Kick
+    snd_hiC, // Leads sound 
+    snd_low_bow,     // Drums_Kick
     snd_snare_1,    // Drums_Snare
-    snd_hihat_2     // Drums_Cymbal
+    snd_hihat_2    // Drums_Cymbal
 ];
 
 // Create enhanced MIDI player with multiple sounds
 midi_player = new Midi_Player(sounds, 10, 10, 400, 200);
 
 // Add MIDI files with track type parameter
-file1 = midi_player.AddMidiFile("Amore_Bass.json", 0);    // Bass - track type 0
-file2 = midi_player.AddMidiFile("mario.json", 1);  // Vocals - track type 1
-file3 = midi_player.AddMidiFile("Amore_Instro.json", 2);   // Leads - track type 2
-file4 = midi_player.AddMidiFile("Amore_Kick.json", 3);   // Drums Kick - track type 3
-file5 = midi_player.AddMidiFile("Amore_Snare.json", 4);  // Drums Snare - track type 4
-file6 = midi_player.AddMidiFile("Amore_Cymbals.json", 5); // Drums Cymbals - track type 5
+file1 = midi_player.AddMidiFile("My Generated Music_BASS_game.json", 0);    // Bass - track type 0
+file2 = midi_player.AddMidiFile("My Generated Music_CHORDS_game.json", 1);  // Vocals - track type 1
+file3 = midi_player.AddMidiFile("My Generated Music_LEADS_game.json", 2);   // Leads - track type 2
+file4 = midi_player.AddMidiFile("mario.json", 3);   // Drums Kick - track type 3
+file5 = midi_player.AddMidiFile("mario.json", 4);  // Drums Snare - track type 4
+file6 = midi_player.AddMidiFile("mario.json", 5); // Drums Cymbals - track type 5
+
+	midi_player.SetTrackPitchShift(3, false); // Kick
+	midi_player.SetTrackPitchShift(4, false); // Snare
+	midi_player.SetTrackPitchShift(5, false); // Cymbals
+	midi_player.SetTrackPitchShift(6, true);  // Other (allow pitch modulation)
 
 // Set default active file
 midi_player.SetActiveFile(0);
@@ -30,33 +35,134 @@ midi_player.SetGameTrack(3); // Default to drums track (kick drum)
 // Set difficulty (0=Easy, 1=Medium, 2=Hard, 3=Expert)
 midi_player.SetDifficulty(1); // Default to Medium
 
+
+// ----- SETUP SONG MANAGER -----
+// Create song manager
+song_manager = new Song_Manager();
+
+// Create Mario song collection
+var mario_song = new Song_Collection("Bossa", {
+    artist: "",
+    genre: "",
+    bpm: 120
+});
+
+// Set file paths for each instrument track
+mario_song.SetFilePath("bass", "Bossa_Bass.json", 1); // Medium difficulty
+mario_song.SetFilePath("leads", "Bossa_Instro.json", 1); // Medium difficulty
+mario_song.SetFilePath("vocals", "Bossa_Vocals.json", 1); // Medium difficulty
+// Add more tracks if available
+
+// Add the song to the manager
+song_manager.AddSong(mario_song);
+
+
+// Create Country song collection
+var country_song = new Song_Collection("Country Jam", {
+    artist: "Country Band",
+    genre: "Country",
+    bpm: 100
+});
+
+// Set file paths for each instrument track
+country_song.SetFilePath("bass", "Country_Bass.json", 1);       // Medium difficulty
+country_song.SetFilePath("leads", "Country_Instro.json", 2);    // Hard difficulty
+country_song.SetFilePath("drums_kick", "Country_Kick.json", 1); // Medium difficulty
+country_song.SetFilePath("drums_snare", "Country_Snare.json", 1); // Medium difficulty
+country_song.SetFilePath("drums_cymbals", "Country_Cymbals.json", 2); // Hard difficulty
+
+// Add the song to the manager
+song_manager.AddSong(country_song);
+
+
+
+
+LoadAndAddSongsFromSingleJSON(song_manager, "datafiles/songs.json");
+
 // Create the rhythm game instance
 rhythm_game = new Rhythm_Game(midi_player);
 
-// Start all tracks playing by default
-PlayAllTracksOnStart();
+// Create song selector
+song_selector = new Song_Selector(song_manager, midi_player, rhythm_game);
 
-/// Updated RestartGame function
-function RestartGame() {
-    // Stop all playback
-    midi_player.StopAll();
+/// @function LoadSongsFromSingleJSON(file_path)
+/// @description Loads all song collections from a single JSON file
+/// @param {string} file_path - Path to the songs JSON file
+/// @returns {array<struct>} Array of loaded Song_Collection objects
+function LoadSongsFromSingleJSON(file_path) {
+    var songs = [];
     
-    // Create a new rhythm game instance (resets all scores and effects)
-    rhythm_game = new Rhythm_Game(midi_player);
-    
-    // Optionally seek all files to the beginning
-    for (var i = 0; i < array_length(midi_player.midi_files); i++) {
-        midi_player.SeekFile(i, 0);
+    if (!file_exists(file_path)) {
+        show_debug_message("Songs JSON file not found: " + file_path);
+        return songs;
     }
     
-    // Start playing all tracks
-    midi_player.PlayAll();
+    // Read the JSON file
+    var file = file_text_open_read(file_path);
+    var json_string = "";
     
-    // Special handling for drums - make sure ALL drum tracks are playing
-    if (midi_player.game_track == 3) {
-        PlayAllDrumTracks();
+    while (!file_text_eof(file)) {
+        json_string += file_text_read_string(file);
+        file_text_readln(file);
     }
+    
+    file_text_close(file);
+    
+    // Parse the JSON
+    var json_data = json_parse(json_string);
+    
+    // Check if it has the songs array
+    if (!variable_struct_exists(json_data, "songs")) {
+        show_debug_message("Invalid songs JSON format: missing 'songs' array");
+        return songs;
+    }
+    
+    // Process each song in the array
+    var song_array = json_data.songs;
+    for (var i = 0; i < array_length(song_array); i++) {
+        var song_data = song_array[i];
+        
+        // Create a new song collection
+        var song = new Song_Collection(song_data.name, song_data.metadata);
+        
+        // Set file paths for each track
+        var tracks = song_data.tracks;
+        
+        struct_foreach(tracks, function(track_name, track_data) {
+            if (track_data.file != "") {
+                self.SetFilePath(track_name, track_data.file, track_data.difficulty);
+            }
+        });
+        
+        // Add to our collection
+        array_push(songs, song);
+        show_debug_message("Loaded song: " + song.name);
+    }
+    
+    return songs;
 }
+
+/// @function LoadAndAddSongsFromSingleJSON(song_manager, file_path)
+/// @description Loads songs from a single JSON file and adds them to the song manager
+/// @param {struct} song_manager - The song manager to add songs to
+/// @param {string} file_path - Path to the songs JSON file
+/// @returns {real} Number of songs loaded
+function LoadAndAddSongsFromSingleJSON(song_manager, file_path) {
+    var songs = LoadSongsFromSingleJSON(file_path);
+    var count = 0;
+    
+    for (var i = 0; i < array_length(songs); i++) {
+        song_manager.AddSong(songs[i]);
+        count++;
+    }
+    
+    show_debug_message("Loaded " + string(count) + " songs from " + file_path);
+    return count;
+}
+
+// Start all tracks playing by default
+//PlayAllTracksOnStart();
+
 
 // GUI State variables
 gui_state = {
@@ -86,6 +192,8 @@ difficulties = [
     { name: "Expert", level: 3 }
 ];
 
+
+
 /// @function ToggleGUI()
 /// @description Show or hide the settings GUI
 function ToggleGUI() {
@@ -112,34 +220,36 @@ function ToggleGUI() {
         // Resume playback if it was playing before
         if (gui_state.was_playing) {
             midi_player.PlayAll();
+			RestartGame();
         }
     }
 }
 
-/// Function to add to your Object's Create event after initializing variables
 /// @function PlayAllDrumTracks()
-/// @description Ensures all drum tracks play simultaneously
+/// @description Ensure all drum tracks are playing when in drum mode
 function PlayAllDrumTracks() {
-    // Make sure all drum tracks are playing and unmuted
-    var drum_tracks = [3, 4, 5]; // Kick, Snare, Cymbals
+    var current_song = song_manager.GetCurrentSong();
+    if (current_song == undefined) return;
     
-    for (var i = 0; i < array_length(drum_tracks); i++) {
-        var drum_track = drum_tracks[i];
-        
-        // Skip if this track doesn't exist
-        if (drum_track >= array_length(midi_player.midi_files)) {
-            continue;
-        }
-        
-        // Start playing this track if it's not already playing
-        if (!midi_player.midi_files[drum_track].is_playing) {
-            midi_player.PlayFile(drum_track);
-        }
-        
-        // Make sure the track is not muted
-        if (midi_player.muted_files[drum_track]) {
-            midi_player.ToggleMute(drum_track);
-        }
+    // Unmute and play all drum tracks
+    if (current_song.track_indices.drums_kick >= 0) {
+        midi_player.muted_files[current_song.track_indices.drums_kick] = false;
+        midi_player.PlayFile(current_song.track_indices.drums_kick);
+    }
+    
+    if (current_song.track_indices.drums_snare >= 0) {
+        midi_player.muted_files[current_song.track_indices.drums_snare] = false;
+        midi_player.PlayFile(current_song.track_indices.drums_snare);
+    }
+    
+    if (current_song.track_indices.drums_cymbals >= 0) {
+        midi_player.muted_files[current_song.track_indices.drums_cymbals] = false;
+        midi_player.PlayFile(current_song.track_indices.drums_cymbals);
+    }
+    
+    if (current_song.track_indices.drums_other >= 0) {
+        midi_player.muted_files[current_song.track_indices.drums_other] = false;
+        midi_player.PlayFile(current_song.track_indices.drums_other);
     }
 }
 
@@ -166,13 +276,28 @@ function SetInstrument(instrument_index) {
 }
 
 /// Updated PlayAllTracksOnStart function
-function PlayAllTracksOnStart() {
-    midi_player.PlayAll();
+// Called when restarting the game
+function RestartGame() {
+    // Stop all playback
+    midi_player.StopAll();
     
-    // If we're starting with drums, make sure all drum tracks are active
-    if (midi_player.game_track == 3) {
-        PlayAllDrumTracks();
+    // Create a new rhythm game instance
+    rhythm_game = new Rhythm_Game(midi_player);
+    
+    // Reset all files to beginning
+    for (var i = 0; i < array_length(midi_player.midi_files); i++) {
+        midi_player.SeekFile(i, 0);
     }
+    
+    // Start a countdown before playing
+    midi_player.StartCountdown(4, function() {
+        midi_player.PlayAll();
+        
+        // Special handling for drums - make sure ALL drum tracks are playing
+        if (midi_player.game_track == 3) {
+            PlayAllDrumTracks();
+        }
+    });
 }
 
 /// @function SetDifficulty(difficulty_level)

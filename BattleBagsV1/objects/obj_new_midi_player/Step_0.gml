@@ -2,6 +2,16 @@
 /// @description Update game logic
 midi_player.Update();
 
+// Update song selector
+song_selector.Update();
+
+// Open song selector when 'S' key is pressed
+if (keyboard_check_pressed(ord("S"))) {
+    song_selector.Show();
+	
+}
+
+
 // Ensure drum tracks stay in sync when playing drums
 if (midi_player.game_track == 3) {
     // Check if any drum track is playing but others are not

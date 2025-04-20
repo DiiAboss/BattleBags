@@ -1,0 +1,185 @@
+// songs.json - Place this file in your datafiles folder
+{
+  "songs": [
+{
+      "name": "Main1",
+      "metadata": {
+        "artist": "",
+        "genre": "",
+        "bpm": 100
+      },
+      "tracks": {
+        "bass": {
+          "file": "ITB_Bass.json",
+          "difficulty": 1,
+          "track_type": 0
+        },
+        "vocals": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 1
+        },
+        "leads": {
+          "file": "ITB_Instro.json",
+          "difficulty": 2,
+          "track_type": 2
+        },
+        "drums_kick": {
+          "file": "Country_Kick.json",
+          "difficulty": 1,
+          "track_type": 3
+        },
+        "drums_snare": {
+          "file": "Country_Snare.json",
+          "difficulty": 1,
+          "track_type": 4
+        },
+        "drums_cymbals": {
+          "file": "Country_Cymbals.json",
+          "difficulty": 2,
+          "track_type": 5
+        },
+        "drums_other": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 6
+        }
+      }
+    },     
+{
+      "name": "Country Jam",
+      "metadata": {
+        "artist": "Country Band",
+        "genre": "Country",
+        "bpm": 100
+      },
+      "tracks": {
+        "bass": {
+          "file": "Country_Bass.json",
+          "difficulty": 1,
+          "track_type": 0
+        },
+        "vocals": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 1
+        },
+        "leads": {
+          "file": "Country_Instro.json",
+          "difficulty": 2,
+          "track_type": 2
+        },
+        "drums_kick": {
+          "file": "Country_Kick.json",
+          "difficulty": 1,
+          "track_type": 3
+        },
+        "drums_snare": {
+          "file": "Country_Snare.json",
+          "difficulty": 1,
+          "track_type": 4
+        },
+        "drums_cymbals": {
+          "file": "Country_Cymbals.json",
+          "difficulty": 2,
+          "track_type": 5
+        },
+        "drums_other": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 6
+        }
+      }
+    },
+    {
+      "name": "Bossa",
+      "metadata": {
+        "artist": "",
+        "genre": "",
+        "bpm": 120
+      },
+      "tracks": {
+        "bass": {
+          "file": "Bossa_Bass.json",
+          "difficulty": 1,
+          "track_type": 0
+        },
+        "vocals": {
+          "file": "Bossa_Vocals.json",
+          "difficulty": 1,
+          "track_type": 1
+        },
+        "leads": {
+          "file": "Bossa_Instro.json",
+          "difficulty": 1,
+          "track_type": 2
+        },
+        "drums_kick": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 3
+        },
+        "drums_snare": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 4
+        },
+        "drums_cymbals": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 5
+        },
+        "drums_other": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 6
+        }
+      }
+    },
+    {
+      "name": "Main2",
+      "metadata": {
+        "artist": "",
+        "genre": "",
+        "bpm": 120
+      },
+      "tracks": {
+        "bass": {
+          "file": "Taran_Bass.json",
+          "difficulty": 1,
+          "track_type": 0
+        },
+        "vocals": {
+          "file": "mario.json",
+          "difficulty": 1,
+          "track_type": 1
+        },
+        "leads": {
+          "file": "Taran_Instro.json",
+          "difficulty": 1,
+          "track_type": 2
+        },
+        "drums_kick": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 3
+        },
+        "drums_snare": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 4
+        },
+        "drums_cymbals": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 5
+        },
+        "drums_other": {
+          "file": "mario.json",
+          "difficulty": -1,
+          "track_type": 6
+        }
+      } 
+	}
+  ]
+}

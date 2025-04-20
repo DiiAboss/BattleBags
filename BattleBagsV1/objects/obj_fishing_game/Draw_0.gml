@@ -1,0 +1,1 @@
+fishing_game.Draw(0, 0, room_width, room_height);

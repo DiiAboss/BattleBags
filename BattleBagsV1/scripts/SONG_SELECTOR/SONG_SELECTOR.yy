@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SONG_SELECTOR",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SONG_SELECTOR",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

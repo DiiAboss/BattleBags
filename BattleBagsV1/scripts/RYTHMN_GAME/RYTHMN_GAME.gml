@@ -1,5 +1,3 @@
-/// @description Enhanced Rhythm Game with Combined Drum Tracks
-/// A rhythm game implementation that uses the enhanced MIDI player and properly handles combined drum tracks
 
 /// @function Rhythm_Game(midi_player)
 /// @description Creates a new rhythm game using the provided MIDI player
@@ -33,11 +31,11 @@ function Rhythm_Game(midi_player) constructor {
     self.max_rating_effects = 20;
     
     // Game configuration
-    self.hit_window = 0.15;  // 150ms window for hitting notes
-    self.perfect_threshold = 0.95;
-    self.great_threshold = 0.85;
-    self.good_threshold = 0.65;
-    self.okay_threshold = 0.50;
+    self.hit_window = 0.25;  // 150ms window for hitting notes
+    self.perfect_threshold = 0.80;
+    self.great_threshold = 0.60;
+    self.good_threshold = 0.40;
+    self.okay_threshold = 0.20;
     self.look_ahead = 2.0;   // How many seconds ahead to show notes
     
     // Visual configuration
@@ -464,7 +462,7 @@ static Initialize = function() {
 
 
 /// @function Initialize()
-/// @description Initialize the rhythm game
+/// @description Initialize the rhythm game with properly balanced difficulty levels
 static Initialize = function() {
     // Make sure the pattern tracking variables are initialized
     if (!variable_struct_exists(self, "note_sequence")) {
@@ -513,6 +511,9 @@ static Initialize = function() {
             array_push(track_indices, 4); // Snare
         if (5 < array_length(self.midi_player.midi_files)) 
             array_push(track_indices, 5); // Cymbals
+        // Also add the "other" drums track if it exists (track 6)
+        if (6 < array_length(self.midi_player.midi_files))
+            array_push(track_indices, 6); // Other drums
     } else {
         // Just use the selected track for non-drum instruments
         array_push(track_indices, game_track);
@@ -558,32 +559,13 @@ static Initialize = function() {
     
     // Initialize filtering variables
     var lastIncludedNote = -1; // Index of the last note we included
-    var noteCounter = 0; // Counter to help with rhythmic patterns
     
-    // Filter notes based on difficulty
-    if (current_difficulty == 0) { // Easy - Only include major notes with significant pitch or time differences
-        for (var i = 0; i < array_length(all_notes); i++) {
-            var note_data = all_notes[i];
-            
-            // Always include the first note
-            if (i == 0) {
-                array_push(filtered_notes, note_data);
-                lastIncludedNote = 0;
-                continue;
-            }
-            
-            // Check time and pitch differences from last included note
-            var time_diff = note_data.time - all_notes[lastIncludedNote].time;
-            var pitch_diff = abs(note_data.midi - all_notes[lastIncludedNote].midi);
-            
-            // Include note if it's either a significant time or pitch difference
-            // Include about 25-30% of notes
-            if (time_diff >= 0.5 || pitch_diff >= 3 || (i % 4 == 0)) {
-                array_push(filtered_notes, note_data);
-                lastIncludedNote = i;
-            }
-        }
-    } else if (current_difficulty == 1) { // Medium - Include about 50-60% of notes
+    // Calculate how many notes we're starting with
+    var total_notes = array_length(all_notes);
+    show_debug_message("Total notes before filtering: " + string(total_notes));
+    
+    // Filter notes based on difficulty - IMPROVED FILTERING
+    if (current_difficulty == 0) { // Easy - Target 40-60% of notes
         for (var i = 0; i < array_length(all_notes); i++) {
             var note_data = all_notes[i];
             
@@ -598,13 +580,14 @@ static Initialize = function() {
             var time_diff = note_data.time - all_notes[lastIncludedNote].time;
             var pitch_diff = abs(note_data.midi - all_notes[lastIncludedNote].midi);
             
-            // For medium, include every other note or significant changes
-            if (time_diff >= 0.25 || pitch_diff >= 2 || (i % 2 == 0)) {
+            // Use a more predictable pattern for Easy mode
+            // Including approximately every 3rd note, plus significant changes
+            if (i % 3 == 0 || time_diff >= 0.6 || pitch_diff >= 5) {
                 array_push(filtered_notes, note_data);
                 lastIncludedNote = i;
             }
         }
-    } else if (current_difficulty == 2) { // Hard - Include most notes (about 75-80%)
+    } else if (current_difficulty == 1) { // Medium - Target 60-80% of notes
         for (var i = 0; i < array_length(all_notes); i++) {
             var note_data = all_notes[i];
             
@@ -615,27 +598,74 @@ static Initialize = function() {
                 continue;
             }
             
-            // Check if notes are too close together in time
+            // Check time and pitch differences
             var time_diff = note_data.time - all_notes[lastIncludedNote].time;
+            var pitch_diff = abs(note_data.midi - all_notes[lastIncludedNote].midi);
             
-            // Skip only the very rapid notes or every 5th note if too close
-            if (time_diff >= 0.05 || i % 5 != 0) {
+            // Use a more predictable pattern for Medium mode
+            // Include approximately every other note, plus significant changes
+            if (i % 2 == 0 || time_diff >= 0.35 || pitch_diff >= 4) {
                 array_push(filtered_notes, note_data);
                 lastIncludedNote = i;
             }
         }
-    } else { // Expert - Include all notes
-        filtered_notes = all_notes;
+    } else if (current_difficulty == 2) { // Hard - Target 80-90% of notes
+        for (var i = 0; i < array_length(all_notes); i++) {
+            var note_data = all_notes[i];
+            
+            // Always include the first note
+            if (i == 0) {
+                array_push(filtered_notes, note_data);
+                lastIncludedNote = 0;
+                continue;
+            }
+            
+            // For Hard, include most notes
+            // Skip only very rapid sequences by using a lower threshold
+            var time_diff = note_data.time - all_notes[lastIncludedNote].time;
+            
+            // Include almost all notes except very close ones
+            // Only filter out extremely close notes (every 8th note if very close)
+            if (time_diff >= 0.001 || i % 15 != 0) {
+                array_push(filtered_notes, note_data);
+                lastIncludedNote = i;
+            }
+        }
+    } else { // Expert - Include ALL notes (100%)
+        // For Expert mode (level 3), copy all notes without filtering
+        filtered_notes = [];
+        for (var i = 0; i < array_length(all_notes); i++) {
+            array_push(filtered_notes, all_notes[i]);
+        }
+        
+        // Debug output to confirm
+        show_debug_message("EXPERT MODE: Including all " + string(array_length(filtered_notes)) + " notes.");
     }
     
-    // Log note counts (only in debug mode)
-    if (false) { // Replace with debug flag if needed
-        show_debug_message("Total notes: " + string(array_length(all_notes)));
-        show_debug_message("Filtered notes: " + string(array_length(filtered_notes)));
-        show_debug_message("Percentage: " + string(array_length(filtered_notes) / array_length(all_notes) * 100) + "%");
+    // After filtering, log statistics to verify the filtering levels
+    var filter_percent = array_length(filtered_notes) / array_length(all_notes) * 100;
+    show_debug_message("Difficulty: " + string(current_difficulty) + 
+                      " - Notes: " + string(array_length(filtered_notes)) + 
+                      "/" + string(array_length(all_notes)) + 
+                      " (" + string_format(filter_percent, 2, 1) + "%)");
+    
+    // IMPROVED MERGING PHASE - Set different merging thresholds by difficulty
+    // This is the key fix to prevent over-merging in higher difficulties
+    var merged_notes = [];
+    var lane_last_note_time = [-1, -1, -1, -1]; // Last note time for each lane
+    
+    // Different merge thresholds for each difficulty to control final note density
+    var merge_threshold;
+    if (current_difficulty == 0) { // Easy
+        merge_threshold = 0.15; // Moderate merging
+    } else if (current_difficulty == 1) { // Medium
+        merge_threshold = 0.10; // Less merging than Easy
+
+    } else { // Expert
+        merge_threshold = 0.001; // Almost no merging
     }
     
-    // Now process the filtered notes
+    // First, determine lanes for each note
     for (var i = 0; i < array_length(filtered_notes); i++) {
         var note_data = filtered_notes[i];
         var file_index = note_data.file_index;
@@ -644,6 +674,53 @@ static Initialize = function() {
         
         // Determine which lane this note should appear in
         var lane_index = self.GetLaneForNote(note, file_index);
+        
+        // Add lane info to the note data
+        note_data.lane = lane_index;
+        
+        // In Expert mode, disable merging completely
+        if (current_difficulty >= 2) {
+            // For expert, include ALL notes without merging
+            array_push(merged_notes, note_data);
+            lane_last_note_time[lane_index] = note_data.time;
+        } else {
+            // For other difficulties, check if we should merge with previous note in same lane
+            var should_merge = false;
+            
+            // If there's a previous note in this lane and it's very close in time
+            if (lane_last_note_time[lane_index] != -1) {
+                var time_diff = note_data.time - lane_last_note_time[lane_index];
+                if (time_diff < merge_threshold) {
+                    should_merge = true;
+                }
+            }
+            
+            if (should_merge) {
+                // Skip this note - don't add it to merged_notes
+                // We're effectively ignoring notes that are too close together in the same lane
+            } else {
+                // Add this note to our final collection
+                array_push(merged_notes, note_data);
+                
+                // Update the last note time for this lane
+                lane_last_note_time[lane_index] = note_data.time;
+            }
+        }
+    }
+    
+    // Log note counts for all modes
+    show_debug_message("Total notes: " + string(array_length(all_notes)));
+    show_debug_message("Filtered notes: " + string(array_length(filtered_notes)));
+    show_debug_message("Merged notes: " + string(array_length(merged_notes)));
+    show_debug_message("Percentage after processing: " + string(array_length(merged_notes) / array_length(all_notes) * 100) + "%");
+    
+    // Now process the merged notes
+    for (var i = 0; i < array_length(merged_notes); i++) {
+        var note_data = merged_notes[i];
+        var file_index = note_data.file_index;
+        var note_index = note_data.note_index;
+        var note = note_data.note;
+        var lane_index = note_data.lane;
         
         var key = string(file_index) + "_" + string(note_index);
         ds_map_add(self.tracked_notes_map, key, {
@@ -655,83 +732,6 @@ static Initialize = function() {
         });
     }
 }
-    
-    // Get game track file index
-    var game_track = self.midi_player.game_track;
-    
-    // For drums (track 3), we need to process all drum tracks (3, 4, 5)
-    var track_indices = [];
-    
-    if (game_track == 3) { // If the selected instrument is "Drums"
-        // Add ALL available drum tracks
-        if (3 < array_length(self.midi_player.midi_files)) 
-            array_push(track_indices, 3); // Kick
-        if (4 < array_length(self.midi_player.midi_files)) 
-            array_push(track_indices, 4); // Snare
-        if (5 < array_length(self.midi_player.midi_files)) 
-            array_push(track_indices, 5); // Cymbals
-    } else {
-        // Just use the selected track for non-drum instruments
-        array_push(track_indices, game_track);
-    }
-    
-    // Sort notes by time across tracks for proper sequential analysis
-    var all_notes = [];
-    
-    // First, collect all notes from relevant tracks
-    for (var track_idx = 0; track_idx < array_length(track_indices); track_idx++) {
-        var file_index = track_indices[track_idx];
-        
-        // Skip if this track doesn't exist
-        if (file_index >= array_length(self.midi_player.midi_files)) {
-            continue;
-        }
-        
-        var midi_file = self.midi_player.midi_files[file_index];
-        
-        // For each note in the MIDI file, add to our collection
-        for (var i = 0; i < array_length(midi_file.notes); i++) {
-            var note = midi_file.notes[i];
-            
-            // Skip notes that don't match the current difficulty level
-            if (note.note_type > self.midi_player.difficulty) continue;
-            
-            // Add to our collection with track info
-            array_push(all_notes, {
-                file_index: file_index,
-                note_index: i,
-                note: note,
-                time: note.time
-            });
-        }
-    }
-    
-    // Sort all notes by time
-    array_sort(all_notes, function(a, b) {
-        return a.time - b.time;
-    });
-    
-    // Now process them in chronological order
-    for (var i = 0; i < array_length(all_notes); i++) {
-        var note_data = all_notes[i];
-        var file_index = note_data.file_index;
-        var note_index = note_data.note_index;
-        var note = note_data.note;
-        
-        // Determine which lane this note should appear in
-        var lane_index = self.GetLaneForNote(note, file_index);
-        
-        var key = string(file_index) + "_" + string(note_index);
-        ds_map_add(self.tracked_notes_map, key, {
-            file_index: file_index,
-            note_index: note_index,
-            hit: false,
-            missed: false,
-            lane: lane_index // Store the lane with the note
-        });
-    }
-
-
 /// @function AnalyzeNotePattern(notes)
 /// @description Analyze a sequence of notes to detect patterns
 /// @param {array} notes - Array of note MIDIs to analyze
@@ -826,66 +826,70 @@ static AnalyzeNotePattern = function(notes) {
     }
     
     /// @function UpdateActiveNotes()
-    /// @description Update the list of notes that are currently active
-    static UpdateActiveNotes = function() {
-        // Clear the active notes list
-        ds_list_clear(self.active_notes);
+/// @description Update the list of notes that are currently active
+static UpdateActiveNotes = function() {
+    // Clear the active notes list
+    ds_list_clear(self.active_notes);
+    
+    // Get game track file index
+    var game_track = self.midi_player.game_track;
+    
+    // Track indices to process
+    var track_indices = [];
+    
+    // For drums (track 3), include all available drum tracks (3, 4, 5, 6)
+    if (game_track == 3) {
+        // Add ALL drum tracks that exist
+        if (3 < array_length(self.midi_player.midi_files)) 
+            array_push(track_indices, 3); // Kick
+        if (4 < array_length(self.midi_player.midi_files)) 
+            array_push(track_indices, 4); // Snare
+        if (5 < array_length(self.midi_player.midi_files)) 
+            array_push(track_indices, 5); // Cymbals
+        if (6 < array_length(self.midi_player.midi_files))
+            array_push(track_indices, 6); // Other drums
+    } else {
+        // Just use the selected track for non-drum instruments
+        array_push(track_indices, game_track);
+    }
+    
+    // Process each relevant track
+    for (var track_idx = 0; track_idx < array_length(track_indices); track_idx++) {
+        var current_track = track_indices[track_idx];
         
-        // Get game track file index
-        var game_track = self.midi_player.game_track;
-        
-        // Track indices to process
-        var track_indices = [];
-        
-        // For drums (track 3), include all available drum tracks (3, 4, 5)
-        if (game_track == 3) {
-            // Add ALL drum tracks that exist
-            if (3 < array_length(self.midi_player.midi_files)) 
-                array_push(track_indices, 3); // Kick
-            if (4 < array_length(self.midi_player.midi_files)) 
-                array_push(track_indices, 4); // Snare
-            if (5 < array_length(self.midi_player.midi_files)) 
-                array_push(track_indices, 5); // Cymbals
-        } else {
-            // Just use the selected track for non-drum instruments
-            array_push(track_indices, game_track);
+        // Skip if this track doesn't exist
+        if (current_track >= array_length(self.midi_player.midi_files)) {
+            continue;
         }
         
-        // Process each relevant track
-        for (var track_idx = 0; track_idx < array_length(track_indices); track_idx++) {
-            var current_track = track_indices[track_idx];
-            
-            // Skip if this track doesn't exist
-            if (current_track >= array_length(self.midi_player.midi_files)) {
-                continue;
-            }
-            
-            var midi_file = self.midi_player.midi_files[current_track];
-            
-            // For drums, always process all drum tracks when drum instrument is selected
+        var midi_file = self.midi_player.midi_files[current_track];
+        
+        // For drums, always process all drum tracks when drum instrument is selected
+        // For other instruments, only process if playing and not muted
+        var should_process = false;
+        
+        if (game_track == 3) {
+            // Always process drum tracks when drums are selected
+            should_process = midi_file.is_playing;
+        } else {
             // For other instruments, only process if playing and not muted
-            var should_process = false;
+            should_process = midi_file.is_playing && !self.midi_player.muted_files[current_track];
+        }
+        
+        if (should_process) {
+            // Determine the visible time window
+            var window_start = midi_file.current_time - self.hit_window;
+            var window_end = midi_file.current_time + self.look_ahead;
             
-            if (game_track == 3) {
-                // Always process drum tracks when drums are selected
-                should_process = midi_file.is_playing;
-            } else {
-                // For other instruments, only process if playing and not muted
-                should_process = midi_file.is_playing && !self.midi_player.muted_files[current_track];
-            }
-            
-            if (should_process) {
-                // Determine the visible time window
-                var window_start = midi_file.current_time - self.hit_window;
-                var window_end = midi_file.current_time + self.look_ahead;
+            // Check each note
+            for (var i = 0; i < array_length(midi_file.notes); i++) {
+                var note = midi_file.notes[i];
                 
-                // Check each note
-                for (var i = 0; i < array_length(midi_file.notes); i++) {
-                    var note = midi_file.notes[i];
-                    
-                    // Skip notes that don't match the current difficulty level
-                    if (note.note_type > self.midi_player.difficulty) continue;
-                    
+                // IMPORTANT: In Expert mode, do not filter notes by note_type
+                var include_note = (self.midi_player.difficulty == 3) || 
+                                  (note.note_type <= self.midi_player.difficulty);
+                
+                if (include_note) {
                     // Check if note is in the visible window
                     if (note.time >= window_start && note.time <= window_end) {
                         // Check if note has already been hit or missed
@@ -907,6 +911,7 @@ static AnalyzeNotePattern = function(notes) {
             }
         }
     }
+}
     
     /// @function UpdateEffects()
     /// @description Update all visual effects
@@ -945,112 +950,138 @@ static AnalyzeNotePattern = function(notes) {
     }
     
     /// @function CheckNoteHits()
-    /// @description Check for player inputs and note hits
-    static CheckNoteHits = function() {
-        // Check each lane for key presses
-        for (var lane_index = 0; lane_index < array_length(self.lanes); lane_index++) {
-            var lane = self.lanes[lane_index];
+/// @description Check for player inputs and note hits
+static CheckNoteHits = function() {
+    // Check each lane for key presses
+    for (var lane_index = 0; lane_index < array_length(self.lanes); lane_index++) {
+        var lane = self.lanes[lane_index];
+        
+        // If the key for this lane was pressed
+        if (keyboard_check_pressed(lane.key)) {
+            var hit_something = false;
             
-            // If the key for this lane was pressed
-            if (keyboard_check_pressed(lane.key)) {
-                var hit_something = false;
+            // Find the closest note to hit in this lane
+            var closest_note = undefined;
+            var closest_time_diff = self.hit_window;
+            var closest_file_index = -1;
+            var closest_note_index = -1;
+            var closest_key = "";
+            
+            // Check if this lane has overlapping notes
+            var overlap_count = self.CountOverlappingNotes(lane_index);
+            var is_multi_hit = overlap_count > 1;
+            
+            // Check only active notes (much more efficient)
+            var active_notes_count = ds_list_size(self.active_notes);
+            for (var i = 0; i < active_notes_count; i++) {
+                var active_note_data = ds_list_find_value(self.active_notes, i);
+                var note = active_note_data.note;
+                var tracked = active_note_data.tracked;
                 
-                // Find the closest note to hit in this lane
-                var closest_note = undefined;
-                var closest_time_diff = self.hit_window;
-                var closest_file_index = -1;
-                var closest_note_index = -1;
-                var closest_key = "";
-                
-                // Check only active notes (much more efficient)
-                var active_notes_count = ds_list_size(self.active_notes);
-                for (var i = 0; i < active_notes_count; i++) {
-                    var active_note_data = ds_list_find_value(self.active_notes, i);
-                    var note = active_note_data.note;
-                    var tracked = active_note_data.tracked;
-                    
-                    // Skip if not in the correct lane or already hit/missed
-                    if (tracked.lane != lane_index || tracked.hit || tracked.missed) {
-                        continue;
-                    }
-                    
-                    // Get the MIDI file 
-                    var file_index = active_note_data.file_index;
-                    var midi_file = self.midi_player.midi_files[file_index];
-                    
-                    // Check if note is within hit window
-                    var time_diff = abs(midi_file.current_time - note.time);
-                    
-                    if (time_diff < self.hit_window && time_diff < closest_time_diff) {
-                        closest_note = note;
-                        closest_time_diff = time_diff;
-                        closest_file_index = file_index;
-                        closest_note_index = active_note_data.note_index;
-                        closest_key = active_note_data.key;
-                    }
+                // Skip if not in the correct lane or already hit/missed
+                if (tracked.lane != lane_index || tracked.hit || tracked.missed) {
+                    continue;
                 }
                 
-                // If we found a note to hit
-                if (closest_note != undefined) {
-                    // Mark note as hit
-                    var tracked = ds_map_find_value(self.tracked_notes_map, closest_key);
-                    tracked.hit = true;
-                    
-                    // Calculate accuracy
-                    var accuracy = 1.0 - (closest_time_diff / self.hit_window);
-                    
-                    // Register the hit with appropriate accuracy
-                    self.RegisterHit(closest_note, accuracy, closest_file_index, lane_index);
-                    hit_something = true;
-                    
-                    // Mark active notes for update on next frame
-                    self.active_notes_need_update = true;
-                }
+                // Get the MIDI file 
+                var file_index = active_note_data.file_index;
+                var midi_file = self.midi_player.midi_files[file_index];
                 
-                // If no hit was registered, show a miss effect
-                if (!hit_something) {
-                    self.RegisterMiss(lane_index);
-                }
+                // Check if note is within hit window
+                var time_diff = abs(midi_file.current_time - note.time);
                 
-                // Add key press visual effect
+                if (time_diff < self.hit_window && time_diff < closest_time_diff) {
+                    closest_note = note;
+                    closest_time_diff = time_diff;
+                    closest_file_index = file_index;
+                    closest_note_index = active_note_data.note_index;
+                    closest_key = active_note_data.key;
+                }
+            }
+            
+            // If we found a note to hit
+            if (closest_note != undefined) {
+                // Mark note as hit
+                var tracked = ds_map_find_value(self.tracked_notes_map, closest_key);
+                tracked.hit = true;
+                
+                // Calculate accuracy
+                var accuracy = 1.0 - (closest_time_diff / self.hit_window);
+                
+                // Register the hit with appropriate accuracy
+                self.RegisterHit(closest_note, accuracy, closest_file_index, lane_index);
+                hit_something = true;
+                
+                // Mark active notes for update on next frame
+                self.active_notes_need_update = true;
+            }
+            
+            // If no hit was registered, show a miss effect only if it's not a multi-hit lane
+            if (!hit_something && !is_multi_hit) {
+                self.RegisterMiss(lane_index);
+            } else if (!hit_something && is_multi_hit) {
+                // For multi-hit lanes, add a hit effect but no penalty
+                // This preserves the visual feedback without breaking combo
                 if (ds_list_size(self.hit_effects) < self.max_hit_effects) {
                     ds_list_add(self.hit_effects, {
                         x: lane.x,
                         y: self.hit_line_y,
                         radius: self.hit_circle_size,
-                        color: hit_something ? lane.color : c_gray,
+                        color: c_dkgray, // Dark gray for neutral feedback
                         life: 10,
                         initial_radius: self.hit_circle_size
                     });
                 }
             }
+            
+            // Add key press visual effect (always show feedback for key press)
+            if (ds_list_size(self.hit_effects) < self.max_hit_effects) {
+                ds_list_add(self.hit_effects, {
+                    x: lane.x,
+                    y: self.hit_line_y,
+                    radius: self.hit_circle_size,
+                    color: hit_something ? lane.color : (is_multi_hit ? c_yellow : c_gray),
+                    life: 10,
+                    initial_radius: self.hit_circle_size
+                });
+            }
         }
     }
+}
     
     /// @function CheckMissedNotes()
-    /// @description Check for notes that were missed
-    static CheckMissedNotes = function() {
-        // Check only active notes (much more efficient)
-        var active_notes_count = ds_list_size(self.active_notes);
-        for (var i = 0; i < active_notes_count; i++) {
-            var active_note_data = ds_list_find_value(self.active_notes, i);
-            var note = active_note_data.note;
-            var tracked = active_note_data.tracked;
-            var file_index = active_note_data.file_index;
+/// @description Check for notes that were missed
+static CheckMissedNotes = function() {
+    // Check only active notes (much more efficient)
+    var active_notes_count = ds_list_size(self.active_notes);
+    for (var i = 0; i < active_notes_count; i++) {
+        var active_note_data = ds_list_find_value(self.active_notes, i);
+        var note = active_note_data.note;
+        var tracked = active_note_data.tracked;
+        var file_index = active_note_data.file_index;
+        
+        // Skip notes already processed
+        if (tracked.hit || tracked.missed) continue;
+        
+        // Get the MIDI file
+        var midi_file = self.midi_player.midi_files[file_index];
+        
+        // If the note has passed the hit window and wasn't hit
+        if (midi_file.current_time > note.time + self.hit_window) {
+            // Check if this is part of a multi-hit note group
+            var lane_index = tracked.lane;
+            var overlap_count = self.CountOverlappingNotes(lane_index);
+            var is_multi_hit = overlap_count > 1;
             
-            // Skip notes already processed
-            if (tracked.hit || tracked.missed) continue;
-            
-            // Get the MIDI file
-            var midi_file = self.midi_player.midi_files[file_index];
-            
-            // If the note has passed the hit window and wasn't hit
-            if (midi_file.current_time > note.time + self.hit_window) {
-                // Mark as missed
+            // For multi-hit notes, just mark as missed without penalty
+            if (is_multi_hit) {
+                tracked.missed = true;
+                // No combo break, no miss effect, no screen shake
+            } else {
+                // Regular note handling for single-hit notes
                 tracked.missed = true;
                 
                 // Register the miss
-                var lane_index = tracked.lane;
                 self.RegisterMiss(lane_index);
                 
                 // Add miss effect
@@ -1068,332 +1099,592 @@ static AnalyzeNotePattern = function(notes) {
                 
                 // Reset combo
                 self.combo = 0;
-                
-                // Mark active notes for update on next frame
-                self.active_notes_need_update = true;
             }
+            
+            // Mark active notes for update on next frame
+            self.active_notes_need_update = true;
         }
     }
+}
     
     /// @function RegisterHit(note, accuracy, file_index, lane_index)
-    /// @description Register a successful hit with accuracy
-    /// @param {struct} note - The note that was hit
-    /// @param {real} accuracy - How accurate the hit was (0-1)
-    /// @param {real} file_index - Which file the note is from
-    /// @param {real} lane_index - Which lane the note was in
-    static RegisterHit = function(note, accuracy, file_index, lane_index) {
-        // Determine rating based on accuracy
-        var rating = "";
-        var points = 0;
-        var add_to_combo = false;
-        
-        if (accuracy >= self.perfect_threshold) {
-            rating = "PERFECT";
-            points = 1000;
-            add_to_combo = true;
-            self.accuracy_ratings.perfect++;
-        } else if (accuracy >= self.great_threshold) {
-            rating = "GREAT";
-            points = 700;
-            add_to_combo = true;
-            self.accuracy_ratings.great++;
-        } else if (accuracy >= self.good_threshold) {
-            rating = "GOOD";
-            points = 400;
-            add_to_combo = true;
-            self.accuracy_ratings.good++;
-        } else if (accuracy >= self.okay_threshold) {
-            rating = "OKAY";
-            points = 200;
-            self.accuracy_ratings.okay++;
-        } else {
-            rating = "POOR";
-            points = 50;
-            self.accuracy_ratings.poor++;
-        }
-        
-        // Apply score multiplier based on difficulty
-        var difficultyMultiplier = self.midi_player.difficulty + 1; // 1x for Easy, 2x for Medium, etc.
-        
-        // Add difficulty bonus
-        if (add_to_combo) {
-            self.combo++;
-            if (self.combo > self.max_combo) {
-                self.max_combo = self.combo;
-            }
-            
-            // Additional combo bonus
-            if (self.combo > 10) {
-                difficultyMultiplier *= 1.0 + (self.combo * 0.01); // 1% per combo point over 10
-            }
-        } else {
-            self.combo = 0;
-        }
-        
-        // Calculate final score
-        var final_score = round(points * difficultyMultiplier);
-        self.score += final_score;
-        
-        // Add rating effect
-        if (ds_list_size(self.rating_effects) < self.max_rating_effects) {
-            var lane = self.lanes[lane_index];
-            ds_list_add(self.rating_effects, {
-                text: rating,
-                x: lane.x,
-                y: self.hit_line_y - 20,
-                color: lane.color,
-                alpha: 1.0,
-                life: 30,
-                max_life: 30,
-                points: "+" + string(final_score)
-            });
-        }
+/// @description Register a successful hit with accuracy
+/// @param {struct} note - The note that was hit
+/// @param {real} accuracy - How accurate the hit was (0-1)
+/// @param {real} file_index - Which file the note is from
+/// @param {real} lane_index - Which lane the note was in
+static RegisterHit = function(note, accuracy, file_index, lane_index) {
+    // Check if this is part of a multi-hit sequence
+    var is_multi_hit = self.CountOverlappingNotes(lane_index) > 1;
+    
+    // Determine rating based on accuracy
+    var rating = "";
+    var points = 0;
+    var add_to_combo = false;
+    
+    if (accuracy >= self.perfect_threshold) {
+        rating = "PERFECT";
+        points = 1000;
+        add_to_combo = true;
+        self.accuracy_ratings.perfect++;
+    } else if (accuracy >= self.great_threshold) {
+        rating = "GREAT";
+        points = 700;
+        add_to_combo = true;
+        self.accuracy_ratings.great++;
+    } else if (accuracy >= self.good_threshold) {
+        rating = "GOOD";
+        points = 400;
+        add_to_combo = is_multi_hit ? true : false; // Always add to combo for multi-hits
+        self.accuracy_ratings.good++;
+    } else if (accuracy >= self.okay_threshold) {
+        rating = "OKAY";
+        points = 200;
+        add_to_combo = is_multi_hit ? true : false; // Always add to combo for multi-hits
+        self.accuracy_ratings.okay++;
+    } else {
+        rating = "POOR";
+        points = 50;
+        add_to_combo = is_multi_hit ? true : false; // Always add to combo for multi-hits
+        self.accuracy_ratings.poor++;
     }
+    
+    // Apply score multiplier based on difficulty
+    var difficultyMultiplier = self.midi_player.difficulty + 1; // 1x for Easy, 2x for Medium, etc.
+    
+    // For multi-hit notes, double the points for each hit (except the first)
+    if (is_multi_hit && self.combo > 0) {
+        points *= 2;
+        rating = "MULTI " + rating;
+    }
+    
+    // Add difficulty bonus
+    if (add_to_combo || is_multi_hit) { // Always add to combo for multi-hits
+        self.combo++;
+        if (self.combo > self.max_combo) {
+            self.max_combo = self.combo;
+        }
+        
+        // Additional combo bonus
+        if (self.combo > 10) {
+            difficultyMultiplier *= 1.0 + (self.combo * 0.01); // 1% per combo point over 10
+        }
+    } else if (!is_multi_hit) { // Only reset combo for non-multi-hit notes
+        self.combo = 0;
+    }
+    
+    // Calculate final score
+    var final_score = round(points * difficultyMultiplier);
+    self.score += final_score;
+    
+    // Add rating effect
+    if (ds_list_size(self.rating_effects) < self.max_rating_effects) {
+        var lane = self.lanes[lane_index];
+        
+        // For multi-hit, use yellow color for rating
+        var effect_color = is_multi_hit ? c_yellow : lane.color;
+        
+        ds_list_add(self.rating_effects, {
+            text: rating,
+            x: lane.x,
+            y: self.hit_line_y - 20,
+            color: effect_color,
+            alpha: 1.0,
+            life: 30,
+            max_life: 30,
+            points: "+" + string(final_score)
+        });
+    }
+}
     
     /// @function RegisterMiss(lane_index)
-    /// @description Register a missed note
-    /// @param {real} lane_index - Which lane the miss occurred in
-    static RegisterMiss = function(lane_index) {
-        // Reset combo
+/// @description Register a missed note
+/// @param {real} lane_index - Which lane the miss occurred in
+static RegisterMiss = function(lane_index) {
+    // Check if this is part of a multi-hit sequence
+    var is_multi_hit = self.CountOverlappingNotes(lane_index) > 1;
+    
+    // For multi-hit notes, don't reset combo
+    if (!is_multi_hit) {
+        // Reset combo only for standard notes
         self.combo = 0;
+    }
+    
+    // Increment miss counter
+    self.accuracy_ratings.miss++;
+    
+    // Add miss effect to the specific lane (only for non-multi-hit notes)
+    if (!is_multi_hit && ds_list_size(self.rating_effects) < self.max_rating_effects) {
+        var lane = self.lanes[lane_index];
+        ds_list_add(self.rating_effects, {
+            text: "MISS",
+            x: lane.x,
+            y: self.hit_line_y - 20,
+            color: c_red,
+            alpha: 1.0,
+            life: 30,
+            max_life: 30,
+            points: ""
+        });
+    }
+}
+	
+	
+	/// @function CountOverlappingNotes(lane_index)
+/// @description Count notes that visually overlap or are very close in time
+/// @param {real} lane_index - The lane to check
+/// @returns {real} The number of overlapping notes
+static CountOverlappingNotes = function(lane_index) {
+    // Safety check - make sure we have MIDI files loaded
+    if (self.midi_player.midi_files == undefined || array_length(self.midi_player.midi_files) == 0) {
+        return 0;
+    }
+    
+    // Define overlap threshold in seconds
+    var overlap_threshold = 0.15; // 150ms
+    
+    // Count notes that are visually close together
+    var count = 0;
+    var note_times = [];
+    
+    // Check active notes in this lane
+    var active_notes_count = ds_list_size(self.active_notes);
+    for (var i = 0; i < active_notes_count; i++) {
+        var active_note_data = ds_list_find_value(self.active_notes, i);
         
-        // Increment miss counter
-        self.accuracy_ratings.miss++;
+        // Safety check for undefined data
+        if (active_note_data == undefined) continue;
         
-        // Add miss effect to the specific lane
-        if (ds_list_size(self.rating_effects) < self.max_rating_effects) {
-            var lane = self.lanes[lane_index];
-            ds_list_add(self.rating_effects, {
-                text: "MISS",
-                x: lane.x,
-                y: self.hit_line_y - 20,
-                color: c_red,
-                alpha: 1.0,
-                life: 30,
-                max_life: 30,
-                points: ""
-            });
+        var note = active_note_data.note;
+        var tracked = active_note_data.tracked;
+        var file_index = active_note_data.file_index;
+        
+        // Skip if already hit
+        if (tracked.hit) continue;
+        
+        // Only consider notes in the specified lane
+        if (tracked.lane != lane_index) continue;
+        
+        // Safety check for valid file index
+        if (file_index >= array_length(self.midi_player.midi_files)) continue;
+        
+        var midi_file = self.midi_player.midi_files[file_index];
+        
+        // Get time difference from current time
+        var time_diff = note.time - midi_file.current_time;
+        
+        // Only count notes that are visible and approaching
+        if (time_diff >= 0 && time_diff <= self.look_ahead) {
+            array_push(note_times, time_diff);
         }
     }
     
-    /// @function Draw()
-    /// @description Draw the rhythm game
-    static Draw = function() {
-        // Apply screen shake
-        var shake_x = 0;
-        var shake_y = 0;
+    // Sort the note times
+    array_sort(note_times, function(a, b) { return a - b; });
+    
+    // Count groups of notes that are close together
+    if (array_length(note_times) > 0) {
+        count = 1; // Start with 1 for the first note
         
-        if (self.shake_amount > 0) {
-            shake_x = random_range(-self.shake_amount, self.shake_amount);
-            shake_y = random_range(-self.shake_amount, self.shake_amount);
+        // Check subsequent notes
+        for (var i = 1; i < array_length(note_times); i++) {
+            // If this note is very close to the previous one
+            if (note_times[i] - note_times[i-1] <= overlap_threshold) {
+                count++;
+            } else {
+                // No more notes in this cluster
+                break;
+            }
+        }
+    }
+    
+    return count;
+}
+	
+    
+    /// @function Draw()
+/// @description Draw the rhythm game
+static Draw = function() {
+    // Safety check to make sure we have loaded some MIDI files
+    if (self.midi_player.midi_files == undefined || array_length(self.midi_player.midi_files) == 0) {
+        // No songs loaded yet, draw a message instead
+        draw_set_color(c_white);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_text(room_width / 2, room_height / 2, "Please select a song to begin");
+        return;
+    }
+    
+    // Make sure positions are calculated
+    if (!variable_struct_exists(self, "hit_line_y")) {
+        self.CalculatePositions();
+    }
+    
+    // Apply screen shake
+    var shake_x = 0;
+    var shake_y = 0;
+    
+    if (self.shake_amount > 0) {
+        shake_x = random_range(-self.shake_amount, self.shake_amount);
+        shake_y = random_range(-self.shake_amount, self.shake_amount);
+    }
+    
+    // Draw lanes
+    for (var i = 0; i < array_length(self.lanes); i++) {
+        var lane = self.lanes[i];
+        
+        // Draw lane background
+        draw_set_color(c_dkgray);
+        draw_set_alpha(0.7);
+        draw_rectangle(
+            lane.x - (self.lane_width / 2) + shake_x, 
+            50 + shake_y, 
+            lane.x + (self.lane_width / 2) + shake_x, 
+            self.hit_line_y + shake_y, 
+            false
+        );
+        draw_set_alpha(1.0);
+        
+        // Draw hit circle
+        draw_set_color(lane.color);
+        draw_circle(
+            lane.x + shake_x, 
+            self.hit_line_y + shake_y, 
+            self.hit_circle_size, 
+            true
+        );
+        
+        // Draw key label
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_white);
+        
+        // If player is playing drums, show drum component names
+        if (self.midi_player.game_track == 3) {
+            self.DrawFancyText(
+                lane.drum_text, 
+                lane.x + shake_x, 
+                self.hit_line_y - 25 + shake_y  // Slightly above the key
+            );
         }
         
-        // Draw lanes
-        for (var i = 0; i < array_length(self.lanes); i++) {
-            var lane = self.lanes[i];
-            
-            // Draw lane background
-            draw_set_color(c_dkgray);
+        self.DrawFancyText(
+            lane.key_text, 
+            lane.x + shake_x, 
+            self.hit_line_y + shake_y
+        );
+        
+        // Display overlap count below the hit circle if needed
+        var overlap_count = self.CountOverlappingNotes(i);
+        if (overlap_count > 1) {
+            // Draw a small indicator below the hit circle
+            draw_set_color(c_black);
             draw_set_alpha(0.7);
-            draw_rectangle(
-                lane.x - (self.lane_width / 2) + shake_x, 
-                50 + shake_y, 
-                lane.x + (self.lane_width / 2) + shake_x, 
-                self.hit_line_y + shake_y, 
+            draw_roundrect(
+                lane.x - 15 + shake_x,
+                self.hit_line_y + 15 + shake_y,
+                lane.x + 15 + shake_x,
+                self.hit_line_y + 35 + shake_y,
                 false
             );
-            draw_set_alpha(1.0);
             
-            // Draw hit circle
-            draw_set_color(lane.color);
+            // Draw the count with a highlight
+            draw_set_color(c_yellow);
+            draw_set_alpha(1.0);
+            self.DrawFancyText(
+                "x" + string(overlap_count),
+                lane.x + shake_x,
+                self.hit_line_y + 25 + shake_y
+            );
+        }
+    }
+    
+    // First, pre-calculate overlap counts for each lane
+    var lane_overlap_counts = array_create(array_length(self.lanes), 0);
+    for (var i = 0; i < array_length(self.lanes); i++) {
+        lane_overlap_counts[i] = self.CountOverlappingNotes(i);
+    }
+    
+    // Draw only the active notes (much more efficient)
+    var active_notes_count = ds_list_size(self.active_notes);
+    for (var i = 0; i < active_notes_count; i++) {
+        var active_note_data = ds_list_find_value(self.active_notes, i);
+        
+        // Safety check for undefined data
+        if (active_note_data == undefined) continue;
+        
+        var note = active_note_data.note;
+        var tracked = active_note_data.tracked;
+        var file_index = active_note_data.file_index;
+        
+        // Skip if already hit
+        if (tracked.hit) continue;
+        
+        // Safety check for valid file index
+        if (file_index >= array_length(self.midi_player.midi_files)) continue;
+        
+        var midi_file = self.midi_player.midi_files[file_index];
+        
+        // Get time difference
+        var time_diff = note.time - midi_file.current_time;
+        
+        // Draw note if it's in our look-ahead window
+        if (time_diff >= -self.hit_window && time_diff <= self.look_ahead) {
+            // Get the lane
+            var lane_index = tracked.lane;
+            var lane = self.lanes[lane_index];
+            
+            // Calculate y position based on time difference (top to bottom)
+            var progress = 1.0 - (time_diff / self.look_ahead);
+            var note_y = 50 + progress * (self.hit_line_y - 50);
+            
+            // Determine color based on note type (difficulty)
+            var note_color = lane.color;
+            var border_color = c_black;
+            
+            // Visual distinction for different note types
+            var note_size_multiplier = 1.0;
+            
+            if (note.note_type == 0) { // Whole notes (Easy)
+                note_size_multiplier = 1.3;
+                border_color = c_white;
+            } else if (note.note_type == 1) { // Half notes (Medium)
+                note_size_multiplier = 1.15;
+                border_color = c_lime;
+            } else if (note.note_type == 2) { // Quarter notes (Hard)
+                note_size_multiplier = 1.0;
+                border_color = c_yellow;
+            } else { // Other notes (Expert)
+                note_size_multiplier = 0.9;
+                border_color = c_red;
+            }
+            
+            // Check if this is part of an overlapping group
+            var is_overlapping = false;
+            var overlap_time_window = 0.15; // 150ms window to check for overlaps
+            
+            // Check if this note is in a lane with overlapping notes
+            if (lane_overlap_counts[lane_index] > 1) {
+                // Find other notes in the same lane that are very close in time
+                for (var j = 0; j < active_notes_count; j++) {
+                    if (j == i) continue; // Skip comparing to self
+                    
+                    var other_note_data = ds_list_find_value(self.active_notes, j);
+                    if (other_note_data == undefined) continue;
+                    
+                    var other_tracked = other_note_data.tracked;
+                    if (other_tracked.lane != lane_index || other_tracked.hit) continue;
+                    
+                    var other_note = other_note_data.note;
+                    var note_time_diff = abs(note.time - other_note.time);
+                    
+                    if (note_time_diff < overlap_time_window) {
+                        is_overlapping = true;
+                        break;
+                    }
+                }
+            }
+            
+            // Make overlapping notes larger
+            if (is_overlapping) {
+                // Increase size for multi-hit notes
+                note_size_multiplier *= 1.3; 
+                
+                // Enhance border to make it more noticeable
+                border_color = c_yellow;
+                
+                // Make note slightly brighter
+                note_color = merge_color(note_color, c_white, 0.2);
+            }
+            
+            // Apply alpha based on track
+            var note_alpha = 1.0;
+            
+            // Draw note
+            draw_set_alpha(note_alpha);
+            draw_set_color(note_color);
             draw_circle(
                 lane.x + shake_x, 
-                self.hit_line_y + shake_y, 
-                self.hit_circle_size, 
+                note_y + shake_y, 
+                self.note_size * note_size_multiplier, 
+                false
+            );
+            
+            // Draw border
+            draw_set_color(border_color);
+            draw_circle(
+                lane.x + shake_x, 
+                note_y + shake_y, 
+                self.note_size * note_size_multiplier, 
                 true
             );
             
-            // Draw key label
-            draw_set_halign(fa_center);
-            draw_set_valign(fa_middle);
-            draw_set_color(c_white);
-            
-            // If player is playing drums, show drum component names
-            if (self.midi_player.game_track == 3) {
-                self.DrawFancyText(
-                    lane.drum_text, 
-                    lane.x + shake_x, 
-                    self.hit_line_y - 25 + shake_y  // Slightly above the key
-                );
-            }
-            
-            self.DrawFancyText(
-                lane.key_text, 
-                lane.x + shake_x, 
-                self.hit_line_y + shake_y
-            );
-        }
-        
-        // Draw only the active notes (much more efficient)
-        var active_notes_count = ds_list_size(self.active_notes);
-        for (var i = 0; i < active_notes_count; i++) {
-            var active_note_data = ds_list_find_value(self.active_notes, i);
-            var note = active_note_data.note;
-            var tracked = active_note_data.tracked;
-            var file_index = active_note_data.file_index;
-            
-            // Skip if already hit
-            if (tracked.hit) continue;
-            
-            // Get the MIDI file
-            var midi_file = self.midi_player.midi_files[file_index];
-            
-            // Get time difference
-            var time_diff = note.time - midi_file.current_time;
-            
-            // Draw note if it's in our look-ahead window
-            if (time_diff >= -self.hit_window && time_diff <= self.look_ahead) {
-                // Get the lane
-                var lane_index = tracked.lane;
-                var lane = self.lanes[lane_index];
-                
-                // Calculate y position based on time difference (top to bottom)
-                var progress = 1.0 - (time_diff / self.look_ahead);
-                var note_y = 50 + progress * (self.hit_line_y - 50);
-                
-                // Determine color based on note type (difficulty)
-                var note_color = lane.color;
-                var border_color = c_black;
-                
-                // Visual distinction for different note types
-                var note_size_multiplier = 1.0;
-                
-                if (note.note_type == 0) { // Whole notes (Easy)
-                    note_size_multiplier = 1.3;
-                    border_color = c_white;
-                } else if (note.note_type == 1) { // Half notes (Medium)
-                    note_size_multiplier = 1.15;
-                    border_color = c_lime;
-                } else if (note.note_type == 2) { // Quarter notes (Hard)
-                    note_size_multiplier = 1.0;
-                    border_color = c_yellow;
-                } else { // Other notes (Expert)
-                    note_size_multiplier = 0.9;
-                    border_color = c_red;
-                }
-                
-                // Apply alpha based on track (for multi-track visualization)
-                var note_alpha = 1.0;
-                
-                // Draw note
-                draw_set_alpha(note_alpha);
-                draw_set_color(note_color);
+            // Draw overlap count directly on the note if it's part of a multi-hit
+            if (is_overlapping && lane_overlap_counts[lane_index] > 1) {
+                draw_set_color(c_black);
+                draw_set_alpha(0.7);
                 draw_circle(
-                    lane.x + shake_x, 
-                    note_y + shake_y, 
-                    self.note_size * note_size_multiplier, 
+                    lane.x + shake_x,
+                    note_y + shake_y,
+                    self.note_size * 0.5,
                     false
                 );
                 
-                // Draw border
-                draw_set_color(border_color);
-                draw_circle(
-                    lane.x + shake_x, 
-                    note_y + shake_y, 
-                    self.note_size * note_size_multiplier, 
-                    true
-                );
-                
+                draw_set_color(c_white);
                 draw_set_alpha(1.0);
+                draw_set_halign(fa_center);
+                draw_set_valign(fa_middle);
+                draw_text(
+                    lane.x + shake_x,
+                    note_y + shake_y,
+                    "x" + string(lane_overlap_counts[lane_index])
+                );
             }
-        }
-        
-        // Draw hit effects
-        var hit_effects_count = ds_list_size(self.hit_effects);
-        for (var i = 0; i < hit_effects_count; i++) {
-            var effect = ds_list_find_value(self.hit_effects, i);
             
-            // Calculate effect size and alpha
-            var progress = effect.life / 10;
-            var current_radius = effect.initial_radius * (2.0 - progress);
-            var alpha = progress;
-            
-            // Draw effect
-            draw_set_alpha(alpha);
-            draw_set_color(effect.color);
-            draw_circle(
-                effect.x + shake_x, 
-                effect.y + shake_y, 
-                current_radius, 
-                true
-            );
             draw_set_alpha(1.0);
         }
+    }
+    
+    // Draw hit effects
+    var hit_effects_count = ds_list_size(self.hit_effects);
+    for (var i = 0; i < hit_effects_count; i++) {
+        var effect = ds_list_find_value(self.hit_effects, i);
         
-        // Draw rating effects
-        var rating_effects_count = ds_list_size(self.rating_effects);
-        for (var i = 0; i < rating_effects_count; i++) {
-            var effect = ds_list_find_value(self.rating_effects, i);
-            
-            // Draw rating text
-            draw_set_alpha(effect.alpha);
-            draw_set_color(effect.color);
+        // Calculate effect size and alpha
+        var progress = effect.life / 10;
+        var current_radius = effect.initial_radius * (2.0 - progress);
+        var alpha = progress;
+        
+        // Draw effect
+        draw_set_alpha(alpha);
+        draw_set_color(effect.color);
+        draw_circle(
+            effect.x + shake_x, 
+            effect.y + shake_y, 
+            current_radius, 
+            true
+        );
+        draw_set_alpha(1.0);
+    }
+    
+    // Draw rating effects
+    var rating_effects_count = ds_list_size(self.rating_effects);
+    for (var i = 0; i < rating_effects_count; i++) {
+        var effect = ds_list_find_value(self.rating_effects, i);
+        
+        // Draw rating text
+        draw_set_alpha(effect.alpha);
+        draw_set_color(effect.color);
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_text_transformed(
+            effect.x + shake_x, 
+            effect.y + shake_y, 
+            effect.text, 
+            1.5, 1.5, 0
+        );
+        
+        // Draw points text if present
+        if (effect.points != "") {
+            draw_text_transformed(
+                effect.x + shake_x, 
+                effect.y + 20 + shake_y, 
+                effect.points, 
+                1.0, 1.0, 0
+            );
+        }
+        
+        draw_set_alpha(1.0);
+    }
+    
+    // Draw miss effects (large text in center of screen)
+    var miss_effects_count = ds_list_size(self.miss_effects);
+    for (var i = 0; i < miss_effects_count; i++) {
+        var effect = ds_list_find_value(self.miss_effects, i);
+        
+        // Calculate effect size and alpha
+        var progress = effect.life / 30;
+        var scale = 2.0 + (1.0 - progress) * 3.0;
+        var alpha = progress;
+        
+        // Only draw briefly
+        if (progress > 0.7) {
+            // Draw effect
+            draw_set_alpha(alpha);
+            draw_set_color(c_red);
             draw_set_halign(fa_center);
             draw_set_valign(fa_middle);
             draw_text_transformed(
-                effect.x + shake_x, 
-                effect.y + shake_y, 
+                room_width / 2 + shake_x, 
+                room_height / 2 + shake_y, 
                 effect.text, 
-                1.5, 1.5, 0
+                scale, scale, 0
             );
-            
-            // Draw points text if present
-            if (effect.points != "") {
-                draw_text_transformed(
-                    effect.x + shake_x, 
-                    effect.y + 20 + shake_y, 
-                    effect.points, 
-                    1.0, 1.0, 0
-                );
-            }
-            
             draw_set_alpha(1.0);
         }
-        
-        // Draw miss effects (large text in center of screen)
-        var miss_effects_count = ds_list_size(self.miss_effects);
-        for (var i = 0; i < miss_effects_count; i++) {
-            var effect = ds_list_find_value(self.miss_effects, i);
-            
-            // Calculate effect size and alpha
-            var progress = effect.life / 30;
-            var scale = 2.0 + (1.0 - progress) * 3.0;
-            var alpha = progress;
-            
-            // Only draw briefly
-            if (progress > 0.7) {
-                // Draw effect
-                draw_set_alpha(alpha);
-                draw_set_color(c_red);
-                draw_set_halign(fa_center);
-                draw_set_valign(fa_middle);
-                draw_text_transformed(
-                    room_width / 2 + shake_x, 
-                    room_height / 2 + shake_y, 
-                    effect.text, 
-                    scale, scale, 0
-                );
-                draw_set_alpha(1.0);
-            }
-        }
-        
-        // Draw HUD
-        self.DrawHUD();
     }
+    
+    // Draw HUD
+    self.DrawHUD();
+}
     
     /// @function DrawHUD()
     /// @description Draw the game HUD (score, combo, etc.)
     static DrawHUD = function() {
+		
+		// Draw "Prepare for Rapid Hits" warning if multiple overlapping notes are approaching
+var has_overlapping_notes = false;
+var max_overlap = 0;
+
+for (var i = 0; i < array_length(self.lanes); i++) {
+    var overlap_count = self.CountOverlappingNotes(i);
+    if (overlap_count > max_overlap) {
+        max_overlap = overlap_count;
+    }
+    if (overlap_count > 1) {
+        has_overlapping_notes = true;
+    }
+}
+
+if (has_overlapping_notes) {
+    // Calculate warning time - show warning when notes are getting closer
+    var earliest_overlap_time = 999;
+    
+    // Find the earliest overlapping note
+    for (var i = 0; i < ds_list_size(self.active_notes); i++) {
+        var active_note_data = ds_list_find_value(self.active_notes, i);
+        var note = active_note_data.note;
+        var file_index = active_note_data.file_index;
+        var midi_file = self.midi_player.midi_files[file_index];
+        
+        var time_diff = note.time - midi_file.current_time;
+        if (time_diff >= 0 && time_diff < earliest_overlap_time) {
+            earliest_overlap_time = time_diff;
+        }
+    }
+    
+    // Only show warning when notes are approaching
+    if (earliest_overlap_time < 1.0 && earliest_overlap_time > 0) {
+        var warning_alpha = 1.0 - (earliest_overlap_time / 1.0);
+        draw_set_alpha(warning_alpha);
+        draw_set_color(c_yellow);
+        draw_set_halign(fa_center);
+        
+        // Pulse the text for emphasis
+        var scale = 1.0 + sin(current_time/100) * 0.1;
+        
+        // Draw warning text
+        if (max_overlap > 2) {
+            draw_text_transformed(room_width / 2, 80, "RAPID HITS COMING!", scale, scale, 0);
+        } else {
+            draw_text_transformed(room_width / 2, 80, "DOUBLE HIT COMING!", scale, scale, 0);
+        }
+        
+        draw_set_alpha(1.0);
+    }
+
+		
+		
         // Draw score
         draw_set_color(c_white);
         draw_set_halign(fa_left);
@@ -1451,6 +1742,7 @@ static AnalyzeNotePattern = function(notes) {
             draw_text(room_width / 2, 40, "Playing: " + track_name);
         }
     }
+	}
     
     /// @function DrawFancyText(text, x, y)
     /// @description Draw fancy text with shadow and border
@@ -1482,4 +1774,5 @@ static AnalyzeNotePattern = function(notes) {
     
     // Initialize the rhythm game
     self.Initialize();
+
 }

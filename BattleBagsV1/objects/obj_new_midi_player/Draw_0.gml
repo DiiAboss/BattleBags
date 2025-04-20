@@ -2,6 +2,29 @@
 // Draw the rhythm game
 rhythm_game.Draw();
 
+// Draw song selector (this will only draw if it's visible)
+song_selector.Draw();
+
+// Draw countdown timer if active
+if (midi_player.IsCountdownActive()) {
+    // Draw large countdown number
+    var remain = ceil(midi_player.GetCountdownTime());
+    if (remain > 0) {
+        draw_set_font(-1); // Replace with your font for countdown
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_middle);
+        draw_set_color(c_yellow);
+        
+        // Draw with pulsing effect
+        var scale = 2.5 + sin(current_time/100) * 0.5;
+        draw_text_transformed(room_width/2, room_height/2, string(remain), scale, scale, 0);
+        
+        // Draw "GET READY!" text above
+        draw_set_color(c_white);
+        draw_text_transformed(room_width/2, room_height/2 - 80, "GET READY!", 1.5, 1.5, 0);
+    }
+}
+
 // Only draw MIDI player UI and instructions if GUI is not visible
 if (!gui_state.visible) {
     // Draw the MIDI player UI

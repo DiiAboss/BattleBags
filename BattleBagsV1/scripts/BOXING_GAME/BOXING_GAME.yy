@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"BOXING_GAME",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"BOXING_GAME",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

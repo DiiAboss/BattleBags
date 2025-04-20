@@ -1,7 +1,7 @@
 function geowars_grid(x_pos, y_pos, grid_width = 256, grid_height = room_height, cell_size = 64) constructor 
 {
     
-    globalvar sz, effect, force_direction, nodes_damping, springs_damping, springs_stiffnes, after_damping;
+    globalvar sz, _effect, force_direction, nodes_damping, springs_damping, springs_stiffnes, after_damping;
     
     //Try to experiment with this values
     //Grid behavior depends on the cell size and these parameters

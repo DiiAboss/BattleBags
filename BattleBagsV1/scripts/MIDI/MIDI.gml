@@ -33,6 +33,25 @@ function Midi_Player(base_sounds, x, y, width, height) constructor {
     // Button dimensions
     self.btn_size = 40;
     self.btn_spacing = 10;
+	
+	// Inside Midi_Player constructor, add these new properties:
+	self.countdown_timer = {
+	    enabled: false,
+	    duration: 4.0,  // Default 4 beats
+	    remaining: 0,
+	    callback: undefined, // Function to call when countdown ends
+	    last_beat: -1
+	};
+	
+	self.sound_settings = {
+	    // For melodic instruments, we might want to pitch shift
+	    enable_pitch_shift: [true, true, true, false, false, false, false],
+	    // Volume adjustment per track type
+	    volume: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+	};
+	
+
+	
     
     /// @function AddMidiFile(filename, track_type)
     /// @description Loads a MIDI file and adds it to this player
@@ -376,74 +395,190 @@ function Midi_Player(base_sounds, x, y, width, height) constructor {
         
         return current_bpm;
     }
+	
+	
+	/// @function StartCountdown(beats, callback)
+	/// @description Starts a BPM-based countdown timer
+	/// @param {real} beats - Number of beats to count down (default: 4)
+	/// @param {function} callback - Optional function to call when countdown completes
+	static StartCountdown = function(beats = 4, callback = undefined) {
+	    // Only allow countdown if we have a valid BPM
+	    if (self.active_file >= 0 && self.active_file < array_length(self.midi_files)) {
+	        var file = self.midi_files[self.active_file];
+	        
+	        // Set up countdown
+	        self.countdown_timer.enabled = true;
+	        self.countdown_timer.duration = beats;
+	        self.countdown_timer.remaining = beats;
+	        self.countdown_timer.callback = callback;
+	        self.countdown_timer.last_beat = -1;
+	        
+	        show_debug_message("Started countdown for " + string(beats) + " beats at BPM: " + string(file.bpm));
+	        return true;
+	    }
+	    
+	    show_debug_message("Cannot start countdown: No active MIDI file");
+	    return false;
+	}
+	
+	/// @function UpdateCountdown(dt)
+	/// @description Updates the countdown timer (call this from Update())
+	/// @param {real} dt - Delta time in seconds
+	static UpdateCountdown = function(dt) {
+	    if (!self.countdown_timer.enabled || self.active_file < 0) return;
+	    
+	    var file = self.midi_files[self.active_file];
+	    var beats_per_second = file.bpm / 60;
+	    
+	    // Calculate current countdown progress
+	    self.countdown_timer.remaining -= dt * beats_per_second;
+	    
+	    // Calculate current beat for audio feedback
+	    var current_beat = ceil(self.countdown_timer.remaining);
+	    
+	    // Play sound on each beat change
+	    if (current_beat != self.countdown_timer.last_beat && current_beat > 0) {
+	        // Play a click sound (you'll need to replace this with your own sound)
+	        // For now, we'll use the first sound in the base_sounds array as a metronome
+	        if (array_length(self.base_sounds) > 0) {
+	            var click_sound = self.base_sounds[0]; // Use first sound as metronome
+	            audio_play_sound(click_sound, 5, false);
+	        }
+	        
+	        self.countdown_timer.last_beat = current_beat;
+	        show_debug_message("Beat: " + string(current_beat));
+	    }
+	    
+	    // Check if countdown is complete
+	    if (self.countdown_timer.remaining <= 0) {
+	        self.countdown_timer.enabled = false;
+	        
+	        // Call the callback function if provided
+	        if (self.countdown_timer.callback != undefined) {
+	            self.countdown_timer.callback();
+	        }
+	        
+	        show_debug_message("Countdown complete!");
+	    }
+	}
+	
+	/// @function GetCountdownTime()
+	/// @description Gets the current countdown time in beats
+	/// @returns {real} The remaining time in beats
+	static GetCountdownTime = function() {
+	    return self.countdown_timer.remaining;
+	}
+	
+	/// @function IsCountdownActive()
+	/// @description Checks if the countdown is currently active
+	/// @returns {bool} Whether the countdown is active
+	static IsCountdownActive = function() {
+	    return self.countdown_timer.enabled;
+	}
+	
+	/// @function SetTrackPitchShift(track_type, enable)
+	/// @description Sets whether pitch shifting is enabled for a track type
+	/// @param {real} track_type - The track type (0-6)
+	/// @param {bool} enable - Whether to enable pitch shifting
+	static SetTrackPitchShift = function(track_type, enable) {
+	    if (track_type >= 0 && track_type < array_length(self.sound_settings.enable_pitch_shift)) {
+	        self.sound_settings.enable_pitch_shift[track_type] = enable;
+	        return true;
+	    }
+	    return false;
+	}
+	
+	/// @function SetTrackVolume(track_type, volume)
+	/// @description Sets the volume for a track type
+	/// @param {real} track_type - The track type (0-6)
+	/// @param {real} volume - The volume (0.0-1.0)
+	static SetTrackVolume = function(track_type, volume) {
+	    if (track_type >= 0 && track_type < array_length(self.sound_settings.volume)) {
+	        self.sound_settings.volume[track_type] = clamp(volume, 0, 1);
+	        return true;
+	    }
+	    return false;
+	}
+
     
-    /// @function Update()
-    /// @description Updates all MIDI playback, call this in the Step event
-    static Update = function() {
-        // Get delta time (time since last frame in seconds)
-        var dt = delta_time / 1000000; // Convert microseconds to seconds
+// Replace the original Update method with this enhanced version
+static Update = function() {
+    // Get delta time (time since last frame in seconds)
+    var dt = delta_time / 1000000; // Convert microseconds to seconds
+    
+    // Update countdown timer
+    self.UpdateCountdown(dt);
+    
+    // Process each MIDI file
+    for (var file_index = 0; file_index < array_length(self.midi_files); file_index++) {
+        var midi_file = self.midi_files[file_index];
         
-        // Process each MIDI file
-        for (var file_index = 0; file_index < array_length(self.midi_files); file_index++) {
-            var midi_file = self.midi_files[file_index];
+        // Update playing files
+        if (midi_file.is_playing) {
+            // Update current time
+            midi_file.current_time += dt;
             
-            // Update playing files
-            if (midi_file.is_playing) {
-                // Update current time
-                midi_file.current_time += dt;
+            // Check for notes that should be played now
+            for (var i = 0; i < array_length(midi_file.notes); i++) {
+                var note = midi_file.notes[i];
                 
-                // Check for notes that should be played now
-                for (var i = 0; i < array_length(midi_file.notes); i++) {
-                    var note = midi_file.notes[i];
+                // If this note's start time is within our current time window
+                if (note.time <= midi_file.current_time && 
+                    note.time + dt > midi_file.current_time - dt) {
                     
-                    // If this note's start time is within our current time window
-                    if (note.time <= midi_file.current_time && 
-                        note.time + dt > midi_file.current_time - dt) {
+                    // Only play if not muted
+                    if (!self.muted_files[file_index]) { // Always play all notes regardless of difficulty
                         
-                        // Only play if not muted
-                        if (!self.muted_files[file_index]) { // Always play all notes regardless of difficulty
-                            
-                            // Get the appropriate sound for this track
-                            var track_type = self.track_types[file_index];
-                            var sound_to_use = self.base_sounds[track_type];
-                            
+                        // Get the appropriate sound for this track
+                        var track_type = self.track_types[file_index];
+                        var sound_to_use = self.base_sounds[track_type];
+                        
+                        // Initialize pitch_shift with default value of 1 (no shift)
+                        var pitch_shift = 1.0;
+                        
+                        // Only apply pitch shifting if enabled for this track type
+                        if (self.sound_settings.enable_pitch_shift[track_type]) {
                             // Calculate pitch shift based on the difference from our base note
-                            var pitch_shift = power(2, (note.midi - self.base_note) / 12);
-                            
-                            // Play the note with adjusted pitch and volume
-                            var sound_instance = audio_play_sound(sound_to_use, 10, false);
-                            audio_sound_pitch(sound_instance, pitch_shift);
-                            
-                            // Use default velocity or the one provided in the data
-                            var velocity = 0.8;
-                            if (variable_struct_exists(note, "velocity")) {
-                                velocity = note.velocity;
-                            }
-                            audio_sound_gain(sound_instance, velocity, 0);
-                            
-                            // Schedule the sound to fade out after its duration
-                            var duration_ms = note.duration * 1000;
-                            audio_sound_gain(sound_instance, 0, duration_ms);
-                            
-                            // Store the sound instance for later reference
-                            array_push(midi_file.sound_instances, sound_instance);
-                            
-                            show_debug_message("Playing note: " + string(note.midi) + 
-                                " at time: " + string(midi_file.current_time) + 
-                                " with pitch: " + string(pitch_shift) + 
-                                " in file: " + string(file_index) +
-                                " using sound index: " + string(track_type));
+                            pitch_shift = power(2, (note.midi - self.base_note) / 12);
                         }
+                        
+                        // Play the note with adjusted pitch and volume
+                        var sound_instance = audio_play_sound(sound_to_use, 10, false);
+                        audio_sound_pitch(sound_instance, pitch_shift);
+                        
+                        // Apply track volume setting
+                        var track_volume = self.sound_settings.volume[track_type];
+                        
+                        // Use default velocity or the one provided in the data
+                        var velocity = 0.8;
+                        if (variable_struct_exists(note, "velocity")) {
+                            velocity = note.velocity;
+                        }
+                        audio_sound_gain(sound_instance, velocity * track_volume, 0);
+                        
+                        // Schedule the sound to fade out after its duration
+                        var duration_ms = note.duration * 1000;
+                        audio_sound_gain(sound_instance, 0, duration_ms);
+                        
+                        // Store the sound instance for later reference
+                        array_push(midi_file.sound_instances, sound_instance);
+                        
+                        show_debug_message("Playing note: " + string(note.midi) + 
+                            " at time: " + string(midi_file.current_time) + 
+                            " with pitch: " + string(pitch_shift) + 
+                            " in file: " + string(file_index) +
+                            " using sound index: " + string(track_type));
                     }
                 }
-                
-                // Check if we've reached the end of the song
-                if (midi_file.current_time > midi_file.duration + 1) {
-                    show_debug_message("MIDI playback finished for file: " + midi_file.filename);
-                    midi_file.is_playing = false;
-                }
+            }
+            
+            // Check if we've reached the end of the song
+            if (midi_file.current_time > midi_file.duration + 1) {
+                show_debug_message("MIDI playback finished for file: " + midi_file.filename);
+                midi_file.is_playing = false;
             }
         }
+    }
         
         // Check for UI interaction
         if (self.show_player) {
