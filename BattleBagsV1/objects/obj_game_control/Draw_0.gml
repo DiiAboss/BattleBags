@@ -157,9 +157,12 @@ else
 	
 	
 	
-	
+	    //Right side pipe
 		draw_sprite(spr_clay_pipe_left, -1, obj_game_control.draw_right_side, room_width * 0.5);
-	draw_sprite(spr_clay_pipe_left, -1, obj_game_control.board_x_offset, room_width * 0.5);
+    //Left Side Pipe
+	//draw_sprite(spr_clay_pipe_left, -1, obj_game_control.board_x_offset, room_width * 0.5);
+    draw_sprite_ext(spr_clay_pipe_left, -1, obj_game_control.board_x_offset, room_width * 0.5, 1.1, 1.5, 0, c_white, 1);
+    //Pipe to Recycler
 	draw_sprite(spr_clay_pipe_top, -1, recycler.x - 500, recycler.y);
 //----------------------------------------------------------------
 // DRAW COLUMN SHAKE
