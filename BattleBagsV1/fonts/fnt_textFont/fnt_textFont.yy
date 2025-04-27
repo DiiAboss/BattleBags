@@ -2527,10 +2527,7 @@
   "sdfSpread":8,
   "size":42.0,
   "styleName":"book",
-  "textureGroupId":{
-    "name":"Default",
-    "path":"texturegroups/Default",
-  },
+  "textureGroupId":null,
   "TTFName":"/Users/homepro/Documents/GMTK Jam 24/Untitled/BattleBags/BattleBagsV1/fonts/fnt_textFont/jazzyrabbit-remake.book.ttf",
   "usesSDF":true,
 }

@@ -162,3 +162,5 @@ devices = array_create(12, -1);
 randomize();
 
 time_left = 999;
+
+//instance_create_layer(1366, 840,"pop_ups", obj_announceWindow);

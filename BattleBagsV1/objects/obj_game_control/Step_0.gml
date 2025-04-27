@@ -51,6 +51,14 @@ if (keyboard_check_pressed(vk_escape))
     set_paused();
 }
 
+//testing announcment pop up
+if (keyboard_check_pressed(ord("H")))
+{
+    var announce_win = instance_create_depth(1366, 840, depth, obj_announceWindow);
+    announce_win.Message = "fuuuuuuck!!!";
+    announce_win.Announcer = spr_clay_antenna_guy;
+}
+
 
 
 //-----------------------------------------

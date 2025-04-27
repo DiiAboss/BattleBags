@@ -674,3 +674,11 @@ for (var by = 0; by < top_playable_row; by++)
 //663 Energy Points
 
 //block_spawn_rates._draw_spawn_rates(1000, 500);
+
+
+    //---------------------------------------------------------
+    // DRAW ANNOUNCEMENT WINDOW
+    //---------------------------------------------------------
+    
+    //instance_create_depth(1366, 840, depth, obj_announceWindow);
+

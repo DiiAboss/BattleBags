@@ -1,4 +1,6 @@
 
+
+
 // Randomize the game board (this can be turned on in game manager, as we may need to run on seeds)
 randomize();
 
@@ -8,6 +10,7 @@ image_alpha = 0.75;
 depth       = -1;
 
 simple_draw = true;
+
 
 // over 650 EP in run
 
