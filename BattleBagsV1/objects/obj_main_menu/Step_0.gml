@@ -1,4 +1,5 @@
 
+
 /// @description Handle menu navigation and selection.
 var input = obj_game_manager.input;
 //if layer_sequence_is_finished(start_seq)
@@ -78,7 +79,7 @@ if (input.ActionPress || input.Enter) {
 
 if (keyboard_check_pressed(vk_alt))
 {
-    room_goto(rm_local_multiplayer_lobby);
+    room_goto(rm_gameRoom);
 }
 
 // Step Event:
