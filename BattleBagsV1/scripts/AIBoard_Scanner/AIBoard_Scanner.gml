@@ -40,7 +40,7 @@ function AIBoardScanner(player) constructor {
         }
         
         
-        show_grid_in_debug();
+        //show_grid_in_debug();
             
         
         return !ds_queue_empty(self.match_queue);
@@ -350,11 +350,11 @@ function AIBoardScanner(player) constructor {
         var dir = gap > 0 ? 0 : 1;    
         var moveCol = col - dir;
 
-        if (targetCol < 0 || targetCol >= player.width) return false;
+        if (targetCol < 0 || targetCol >= player.board_width) return false;
         
         var block1 = grid[col, row];
         var block1_left = grid[max(0, col - 1), row];
-        var block1_right = grid[min(col + 1, player.width - 1), row];
+        var block1_right = grid[min(col + 1, player.board_width - 1), row];
         
         if (block1.type == BLOCK.NONE) return false;
         
@@ -364,7 +364,7 @@ function AIBoardScanner(player) constructor {
         var block2_down_1 = grid[targetCol, row + 1].type;
         var block2_up_1 = grid[targetCol, row - 1].type;
         var block2_left_1 = grid[max(0,targetCol - 1), row].type;
-        var block2_right_1 = grid[min(player.width - 1, targetCol + 1), row].type;
+        var block2_right_1 = grid[min(player.board_width - 1, targetCol + 1), row].type;
         
         
         
@@ -404,13 +404,13 @@ function AIBoardScanner(player) constructor {
         
         if (matchSize < 3 || !valid) return;
         
-        show_debug_message("Col: " + string(col) + "\n"
-                                + "Row: " + string(row) + "\n"
-                                    + "Target Col: " + string(targetCol) + "\n"
-                                        + "Move Col: " + string(moveCol) + "\n"
-        + "Move Dir: " + string(dir) + "\n")
+        //show_debug_message("Col: " + string(col) + "\n"
+                                //+ "Row: " + string(row) + "\n"
+                                    //+ "Target Col: " + string(targetCol) + "\n"
+                                        //+ "Move Col: " + string(moveCol) + "\n"
+        //+ "Move Dir: " + string(dir) + "\n")
         
-        show_debug_message("Match Size: " + string(matchSize) + "\n")
+        //show_debug_message("Match Size: " + string(matchSize) + "\n")
         randomize();
         // Check for match in the temp grid at the target position (where the moveBlock landed)
         var distance = (abs(player.hovered_block[0] - moveCol) + abs(player.hovered_block[1])) + (row * (2));
@@ -429,7 +429,7 @@ function AIBoardScanner(player) constructor {
     }
     
     checkTempMatch = function(col, row) {
-        if (col < 0 || col > player.width - 1) return false;
+        if (col < 0 || col > player.board_width - 1) return false;
         var blockType = player.grid[col, row].type;
     
         if (blockType < 0) return false;
@@ -437,7 +437,7 @@ function AIBoardScanner(player) constructor {
         // Horizontal check
         var horizontalCount = 1;
         for (var c = col - 1; c >= 0 && player.grid[c, row].type == blockType; c--) horizontalCount++;
-        for (var c = col + 1; c < player.width && player.grid[c, row].type == blockType; c++) horizontalCount++;
+        for (var c = col + 1; c < player.board_width && player.grid[c, row].type == blockType; c++) horizontalCount++;
     
         // Vertical check
         var verticalCount = 1;
@@ -449,12 +449,12 @@ function AIBoardScanner(player) constructor {
     }
     
     countConnectedBlocksInGrid = function(col, row) {
-        if (col < 0 || col > player.width - 1) return false;
+        if (col < 0 || col > player.board_width - 1) return false;
         var blockType = player.grid[col, row].type;
     
         var count = 1;  // Itself counts
         for (var c = col - 1; c >= 0 && player.grid[c, row].type == blockType; c--) count++;
-        for (var c = col + 1; c < player.width - 1 && player.grid[c, row].type == blockType; c++) count++;
+        for (var c = col + 1; c < player.board_width - 1 && player.grid[c, row].type == blockType; c++) count++;
         for (var r = row - 1; r >= player.topmost_row && player.grid[col, r].type == blockType; r--) count++;
         for (var r = row + 1; r <= player.bottom_playable_row && player.grid[col, r].type == blockType; r++) count++;
     
@@ -647,7 +647,7 @@ function AIBoardScanner(player) constructor {
             score: score
         });
     
-        show_debug_message("📌 Queued pair setup: Move [" + string(startCol) + "," + string(startRow) + "] ➡ [" + string(targetCol) + "," + string(targetRow) + "]");
+        //show_debug_message("📌 Queued pair setup: Move [" + string(startCol) + "," + string(startRow) + "] ➡ [" + string(targetCol) + "," + string(targetRow) + "]");
     }
     
     

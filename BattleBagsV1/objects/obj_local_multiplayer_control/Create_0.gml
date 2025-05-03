@@ -21,8 +21,9 @@ ai_button_height = 40;       // Height of AI button
 ai_difficulty = 5;           // Default AI difficulty (1-5)
 ai_difficulty_names = ["Easy", "Medium", "Hard", "Expert", "Master"];
 
+number_of_block_types = 8;
 
-
+//create_block_spawn_rates(self);
 
 
 
@@ -56,7 +57,7 @@ for (var i = 0; i < max_players; i++) {
 for (var i = 0; i < ds_list_size(global.player_list); i++) {
     var player = ds_list_find_value(global.player_list, i);
     random_set_seed(random_seed);
-    spawn_random_blocks_in_array(player.grid, player.start_row);
+    spawn_random_blocks_in_array(player, player.grid, player.start_row);
     player.swap_info = create_swap_info();
     player.swap_queue = create_swap_queue();
     player.pop_list = ds_list_create();

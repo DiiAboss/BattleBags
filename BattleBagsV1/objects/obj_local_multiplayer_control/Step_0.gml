@@ -115,7 +115,6 @@ if (room == rm_local_multiplayer_lobby)
 
 if (room == rm_local_multiplayer_game)
 {
-    
     if (keyboard_check_pressed(ord("P")))
     {
         if (player.is_ai)
@@ -126,11 +125,11 @@ if (room == rm_local_multiplayer_game)
     }
     
     
-    if (player.is_ai && player.input.ActionPress) {
-        show_debug_message("AI trying to swap at position: " + 
-                        string(player.hovered_block[0]) + "," + 
-                        string(player.hovered_block[1]));
-    }
+    //if (player.is_ai && player.input.ActionPress) {
+        //show_debug_message("AI trying to swap at position: " + 
+                        //string(player.hovered_block[0]) + "," + 
+                        //string(player.hovered_block[1]));
+    //}
 
     
     setup_ai_players_from_lobby(self);
@@ -139,7 +138,7 @@ if (room == rm_local_multiplayer_game)
     
     for (var i = 0; i < ds_list_size(global.player_list); i++) {
         var player = ds_list_find_value(global.player_list, i);
-        
+               
         if (player.combo > 0 || !ds_list_empty(player.pop_list))
         {
             player.combo_timer += 1;
@@ -156,7 +155,7 @@ if (room == rm_local_multiplayer_game)
         }
         
         
-        update_topmost_row_mp(self, player);
+        update_topmost_row_mp(player);
         
         // Drop the blocks
         drop_blocks_mp(self, player);

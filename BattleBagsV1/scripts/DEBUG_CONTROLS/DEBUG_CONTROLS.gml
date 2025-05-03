@@ -1,6 +1,7 @@
 // Script Created By DiiAboss AKA Dillon Abotossaway
 function enable_debug_controls(_self, hover_x, hover_y, debug_active = false)
 {
+    //return;
 	if !debug_active return;
 	//  Horizontal Destruction
 	if (keyboard_check_pressed(ord("L"))) { 
@@ -24,7 +25,9 @@ function enable_debug_controls(_self, hover_x, hover_y, debug_active = false)
     
     if (keyboard_check_pressed(ord("T")))
     {
-        destroy_rows_from_bottom(self, 1);
+        var bug = instance_create_depth(mouse_x, mouse_y, -room_height, obj_bug);
+        bug.target = obj_recycler;
+        //destroy_rows_from_bottom(self, 1);
     }
     
 	
@@ -37,6 +40,12 @@ function enable_debug_controls(_self, hover_x, hover_y, debug_active = false)
     {
         victory_state = true;
     }
+    
+    if (keyboard_check_pressed(ord("G")))
+        {
+            self.grid[hover_x, hover_y].type = BLOCK.COLOR_BOMB;
+        }
+    
 
 	// 🌟 Vertical Destruction
 	if (keyboard_check_pressed(ord("I"))) { 
@@ -64,7 +73,7 @@ if (keyboard_check_pressed(vk_end)) {
     spawn_2x2_block(_self, hover_x, hover_y, BLOCK.RED); // Spawns a big RED block
 }
 if (keyboard_check_pressed(vk_home)) {
-    spawn_mega_block(self, irandom_range(0, _self.width), 4, "line_1x3"); // Spawn **1x3 Line Mega Block**
+    spawn_mega_block(_self, irandom_range(0, _self.width), 4, "line_1x3"); // Spawn **1x3 Line Mega Block**
 }
 	if (keyboard_check_pressed(vk_shift)) {
 		//toss_down_row(_self, true);
@@ -103,7 +112,7 @@ if (keyboard_check_pressed(vk_home)) {
 	}
 
 	if (keyboard_check_pressed(ord("U"))) {
-		bring_up_upgrade_menu();
+		bring_up_shop_menu();
 	}
 
 	if (keyboard_check_pressed(ord("Q"))) {

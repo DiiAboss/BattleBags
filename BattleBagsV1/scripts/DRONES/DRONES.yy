@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"DRONES",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DRONES",
+  "parent":{
+    "name":"DRONES",
+    "path":"folders/Scripts/DRONES.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

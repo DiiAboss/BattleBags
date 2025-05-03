@@ -1,19 +1,95 @@
+
+// Randomize the game board (this can be turned on in game manager, as we may need to run on seeds)
 randomize();
 
+// image speed?
 image_speed = 0.1;
 image_alpha = 0.75;
 depth       = -1;
 
+simple_draw = false;
+
+// over 650 EP in run
+
 //--------------------------------------------------
 // Positioning Cursor
 //--------------------------------------------------
-selected_piece = [-1, -1];
 hovered_block  = [-1, -1];
 
 //--------------------------------------------------
 // Player Stats
 //--------------------------------------------------
-global.gold       = 0;
+
+can_2x2 = true;
+color_bomb_enabled = 5;
+
+board_width  = 8;
+board_height = 24;
+
+top_playable_row    = 7;
+bottom_playable_row = 20;
+
+number_of_drones = obj_game_manager.number_of_drones;
+
+//-----------------------------------------
+// DRONE MANAGEMENT
+//-----------------------------------------
+drone_speed = 1;
+
+drone_array = obj_game_manager.drone_array;
+
+for (var d = 0; d < number_of_drones; d++)
+{
+    drone_array[d].player = self;
+	
+	drone_array[d].x -= 260 + (32*d);
+}
+
+
+diagonal_matches = false;
+
+big_block_multi = 1;
+
+
+stats =
+{
+    ep_gain:        1,
+    ep_combo_multi: 1.1,
+    gold_per_coin:  1,
+    shop_price:     1,
+    objective_ep_gain: 1,
+    overworld_speed: 0.05,
+	overheat_rate: 1,
+	overheat_cooldown: 0.25,
+	conveyor_speed: 1,
+	shift_speed: 1,
+	max_combo_timer: 60,
+}
+
+mod_stats = obj_game_manager.mod_stats;
+
+combo_multi 	   = stats.ep_combo_multi	 * mod_stats.ep_combo_multi;
+max_combo_timer    = stats.max_combo_timer	 * mod_stats.max_combo_timer;
+game_speed_default = stats.shift_speed		 * mod_stats.shift_speed;
+ep_gain            = stats.ep_gain           * mod_stats.ep_gain;
+shop_price         = stats.shop_price        * mod_stats.shop_price;
+gold_per_coin      = stats.gold_per_coin     * mod_stats.gold_per_coin;
+shop_price         = stats.shop_price        * mod_stats.shop_price;
+objective_ep_gain  = stats.objective_ep_gain * mod_stats.objective_ep_gain;
+overworld_speed    = stats.overworld_speed   * mod_stats.overworld_speed;
+
+
+objective_manager = instance_create_depth(x, y, -room_height, obj_objective_manager);
+
+special_event = false;
+special_event_completed = false;
+special_event_type = EVENT_TYPE.NONE;
+ 
+energy_points = 0; //Temporary Currency
+gold          = 0;
+game_board_speed = 1;
+
+global.gold       = 10000;
 luck              = 0;
 damage_mod        = 0;
 health_pickup_mod = 0;
@@ -28,6 +104,10 @@ total_combo_counter    = 0;
 highest_max_combo      = 0;
 total_damage_dealt     = 0;
 
+width	     = board_width;
+height	     = board_height;
+
+in_shop = false;
 
 // These will be bound to keyboard keys and right clicks
 skills = [0,0,0,0];
@@ -40,22 +120,44 @@ control_mode = "modern";
 iType = "click_and_drag";
 
 
+
+
+
+big_blocks_on_board =
+{
+    red:        0,
+    yellow:     0,
+    green:      0,
+    blue:       0,
+    lightblue:  0,
+    orange:     0,
+    pink:       0,
+    purple:     0,
+}
+
+black_blocks_on_board = 0;
+blocks_to_activate_color_bomb = 5;
+
+combo_tiers = [0, 5, 10, 15, 20, 25, 30];
+
+combo_tier_level = 0;
+
+black_block_spawn_rate_per_tier = [50, 40, 30, 20, 10, 0];
+
+block_life_outside_of_grid = 360;
+game_over_show_option = false;
+
 //----------------------------------------------------
 // Board Creation
 //----------------------------------------------------
 big_block_enabled = true;
 
-spawn_rows   = 6; // Number of initial rows to spawn
-width	     = 8;
-height	     = 24;
-
-board_width  = 8;
-board_height = 24;
-
-top_playable_row    = 4;
-bottom_playable_row = 20;
 
 
+
+spawn_rows   = 4; // Number of initial rows to spawn
+
+powerup_slots = array_create(board_width, -1);
 // ------------------------------------------------------
 // MUSIC
 // ------------------------------------------------------
@@ -73,16 +175,20 @@ global.music_fight_volume = 0;
 global.music_fade_speed = 0.02;
 
 
+
+
+recycler = noone;
+
 // ------------------------------------------------------
 // Adjustable Stats
 // ------------------------------------------------------
-game_speed_default = 1;
+
 game_speed_start   = game_speed_default;
 
 global.modifier = game_speed_default / game_speed_start;
 
 game_speed_combo_modifier = 0.5;
-game_speed_increase_modifier = 2;
+game_speed_increase_modifier = 3;
 game_speed_fight_for_your_life_modifier = 0;
 
 global.gameSpeed = game_speed_default;
@@ -91,6 +197,47 @@ global.enemy_timer_game_speed = 1;
 
 global.player_total_level = 1;
 global.player_level = 1;
+
+
+scan_board = 5;
+repel_bugs_timer = 0;
+
+
+
+
+consumable_array = [];
+
+upgrade_array    = [];
+
+//-----------------------------------------
+// ADJUSTABLE STATS
+//-----------------------------------------
+
+
+
+
+// Currency
+red_blocks = 0;
+yellow_blocks = 0;
+green_blocks = 0;
+blue_blocks = 0;
+lightblue_blocks = 0;
+orange_blocks = 0;
+pink_blocks = 0;
+purple_blocks = 0;
+
+bronze_blocks = 0;
+silver_blocks = 0;
+gold_blocks = 0;
+
+factory_points = 0;
+
+
+//----------------------------------------
+//
+//----------------------------------------
+big_block_types_on_grid = array_create(0);
+
 
 level = 1;
 target_level = 0;
@@ -103,6 +250,9 @@ max_exp_level_mod = 10;
 
 max_experience_points = max_exp_mod + ((max_exp_level_mod * level) + (level * level)) - level;
 
+
+
+
 fight_for_your_life = false;
 
 
@@ -114,11 +264,12 @@ lose_life_timer     = 0;
 blocks_in_danger = false;
 
 
-health_per_heart = 4; // Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
-total_hearts = 3;
-max_hearts = total_hearts * health_per_heart;
+health_per_heart  = 4; // Set to player hearts of 3 x 4 pieces (hearts will only heal a pieace of health now)
+total_hearts      = 3;
+max_hearts        = total_hearts * health_per_heart;
 max_player_health = max_hearts;
 player_health     = max_player_health;
+
 
 
 highest_points = 0;
@@ -139,7 +290,7 @@ time_in_minutes = floor(time_in_seconds / 60);
 
 draw_time = string(time_in_minutes) + ":" + string(floor(time_in_seconds % 60));
 
-diagonal_matches = false;
+
 
 after_menu_counter_max = 2 * _FPS;
 after_menu_counter = after_menu_counter_max;
@@ -151,6 +302,11 @@ number_of_rows_spawned = 0;
 // RAVEN CLEARS IN ABOUT 7-8 mins avg
 victory_number_of_rows = 48;
 
+
+
+topmost_row = 0;
+
+
 // ------------------------------------------------------
 // Global Variables & Game State
 // ------------------------------------------------------
@@ -159,7 +315,7 @@ combo_y = -1;
 global.paused = false;
 
 
-global.grid_shake_amount = 0; // Grid shake intensity
+grid_shake_amount = 0; // Grid shake intensity
 
 // ------------------------------------------------------
 // Block Types
@@ -167,7 +323,9 @@ global.grid_shake_amount = 0; // Grid shake intensity
 global_shape_function_init();
 
 combo_timer     = 0;
-max_combo_timer = 60; // Half a second of grace
+
+
+
 
 // ✅ Initialize Global Upgrade System
 
@@ -188,7 +346,7 @@ global.enemy_attack_queue = ds_list_create();
 // ------------------------------------------------------
 swap_in_progress = false;
 swap_info = create_swap_info();
-global.swap_queue = { 
+swap_queue = { 
 	active: false, 
 	ax: -1, 
 	ay: -1, 
@@ -199,18 +357,23 @@ global.swap_queue = {
 // ------------------------------------------------------
 // Board Setup
 // ------------------------------------------------------
-board_x_offset = 128;
+
+left_column_ui_length = 192;
+
+board_x_offset = 128 + left_column_ui_length;
 
 max_shake_timer = 30;
 
-global.topmost_row = height - 1;
-global.pop_list    = ds_list_create();
+topmost_row = height - 1;
+
+
+pop_list    = ds_list_create();
 
 global.lastSwapX = -1;
 global.lastSwapY = -1;
 player_level     = 0;
 combo            = 0;
-numberOfGemTypes = 8;
+number_of_block_types = 8;
 darken_alpha     = 0;
 
 gem_size        = 64;
@@ -224,7 +387,10 @@ global.in_upgrade_menu = false;
 // ------------------------------------------------------
 // Create The Grid
 // ------------------------------------------------------
-create_block_spawn_rates(self);
+//create_block_spawn_rates(self);
+
+block_spawn_rates = new block_spawn_weight_manager();
+
 initialize_game_board(self, width, height, spawn_rows);
 
 // ------------------------------------------------------
@@ -268,15 +434,14 @@ game_over_blocks_popped = 0;
 inputDelay   = 10;
 devices      = [];
 
-enemy_control = instance_create_depth(x, y, depth, obj_enemy_control);
 is_targeting_enemy = true;
-enemy_target = -1;
+enemy_target       = -1;
 
 
 //------------------------------------------
 // COMBO POINTS SYSTEM
 //------------------------------------------
-combo_points = 0;
+combo_points     = 0;
 max_combo_points = 100;
 
 cp_per_match_3    = 1;
@@ -286,9 +451,12 @@ cp_per_match_plus = 3;
 cp_per_big_block  = 3;
 cp_per_combo      = 1;
 
+
+
+
 meteor_block      = -1;
 
-block_colors_destroyed = array_create(numberOfGemTypes, -1); //to show how much b
+block_colors_destroyed = array_create(number_of_block_types, -1); //to show how much b
 
 victory_state         = false;
 victory_alpha         = 0;
@@ -329,4 +497,31 @@ default_font = fnt_basic;
 
 
 var geo_size = (board_width * gem_size) + 128;
-geogrid = new geowars_grid(board_x_offset, 256, geo_size, room_height, 128);
+//geogrid = new geowars_grid(board_x_offset, 256, geo_size, room_height, 128);
+conveyor_belt = instance_create_depth(x, y, depth - 1, obj_conveyor_belt);
+
+alarm[0] = scan_board;
+
+//show_debug_overlay(true);
+
+big_block_mod_list = ds_list_create();
+
+big_block_enabled = false;
+
+speed_up_delay_max = 60;
+speed_up_delay = 30;
+just_shifted = false;
+
+global.total_speed_modifier = 1;
+
+audio_stop_sound(songs[current_song]);
+audio_stop_sound(global.music_fight);
+audio_stop_sound(global.music_regular);
+
+time_in_seconds = (total_time / fps);
+
+next_event_timer = 0;
+next_event_timer_max = fps * 120
+
+
+draw_right_side = board_x_offset + (board_width * gem_size);

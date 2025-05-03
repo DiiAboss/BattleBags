@@ -21,6 +21,17 @@ function update_draw_time(_self)
 }
 
 
+function draw_next_event_timer(player, next_event_timer)
+{
+    var draw_minutes = floor(next_event_timer / 60);
+    if (draw_minutes <10) draw_minutes="0"+string(draw_minutes);
+    var draw_seconds = next_event_timer % 60;
+    if (draw_seconds <10) draw_seconds="0"+string(draw_seconds);
+        
+    var draw_time = string(draw_minutes) + ":" + string(draw_seconds);
+    
+    return draw_time;
+}
 
 
  

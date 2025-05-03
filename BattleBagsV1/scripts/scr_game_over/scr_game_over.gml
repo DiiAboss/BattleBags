@@ -29,7 +29,7 @@ function check_game_over(_self)
 		    // If we destroyed any blocks, subtract that many from player health
 		    if (blocks_destroyed > 0) {
 		        player_health -= _self.health_per_heart;
-		        global.grid_shake_amount = 10; // Trigger a shake effect
+		        _self.grid_shake_amount = 10; // Trigger a shake effect
 		        if (player_health <= 0) {
 		            trigger_final_game_over(_self);
 		        }
@@ -67,7 +67,7 @@ function trigger_final_game_over(_self) {
     var top_row = _self.top_playable_row;
 
     // ✅ Add all blocks to the pop queue in order (top-left to bottom-right)
-    for (var _y = top_row; _y <= bottom_row; _y++) {
+    for (var _y = top_row; _y < bottom_row; _y++) {
         for (var _x = 0; _x < width; _x++) {
             var block = _self.grid[_x, _y];
 

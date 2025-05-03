@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SHOW_HOVERED_BLOCK",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SHOW_HOVERED_BLOCK",
+  "parent":{
+    "name":"DRAW",
+    "path":"folders/Scripts/DRAW.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

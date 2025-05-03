@@ -1,10 +1,11 @@
 function create_player(_id)
 {
     return {
-        _id: _id,                              // Player ID
-        input: new Input(),                   // Player input
-        grid: create_grid_array(),            // Player grid
-        global_y_offset: 0,                   // Y Offset
+        _id: _id,                                // Player ID
+        input: new Input(),                      // Player input
+        grid: create_grid_array(self),            // Player grid
+        block_spawn_rates: new block_spawn_weight_manager(), // Block Spawn Rates Manager
+        global_y_offset: 0,                      // Y Offset
         start_row: 12,
         shift_speed: 1,                        // Shift speed
         default_shift_speed: 1,
@@ -25,8 +26,8 @@ function create_player(_id)
         swap_in_progress: false,
         swap_info: undefined,
         swap_queue: undefined,
-        width: 8,
-        height: 24,
+        board_width: 8,
+        board_height: 24,
         online_player: false,
         last_swap_x: -1,
         last_swap_y: -1,
@@ -45,6 +46,7 @@ function create_player(_id)
         combo: 0,
         max_combo_timer: 60,
         combo_timer: 60,
+        dragged: false,
         
         
     };

@@ -9,7 +9,7 @@
   "bitRate":128,
   "compression":0,
   "conversionMode":0,
-  "duration":214.93552,
+  "duration":214.88748,
   "name":"Sound7",
   "parent":{
     "name":"group1",

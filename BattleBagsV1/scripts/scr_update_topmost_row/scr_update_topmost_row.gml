@@ -1,18 +1,18 @@
 /// Updates `global.topmost_row` to the highest row containing a **stationary** gem
-function update_topmost_row(_self) {
+function update_topmost_row(player) {
 	
-	var width = _self.width;
-	var height = _self.height;
+	var width = player.board_width;
+	var height = player.board_height;
 	
-    global.topmost_row = height - 1; // Start at the bottom
+    player.topmost_row = height - 1; // Start at the bottom
 
     for (var j = 0; j < height; j++) { // Scan top to bottom
         for (var i = 0; i < width; i++) {
-            var gem = _self.grid[i, j];
+            var block = player.grid[i, j];
 
             // ✅ If there's a valid, stationary gem, update `topmost_row`
-            if (gem.type != BLOCK.NONE && !_self.locked[i, j] && !gem.falling && gem.fall_delay == 0) {
-                global.topmost_row = j;
+            if (block.type != BLOCK.NONE && !player.locked[i, j] && !block.falling && block.fall_delay == 0) {
+                player.topmost_row = j;
                 return;
             }
         }
@@ -20,10 +20,10 @@ function update_topmost_row(_self) {
 }
 
 
-function update_topmost_row_mp(_self, player) {
+function update_topmost_row_mp(player) {
     
-    var width = _self.width;
-    var height = _self.height;
+    var width = player.board_width;
+    var height = player.board_height;
     
     player.topmost_row = height - 1; // Start at the bottom
 

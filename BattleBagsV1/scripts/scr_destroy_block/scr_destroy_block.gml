@@ -1,9 +1,9 @@
-function destroy_block(_self, _x, _y) {
-    var block = _self.grid[_x, _y];
+function destroy_block(player, _x, _y) {
+    var block = player.grid[_x, _y];
 
-    if (block == BLOCK.NONE) return; // Prevent null errors
+    if (block == BLOCK.NONE) return noone; // Prevent null errors
 	
-	if (_y > _self.bottom_playable_row) return;
+	if (_y > player.bottom_playable_row) return noone;
 	
     // ✅ If BLACK, store it for transformation (don't destroy immediately)
     if (block.type == BLOCK.BLACK) {
@@ -12,6 +12,8 @@ function destroy_block(_self, _x, _y) {
     }
 	
     // ✅ Otherwise, process the destruction normally
-    _self.grid[_x, _y] = create_block(BLOCK.NONE); // Remove block from grid
+    player.grid[_x, _y] = create_block(player, BLOCK.NONE); // Remove block from grid"
+    
+    return player.grid[_x, _y];
 }
 

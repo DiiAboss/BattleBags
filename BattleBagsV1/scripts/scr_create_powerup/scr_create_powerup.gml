@@ -47,7 +47,7 @@ ds_map_add(global.powerup_weights, POWERUP.HEART, 2);
 ds_map_add(global.powerup_weights, POWERUP.MONEY, 2);
 ds_map_add(global.powerup_weights, POWERUP.POISON, 0);
 ds_map_add(global.powerup_weights, POWERUP.FIRE, 0);
-ds_map_add(global.powerup_weights, POWERUP.ICE, 0);
+ds_map_add(global.powerup_weights, POWERUP.ICE, 2);
 ds_map_add(global.powerup_weights, POWERUP.TIMER, 0);
 ds_map_add(global.powerup_weights, POWERUP.FEATHER, 0);
 ds_map_add(global.powerup_weights, POWERUP.WILD_POTION, 2); // Very rare
@@ -66,7 +66,7 @@ ds_map_add(global.powerup_weights, POWERUP.NONE, chance_none);
 
 
 
-function create_powerup(_powerup = -1, _chance = 25) {
+function create_powerup(_powerup = -1) {
 	
 	var _sprite = spr_powerup_1;
 	var _dir = choose(0, 90, 180, 270);
@@ -120,7 +120,7 @@ function create_powerup(_powerup = -1, _chance = 25) {
 			_sprite = spr_powerup_fire;
 		break;
 		case POWERUP.ICE:
-			_sprite = spr_powerup_ice;
+			_sprite = spr_ice_cube;
 		break;
 		case POWERUP.TIMER:
 			_sprite = spr_powerup_timer;
@@ -140,7 +140,7 @@ function create_powerup(_powerup = -1, _chance = 25) {
     return {
         powerup: _powerup, // Power-up type (e.g., 0 for bomb, 1 for rainbow, etc.)
 		sprite: _sprite,
-		chance: _chance,
+		//chance: _chance,
 		dir: _dir,
 		size: 1,
 		bomb_tracker: _bomb_tracker,

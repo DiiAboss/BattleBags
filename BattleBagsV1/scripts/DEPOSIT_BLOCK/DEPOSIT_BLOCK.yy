@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"DEPOSIT_BLOCK",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DEPOSIT_BLOCK",
+  "parent":{
+    "name":"DEPOSIT_BLOCKS",
+    "path":"folders/Scripts/DEPOSIT_BLOCKS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

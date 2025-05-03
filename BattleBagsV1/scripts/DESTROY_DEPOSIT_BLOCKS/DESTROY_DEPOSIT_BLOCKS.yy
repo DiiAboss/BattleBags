@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"DESTROY_DEPOSIT_BLOCKS",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DESTROY_DEPOSIT_BLOCKS",
+  "parent":{
+    "name":"DEPOSIT_BLOCKS",
+    "path":"folders/Scripts/DEPOSIT_BLOCKS.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

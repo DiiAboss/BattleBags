@@ -1,14 +1,14 @@
 function get_color_spawn_percentages(_self) {
     var total_weight = 0;
-    var percentages = array_create(_self.numberOfGemTypes, 0);
+    var percentages = array_create(_self.number_of_block_types, 0);
 
     // ✅ Calculate total weight
-    for (var i = 0; i < _self.numberOfGemTypes; i++) {
+    for (var i = 0; i < _self.number_of_block_types; i++) {
         total_weight += global.color_spawn_weight[i];
     }
 
     // ✅ Compute each color’s percentage
-    for (var i = 0; i < _self.numberOfGemTypes; i++) {
+    for (var i = 0; i < _self.number_of_block_types; i++) {
         percentages[i] = (global.color_spawn_weight[i] / total_weight) * 100;
     }
 
@@ -25,7 +25,7 @@ function draw_spawn_rates(_self) {
     var start_y = 50;  // ✅ Top position
     var spacing = 20;  // ✅ Line spacing
 
-    for (var i = 0; i < _self.numberOfGemTypes; i++) {
+    for (var i = 0; i < _self.number_of_block_types; i++) {
 		
 		var color_name = "";
 		
@@ -41,10 +41,10 @@ function draw_spawn_rates(_self) {
 				color_name = "GREEN";
 			break;
 			case BLOCK.PINK:
-				color_name = "PINK";
+				color_name = "PURPLE";
 			break;
 			case BLOCK.PURPLE:
-				color_name = "PURPLE";
+				color_name = "BEIGE";
 			break;
 			case BLOCK.LIGHTBLUE:
 				color_name = "LIGHT BLUE";

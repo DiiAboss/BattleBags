@@ -1,12 +1,12 @@
-function activate_shuffle(_self) {
+function activate_shuffle(player) {
 	
-	var width = _self.width;
-	var height = _self.height;
+	var width = player.board_width;
+	var height = player.board_height;
 	
     for (var i = 0; i < width; i++) {
         for (var j = 0; j < height; j++) {
-            if (_self.grid[i, j] != -1) {
-                _self.grid[i, j] = create_block(BLOCK.RANDOM);
+            if (player.grid[i, j] != -1) {
+                player.grid[i, j] = create_block(player, BLOCK.RANDOM);
             }
         }
     }

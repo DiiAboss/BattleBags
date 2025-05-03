@@ -1,7 +1,7 @@
 function create_mega_block(_width, _height) {
     return {
-        x: -1, // Grid X position (top-left)
-        y: -1, // Grid Y position (top-left)
+        x: 0, // Grid X position (top-left)
+        y: 0, // Grid Y position (top-left)
         width: _width,
         height: _height,
         type: BLOCK.MEGA,
@@ -29,21 +29,21 @@ function create_mega_block(_width, _height) {
     };
 }
 
-function spawn_mega_block(_self, _x, _y, _shape_name) {
+function spawn_mega_block(player, _x, _y, _shape_name) {
     if (!ds_map_exists(global.shape_templates, _shape_name)) return;
 
     var shape = ds_map_find_value(global.shape_templates, _shape_name);
     var shape_width = array_length(shape[0]);
     var shape_height = array_length(shape);
 
-    if (_x < 0 || _x + shape_width > _self.width || _y < 0 || _y + shape_height > _self.height) return;
+    if (_x < 0 || _x + shape_width > player.board_width || _y < 0 || _y + shape_height > player.board_height) return;
 
     var group_id = irandom_range(1, 999999);
 
     for (var j = 0; j < shape_height; j++) {
         for (var i = 0; i < shape_width; i++) {
             if (shape[j][i] != BLOCK.NONE) {
-                var mega_gem = create_block(BLOCK.MEGA);
+                var mega_gem = create_block(player, BLOCK.MEGA);
                 mega_gem.is_big = true;
                 mega_gem.group_id = group_id;
                 mega_gem.big_parent = [_x, _y];
@@ -53,20 +53,20 @@ function spawn_mega_block(_self, _x, _y, _shape_name) {
                 mega_gem.mega_width = shape_width;
                 mega_gem.mega_height = shape_height; // ✅ Store dimensions
                 mega_gem.powerup = create_powerup(POWERUP.NONE); // ✅ Store dimensions
-                _self.grid[_x + i, _y + j] = mega_gem;
+                player.grid[_x + i, _y + j] = mega_gem;
             }
         }
     }
 }
 
-function check_adjacent_mega_blocks(_self, _x, _y, _list) {
-    var gem = _self.grid[_x, _y];
+function check_adjacent_mega_blocks(player, _x, _y, _list) {
+    var gem = player.grid[_x, _y];
 
     // ✅ Only process Mega Blocks
     if (gem.is_big) {
         var parent_x = gem.big_parent[0];
         var parent_y = gem.big_parent[1];
-        var parent_block = _self.grid[parent_x, parent_y];
+        var parent_block = player.grid[parent_x, parent_y];
 
         var big_block_width = parent_block.mega_width;
         var big_block_height = parent_block.mega_height;
@@ -87,8 +87,8 @@ function check_adjacent_mega_blocks(_self, _x, _y, _list) {
                     var dy = block_y + directions[i][1];
 
                     // ✅ Check if within bounds
-                    if (dx >= 0 && dx < _self.width && dy >= 0 && dy < _self.height) {
-                        var target_block = _self.grid[dx, dy];
+                    if (dx >= 0 && dx < player.board_width && dy >= 0 && dy < player.board_height) {
+                        var target_block = player.grid[dx, dy];
 
                         // ✅ Ensure it's a Mega Block & NOT part of the same group
                         if (target_block.type == BLOCK.MEGA && target_block.group_id != parent_block.group_id) {
@@ -119,18 +119,18 @@ function check_adjacent_mega_blocks(_self, _x, _y, _list) {
 
 
 
-function update_mega_blocks(_self, _list) {
+function update_mega_blocks(player, _list) {
     for (var i = 0; i < ds_list_size(_list); i++) {
         var pos = ds_list_find_value(_list, i);
         var _x = pos[0];
         var _y = pos[1];
 
-        var gem = _self.grid[_x, _y];
+        var gem = player.grid[_x, _y];
 
         if (gem.type == BLOCK.MEGA) {
             var parent_x = gem.big_parent[0];
             var parent_y = gem.big_parent[1];
-            var parent_block = _self.grid[parent_x, parent_y];
+            var parent_block = player.grid[parent_x, parent_y];
 
             var big_block_width = parent_block.mega_width;
             var big_block_height = parent_block.mega_height;
@@ -142,28 +142,30 @@ function update_mega_blocks(_self, _list) {
                     var block_y = parent_y + by;
 
                     // ✅ Transform each piece individually into a new random block
-                    _self.grid[block_x, block_y] = create_block(BLOCK.RANDOM);
+                    player.grid[block_x, block_y] = create_block(player, BLOCK.RANDOM);
                 }
             }
         }
     }
 }
 
-function process_mega_blocks(_self, _x, _y) {
+function process_mega_blocks(player, _x, _y) {
     var gem_size = 64; // Grid size
     var offset = 32; // Center offset
-    var board_x_offset = _self.board_x_offset;
-    var global_y_offset = _self.global_y_offset;
+    var board_x_offset = player.board_x_offset;
+    var global_y_offset = player.global_y_offset;
 
-    var gem = _self.grid[_x, _y];
+    var gem = player.grid[_x, _y];
 
     // 🔥 Only process Mega Blocks
     if (gem.type == BLOCK.MEGA) {
         var parent_x = gem.big_parent[0];
         var parent_y = gem.big_parent[1];
-        if (parent_x == -1) || (parent_y == -1) gem = create_block(BLOCK.NONE);
+		if (parent_x < 0) return;
+			
+        if (parent_x == -1) || (parent_y == -1) gem = create_block(player, BLOCK.NONE);
         
-        var parent_block = _self.grid[parent_x, parent_y];
+        var parent_block = player.grid[parent_x, parent_y];
 
         var big_block_width = parent_block.mega_width;
         var big_block_height = parent_block.mega_height;
@@ -184,8 +186,8 @@ function process_mega_blocks(_self, _x, _y) {
                     var dy = block_y + directions[i][1];
 
                     // ✅ Check if within bounds
-                    if (dx >= 0 && dx < _self.width && dy >= 0 && dy < _self.height) {
-                        var target_block = _self.grid[dx, dy];
+                    if (dx >= 0 && dx < player.board_width && dy >= 0 && dy < player.board_height) {
+                        var target_block = player.grid[dx, dy];
 
                         // ✅ Determine color: 🔴 Red = empty, 🔵 Blue = occupied
                         var popping_found = (target_block.popping);
@@ -198,25 +200,28 @@ function process_mega_blocks(_self, _x, _y) {
 						{
 							if target_block.group_id != parent_block.group_id
 							{
+								var total_dist  = 20;
+    							var current_block = (big_block_width * big_block_height);
 								//  Loop through each part of the Mega Block
 					            for (var bx = 0; bx < big_block_width; bx++) {
 					                for (var by = 0; by < big_block_height; by++) {
 					                    var block_x = parent_x + bx;
 					                    var block_y = parent_y + by;
-                                        var _start_delay = 10;
-                                        var dist = 20 * (clamp(point_distance(block_x, block_y, room_width, room_height) / distance_to_point(room_width, room_height), 0, 1));
+
+                                        var _start_delay = total_dist/current_block;
+                                        current_block -=1;
 					                    
                                         // ✅ Transform each piece individually into a new random block
-                                        _self.grid[block_x, block_y] = create_block(BLOCK.RANDOM);
+                                        player.grid[block_x, block_y] = create_block(player, BLOCK.RANDOM);
                                         
                                         
 					                    // ✅ Add to pop list (fixed version)
 					                    var pop_info = {
 					                        x: block_x,
 					                        y: block_y,
-					                        gem_type: _self.grid[block_x, block_y].type,
+					                        gem_type: player.grid[block_x, block_y].type,
 					                        timer: 0,
-					                        start_delay: dist, // 🔥 Give a small delay so we see the effect
+					                        start_delay: _start_delay, // 🔥 Give a small delay so we see the effect
 					                        scale: 1.1,
 					                        popping: true,
 					                        powerup: -1,
@@ -224,23 +229,23 @@ function process_mega_blocks(_self, _x, _y) {
 					                        offset_x: 0,
 					                        offset_y: 0,
 					                        color: c_red, // 🔥 Make sure we mark them correctly
-					                        y_offset_global: _self.global_y_offset,
+					                        y_offset_global: player.global_y_offset,
 					                        match_size: 1,
 					                        match_points: 10, // Placeholder, adjust as needed
 					                        bomb_tracker: false,
 					                        bomb_level: 0,
-					                        img_number: _self.grid[block_x, block_y].img_number,
+					                        img_number: player.grid[block_x, block_y].img_number,
                                             is_big: true,
 					                    };
 
-					                    ds_list_add(global.pop_list, pop_info);
+					                    ds_list_add(player.pop_list, pop_info);
                     
 					                    // 🔥 **Create a pop effect**
-                                        _self.grid[block_x, block_y].popping = true;
-                                        _self.grid[block_x, block_y].pop_timer = dist * _start_delay + _start_delay;
-					                    var draw_x = (block_x * 64) + _self.board_x_offset + 32;
-					                    var draw_y = (block_y * 64) + _self.global_y_offset + 32;
-					                    effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
+                                        player.grid[block_x, block_y].popping = true;
+                                        player.grid[block_x, block_y].pop_timer = _start_delay;
+					                    var draw_x = (block_x * 64) + player.board_x_offset + 32;
+					                    var draw_y = (block_y * 64) + player.global_y_offset + 32;
+					                    //effect_create_above(ef_firework, draw_x, draw_y, 1, c_red);
 					                }
 					            }
 							}
@@ -348,7 +353,7 @@ function process_all_mega_blocks(_self)
     var bottom_row = _self.bottom_playable_row;
     for (var _x = 0; _x < width; _x++)
     {
-        for (var _y = 0; _y < bottom_playable_row; _y++)
+        for (var _y = 0; _y < bottom_row; _y++)
         {
             process_mega_blocks(_self, _x, _y);
             pop_adjacent_black_blocks(_self, _x, _y);

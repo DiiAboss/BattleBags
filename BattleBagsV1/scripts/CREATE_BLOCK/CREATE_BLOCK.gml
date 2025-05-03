@@ -1,31 +1,57 @@
 
 enum BLOCK {
-    RANDOM = -99, GAME_OVER = -404, CURSE = -5, PUZZLE_1 = -4, MEGA = -3, WILD = -2, NONE = -1, RED = 0, YELLOW = 1, GREEN = 2, PINK = 3, PURPLE = 4,
-    LIGHTBLUE = 5, ORANGE = 6, BLUE = 7, GREY = 8, WHITE = 9, BLACK = 10
+    GAME_OVER   = -404,
+    RANDOM      = -99,
+    MEGA        = -3,
+    NONE        = -1,
+    RED         = 0,
+    YELLOW      = 1,
+    GREEN       = 2,
+    PINK        = 3,
+    PURPLE      = 4,
+    LIGHTBLUE   = 5,
+    ORANGE      = 6,
+    BLUE        = 7,
+    GREY        = 8,
+    WHITE       = 9,
+    BLACK       = 10,
+    WILD        = 11,
+    PUZZLE_1    = 12,
+    CURSE       = 13,
+    COLOR_BOMB  = 14,
+    BUG         = 15,
+    COIN        = 16,
+	MULTI       = 17,
+	
+    ICE         = -999,
 }
 
-function create_block(_type = BLOCK.RANDOM, _powerup = weighted_random_powerup()) {
+enum UPGRADE {
+    RANDOM = -99, NONE = -1, HEART = 0, ARROW = 1, BOMB = 2, ICE = 3
+}
+
+function create_block(player, _type = BLOCK.RANDOM, _powerup = POWERUP.NONE) {
 	
 	if (_type == BLOCK.RANDOM) { // If generating a new random gem
-		_type = weighted_random_block(self);
+		_type = weighted_random_block(player);
     }
 	
-if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
-    _powerup = create_powerup(POWERUP.NONE, 0);
-}
+   if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
+       _powerup = create_powerup(POWERUP.NONE);
+   }
 	
 	var _dir = choose(0, 90, 180, 270);
 	var _bomb_level = 1;
 	var _bomb_tracker = false;
 	
-	if (_powerup != -1) {
+	if (_powerup != POWERUP.NONE) {
 		_dir = _powerup.dir;
 		_bomb_level = _powerup.bomb_level;
 		_bomb_tracker = _powerup.bomb_tracker;
 	}
 	else
 	{
-		_powerup = create_powerup(POWERUP.NONE, 0);
+		_powerup = create_powerup(POWERUP.NONE);
 	}
 	
 	var _color = c_white;
@@ -41,11 +67,13 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		case BLOCK.BLUE:   _color = c_blue; break;
 		case BLOCK.BLACK:  _color = c_black; break;
 		case BLOCK.MEGA:   _color = c_white; break;
+            default: break;
 	}
 	
     return {
         type: _type,       
-        powerup: _powerup, 
+        powerup: _powerup,
+        level: irandom(2),
         locked: false,     
         offset_x: 0,       
         offset_y: 0,       
@@ -65,6 +93,7 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
 		explode_on_six: false,
 		popping: false,
 		pop_timer: 0,
+        pop_timer_max: 0,
 		group_id: -1,
 		dir: _dir,
 		is_enemy_block: false,
@@ -82,6 +111,9 @@ if (irandom(100) > ds_map_find_value(global.powerup_weights, _powerup)) {
         draw_y: 0,
         dist_without_touching: 0,
         freeze_on_land: false,
+        cb: BLOCK.NONE,
+        life_counter: 5,
+        is_meteor: false,
     };
 }
 

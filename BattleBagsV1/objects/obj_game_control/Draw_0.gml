@@ -1,64 +1,23 @@
 /// @description Draw the grid, fade bottom row, and highlight hovered gem
 input = obj_game_manager.input;
 
+if (number_of_drones > 0)
+{
+	for (var d = 0; d< number_of_drones; d++)
+	{
+	drone_array[d].draw();
+	}
+}
+
+
+
 
 //// Horizontal pass
-if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) { 
+if (game_over_state) || (victory_state && victory_countdown != victory_max_countdown) {
     
     if (game_over_state)
     {
-        // ✅ Draw Left Panel
-        draw_set_alpha(0.85);
-        draw_set_color(c_black);
-        draw_rectangle(game_over_ui_x, game_over_ui_y, game_over_ui_x + game_over_ui_width, game_over_ui_y + game_over_ui_height, false);
-        draw_set_alpha(1);
-    
-        // ✅ Draw "You Lose" Title
-        var you_lose_x = game_over_ui_x + game_over_ui_width / 2;
-        var you_lose_y = game_over_ui_y + 600;
-        var you_lose_str = "YOU LOSE";
-        
-        draw_text_heading_font(you_lose_x, you_lose_y, you_lose_str);
-    
-        // ✅ Draw Popping Blocks
-        for (var i = 0; i < ds_list_size(game_over_popping); i++) {
-            var pop_data = ds_list_find_value(game_over_popping, i);
-            var _x = pop_data.x;
-            var _y = pop_data.y;
-    
-            draw_sprite(spr_gameOver, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
-            draw_sprite(spr_enemy_gem_overlay, 0, (_x * gem_size) + board_x_offset, (_y * gem_size));
-        }
-    
-        // ✅ Draw Options After Blocks Have Popped
-        if (game_over_show_options) {
-            var restart_x = game_over_ui_x + 50;
-            var restart_y = game_over_ui_y + 350;
-            var menu_x = game_over_ui_x + 50;
-            var menu_y = game_over_ui_y + 420;
-            var button_width = 300;
-            var button_height = 50;
-
-            
-            // ✅ Highlight button on hover
-            if (game_over_option_selected == 0) draw_set_color(c_white);
-            else draw_set_color(c_grey); 
-                
-            var rest_x = restart_x + button_width / 2;
-            var rest_y = restart_y + button_height / 2;
-            var restart_str = "RESTART";
-            
-            draw_text_text_font(rest_x, rest_y, restart_str);
-                
-            if (game_over_option_selected == 1) draw_set_color(c_white);
-            else draw_set_color(c_grey);
-                
-            var mmenu_x = menu_x + button_width / 2;
-            var mmenu_y = menu_y + button_height / 2;
-            var mmenu_str = "MAIN MENU";
-            
-            draw_text_text_font(mmenu_x, mmenu_y, mmenu_str);
-        }
+        draw_game_over_state(self);
     }
     
     draw_set_color(c_white);
@@ -77,17 +36,14 @@ if (game_over_state) || (victory_state && victory_countdown != victory_max_count
         // ✅ Draw "You Lose" Title
         draw_text_heading_font(game_over_text_x, game_over_text_y, victory_string);
     }
-    
 }
-
-
 else
 {
    // ----------------------------------
    //  APPLY GRID SHAKE WHEN DAMAGED
    // ----------------------------------
-    var shake_x = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
-    var shake_y = irandom_range(-global.grid_shake_amount, global.grid_shake_amount);
+    var shake_x = irandom_range(-grid_shake_amount, grid_shake_amount);
+    var shake_y = irandom_range(-grid_shake_amount, grid_shake_amount);
     
     var draw_y_start = camera_get_view_y(view_get_camera(view_current));
     
@@ -113,10 +69,11 @@ else
                             board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, c_black, c_black, c_black, c_black, false);
     draw_set_alpha(1);
     
-    surface_set_target(surBase);
-        draw_clear(c_black);
-        
     
+    if !simple_draw
+    {
+        surface_set_target(surBase);
+            draw_clear(c_black);
     
     
         for (var i = 0; i < width; i++)
@@ -128,61 +85,81 @@ else
                     var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
                     var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
     
-                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 1, 1, 0, gem.color, 1);
+                    //draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 1, 1, 0, gem.color, 1);
+                    draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 0.5 + (0.5 * gem.level), 0.5 + (0.5 * gem.level), 0, gem.color, 1);
+                    if (gem.is_big)
+                    {
+                        if (gem.big_parent[0] == i && gem.big_parent[1] == j)
+                        {
+                          //draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x, draw_y, 0.5, 0.5, 0, c_white, 1); 
+                            draw_sprite_ext(sprite_for_block(gem.type), gem.level, draw_x, draw_y, 0.5 * gem.level, 0.5 * gem.level, 0, gem.color, 1);
+                        }
+                    }
                 }
             }
         }
-        
+      }  
     
     //----------------------------------------------------------------
     // DRAW GLOWING BLOCKS
     //----------------------------------------------------------------
+    if !(simple_draw)
+    {
         surface_reset_target();
+                
+                // Make it glow horizontally
+                surface_set_target(surPass);
+                draw_clear_alpha(c_black, 0);
+                
+                shader_set(shd_blur_horizontal);
+                shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+                shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_time"), current_time);
+                
+                gpu_set_blendenable(false);
+                draw_surface(surBase, 0, 0);
+                gpu_set_blendenable(true);
+                
+                shader_reset();
+                surface_reset_target();
+                
+                //// Vertical pass + final adjustments, add on top
+                gpu_set_blendmode(bm_add);
+                
         
-        // Make it glow horizontally
-        surface_set_target(surPass);
-        draw_clear_alpha(c_black, 0);
+                //
         
-        shader_set(shd_blur_horizontal);
-        shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
-        shader_set_uniform_f(shader_get_uniform(shd_blur_horizontal, "u_time"), current_time);
-        
-        gpu_set_blendenable(false);
-        draw_surface(surBase, 0, 0);
-        gpu_set_blendenable(true);
-        
-        shader_reset();
-        surface_reset_target();
-        
-        //// Vertical pass + final adjustments, add on top
-        gpu_set_blendmode(bm_add);
-        
-        shader_set(shd_blur_vertical);
-        shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
-        shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
-        draw_surface(surPass, 0, 0);
-        shader_reset();
-        
-        gpu_set_blendmode(bm_normal); 
-    
-      draw_set_alpha(0.75);
-      draw_rectangle_color( board_x_offset,
-                            view_diff - thickness,
-                            board_x_offset + grid_width + thickness,
-                            view_diff + grid_height - thickness,
-                            c_black,
-                            c_black,
-                            c_black,
-                            c_black,
-                            false);
-      draw_set_alpha(1);
-    
-    
-        draw_set_color(c_lime);
-        geogrid.geogrid_draw(self);
-        draw_set_color(c_white);
-    
-    
+                shader_set(shd_blur_vertical);
+                shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_glowProperties"), uOuterIntensity, uInnerIntensity, uInnerLengthMultiplier);
+                shader_set_uniform_f(shader_get_uniform(shd_blur_vertical, "u_time"), current_time);
+                draw_surface(surPass, 0, 0);
+                shader_reset();
+                
+                gpu_set_blendmode(bm_normal); 
+            
+            draw_set_alpha(0.75);
+            draw_rectangle_color( board_x_offset,
+                                    view_diff - thickness,
+                                    board_x_offset + grid_width + thickness,
+                                    view_diff + grid_height - thickness,
+                                    c_black,
+                                    c_black,
+                                    c_black,
+                                    c_black,
+                                    false);
+            draw_set_alpha(1);
+            
+            
+                draw_set_color(c_lime);
+    }
+       draw_set_color(c_white); 
+ 
+	
+	
+	
+	
+		draw_sprite(spr_clay_pipe_left, -1, obj_game_control.draw_right_side, room_width * 0.5);
+	draw_sprite(spr_clay_pipe_left, -1, obj_game_control.board_x_offset, room_width * 0.5);
+	draw_sprite(spr_clay_pipe_top, -1, recycler.x - 500, recycler.y);
 //----------------------------------------------------------------
 // DRAW COLUMN SHAKE
 //----------------------------------------------------------------
@@ -191,9 +168,9 @@ for (var i = 0; i < width; i++) {
     var shake_intensity = 0; // Default no shake
 
     // **Check if column has any blocks above row 1**
-    var above_blocks = global.topmost_row <= top_playable_row;
+    var above_blocks = topmost_row <= top_playable_row;
 
-	draw_text(10, draw_y_start + 0, "TOPROW: " + string(global.topmost_row));
+	draw_text(10, draw_y_start + 0, "TOPROW: " + string(topmost_row));
 	draw_text(10, draw_y_start + 10, "above: " + string(above_blocks));
 	
 	var danger_row = 99;
@@ -251,7 +228,7 @@ for (var i = 0; i < width; i++) {
             var draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
             var draw_y = (j * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
             
-            effect_create_depth(depth + 1, ef_smokeup, draw_x, draw_y, 1, c_red);
+            //effect_create_depth(depth + 1, ef_smokeup, draw_x, draw_y, 1, c_red);
         }
         
         if (gem.falling)
@@ -342,30 +319,21 @@ for (var i = 0; i < width; i++) {
 				}
 				else
 				{
+                    
 				    // Only draw if this is the top-left (actual) parent
 				    if (gem.big_parent[0] == i && gem.big_parent[1] == j) {
 				        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake + 32, draw_y_with_global_shake + 32, 2, 2, 0, c_white, 1);
 					}
-					 
 			    }
 			} 
 			else {
+                    
                 
-				if (j >= bottom_playable_row)
-				{
-				        var _draw_x = board_x_offset + (i * gem_size) + offset + gem.offset_x;
-				        var _draw_y = ((bottom_playable_row) * gem_size) + global_y_offset + gem.offset_y + offset + gem.draw_y;
-					       
-						if (j == bottom_playable_row)
-						{		
-					        // Draw Normally but with Transparency
-					        draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, _draw_x, _draw_y, gem.x_scale, gem.y_scale, 0 ,c_white, darken_alpha);
-						}
-				}
-				else
-				{
+                    // DRAW BLOCKS  
                     draw_sprite_ext(sprite_for_block(gem.type), gem.img_number, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, c_white, 1);
-				}
+				    
+                    // DRAW LEVEL FRAME
+                    draw_sprite_ext(spr_level_frames, gem.level, draw_x_with_global_shake, draw_y_with_global_shake, gem.x_scale, gem.y_scale, 0, gem.color, 1);
 			}
 
                 //--------------------------------------------------------------------------------------
@@ -414,10 +382,35 @@ for (var i = 0; i < width; i++) {
     			scale = 1;
     		}
             
-            if (is_targeting_enemy)
-            {
-                draw_text(hovered_block[0], hovered_block[1], string(combo_points));
-            }
+            
+            if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
+                            var rect_x1 = board_x_offset + (hover_i * gem_size) + hover_gem.offset_x;
+                            var rect_y1 = (hover_j * gem_size) + global_y_offset + hover_gem.offset_y + hover_gem.draw_y;
+                            var rect_x2 = rect_x1 + gem_size;
+                            var rect_y2 = rect_y1 + gem_size;
+                            var half_offset = gem_size * 0.5;
+                
+                            draw_set_alpha(0.3);
+                            draw_set_color(c_yellow);
+                            draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
+                            
+                            // ✅ Draw Normally but with Transparency
+                            draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
+                            draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
+                            
+                            if (control_mode == "modern") {
+                                draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
+                            }
+                            draw_set_color(c_white);
+                            draw_set_alpha(1.0);
+                            
+                            // ✅ OPTIONAL: Show gem info in the corner
+                            show_hovered_block_data(true, hover_gem, hover_i, hover_j);
+                            
+
+
+                        }
+            
     		
     		if (control_mode == "legacy") {
     				if (hover_i + 1 < width)
@@ -432,56 +425,22 @@ for (var i = 0; i < width; i++) {
     						draw_sprite_ext(hover_gem2.powerup.sprite, 0, rect_x2 + half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     					}
     				}
-    				
+                
+    				var half_offset = gem_size * 0.5;
     				draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
     		}
     		
-            if (hover_gem.type != BLOCK.NONE && !(hover_gem.is_big)) {
-                var rect_x1 = board_x_offset + (hover_i * gem_size);
-                var rect_y1 = (hover_j * gem_size) + global_y_offset + hover_gem.offset_y + hover_gem.draw_y;
-                var rect_x2 = rect_x1 + gem_size;
-                var rect_y2 = rect_y1 + gem_size;
-                var half_offset = gem_size * 0.5;
-    
-                draw_set_alpha(0.3);
-                draw_set_color(c_yellow);
-                draw_rectangle(rect_x1, rect_y1, rect_x2, rect_y2, false);
-                
-    			// ✅ Draw Normally but with Transparency
-    			draw_sprite_ext(sprite_for_block(hover_gem.type), hover_gem.img_number, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
-    			draw_sprite_ext(hover_gem.powerup.sprite, 0, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
-    			
-    			if (control_mode == "modern") {
-    			    draw_sprite_ext(spr_gem_hovered_border, -1, rect_x2 - half_offset, rect_y2 - half_offset, scale, scale, 0, c_white, 1);
-    			}
-                draw_set_color(c_white);
-                draw_set_alpha(1.0);
-    
-                // ✅ OPTIONAL: Show gem info in the corner
-                draw_text(10, draw_y_start + 10,
-                    "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-                    ") | Type: " + string(hover_gem.type) + 
-                    " | Powerup: " + string(hover_gem.powerup)
-                );
-            }
-    		else
-    		{
-    			// ✅ OPTIONAL: Show gem info in the corner
-                draw_text(10, draw_y_start + 10,
-                    "Hovering: (" + string(hover_i) + ", " + string(hover_j) +
-                    ") | Type: " + string(hover_gem.type) + 
-                    " | Powerup: " + string(hover_gem.powerup)
-                );
-    		}
+           
+           
         }
     }
 
 
    // ----------------------------------------------------------------------
-   // DRAW POPPING GEMS (from global.pop_list)
+   // DRAW POPPING GEMS (from pop_list)
    // ----------------------------------------------------------------------
-   for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
-       var pop_data = ds_list_find_value(global.pop_list, idx);
+   for (var idx = 0; idx < ds_list_size(pop_list); idx++) {
+       var pop_data = ds_list_find_value(pop_list, idx);
    
        // Base coords
        var draw_x = board_x_offset + (pop_data.x * gem_size) + offset;
@@ -494,7 +453,7 @@ for (var i = 0; i < width; i++) {
    
        var final_x = draw_x + center_offset - scaled_offset;
        var final_y = draw_y + center_offset - scaled_offset;
-   	
+    
    	
        draw_sprite_ext(
            sprite_for_block(pop_data.gem_type),
@@ -507,7 +466,7 @@ for (var i = 0; i < width; i++) {
            c_white,
            1.0
    		);
-   	
+        
    	if (pop_data.powerup != -1) {
            draw_sprite_ext(pop_data.powerup.sprite,
    		0,
@@ -520,14 +479,17 @@ for (var i = 0; i < width; i++) {
            1.0
    		);
    	}
+    
+    
+    draw_text(draw_x, draw_y, string(pop_data.match_size));
    	
    }
 
     //------------------------------------------------------------
-    // DFAW BOMB OVERLAY ON POP
+    // DRAW BOMB OVERLAY ON POP
     //------------------------------------------------------------
-    for (var idx = 0; idx < ds_list_size(global.pop_list); idx++) {
-        var pop_data = ds_list_find_value(global.pop_list, idx);
+    for (var idx = 0; idx < ds_list_size(pop_list); idx++) {
+        var pop_data = ds_list_find_value(pop_list, idx);
     	
     		if (pop_data.bomb_tracker)
     		{ 
@@ -568,18 +530,7 @@ for (var i = 0; i < width; i++) {
     //---------------------------------------------------------
     // DRAW STATS
     //---------------------------------------------------------
-    draw_text_stats(self, 10, draw_y_start, true);
-
-    
-    //---------------------------------------------------------
-    // DRAW EXPERIENCE BAR
-    //---------------------------------------------------------
-    var y_start = draw_y_start + 128;
-    var y_end   = draw_y_start + camera_get_view_height(view_get_camera(view_current)) - 128; 
-    var draw_exp_y = (y_end - y_start) * (experience_points / max_experience_points);
-    
-    draw_rectangle_color(board_x_offset * 0.5, y_start, board_x_offset * 0.9, y_end,              c_white,   c_white,  c_white,  c_white,  true);
-    draw_rectangle_color(board_x_offset * 0.5, y_end,   board_x_offset * 0.9, y_end - draw_exp_y, c_fuchsia, c_purple, c_purple, c_purple, false);
+    //draw_text_stats(self, 10, draw_y_start, true);
     
     
     //---------------------------------------------------------
@@ -599,10 +550,12 @@ for (var i = 0; i < width; i++) {
     // Draw thick outline around the grid
     draw_rectangle(board_x_offset - thickness, view_diff - thickness,
                     board_x_offset + grid_width + thickness, view_diff + thickness, false); // Top
-    draw_rectangle(board_x_offset - thickness,view_diff - thickness,
-                    board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
-    draw_rectangle(board_x_offset + grid_width, view_diff - thickness,
-                    board_x_offset + grid_width + thickness, view_diff + grid_height - thickness, false); // Right
+    //draw_rectangle(board_x_offset - thickness,view_diff - thickness,
+                    //board_x_offset + 1, view_diff + grid_height + thickness, false); // Left
+    //draw_rectangle(board_x_offset + grid_width, view_diff - thickness,
+                    //board_x_offset + grid_width + thickness, view_diff + grid_height - thickness, false); // Right
+	
+
     draw_rectangle(board_x_offset - thickness, view_diff + grid_height,
                     board_x_offset + grid_width + thickness, view_diff +  grid_height - thickness, false); // Bottom
     
@@ -610,53 +563,10 @@ for (var i = 0; i < width; i++) {
     //---------------------------------------------------------
     // DRAW SPAWN RATES
     //---------------------------------------------------------
-    //draw_spawn_rates(self);
     
-        
-    //--------------------------------------
-    // DRAW HEARTS
-    //--------------------------------------
-    var heart_sprite = spr_health_new;
-    var hearts_y_pos = draw_y_start + grid_height - 34;
-    draw_player_hearts(self, 
-                        player_health, 
-                        max_player_health, 
-                        board_x_offset, 
-                        hearts_y_pos, 
-                        width, 
-                        heart_sprite, 
-                        gem_size);
-    
-    
-    if (is_targeting_enemy)
-    {
-        draw_set_alpha(0.95);
-        draw_rectangle_color(0, 0, 800, room_height, c_black, c_black, c_black, c_black, false);
-        draw_set_alpha(1);
-        
-        draw_rectangle_color(850, 300, room_width - 82, room_height - 44, c_white, c_white, c_white, c_white, true);
-    }
-
-    if (enemy_target != -1)
-    {
-        with (enemy_target)
-        { 
-            var scale = 1.1; // Slightly enlarged
-            var rotation = sin(degtorad(current_time * 2)) * 5; // Oscillates slightly (-5° to +5°)
-            draw_sprite_ext(my_sprite, 0, x, y, scale, scale, rotation, c_white, 0.9);
-            
-            draw_sprite_ext(spr_crosshair, 0, x, y, scale, scale, rotation, c_red, 1);
-        }
-    }
-    else {
-        if input.InputType == INPUT.KEYBOARD
-        {
-            draw_sprite(spr_crosshair, 0, mouse_x, mouse_y);
-        }
-    }
     
 
-if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instance_exists(obj_upgrade_menu) {
+if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instance_exists(obj_upgrade_menu) && !instance_exists(obj_shop_controller) {
 
 
 	draw_set_color(c_black);
@@ -714,5 +624,48 @@ if (global.paused) || (after_menu_counter != after_menu_counter_max) && !instanc
         
     }
     
+    
+
+    for (var u = 0; u < array_length(powerup_slots); u++)
+    {
+        if (powerup_slots[u] != -1)
+        {
+            var draw_x = board_x_offset + (u * gem_size) + offset;
+            var draw_y = (bottom_playable_row * gem_size);
+            var current_x = powerup_slots[u].x_pos;
+            var _scale = 1;
+            var max_y_offset = 64;
+            
+            
+            if grid[u, bottom_playable_row].type != BLOCK.NONE
+            {
+                _scale = min(1, 1 - (abs(obj_game_control.global_y_offset) / max_y_offset) + 0.5);
+            }
+            
+            draw_sprite_ext(powerup_slots[u].sprite, powerup_slots[u].img, current_x, draw_y, _scale, _scale, powerup_slots[u].angle, c_white, 1);
+            draw_sprite_ext(spr_upgrades_overlay, 0, current_x, draw_y, _scale, _scale, 0, c_white, 1);
+        }
+        
+        draw_sprite(spr_upgrade_tube, 0, board_x_offset + (u * gem_size) + offset, (bottom_playable_row * gem_size));
+    }
 }
 
+
+
+var ep_pos_x = room_width * 0.5;
+
+//Draw the top of engine
+for (var by = 0; by < top_playable_row; by++)
+    for (var bx = 0; bx < board_width; bx++)
+{
+    var draw_x = board_x_offset + (bx * gem_size) + offset;
+    var draw_y = (by * gem_size) + offset;
+        
+    var col = fight_for_your_life ? c_red : c_white;
+        
+    draw_sprite_ext(spr_exclaim_block, 0, draw_x, draw_y, 1, 1, 0, col, 0.5);
+}
+
+//663 Energy Points
+
+//block_spawn_rates._draw_spawn_rates(1000, 500);

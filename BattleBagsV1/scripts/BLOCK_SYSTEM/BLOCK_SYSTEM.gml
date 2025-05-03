@@ -1,6 +1,6 @@
 function Block(_type = BLOCK.RANDOM) constructor {
     // Core properties
-    type = (_type == BLOCK.RANDOM) ? weighted_random_block() : _type;
+    type = (_type == BLOCK.RANDOM) ? weighted_random_block(obj_game_control) : _type;
     powerup = weighted_random_powerup();
     
     // Visual properties

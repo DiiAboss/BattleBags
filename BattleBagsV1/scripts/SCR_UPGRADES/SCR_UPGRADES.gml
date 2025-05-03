@@ -15,6 +15,22 @@ function bring_up_upgrade_menu() {
     }
 }
 
+function bring_up_shop_menu() {
+
+    // ✅ If no upgrades are available, do NOT open the menu
+    if (global.all_stats_maxed)  {
+        //show_message("All upgrades have reached max level!");
+        return;
+    }
+
+    if (!instance_exists(obj_shop_controller)) {
+        var shop = instance_create_layer(0, 0, "pop_ups", obj_shop_controller);
+        shop.depth = -room_height;
+    } else {
+        instance_destroy(obj_shop_controller); // Close menu
+    }
+}
+
 
 /// @function get_upgrade_level()
 /// @description Uses weighted probability to determine an upgrade level.

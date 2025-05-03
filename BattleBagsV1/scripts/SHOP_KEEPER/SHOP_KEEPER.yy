@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SHOP_KEEPER",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SHOP_KEEPER",
+  "parent":{
+    "name":"SHOPKEEPER",
+    "path":"folders/Scripts/SHOPKEEPER.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

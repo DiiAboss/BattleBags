@@ -94,7 +94,7 @@ function shift_up_mp(player) {
     
             }
         }
-        //// 2️⃣ Shift all popping gems in `global.pop_list`
+        //// 2️⃣ Shift all popping gems in `pop_list`
         for (var k = 0; k < ds_list_size(player.pop_list); k++) {
             var pop_data = ds_list_find_value(player.pop_list, k);
             
@@ -107,7 +107,7 @@ function shift_up_mp(player) {
             // 3️⃣ Spawn a new random row at the **very bottom of the grid**
         for (var i = 0; i < width; i++) {
             // ✅ Ensure **only spawn new blocks in the last row*
-            grid[i, height - 1] = create_block(BLOCK.RANDOM);
+            grid[i, height - 1] = create_block(player, BLOCK.RANDOM);
         }
         //player.board_is_shifting = false;
     }

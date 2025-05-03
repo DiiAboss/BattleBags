@@ -22,7 +22,7 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
     
     // Initialize the marked_for_removal array
     for (var xx = 0; xx < width; xx++) {
-        for (var yy = 0; yy <= bottom_row; yy++) {
+        for (var yy = 0; yy < bottom_row; yy++) {
             marked_for_removal[xx, yy] = false;
             
             
@@ -44,7 +44,7 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
     // ✅ HORIZONTAL MATCHES
     // -------------------------
 
-        for (var j = 0; j <= bottom_row; j++) {
+        for (var j = 0; j < bottom_row; j++) {
                 var match_count = 1;
                 var start_idx = 0;
         
@@ -89,7 +89,7 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
         var match_count = 1;
         var start_idx = 0;
 
-        for (var j = 1; j <= bottom_row; j++) {
+        for (var j = 1; j < bottom_row; j++) {
             if (can_match(player.grid[i, j], player.grid[i, j - 1])) {
                 if (match_count == 1) start_idx = j - 1;
                 match_count++;
@@ -100,7 +100,7 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
                     for (var k = 0; k < match_count; k++) {
                         var yy = start_idx + k;
                         
-                        if (yy >= 0 && yy <= bottom_row) {
+                        if (yy >= 0 && yy < bottom_row) {
                             marked_for_removal[i, yy] = true;
 
                         }
@@ -116,7 +116,7 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
             
             for (var k = 0; k < match_count; k++) {
                 var yy = start_idx + k;
-                if (yy >= 0 && yy <= bottom_row) {
+                if (yy >= 0 && yy < bottom_row) {
                     marked_for_removal[i, yy] = true;
 
                 }
@@ -129,7 +129,7 @@ function find_matches_and_add_to_pop_list(mp_control, player) {
     // -------------------------
 
     for (var i = 0; i < width; i++) {
-        for (var j = 0; j <= bottom_row; j++) {
+        for (var j = 0; j < bottom_row; j++) {
             if (marked_for_removal[i, j]) {
                 found_any = true;
                 //player.grid[i, j].shake_timer = player.max_shake_timer; // Start shaking effect

@@ -4,8 +4,8 @@ function block_dragged(_self, action_key_pressed = mouse_check_button_pressed(mb
 	
 	//var input = _self.input;
 	
-	var width = _self.width;
-	var height = _self.height;
+	var width = _self.board_width;
+	var height = _self.bottom_playable_row;
 	var board_x_offset = _self.board_x_offset;
 	var gem_size = _self.gem_size;
 	var global_y_offset = _self.global_y_offset;
@@ -39,7 +39,7 @@ function block_dragged(_self, action_key_pressed = mouse_check_button_pressed(mb
 			if _self.grid[hover_x, hover_y].freeze_timer > 0
 			{
 				_self.grid[hover_x, hover_y].freeze_timer -= 20;
-				effect_create_depth(_self.depth - 99, ef_smoke, (hover_x * gem_size) + board_x_offset + 32, (hover_y * gem_size) + global_y_offset + 32, 1, c_blue);
+				//effect_create_depth(_self.depth - 99, ef_smoke, (hover_x * gem_size) + board_x_offset + 32, (hover_y * gem_size) + global_y_offset + 32, 1, c_blue);
 			}
 			
         } 

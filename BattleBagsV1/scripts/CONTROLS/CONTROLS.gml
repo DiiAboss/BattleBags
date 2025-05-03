@@ -1,24 +1,28 @@
 function block_dragged_mp(mp_control, player) {
         var input = player.input;
-        var width = mp_control.width;
-        var height = mp_control.height;
+        var width = player.board_width;
+        var height = player.board_height;
         var board_x_offset = player.board_x_offset;
         var gem_size = mp_control.gem_size;
         var global_y_offset = player.global_y_offset;
+        
         
         // 🔹 Convert pointer position to player's grid coordinates
         var hover_x = floor((player.pointer_x - board_x_offset) / gem_size);
         var hover_y = floor((player.pointer_y - global_y_offset) / gem_size);
         
+        
+    
         // ✅ Ensure hover is within player’s grid
         if (hover_x >= 0 && hover_x < width && hover_y >= 0 && hover_y < height) {
             player.hovered_block = [hover_x, hover_y];
-        } else {
+        }/* else {
             player.hovered_block = [-1, -1]; // Reset if out of bounds
-        }
-    
+        }*/
+        
         // ✅ Select block when action key is pressed (ONLY within player's grid)
         if (input.ActionPress) {
+            
             player.selected_x = hover_x;
             player.selected_y = hover_y;
     
@@ -33,10 +37,10 @@ function block_dragged_mp(mp_control, player) {
                 // ✅ Reduce freeze timer if applicable
                 if (player.grid[hover_x, hover_y].freeze_timer > 0) {
                     player.grid[hover_x, hover_y].freeze_timer -= 20;
-                    effect_create_depth(mp_control.depth - 99, ef_smoke, 
-                                        (hover_x * gem_size) + board_x_offset + 32, 
-                                        (hover_y * gem_size) + global_y_offset + 32, 
-                                        1, c_blue);
+                    //effect_create_depth(mp_control.depth - 99, ef_smoke, 
+                                        //(hover_x * gem_size) + board_x_offset + 32, 
+                                        //(hover_y * gem_size) + global_y_offset + 32, 
+                                        //1, c_blue);
                 }
             } else {
                 // Reset selection if clicking on an invalid block
@@ -45,6 +49,7 @@ function block_dragged_mp(mp_control, player) {
             }
         }
     
+        
         // ✅ Swap logic when dragging
         if (input.ActionKey && !player.dragged && player.selected_x != -1) {
             var target_x = floor((player.pointer_x - board_x_offset) / gem_size);
@@ -66,10 +71,11 @@ function block_dragged_mp(mp_control, player) {
         }
     }
     
+
     function block_legacy_swap(mp_control, player) {
         var input = player.input;
-        var width = mp_control.width;
-        var height = mp_control.height;
+        var width = player.board_width;
+        var height = player.board_height;
         var board_x_offset = player.board_x_offset;
         var gem_size = mp_control.gem_size;
         var global_y_offset = player.global_y_offset;
@@ -90,7 +96,7 @@ function block_dragged_mp(mp_control, player) {
     
                 // ✅ Check if the right-side block is valid for swapping
                 if (!player.grid[target_x, target_y].is_big) {
-                    start_swap_mp(self, player, hover_x, hover_y, target_x, target_y);
+                    start_swap_mp(mp_control, player, hover_x, hover_y, target_x, target_y);
                 }
             }
         }
