@@ -301,6 +301,7 @@
     {"name":"spr_bomb_overlay_wick","order":2,"path":"sprites/spr_bomb_overlay_wick/spr_bomb_overlay_wick.yy",},
     {"name":"spr_bug_repel","order":4,"path":"sprites/spr_bug_repel/spr_bug_repel.yy",},
     {"name":"spr_bullet","order":3,"path":"sprites/spr_bullet/spr_bullet.yy",},
+    {"name":"spr_city_1","order":48,"path":"sprites/spr_city_1/spr_city_1.yy",},
     {"name":"spr_city","order":40,"path":"sprites/spr_city/spr_city.yy",},
     {"name":"spr_clay_alphabet","order":1,"path":"sprites/spr_clay_alphabet/spr_clay_alphabet.yy",},
     {"name":"spr_clay_antenna_guy_left","order":39,"path":"sprites/spr_clay_antenna_guy_left/spr_clay_antenna_guy_left.yy",},

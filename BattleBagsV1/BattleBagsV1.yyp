@@ -388,6 +388,7 @@
     {"id":{"name":"spr_bug_repel","path":"sprites/spr_bug_repel/spr_bug_repel.yy",},},
     {"id":{"name":"spr_bullet","path":"sprites/spr_bullet/spr_bullet.yy",},},
     {"id":{"name":"spr_checker","path":"sprites/spr_checker/spr_checker.yy",},},
+    {"id":{"name":"spr_city_1","path":"sprites/spr_city_1/spr_city_1.yy",},},
     {"id":{"name":"spr_city","path":"sprites/spr_city/spr_city.yy",},},
     {"id":{"name":"spr_clay_alphabet","path":"sprites/spr_clay_alphabet/spr_clay_alphabet.yy",},},
     {"id":{"name":"spr_clay_antenna_guy_left","path":"sprites/spr_clay_antenna_guy_left/spr_clay_antenna_guy_left.yy",},},
